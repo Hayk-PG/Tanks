@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
 
-public class TankMovement : BaseTankMovement
+public class AITankMovement : BaseTankMovement
 {
-    FixedJoystick _joystick;
+    [Range(-1,1)]
+    [SerializeField] int direction;
 
-    public override float Direction => _joystick.Horizontal;
+    public override float Direction => direction;
 
 
     protected override void Awake()
     {
         base.Awake();
-
-        _joystick = GameObject.Find(Names.MovementJoystick).GetComponent<FixedJoystick>();
 
         RigidbodyCenterOfMass();
     }
@@ -29,7 +28,7 @@ public class TankMovement : BaseTankMovement
         Raycasts();
         UpdateSpeedAndPush();
         Brake();
-        RigidbodyTransform();             
+        RigidbodyTransform();
     }
 
     public void UpdateSpeedAndPush()
