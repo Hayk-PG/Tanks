@@ -1,72 +1,97 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
+using UnityEngine;
 
 public class ChangeTiles : BaseChangeTiles
 {
+    float second;
 
-    void Update()
+
+    protected override void Awake()
     {
-        for (int i = 0; i < TilesGenerator.TilesDict.Keys.ToList().Count; i++)
+        base.Awake();
+
+        UpdateTiles();
+    }
+
+    public void UpdateTiles()
+    {
+        second = 0;
+
+        StartCoroutine(UpdateTilesCoroutine(second));
+    }
+
+    IEnumerator UpdateTilesCoroutine(float time)
+    {
+        while (time < 1)
         {
-            if (HasTile(TilesGenerator.TilesDict.Keys.ToList()[i]))
+            time += 1 * Time.deltaTime;
+
+            for (int i = 0; i < TilesGenerator.TilesDict.Keys.ToList().Count; i++)
             {
-                ThisTilePos = TilesGenerator.TilesDict.Keys.ToList()[i];
-
-                if(!HasTile(ThisTilePos + Vertical))
+                if (HasTile(TilesGenerator.TilesDict.Keys.ToList()[i]))
                 {
-                    if(ThisTilePos.y != TilesGenerator.YStartPoint)
+                    ThisTilePos = TilesGenerator.TilesDict.Keys.ToList()[i];
+
+                    if (!HasTile(ThisTilePos + Vertical))
                     {
-                        if(HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                        if (ThisTilePos.y != TilesGenerator.YStartPoint)
                         {
-                            CreateTopTile();
-                        }
-                    }
-
-                    if(HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Vertical + Horizontal))
-                    {
-                        CreateTopRightTile();
-                    }
-
-                    if (HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos - Vertical - Horizontal))
-                    {
-                        CreateTopLeftTile();
-                    }
-
-                    if(!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
-                    {
-                        CreateRightTopLeftTile();
-                    }
-
-                    if(!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical - Horizontal))
-                    {
-                        CreateRightSlope();
-                    }
-
-                    if (!HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical + Horizontal))
-                    {
-                        CreateLeftSlope();
-                    }
-                }
-                else
-                {
-                    if(ThisTilePos.y != TilesGenerator.YStartPoint)
-                    {
-                        if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
-                        {
-                            CreateRightTile();
+                            if (HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                            {
+                                CreateTopTile();
+                            }
                         }
 
-                        if(!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                        if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Vertical + Horizontal))
                         {
-                            CreateLeftTile();
+                            CreateTopRightTile();
+                        }
+
+                        if (HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos - Vertical - Horizontal))
+                        {
+                            CreateTopLeftTile();
                         }
 
                         if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
                         {
-                            CreateLeftRightTile();
+                            CreateRightTopLeftTile();
+                        }
+
+                        if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical - Horizontal))
+                        {
+                            CreateRightSlope();
+                        }
+
+                        if (!HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical + Horizontal))
+                        {
+                            CreateLeftSlope();
+                        }
+                    }
+                    else
+                    {
+                        if (ThisTilePos.y != TilesGenerator.YStartPoint)
+                        {
+                            if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
+                            {
+                                CreateRightTile();
+                            }
+
+                            if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                            {
+                                CreateLeftTile();
+                            }
+
+                            if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
+                            {
+                                CreateLeftRightTile();
+                            }
                         }
                     }
                 }
             }
+
+            yield return null;
         }
     }
 

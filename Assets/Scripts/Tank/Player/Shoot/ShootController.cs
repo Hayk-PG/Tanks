@@ -5,6 +5,7 @@ public class ShootController : MonoBehaviour
 {
     FixedJoystick _joystick;
     ShootButton _shootButton;
+    Rigidbody _rigidBody;
 
     [SerializeField] PlayerShootTrajectory _playerShootTrajectory;
 
@@ -43,6 +44,7 @@ public class ShootController : MonoBehaviour
     {
         _joystick = GameObject.Find(Names.VerticalJoystick).GetComponent<FixedJoystick>();
         _shootButton = FindObjectOfType<ShootButton>();
+        _rigidBody = GetComponent<Rigidbody>();
     }
 
     void OnEnable()
@@ -87,6 +89,7 @@ public class ShootController : MonoBehaviour
     {
         BulletController bullet = Instantiate(_shoot._bulletsPrefab[_shoot._activeBulletIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
         bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
+        _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
     }
 
     void ApplyForce()
@@ -97,7 +100,7 @@ public class ShootController : MonoBehaviour
         }
         else
         {
-            _shoot._currentForce = _shoot._minForce;
+            if(_shoot._currentForce != _shoot._minForce) _shoot._currentForce = _shoot._minForce;
         }
 
         _playerShootTrajectory.TrajectoryPrediction(_shoot._currentForce);

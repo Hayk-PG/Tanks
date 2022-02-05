@@ -24,11 +24,13 @@ public class AIShootController : MonoBehaviour
 
     Transform _player;
     Vector3 _target;
+    Rigidbody _rigidBody;
 
 
     void Awake()
     {
         _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _rigidBody = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -61,5 +63,6 @@ public class AIShootController : MonoBehaviour
     {
         BulletController bullet = Instantiate(_shoot._bulletsPrefab[_shoot._activeBulletIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
         bullet.RigidBody.velocity = _target;
+        _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
     }
 }
