@@ -261,6 +261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6391124024811932370}
+  - component: {fileID: 588144372}
   m_Layer: 0
   m_Name: ShootPoint
   m_TagString: Untagged
@@ -282,6 +283,21 @@ Transform:
   m_Father: {fileID: 2660458858678603934}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &588144372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3002179012927423854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29a2b32e91049c84496164c9ad46f678, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointsPrefab: {fileID: 2433326035855634741, guid: 08ac2f6887dbc0b4298e148692fc6478,
+    type: 3}
+  numberOfPoints: 20
 --- !u!1 &3233253707314813569
 GameObject:
   m_ObjectHideFlags: 0
@@ -912,6 +928,7 @@ GameObject:
   - component: {fileID: 4312543678183950576}
   - component: {fileID: 4312543678183950577}
   - component: {fileID: 3470013382551498439}
+  - component: {fileID: 425417218}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Player
@@ -975,6 +992,31 @@ MonoBehaviour:
   _wheelColliderController: {fileID: 8441883757519538814}
   _rigidBody: {fileID: 4312543678183950577}
   _rayCasts: {fileID: 1965194218}
+--- !u!114 &425417218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4312543678183950582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f735b49fc3d1154f92c7fab11fbb35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerShootTrajectory: {fileID: 588144372}
+  _canon:
+    _minEulerAngleX: -70
+    _maxEulerAngleX: 27
+    _rotationSpeed: 50
+    _canonPivotPoint: {fileID: 4141257443984115461}
+    _rotationStabilizer: {x: 0, y: 0, z: 0}
+  _shoot:
+    _currentForce: 0
+    _minForce: 3
+    _maxForce: 10
+    _smoothTime: 1
+    _maxSpeed: 6
 --- !u!1 &4312543678677237571
 GameObject:
   m_ObjectHideFlags: 0

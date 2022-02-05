@@ -11,7 +11,7 @@ public class TankMovement : BaseTankMovement
     {
         base.Awake();
 
-        _joystick = GameObject.Find(Names.MovementJoystick).GetComponent<FixedJoystick>();
+        _joystick = GameObject.Find(Names.HorizontalJoystick).GetComponent<FixedJoystick>();
 
         RigidbodyCenterOfMass();
     }
