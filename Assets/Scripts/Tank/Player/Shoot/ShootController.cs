@@ -26,7 +26,12 @@ public class ShootController : MonoBehaviour
         [SerializeField] internal float _minForce, _maxForce;
         [SerializeField] internal float _smoothTime, _maxSpeed;
         internal float _currentVelocity;
-        internal bool isApplyingForce;
+        internal bool _isApplyingForce;
+
+        [Header("Bullet")]
+        [SerializeField] internal BulletController[] _bulletsPrefab;
+        [SerializeField] internal Transform _shootPoint;
+        [SerializeField] internal int _activeBulletIndex;
     }
 
     [SerializeField] Canon _canon;
@@ -70,17 +75,23 @@ public class ShootController : MonoBehaviour
 
     void OnShootButtonClick(bool isTrue)
     {
-        print("Shoot");
+        ShootBullet();
     }
 
     void OnShootButtonPointer(bool isTrue)
     {
-        _shoot.isApplyingForce = isTrue;
+        _shoot._isApplyingForce = isTrue;
+    }
+
+    void ShootBullet()
+    {
+        BulletController bullet = Instantiate(_shoot._bulletsPrefab[_shoot._activeBulletIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
+        bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
     }
 
     void ApplyForce()
     {
-        if (_shoot.isApplyingForce)
+        if (_shoot._isApplyingForce)
         {
             _shoot._currentForce = Mathf.SmoothDamp(_shoot._currentForce, _shoot._maxForce, ref _shoot._currentVelocity,_shoot._smoothTime * Time.deltaTime, _shoot._maxSpeed);
         }
