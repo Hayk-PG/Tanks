@@ -5,11 +5,14 @@ public class BulletController : MonoBehaviour
 {
     public Rigidbody RigidBody { get; private set; }
     private TurnController _turnController;
+    private CameraShake _cameraShake;
 
     [Serializable]
     private struct Particles
     {
+        [SerializeField] internal GameObject _trail;
         [SerializeField] internal GameObject explosion;
+        [SerializeField] internal GameObject _muzzleFlash;
     }
 
     [SerializeField]
@@ -21,6 +24,11 @@ public class BulletController : MonoBehaviour
     {
         RigidBody = GetComponent<Rigidbody>();
         _turnController = FindObjectOfType<TurnController>();
+        _cameraShake = FindObjectOfType<CameraShake>();
+
+        _particles._muzzleFlash.transform.parent = null;
+
+        Invoke("ActivateTrail", 0.1f);
     }
 
     private void Start()
@@ -50,6 +58,11 @@ public class BulletController : MonoBehaviour
         DestroyBullet();
     }
 
+    private void ActivateTrail()
+    {
+        _particles._trail.SetActive(true);
+    }
+
     private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
     {
         if(arg1 == TurnState.Other)
@@ -67,6 +80,7 @@ public class BulletController : MonoBehaviour
     {
         _particles.explosion.SetActive(true);
         _particles.explosion.transform.parent = null;
+        _cameraShake.Shake();
     }
 
     private void DestroyBullet()
