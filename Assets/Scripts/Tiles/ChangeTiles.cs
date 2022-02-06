@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ChangeTiles : BaseChangeTiles
 {
-    float second;
+    private float second;
 
 
     protected override void Awake()
@@ -21,7 +21,7 @@ public class ChangeTiles : BaseChangeTiles
         StartCoroutine(UpdateTilesCoroutine(second));
     }
 
-    IEnumerator UpdateTilesCoroutine(float time)
+    private IEnumerator UpdateTilesCoroutine(float time)
     {
         while (time < 1)
         {
@@ -95,47 +95,47 @@ public class ChangeTiles : BaseChangeTiles
         }
     }
 
-    void CreateTopTile()
+    private void CreateTopTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[0]);
     }
 
-    void CreateTopRightTile()
+    private void CreateTopRightTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[5]);
     }
 
-    void CreateTopLeftTile()
+    private void CreateTopLeftTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[4]);
     }
 
-    void CreateRightTile()
+    private void CreateRightTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[3]);
     }
 
-    void CreateLeftTile()
+    private void CreateLeftTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[2]);
     }
 
-    void CreateRightTopLeftTile()
+    private void CreateRightTopLeftTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[8]);
     }
 
-    void CreateLeftRightTile()
+    private void CreateLeftRightTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[9]);
     }
 
-    void CreateRightSlope()
+    private void CreateRightSlope()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[7]);
     }
 
-    void CreateLeftSlope()
+    private void CreateLeftSlope()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[6]);
     }

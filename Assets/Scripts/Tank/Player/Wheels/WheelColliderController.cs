@@ -34,4 +34,16 @@ public class WheelColliderController : MonoBehaviour
             wheel.brakeTorque = torque;
         }
     }
+
+    public float WheelRPM()
+    {
+        float rpm = 0;
+
+        foreach (var wheel in _wheelCollider)
+        {
+            rpm = wheel.rpm;
+        }
+
+        return rpm;
+    }
 }

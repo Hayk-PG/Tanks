@@ -3,15 +3,18 @@ using UnityEngine;
 
 public class ShootController : MonoBehaviour
 {
-    FixedJoystick _joystick;
-    ShootButton _shootButton;
-    Rigidbody _rigidBody;
+    private FixedJoystick _joystick;
+    private ShootButton _shootButton;
+    private Rigidbody _rigidBody;
+    private PlayerTurn _playerTurn;
 
-    [SerializeField] PlayerShootTrajectory _playerShootTrajectory;
+    [SerializeField]
+    private PlayerShootTrajectory _playerShootTrajectory;
 
     public float Direction => -_joystick.Vertical;
 
-    [Serializable] struct Canon
+    [Serializable]
+    private struct Canon
     {
         internal float _currentEulerAngleX;
         [SerializeField] internal float _minEulerAngleX, _maxEulerAngleX;
@@ -20,7 +23,8 @@ public class ShootController : MonoBehaviour
         [SerializeField] internal Transform _canonPivotPoint;
         [SerializeField] internal Vector3 _rotationStabilizer;
     }
-    [Serializable] struct Shoot
+    [Serializable]
+    private struct Shoot
     {
         [Header("Force")]
         [SerializeField] internal float _currentForce;
@@ -35,34 +39,40 @@ public class ShootController : MonoBehaviour
         [SerializeField] internal int _activeBulletIndex;
     }
 
-    [SerializeField] Canon _canon;
-    [SerializeField] Shoot _shoot;
+    [SerializeField]
+    private Canon _canon;
+    [SerializeField]
+    private Shoot _shoot;
 
-    
 
-    void Awake()
+
+    private void Awake()
     {
         _joystick = GameObject.Find(Names.VerticalJoystick).GetComponent<FixedJoystick>();
         _shootButton = FindObjectOfType<ShootButton>();
         _rigidBody = GetComponent<Rigidbody>();
+        _playerTurn = GetComponent<PlayerTurn>();
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         _shootButton.OnPointer += OnShootButtonPointer;
         _shootButton.OnClick += OnShootButtonClick;
     }
-   
-    void OnDisable()
+
+    private void OnDisable()
     {
         _shootButton.OnPointer -= OnShootButtonPointer;
         _shootButton.OnClick -= OnShootButtonClick;
     }
 
-    void Update()
+    private void Update()
     {
-        RotateCanon();
-        ApplyForce();
+        if (_playerTurn.IsMyTurn)
+        {
+            RotateCanon();
+            ApplyForce();
+        }
     }
 
     public void RotateCanon()
@@ -75,24 +85,24 @@ public class ShootController : MonoBehaviour
         _canon._canonPivotPoint.localEulerAngles = new Vector3(_canon._currentEulerAngleX += (_canon._rotationSpeed * Direction * Time.deltaTime), 0, 0) + _canon._rotationStabilizer;
     }
 
-    void OnShootButtonClick(bool isTrue)
+    private void OnShootButtonClick(bool isTrue)
     {
-        ShootBullet();
+        if(_playerTurn.IsMyTurn) ShootBullet();
     }
 
-    void OnShootButtonPointer(bool isTrue)
+    private void OnShootButtonPointer(bool isTrue)
     {
         _shoot._isApplyingForce = isTrue;
     }
 
-    void ShootBullet()
+    private void ShootBullet()
     {
         BulletController bullet = Instantiate(_shoot._bulletsPrefab[_shoot._activeBulletIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
         bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
         _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
     }
 
-    void ApplyForce()
+    private void ApplyForce()
     {
         if (_shoot._isApplyingForce)
         {

@@ -1,34 +1,81 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class AITankMovement : BaseTankMovement
-{
-    [Range(-1,1)]
-    [SerializeField] int direction;
+{      
+    private bool IsDestinationReachedForwards => Direction > 0 && transform.position.x <= _destination.x;
+    private bool IsDestinationReachedBackwards => Direction < 0 && transform.position.x > _destination.x;
 
-    public override float Direction => direction;
+    private Vector3 _destination;
+
+    private AIActionPlanner _aiActionPlanner;
+
+    public event Action Shoot;
 
 
     protected override void Awake()
     {
         base.Awake();
 
+        _aiActionPlanner = GetComponent<AIActionPlanner>();
+
         RigidbodyCenterOfMass();
     }
 
-    void FixedUpdate()
+    private void OnEnable()
+    {
+        _aiActionPlanner.OnActionPlanner += OnGetDestination;
+    }
+   
+    private void OnDisable()
+    {
+        _aiActionPlanner.OnActionPlanner -= OnGetDestination;
+    }
+
+    private void FixedUpdate()
     {
         Move();
+    }
+
+    private void OnGetDestination(Vector3 arg1, int arg2)
+    {
+        _destination = arg1;
+        Direction = arg2;
+
+        if(arg2 == 0)
+        {
+            Shoot?.Invoke();
+        }
     }
 
     public void Move()
     {
         _wheelColliderController.MotorTorque(Direction * Speed * Time.fixedDeltaTime);
         _wheelColliderController.RotateWheels();
-
-        Raycasts();
-        UpdateSpeedAndPush();
         Brake();
         RigidbodyTransform();
+        OnDestinationReached();
+
+        if (_playerTurn.IsMyTurn)
+        {
+            Raycasts();
+            UpdateSpeedAndPush();
+        }
+        else
+        {
+            Direction = 0;
+        }
+    }
+    private void OnDestinationReached()
+    {
+        if(IsDestinationReachedForwards || IsDestinationReachedBackwards)
+        {
+            if (Direction != 0)
+            {
+                Direction = 0;
+                Shoot?.Invoke();
+            }
+        }
     }
 
     public void UpdateSpeedAndPush()
@@ -71,7 +118,7 @@ public class AITankMovement : BaseTankMovement
         _rayCasts.CastRays(_vectorRight, _vectorLeft);
     }
 
-    bool IsVehicleStopped(float value)
+    private bool IsVehicleStopped(float value)
     {
         return value == 0;
     }

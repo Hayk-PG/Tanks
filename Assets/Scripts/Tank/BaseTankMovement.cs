@@ -10,6 +10,7 @@ public class BaseTankMovement : MonoBehaviour
     [SerializeField] protected WheelColliderController _wheelColliderController;
     [SerializeField] protected Rigidbody _rigidBody;
     [SerializeField] protected Raycasts _rayCasts;
+    protected PlayerTurn _playerTurn;
 
     protected bool _isOnRightSlope, _isOnLeftSlope;
     protected string[] _slopesNames;
@@ -23,6 +24,8 @@ public class BaseTankMovement : MonoBehaviour
 
     protected virtual void Awake()
     {
+        _playerTurn = GetComponent<PlayerTurn>();
+
         Initialize();
     }
 

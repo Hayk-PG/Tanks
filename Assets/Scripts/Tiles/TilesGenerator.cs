@@ -11,7 +11,7 @@ public class TilesGenerator : MonoBehaviour
     [SerializeField] float xStartPoint, xEndPoint, yStartPoint, yEndPoint;
     [SerializeField] float size;
 
-    internal Dictionary<Vector3, GameObject> TilesDict = new Dictionary<Vector3, GameObject>();
+    public Dictionary<Vector3, GameObject> TilesDict = new Dictionary<Vector3, GameObject>();
 
     public float XStartPoint { get => xStartPoint; }
     public float XEndPoint { get => xEndPoint; }
@@ -22,12 +22,12 @@ public class TilesGenerator : MonoBehaviour
 
 
 
-    void Awake()
+    private void Awake()
     {
         size = TilesPrefabs[0].GetComponentInChildren<MeshRenderer>().bounds.size.x;
     }
 
-    void Start()
+    private void Start()
     {
         GenerateTiles();
     }
@@ -64,7 +64,7 @@ public class TilesGenerator : MonoBehaviour
         }
     }
 
-    void Create(int index, float x, float y)
+    private void Create(int index, float x, float y)
     {
         if(!TilesDict.ContainsKey(new Vector3(x, y, 0)))
         {

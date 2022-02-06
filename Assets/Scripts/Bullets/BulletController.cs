@@ -4,40 +4,74 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     public Rigidbody RigidBody { get; private set; }
+    private TurnController _turnController;
 
-    [Serializable] struct Particles
+    [Serializable]
+    private struct Particles
     {
         [SerializeField] internal GameObject explosion;
     }
-    [SerializeField] Particles _particles;
+
+    [SerializeField]
+    private Particles _particles;
 
 
 
-    void Awake()
+    private void Awake()
     {
         RigidBody = GetComponent<Rigidbody>();
+        _turnController = FindObjectOfType<TurnController>();
     }
 
-    void FixedUpdate()
+    private void Start()
+    {
+        _turnController.SetNextTurn(TurnState.Other);
+    }
+   
+    private void OnEnable()
+    {
+        _turnController.OnTurnChanged += OnTurnChanged;
+    }
+    
+    private void OnDisable()
+    {
+        _turnController.OnTurnChanged -= OnTurnChanged;
+    }
+
+    private void FixedUpdate()
     {
         RigidBody.transform.rotation = Quaternion.LookRotation(RigidBody.velocity);
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         OnCollisionWithIDamagables(collision);
         Explode();
-        Destroy(gameObject);
+        DestroyBullet();
     }
 
-    void OnCollisionWithIDamagables(Collision collision)
+    private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
+    {
+        if(arg1 == TurnState.Other)
+        {
+            arg2.SetCameraTarget(transform, 3);
+        }
+    }
+
+    private void OnCollisionWithIDamagables(Collision collision)
     {
         collision.gameObject.GetComponent<IDamage>()?.Damage(0);
     }
 
-    void Explode()
+    private void Explode()
     {
         _particles.explosion.SetActive(true);
         _particles.explosion.transform.parent = null;
+    }
+
+    private void DestroyBullet()
+    {
+        _turnController.SetNextTurn(TurnState.Transition);
+        Destroy(gameObject);
     }
 }
