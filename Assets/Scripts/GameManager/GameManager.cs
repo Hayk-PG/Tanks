@@ -7,11 +7,10 @@ public class GameManager : MonoBehaviour
 
     public bool IsGameStarted { get; private set; }
     public bool IsGameFinished { get; private set; }
+    public bool IsGameRunning => IsGameStarted && !IsGameFinished;
     public float TimeToStartTheGame { get; private set; }
 
-
     public event OnEvents OnGameStarted;
-
 
 
     void Update()

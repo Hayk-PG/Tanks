@@ -48,11 +48,11 @@ public class TilesGenerator : MonoBehaviour
 
                 int r = Random.Range(0, 10);
 
-                if(y == yStartPoint && r > 2)
+                if(y == yStartPoint && r > 1)// old value is 2
                 {
                     Create(index, x, y);
                 }
-                if (y != yStartPoint && !TilesDict.ContainsKey(new Vector3(x, y + size, 0)) && r > 2 && r <= 5)
+                if (y != yStartPoint && !TilesDict.ContainsKey(new Vector3(x, y + size, 0)) && r > 2 && r <= 8) //old value is 2 && 5
                 {
                     Create(index, x, y);
                 }

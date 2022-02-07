@@ -2,11 +2,13 @@
 
 public class WheelColliderController : MonoBehaviour
 {
-    [SerializeField] WheelCollider[] _wheelCollider;
-    [SerializeField] Transform[] _wheelTransforms;
+    [SerializeField]
+    private WheelCollider[] _wheelCollider;
+    [SerializeField]
+    private Transform[] _wheelTransforms;
 
-    Vector3 _wheelWorldPosition;
-    Quaternion _wheelWorldRotation;
+    private Vector3 _wheelWorldPosition;
+    private Quaternion _wheelWorldRotation;
 
 
     public void RotateWheels()
@@ -45,5 +47,17 @@ public class WheelColliderController : MonoBehaviour
         }
 
         return rpm;
+    }
+
+    public bool AreWheelsGrounded()
+    {
+        int groundedWheels = 0;
+
+        for (int i = 0; i < _wheelCollider.Length; i++)
+        {
+            if (_wheelCollider[i].isGrounded) groundedWheels++;
+        }
+
+        return groundedWheels == _wheelCollider.Length ? true : false;
     }
 }

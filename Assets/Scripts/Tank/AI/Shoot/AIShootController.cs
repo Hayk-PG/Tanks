@@ -29,7 +29,6 @@ public class AIShootController : MonoBehaviour
     private Transform _player;
     private Vector3 _target;
     private Rigidbody _rigidBody;
-    private PlayerTurn _playerTurn;
     private AITankMovement _aiTankMovement;
 
 
@@ -37,7 +36,6 @@ public class AIShootController : MonoBehaviour
     {
         _player = GameObject.FindGameObjectWithTag("Player").transform;
         _rigidBody = GetComponent<Rigidbody>();
-        _playerTurn = GetComponent<PlayerTurn>();
         _aiTankMovement = GetComponent<AITankMovement>();
     }
 

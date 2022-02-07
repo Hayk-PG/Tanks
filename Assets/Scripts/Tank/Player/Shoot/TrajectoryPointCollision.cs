@@ -3,18 +3,20 @@ using UnityEngine;
 
 public class TrajectoryPointCollision : MonoBehaviour
 {
-    Transform _parent;
-    TrajectoryPointCollision[] _trajectoryPointCollision;
+    private Transform _parent;
+    private TrajectoryPointCollision[] _trajectoryPointCollision;
 
-    int _myIndex;
-    int _previousPoint;
+    private int _myIndex;
+    private int _previousPoint;
+    private GameObject _collisionGameObject;
+
 
     public SpriteRenderer SpriteRenderer { get; set; }
     public bool IsEntered { get; set; }
 
-    
 
-    void Awake()
+
+    private void Awake()
     {
         _parent = transform.parent;
         _myIndex = transform.GetSiblingIndex();
@@ -28,12 +30,12 @@ public class TrajectoryPointCollision : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(PointsVisibility());
     }
 
-    IEnumerator PointsVisibility()
+    private IEnumerator PointsVisibility()
     {        
         while (true)
         {
@@ -43,7 +45,7 @@ public class TrajectoryPointCollision : MonoBehaviour
             {
                 for (int i = 0; i < _myIndex; i++)
                 {
-                    if (_trajectoryPointCollision[i].IsEntered == false) _previousPoint++;
+                    if (_trajectoryPointCollision[i].IsEntered == false && _trajectoryPointCollision[i]._collisionGameObject == null) _previousPoint++;
                 }
 
                 SpriteRenderer.enabled = _previousPoint == _myIndex ? true : false; 
@@ -53,11 +55,12 @@ public class TrajectoryPointCollision : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (!other.isTrigger)
         {
             IsEntered = true;
+            if(_collisionGameObject != other.gameObject) _collisionGameObject = other.gameObject;
 
             for (int i = _myIndex; i < _trajectoryPointCollision.Length; i++)
             {
@@ -66,8 +69,12 @@ public class TrajectoryPointCollision : MonoBehaviour
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
-        if (!other.isTrigger) IsEntered = false;
+        if (!other.isTrigger)
+        {
+            IsEntered = false;
+            if (_collisionGameObject != null) _collisionGameObject = null;
+        }
     }
 }
