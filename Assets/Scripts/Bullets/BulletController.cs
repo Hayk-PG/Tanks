@@ -86,7 +86,7 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionWithIDamagables(Collision collision)
     {
-        collision.gameObject.GetComponent<IDamage>()?.Damage(0);
+        Get<IDamage>.Component(collision.gameObject)?.Damage(10);
     }
 
     private void Explode()
