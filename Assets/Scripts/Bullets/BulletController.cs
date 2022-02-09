@@ -7,7 +7,7 @@ public class BulletController : MonoBehaviour
     private TurnController _turnController;
     private CameraShake _cameraShake;
     private WindSystemController _windSystemController;
-    private TilesGenerator _tilesGenerator;
+    private TilesData _tilesGenerator;
 
     [Serializable]
     private struct Particles
@@ -29,7 +29,7 @@ public class BulletController : MonoBehaviour
         _turnController = FindObjectOfType<TurnController>();
         _cameraShake = FindObjectOfType<CameraShake>();
         _windSystemController = FindObjectOfType<WindSystemController>();
-        _tilesGenerator = FindObjectOfType<TilesGenerator>();
+        _tilesGenerator = FindObjectOfType<TilesData>();
 
         _particles._muzzleFlash.transform.parent = null;
 
@@ -86,7 +86,7 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionWithIDamagables(Collision collision)
     {
-        Get<IDamage>.Component(collision.gameObject)?.Damage(10);
+        Get<IDamage>.From(collision.gameObject)?.Damage(10);
     }
 
     private void Explode()
@@ -98,7 +98,7 @@ public class BulletController : MonoBehaviour
 
     private void DestroyBulletByPosition()
     {
-        if(RigidBody.position.y < _tilesGenerator.YEndPoint)
+        if(RigidBody.position.y < -5)
         {
             DestroyBullet();
         }

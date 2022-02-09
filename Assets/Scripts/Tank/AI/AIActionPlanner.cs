@@ -6,7 +6,7 @@ public class AIActionPlanner : MonoBehaviour
 {
     private TurnController _turnController;
     private ChangeTiles _changeTiles;
-    private TilesGenerator _tilesGenerator;
+    private TilesData _tilesGenerator;
     private PlayerTurn _playerTurn;
     
     [SerializeField]
@@ -19,7 +19,7 @@ public class AIActionPlanner : MonoBehaviour
     {
         _turnController = FindObjectOfType<TurnController>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
-        _tilesGenerator = FindObjectOfType<TilesGenerator>();
+        _tilesGenerator = FindObjectOfType<TilesData>();
         _playerTurn = GetComponent<PlayerTurn>();
     }
 

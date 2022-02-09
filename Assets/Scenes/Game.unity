@@ -374,6 +374,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tank
       objectReference: {fileID: 0}
+    - target: {fileID: 4312543678183950582, guid: 6a16bc98153c6a0428d2ed63e4fcf647,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a16bc98153c6a0428d2ed63e4fcf647, type: 3}
 --- !u!1 &705507993
@@ -1020,6 +1025,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1950072986}
+  - component: {fileID: 1950072988}
   - component: {fileID: 1950072985}
   - component: {fileID: 1950072987}
   m_Layer: 0
@@ -1052,11 +1058,6 @@ MonoBehaviour:
   - {fileID: 7235703061675212274, guid: b50dd83e6a789f94fbd3f4dbf616d109, type: 3}
   - {fileID: 5801038277752547605, guid: 483aa0e82af1b5748a6261a920697c7e, type: 3}
   - {fileID: 7706194130737101234, guid: 85662749148a75e488b144cbe6dbdef1, type: 3}
-  xStartPoint: -5
-  xEndPoint: 5
-  yStartPoint: 0
-  yEndPoint: -5
-  size: 0.5
 --- !u!4 &1950072986
 Transform:
   m_ObjectHideFlags: 0
@@ -1083,6 +1084,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edbef145dec67d142b67937c9be1ba37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1950072988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950072984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6d6ae0fd6815f44a055a60ffb13032, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelMap:
+    _map: {fileID: 2800000, guid: 2e6ec429c4029ec4b89877ed42ff0842, type: 3}
+  _colorMapping:
+  - _color: {r: 0.21176471, g: 1, b: 0, a: 1}
+    _prefab: {fileID: 4069539943661971662, guid: acb9f985c2990334fa57d4aa441ed5e3,
+      type: 3}
+  - _color: {r: 0.21960784, g: 0.8509804, b: 0.050980393, a: 1}
+    _prefab: {fileID: 3603379897958890832, guid: aa1c1146fd2810541860b2ae7a9b2d3f,
+      type: 3}
+  - _color: {r: 0.1764706, g: 0.7254902, b: 0.03137255, a: 1}
+    _prefab: {fileID: 2980697628527095468, guid: 60f888d0ced834c43a88f887e1b410c5,
+      type: 3}
+  - _color: {r: 0.15686275, g: 0.62352943, b: 0.03137255, a: 1}
+    _prefab: {fileID: 8153499014228409224, guid: 2e4788f0051e99a49b9be07abae99537,
+      type: 3}
+  - _color: {r: 0.12156863, g: 0.50980395, b: 0.015686275, a: 1}
+    _prefab: {fileID: 7291032880381130250, guid: 4d51bd6dd411fbb48b26aba58f54cd4a,
+      type: 3}
+  - _color: {r: 0.09019608, g: 0.34901962, b: 0.019607844, a: 1}
+    _prefab: {fileID: 7706194130737101234, guid: 85662749148a75e488b144cbe6dbdef1,
+      type: 3}
+  - _color: {r: 0.0627451, g: 0.23529412, b: 0.015686275, a: 1}
+    _prefab: {fileID: 5801038277752547605, guid: 483aa0e82af1b5748a6261a920697c7e,
+      type: 3}
+  - _color: {r: 0.047058824, g: 0.1882353, b: 0.007843138, a: 1}
+    _prefab: {fileID: 7788876935950047107, guid: d57c80cfc242ce84f96936261febebe6,
+      type: 3}
+  - _color: {r: 0.03137255, g: 0.12156863, b: 0.007843138, a: 1}
+    _prefab: {fileID: 7235703061675212274, guid: b50dd83e6a789f94fbd3f4dbf616d109,
+      type: 3}
+  - _color: {r: 0.7254902, g: 0.44313726, b: 0.30588236, a: 1}
+    _prefab: {fileID: 5101971777255703518, guid: 5f35424ca3928c649b3257eaa46d0a43,
+      type: 3}
 --- !u!1 &2025759507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,6 +1424,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AITank
+      objectReference: {fileID: 0}
+    - target: {fileID: 7732026768825822125, guid: cc34dc5daa7b73b439b82f789e59dc06,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc34dc5daa7b73b439b82f789e59dc06, type: 3}

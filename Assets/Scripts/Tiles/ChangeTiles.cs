@@ -10,8 +10,6 @@ public class ChangeTiles : BaseChangeTiles
     protected override void Awake()
     {
         base.Awake();
-
-        UpdateTiles();
     }
 
     public void UpdateTiles()
@@ -35,12 +33,9 @@ public class ChangeTiles : BaseChangeTiles
 
                     if (!HasTile(ThisTilePos + Vertical))
                     {
-                        if (ThisTilePos.y != TilesGenerator.YStartPoint)
+                        if (HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
                         {
-                            if (HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
-                            {
-                                CreateTopTile();
-                            }
+                            CreateTopTile();
                         }
 
                         if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Vertical + Horizontal))
@@ -70,22 +65,19 @@ public class ChangeTiles : BaseChangeTiles
                     }
                     else
                     {
-                        if (ThisTilePos.y != TilesGenerator.YStartPoint)
+                        if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
                         {
-                            if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
-                            {
-                                CreateRightTile();
-                            }
+                            CreateRightTile();
+                        }
 
-                            if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
-                            {
-                                CreateLeftTile();
-                            }
+                        if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                        {
+                            CreateLeftTile();
+                        }
 
-                            if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
-                            {
-                                CreateLeftRightTile();
-                            }
+                        if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
+                        {
+                            CreateLeftRightTile();
                         }
                     }
                 }
