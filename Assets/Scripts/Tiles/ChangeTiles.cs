@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
 public class ChangeTiles : BaseChangeTiles
 {
     private float second;
+
+    public event Action<TilesData> OnTilesUpdated;
 
 
     protected override void Awake()
@@ -79,12 +82,19 @@ public class ChangeTiles : BaseChangeTiles
                         {
                             CreateLeftRightTile();
                         }
+
+                        if(HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                        {
+                            CreateMiddleTile();
+                        }
                     }
                 }
             }
 
             yield return null;
         }
+
+        OnTilesUpdated?.Invoke(TilesGenerator);
     }
 
     private void CreateTopTile()
@@ -130,5 +140,10 @@ public class ChangeTiles : BaseChangeTiles
     private void CreateLeftSlope()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[6]);
+    }
+
+    private void CreateMiddleTile()
+    {
+        SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[1]);
     }
 }

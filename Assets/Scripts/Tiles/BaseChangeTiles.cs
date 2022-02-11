@@ -6,8 +6,8 @@ public class BaseChangeTiles : MonoBehaviour
 
     protected Vector3 ThisTilePos;
 
-    protected Vector3 Vertical { get => new Vector3(0, TilesGenerator.Size, 0); }
-    protected Vector3 Horizontal { get => new Vector3(TilesGenerator.Size, 0, 0); }
+    public Vector3 Vertical { get => new Vector3(0, TilesGenerator.Size, 0); }
+    public Vector3 Horizontal { get => new Vector3(TilesGenerator.Size, 0, 0); }
 
 
     protected virtual void Awake()
