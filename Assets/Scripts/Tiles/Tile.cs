@@ -4,20 +4,23 @@ public class Tile : MonoBehaviour, IDamage
 {
     private Collider _collider;
     private ChangeTiles _changeTiles;
-    private CameraShake _cameraShake;
+    private PoolVFX _poolVFX;
 
     [SerializeField]
     private GameObject _explosion;
 
     private bool _isSuspended;
     private Vector3 _desiredPosition;
+    private Vector3 _tileSize;
 
 
     private void Awake()
     {
         _collider = GetComponent<Collider>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
-        _cameraShake = FindObjectOfType<CameraShake>();
+        _poolVFX = FindObjectOfType<PoolVFX>();
+
+        _tileSize = _collider.bounds.size;
     }
 
     private void OnEnable()
@@ -39,19 +42,19 @@ public class Tile : MonoBehaviour, IDamage
     {
         if (_isSuspended && transform.position.y > _desiredPosition.y)
         {
-            transform.Translate(Vector3.down * 2 * Time.deltaTime);
+            transform.Translate(Vector3.down * 5 * Time.deltaTime);
 
             if (transform.position.y <= _desiredPosition.y)
             {
-                SnapTheTileToTheDesiredPosition();
-                _cameraShake.Shake();
+                SnapTheTileToTheDesiredPosition();               
             }
         }
     }
 
     private void SnapTheTileToTheDesiredPosition()
     {
-        transform.position = _desiredPosition;       
+        transform.position = _desiredPosition;
+        _poolVFX.Pool(0, new Vector3(transform.position.x, transform.position.y - (_tileSize.y / 2), transform.position.z), true);
         _isSuspended = false;
         _changeTiles.UpdateTiles();
     }

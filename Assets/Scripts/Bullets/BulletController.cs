@@ -21,6 +21,7 @@ public class BulletController : MonoBehaviour
     private Particles _particles;
 
     private bool _isWindActivated;
+    private int _collisionCount;
 
 
     private void Awake()
@@ -86,7 +87,9 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionWithIDamagables(Collision collision)
     {
-        Get<IDamage>.From(collision.gameObject)?.Damage(10);
+        _collisionCount++;
+
+        if(_collisionCount <= 1) Get<IDamage>.From(collision.gameObject)?.Damage(10);
     }
 
     private void Explode()
