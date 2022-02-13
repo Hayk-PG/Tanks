@@ -59,7 +59,7 @@ public class Tile : MonoBehaviour, IDamage
         _changeTiles.UpdateTiles();
     }
 
-    public void Damage(float damage)
+    public void Damage(int damage)
     {
         _collider.isTrigger = true;
         _explosion.SetActive(true);

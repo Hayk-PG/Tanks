@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
-
-
 
 public class WindSystemController : MonoBehaviour
 {
@@ -15,6 +13,8 @@ public class WindSystemController : MonoBehaviour
     private GameManager _gameManager;
 
     public int WindForce => _currentWindForce;
+
+    public event Action<int> OnWindForce;
 
 
     private void Awake()
@@ -48,8 +48,10 @@ public class WindSystemController : MonoBehaviour
     {
         while (isGameRunning)
         {
-            _currentWindForce = Random.Range(_minWindForce, _maxWindForce);
-            _currentInterval = Random.Range(_minInterval, _maxInterval);
+            _currentWindForce = UnityEngine.Random.Range(_minWindForce, _maxWindForce);
+            _currentInterval = UnityEngine.Random.Range(_minInterval, _maxInterval);
+
+            OnWindForce?.Invoke(_currentWindForce);
 
             yield return new WaitForSeconds(_currentInterval);
         }

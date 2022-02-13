@@ -3,11 +3,14 @@
 public class HealthController : MonoBehaviour, IDamage
 {
     [SerializeField]
-    private float _currentHealth;
-    private float _minHealth = 0;
-    private float _maxHealth = 100;
+    private int _currentHealth;
+    private int _minHealth = 0;
+    private int _maxHealth = 100;
 
-    public float Health
+    private HealthBar _healthBar;
+    private PlayerTurn _playerTurn;
+
+    public int Health
     {
         get => _currentHealth;
         set => _currentHealth = value;
@@ -17,11 +20,13 @@ public class HealthController : MonoBehaviour, IDamage
     private void Awake()
     {
         Health = _maxHealth;
+        _healthBar = FindObjectOfType<HealthBar>();
+        _playerTurn = Get<PlayerTurn>.From(gameObject);
     }
 
-    public void Damage(float damage)
+    public void Damage(int damage)
     {
         Health -= damage;
-        print(Health);
+        _healthBar.OnUpdateHealthBar(_playerTurn.MyTurn, Health);
     }
 }
