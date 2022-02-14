@@ -52,6 +52,9 @@ public class AITankMovement : BaseTankMovement
     {
         _wheelColliderController.MotorTorque(Direction * Speed * Time.fixedDeltaTime);
         _wheelColliderController.RotateWheels();
+
+        OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
+
         Brake();
         RigidbodyTransform();
         OnDestinationReached();

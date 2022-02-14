@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class ShootController : MonoBehaviour
+public class ShootController : MonoBehaviour, ICanonRotation
 {
     private FixedJoystick _joystick;
     private ShootButton _shootButton;
@@ -12,6 +12,8 @@ public class ShootController : MonoBehaviour
     private PlayerShootTrajectory _playerShootTrajectory;
 
     public float Direction => -_joystick.Vertical;
+
+    public Action<bool> OnCanonRotation { get; set; }
 
     [Serializable]
     private struct Canon
@@ -83,6 +85,8 @@ public class ShootController : MonoBehaviour
         if (Direction < 0 && Converter.AngleConverter(_canon._currentEulerAngleX) < _canon._minEulerAngleX) return;
 
         _canon._canonPivotPoint.localEulerAngles = new Vector3(_canon._currentEulerAngleX += (_canon._rotationSpeed * Direction * Time.deltaTime), 0, 0) + _canon._rotationStabilizer;
+
+        OnCanonRotation?.Invoke(Direction != 0);
     }
 
     private void OnShootButtonClick(bool isTrue)

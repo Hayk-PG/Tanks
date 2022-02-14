@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class BaseTankMovement : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class BaseTankMovement : MonoBehaviour
     public virtual float Speed { get; set; }
     public virtual float Direction { get; set; }     
     protected float InitialRotationYAxis { get; set; }
+
+    internal Action<float> OnVehicleMove;
 
 
     protected virtual void Awake()

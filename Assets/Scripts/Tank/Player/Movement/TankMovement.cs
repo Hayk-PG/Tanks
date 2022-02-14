@@ -41,6 +41,8 @@ public class TankMovement : BaseTankMovement
     {
         _wheelColliderController.MotorTorque(Direction * Speed * Time.fixedDeltaTime);
         _wheelColliderController.RotateWheels();
+
+        OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
     }
 
     private void UpdateSpeedAndPush()

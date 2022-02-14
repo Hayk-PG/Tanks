@@ -7,18 +7,27 @@ public class AIShootController : MonoBehaviour
     [Serializable]
     private struct Canon
     {
-        [SerializeField] internal Transform _canonPivotPoint;
-        [SerializeField] internal float _x, _y, _z;
+        [SerializeField]
+        internal Transform _canonPivotPoint;
+        [SerializeField]
+        internal float _x, _y, _z;
+        internal float _t;
+
+        internal Quaternion _lookRot, _rot, _desiredRotation;
     }
     [Serializable]
     private struct Shoot
     {
-        [SerializeField] internal AIShootTrajectory _aIShootTrajectory;
+        [SerializeField]
+        internal AIShootTrajectory _aIShootTrajectory;
 
         [Header("Bullet")]
-        [SerializeField] internal BulletController[] _bulletsPrefab;
-        [SerializeField] internal Transform _shootPoint;
-        [SerializeField] internal int _activeBulletIndex;
+        [SerializeField]
+        internal BulletController[] _bulletsPrefab;
+        [SerializeField]
+        internal Transform _shootPoint;
+        [SerializeField]
+        internal int _activeBulletIndex;
     }
 
     [SerializeField]
@@ -30,7 +39,6 @@ public class AIShootController : MonoBehaviour
     private Vector3 _target;
     private Rigidbody _rigidBody;
     private AITankMovement _aiTankMovement;
-
 
     private void Awake()
     {
@@ -61,12 +69,13 @@ public class AIShootController : MonoBehaviour
 
     public void RotateCanon()
     {
-        Quaternion lookRot = Quaternion.LookRotation(Vector3.forward, _target);
-        Quaternion rot = lookRot * Quaternion.Euler(_canon._x, _canon._y, _canon._z);
+        _canon._lookRot = Quaternion.LookRotation(Vector3.forward, _target);
+        _canon._rot = _canon._lookRot * Quaternion.Euler(_canon._x, _canon._y, _canon._z);
+        _canon._desiredRotation = Quaternion.Slerp(_canon._desiredRotation, _canon._rot, _canon._t);
 
-        float deltaTime = 2 * Time.deltaTime;
+        _canon._t = 2 * Time.deltaTime;
 
-        _canon._canonPivotPoint.rotation = Quaternion.Slerp(_canon._canonPivotPoint.rotation, rot, deltaTime);
+        _canon._canonPivotPoint.rotation = _canon._desiredRotation;
     }
 
     private void ShootBullet()
