@@ -63,7 +63,7 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        OnCollisionWithIDamagables(collision);       
+        OnCollisionWithDestructables(collision);       
         DestroyBullet();
     }
 
@@ -85,11 +85,11 @@ public class BulletController : MonoBehaviour
         }
     }
 
-    private void OnCollisionWithIDamagables(Collision collision)
+    private void OnCollisionWithDestructables(Collision collision)
     {
         _collisionCount++;
 
-        if(_collisionCount <= 1) Get<IDamage>.From(collision.gameObject)?.Damage(10);
+        if (_collisionCount <= 1) Get<IDestruct>.From(collision.gameObject)?.Destruct();
     }
 
     private void Explode()

@@ -29,7 +29,7 @@ public class Conditions<T>
             OnBFalse?.Invoke();
     }
 
-    public static void CheckNull<T3>(T3 a, T3 b, Action OnNull, Action OnExists)
+    public static void CheckNull<T3>(T3 a, Action OnNull, Action OnExists)
     {
         if (a == null)
             OnNull?.Invoke();

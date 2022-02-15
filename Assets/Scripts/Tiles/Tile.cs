@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Tile : MonoBehaviour, IDamage
+public class Tile : MonoBehaviour, IDestruct
 {
     private Collider _collider;
     private ChangeTiles _changeTiles;
@@ -59,7 +59,7 @@ public class Tile : MonoBehaviour, IDamage
         _changeTiles.UpdateTiles();
     }
 
-    public void Damage(int damage)
+    public void Destruct()
     {
         _collider.isTrigger = true;
         _explosion.SetActive(true);
