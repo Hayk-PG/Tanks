@@ -7,6 +7,7 @@ public class ShootController : MonoBehaviour, ICanonRotation
     private ShootButton _shootButton;
     private Rigidbody _rigidBody;
     private PlayerTurn _playerTurn;
+    private IScore _iScore;
 
     [SerializeField]
     private PlayerShootTrajectory _playerShootTrajectory;
@@ -54,6 +55,7 @@ public class ShootController : MonoBehaviour, ICanonRotation
         _shootButton = FindObjectOfType<ShootButton>();
         _rigidBody = GetComponent<Rigidbody>();
         _playerTurn = GetComponent<PlayerTurn>();
+        _iScore = Get<IScore>.From(gameObject);
     }
 
     private void OnEnable()
@@ -102,6 +104,7 @@ public class ShootController : MonoBehaviour, ICanonRotation
     private void ShootBullet()
     {
         BulletController bullet = Instantiate(_shoot._bulletsPrefab[_shoot._activeBulletIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
+        bullet.OwnerScore = _iScore;
         bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
         _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
     }

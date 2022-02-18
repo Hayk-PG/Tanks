@@ -17,6 +17,14 @@ public class Conditions<T>
             OnLesser?.Invoke();
     }
 
+    public static void Compare(bool A, F OnTrue, F OnFalse)
+    {
+        if (A == true)
+            OnTrue?.Invoke();
+        else
+            OnFalse?.Invoke();
+    }
+
     public static void Compare(bool A, bool B, F OnATrue, F OnBTrue, F OnAFalse, F OnBFalse)
     {
         if (A == true)

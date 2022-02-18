@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
+    public IScore OwnerScore { get; set; }
+
     [SerializeField]
     private float _radius;
     private Collider[] _colliders;
@@ -45,9 +47,11 @@ public class Explosion : MonoBehaviour
     {
         _percentage = 100 - Mathf.InverseLerp(0, _radius, _magnitude) * 100;
         _currentDamageValue = Mathf.RoundToInt(_maxDamageValue / 100 * _percentage);
-        print(_percentage + "/" + _magnitude + "/" + _currentDamageValue);
-        iDamage.Damage(_currentDamageValue);
-        _iDamages.Add(iDamage);
 
+        iDamage.Damage(_currentDamageValue);
+
+        Conditions<bool>.Compare(_currentDamageValue * 10 > 0, () => OwnerScore?.GetScore(_currentDamageValue * 10, iDamage), null);
+
+        _iDamages.Add(iDamage);
     }
 }

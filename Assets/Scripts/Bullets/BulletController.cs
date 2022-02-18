@@ -4,17 +4,18 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     public Rigidbody RigidBody { get; private set; }
+    public IScore OwnerScore { get; set; }
+
     private TurnController _turnController;
     private CameraShake _cameraShake;
     private WindSystemController _windSystemController;
-    private TilesData _tilesGenerator;
 
     [Serializable]
     private struct Particles
     {
-        [SerializeField] internal GameObject _trail;
-        [SerializeField] internal GameObject explosion;
+        [SerializeField] internal GameObject _trail;      
         [SerializeField] internal GameObject _muzzleFlash;
+        [SerializeField] internal Explosion explosion;
     }
 
     [SerializeField]
@@ -30,7 +31,6 @@ public class BulletController : MonoBehaviour
         _turnController = FindObjectOfType<TurnController>();
         _cameraShake = FindObjectOfType<CameraShake>();
         _windSystemController = FindObjectOfType<WindSystemController>();
-        _tilesGenerator = FindObjectOfType<TilesData>();
 
         _particles._muzzleFlash.transform.parent = null;
 
@@ -94,7 +94,8 @@ public class BulletController : MonoBehaviour
 
     private void Explode()
     {
-        _particles.explosion.SetActive(true);
+        _particles.explosion.OwnerScore = OwnerScore;
+        _particles.explosion.gameObject.SetActive(true);
         _particles.explosion.transform.parent = null;
         _cameraShake.Shake();
     }

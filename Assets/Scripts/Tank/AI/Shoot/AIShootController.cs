@@ -39,12 +39,14 @@ public class AIShootController : MonoBehaviour
     private Vector3 _target;
     private Rigidbody _rigidBody;
     private AITankMovement _aiTankMovement;
+    private IScore _iScore;
 
     private void Awake()
     {
         _player = GameObject.FindGameObjectWithTag("Player").transform;
         _rigidBody = GetComponent<Rigidbody>();
         _aiTankMovement = GetComponent<AITankMovement>();
+        _iScore = Get<IScore>.From(gameObject);
     }
 
     private void OnEnable()
@@ -88,6 +90,7 @@ public class AIShootController : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         BulletController bullet = Instantiate(_shoot._bulletsPrefab[_shoot._activeBulletIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
+        bullet.OwnerScore = _iScore;
         bullet.RigidBody.velocity = _target;
         _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
     }
