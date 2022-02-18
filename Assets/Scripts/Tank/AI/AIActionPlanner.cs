@@ -33,12 +33,20 @@ public class AIActionPlanner : MonoBehaviour
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
+    private void InitializeAIMovementParameters(out int stepsLength, out int direction, out Vector3 destination)
+    {
+        stepsLength = UnityEngine.Random.Range(5, 15);
+        destination = Vector3.zero;
+        direction = 0;
+    }
+
     private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
     {
         if(arg1 == _playerTurn.MyTurn)
         {
             _rayCasts.CastRays(Vector3.zero, Vector3.zero);
 
+            int stepsLength = UnityEngine.Random.Range(5, 15);
             Vector3 destination = Vector3.zero;
             int direction = 0;
 
@@ -48,10 +56,43 @@ public class AIActionPlanner : MonoBehaviour
                 Vector3 currentTilePos = _rayCasts.DownHit.collider.transform.position;
                 Vector3 nextTilePos;
                 float desiredDirection = UnityEngine.Random.Range(-1, 2);
+                float y = 0;
 
-                for (float i = 0.5f; i < 5; i += 0.5f)
+                for (float i = 0.5f; i < stepsLength; i += 0.5f)
                 {
-                    nextTilePos = currentTilePos - new Vector3(desiredDirection > 0 ? i : -i , 0, 0);
+                    nextTilePos = currentTilePos - new Vector3(desiredDirection > 0 ? i : -i , y, 0);
+
+                    if(desiredDirection > 0)
+                    {
+                        if (LS(new Vector3(nextTilePos.x, nextTilePos.y + 0.5f, nextTilePos.z)))
+                        {
+                            print("LS");
+                            y += -0.5f;
+                            nextTilePos = currentTilePos - new Vector3(desiredDirection > 0 ? i : -i, y, 0);
+                        }
+
+                        if (RS(nextTilePos))
+                        {
+                            print("RS");
+                            y -= -0.5f;
+                        }
+                    }
+                    else
+                    {
+                        if (LS(nextTilePos))
+                        {
+                            print("LS");
+                            y -= -0.5f;
+                        }
+
+                        if (RS(new Vector3(nextTilePos.x, nextTilePos.y + 0.5f, nextTilePos.z)))
+                        {
+                            y += -0.5f;
+                            nextTilePos = currentTilePos - new Vector3(desiredDirection > 0 ? i : -i, y, 0);
+                        }
+                    }
+
+                    print(nextTilePos);
 
                     if (_changeTiles.HasTile(nextTilePos) && IsNextPositionAvailable(_tilesGenerator.TilesDict[nextTilePos].name))
                     {
@@ -74,6 +115,16 @@ public class AIActionPlanner : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         OnActionPlanner?.Invoke(destination, direction);
+    }
+
+    private bool LS(Vector3 nextTilePos)
+    {
+        return _tilesGenerator.TilesDict.ContainsKey(nextTilePos) && _tilesGenerator.TilesDict[nextTilePos].name == Names.LS;
+    }
+
+    private bool RS(Vector3 nextTilePos)
+    {
+        return _tilesGenerator.TilesDict.ContainsKey(nextTilePos) && _tilesGenerator.TilesDict[nextTilePos].name == Names.RS;
     }
 
     private bool IsNextPositionAvailable(string name)
