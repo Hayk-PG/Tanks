@@ -15,7 +15,7 @@ public class ShootController : MonoBehaviour, ICanonRotation
     public float Direction => -_joystick.Vertical;
 
     public Action<bool> OnCanonRotation { get; set; }
-
+    
     [Serializable]
     private struct Canon
     {
@@ -47,7 +47,22 @@ public class ShootController : MonoBehaviour, ICanonRotation
     [SerializeField]
     private Shoot _shoot;
 
+    internal class PlayerHUDValues
+    {
+        internal float _currentAngle, _minAngle, _maxAngle;
+        internal float _currentForce, _minForce, _maxForce;
 
+        internal PlayerHUDValues(float _currentAngle, float _minAngle, float _maxAngle, float _currentForce, float _minForce, float _maxForce)
+        {
+            this._currentAngle = _currentAngle;
+            this._minAngle = _minAngle;
+            this._maxAngle = _maxAngle;
+            this._currentForce = _currentForce;
+            this._minForce = _minForce;
+            this._maxForce = _maxForce;
+        }
+    }
+    internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
 
     private void Awake()
     {
@@ -76,6 +91,8 @@ public class ShootController : MonoBehaviour, ICanonRotation
         {
             RotateCanon();
             ApplyForce();
+
+            OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canon._canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
         }
     }
 

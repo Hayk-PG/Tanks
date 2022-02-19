@@ -10,6 +10,8 @@ public class VehicleFall : MonoBehaviour
 
     [SerializeField]
     private GameObject _smoke;
+
+    internal Action OnVehicleFell;
         
 
     private void Awake()
@@ -27,6 +29,7 @@ public class VehicleFall : MonoBehaviour
         if (_isVehicleFalling && _wheelColliderController.AreWheelsGrounded())
         {
             _smoke.SetActive(true);
+            OnVehicleFell?.Invoke();
             _isVehicleFalling = false;
         }
     }
