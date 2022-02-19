@@ -12,6 +12,8 @@ public class AITankMovement : BaseTankMovement
 
     public event Action Shoot;
 
+    private float _stuckTime;
+
 
     protected override void Awake()
     {
@@ -20,6 +22,11 @@ public class AITankMovement : BaseTankMovement
         _aiActionPlanner = GetComponent<AIActionPlanner>();
 
         RigidbodyCenterOfMass();
+    }
+
+    private void Start()
+    {
+        OnLocalDelegatesSubscription();
     }
 
     private void OnEnable()
@@ -42,10 +49,9 @@ public class AITankMovement : BaseTankMovement
         _destination = arg1;
         Direction = arg2;
 
-        if(arg2 == 0)
-        {
-            Shoot?.Invoke();
-        }
+        if(arg2 == 0) Shoot?.Invoke();
+
+        ResetStuckTime();
     }
 
     public void Move()
@@ -58,6 +64,7 @@ public class AITankMovement : BaseTankMovement
         Brake();
         RigidbodyTransform();
         OnDestinationReached();
+        OnStuck();
 
         if (_playerTurn.IsMyTurn)
         {
@@ -66,20 +73,48 @@ public class AITankMovement : BaseTankMovement
         }
         else
         {
-            Direction = 0;
+            ResetDirection();
         }
     }
+
+    private delegate void Stuck();
+    private Stuck _OnResets;
+    private Stuck _OnStuck;
+    private Stuck _OnStuckTimeEnded;
+    private Stuck _OnDestinationReached;
+
+    private delegate bool Checker();
+    private Checker _isDestinationReached;
+    private Checker _isVehicleStuck;
+    private Checker _isStuckTimeEnded;
+
+    private void OnLocalDelegatesSubscription()
+    {
+        _OnResets += ResetDirection;
+        _OnResets += ResetStuckTime;
+        _OnStuck = delegate { Conditions<bool>.Compare(_isVehicleStuck(), () => _stuckTime += Time.deltaTime, null); };
+        _OnStuckTimeEnded = delegate { _OnResets?.Invoke(); Shoot?.Invoke(); };
+        _OnDestinationReached = delegate { ResetDirection(); Shoot?.Invoke(); };
+
+        _isDestinationReached = delegate { return IsDestinationReachedForwards || IsDestinationReachedBackwards; };
+        _isVehicleStuck = delegate { return _rigidBody.velocity.x >= -0.3 && _rigidBody.velocity.x <= 0.3f; };
+        _isStuckTimeEnded = delegate { return _stuckTime >= 3; };
+    }
+
     private void OnDestinationReached()
     {
-        if(IsDestinationReachedForwards || IsDestinationReachedBackwards)
-        {
-            if (Direction != 0)
-            {
-                Direction = 0;
-                Shoot?.Invoke();
-            }
-        }
+        Conditions<bool>.Compare(_isDestinationReached() && Direction != 0, () => _OnDestinationReached?.Invoke(), null);
     }
+   
+    private void OnStuck()
+    {
+        Conditions<bool>.Compare(!_isDestinationReached() && Direction != 0, ()=> _OnStuck?.Invoke(), null);
+        Conditions<bool>.Compare(_isStuckTimeEnded(), () => _OnStuckTimeEnded?.Invoke(), null);
+    }
+
+    private void ResetStuckTime() => _stuckTime = 0;
+
+    private void ResetDirection() => Direction = 0;
 
     public void UpdateSpeedAndPush()
     {
@@ -121,7 +156,7 @@ public class AITankMovement : BaseTankMovement
         _rayCasts.CastRays(_vectorRight, _vectorLeft);
     }
 
-    private bool IsVehicleStopped(float value)
+    private bool IsVehicleStopped(float value) 
     {
         return value == 0;
     }

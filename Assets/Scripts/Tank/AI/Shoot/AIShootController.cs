@@ -61,10 +61,7 @@ public class AIShootController : MonoBehaviour
 
     private void Update()
     {
-        if (_player != null)
-        {
-            _target = _shoot._aIShootTrajectory.PredictedTrajectory(_player.position, transform.position, 1);
-        }
+        if (_player != null) _target = _shoot._aIShootTrajectory.PredictedTrajectory(_player.position, transform.position, 1);
 
         RotateCanon();
     }
