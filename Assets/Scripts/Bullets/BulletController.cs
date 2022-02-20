@@ -10,17 +10,17 @@ public class BulletController : MonoBehaviour
     private WindSystemController _windSystemController;
 
     [Serializable]
-    private struct Particles
+    internal struct Particles
     {
-        [SerializeField] internal GameObject _trail;      
-        [SerializeField] internal GameObject _muzzleFlash;
+        [SerializeField] internal ParticleSystem _trail;      
+        [SerializeField] internal ParticleSystem _muzzleFlash;
     }
 
     [SerializeField]
-    private Particles _particles;
+    internal Particles _particles;
 
     private bool _isWindActivated;
-    internal struct VelocityData
+    public struct VelocityData
     {
         internal Rigidbody _rigidBody;
 
@@ -86,7 +86,7 @@ public class BulletController : MonoBehaviour
         OnExplodeOnCollision?.Invoke(OwnerScore);
     }
 
-    private void ActivateTrail() => _particles._trail.SetActive(true);
+    private void ActivateTrail() => _particles._trail.gameObject.SetActive(true);
 
     private void ActivateWindForce() => _isWindActivated = true;
 

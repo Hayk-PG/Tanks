@@ -2,14 +2,25 @@
 
 public class BulletVelocity : GetBulletController
 {
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (_bulletController != null) _bulletController.OnBulletVelocity = OnBulletVelocity;
     }
 
-    private void OnBulletVelocity(BulletController.VelocityData velocityData)
+    protected virtual void OnBulletVelocity(BulletController.VelocityData velocityData)
+    {
+        BulletLookRotation(velocityData);
+        ApplyWindForceToTheMovement(velocityData);
+    }
+
+    protected virtual void BulletLookRotation(BulletController.VelocityData velocityData)
     {
         velocityData._rigidBody.transform.rotation = velocityData._lookRotation;
-        if (velocityData._isWindActivated) velocityData._rigidBody.velocity += velocityData._windVelocity;
+    }
+
+    protected virtual void ApplyWindForceToTheMovement(BulletController.VelocityData velocityData)
+    {
+        if (velocityData._isWindActivated)
+            velocityData._rigidBody.velocity += velocityData._windVelocity;
     }
 }
