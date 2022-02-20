@@ -6,8 +6,7 @@ public class BulletController : MonoBehaviour
     public Rigidbody RigidBody { get; private set; }
     public IScore OwnerScore { get; set; }
 
-    private TurnController _turnController;
-    private CameraShake _cameraShake;
+    internal TurnController _turnController;
     private WindSystemController _windSystemController;
 
     [Serializable]
@@ -15,21 +14,40 @@ public class BulletController : MonoBehaviour
     {
         [SerializeField] internal GameObject _trail;      
         [SerializeField] internal GameObject _muzzleFlash;
-        [SerializeField] internal Explosion explosion;
     }
 
     [SerializeField]
     private Particles _particles;
 
     private bool _isWindActivated;
-    private int _collisionCount;
+    internal struct VelocityData
+    {
+        internal Rigidbody _rigidBody;
+
+        internal Quaternion _lookRotation;
+        internal Vector3 _windVelocity;
+
+        internal bool _isWindActivated;
+
+        internal VelocityData(Rigidbody rb, Quaternion lookR, Vector3 _windVel, bool isWindActivated)
+        {
+            _rigidBody = rb;
+            _lookRotation = lookR;
+            _windVelocity = _windVel;
+            _isWindActivated = isWindActivated;
+        }
+    }
+
+    internal Action<VelocityData> OnBulletVelocity;
+    internal Action<Collision> OnCollision;
+    internal Action<IScore> OnExplodeOnCollision;
+    internal Action<bool> OnExplodeOnLimit;
 
 
     private void Awake()
     {
         RigidBody = GetComponent<Rigidbody>();
         _turnController = FindObjectOfType<TurnController>();
-        _cameraShake = FindObjectOfType<CameraShake>();
         _windSystemController = FindObjectOfType<WindSystemController>();
 
         _particles._muzzleFlash.transform.parent = null;
@@ -55,27 +73,22 @@ public class BulletController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        DestroyBulletByPosition();
+        OnExplodeOnLimit?.Invoke(RigidBody.position.y < -5);
 
-        RigidBody.transform.rotation = Quaternion.LookRotation(RigidBody.velocity);
-        if(_isWindActivated) RigidBody.velocity += new Vector3(_windSystemController.WindForce * Time.fixedDeltaTime, 0, 0);
+        OnBulletVelocity?.Invoke(new VelocityData(RigidBody, Quaternion.LookRotation(RigidBody.velocity), 
+                                 new Vector3(_windSystemController.WindForce * Time.fixedDeltaTime, 0, 0), 
+                                 _isWindActivated));       
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        OnCollisionWithDestructables(collision);       
-        DestroyBullet();
+        OnCollision?.Invoke(collision);
+        OnExplodeOnCollision?.Invoke(OwnerScore);
     }
 
-    private void ActivateTrail()
-    {
-        _particles._trail.SetActive(true);
-    }
+    private void ActivateTrail() => _particles._trail.SetActive(true);
 
-    private void ActivateWindForce()
-    {
-        _isWindActivated = true;
-    }
+    private void ActivateWindForce() => _isWindActivated = true;
 
     private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
     {
@@ -84,34 +97,7 @@ public class BulletController : MonoBehaviour
             arg2.SetCameraTarget(transform, 3);
         }
     }
-
-    private void OnCollisionWithDestructables(Collision collision)
-    {
-        _collisionCount++;
-
-        if (_collisionCount <= 1) Get<IDestruct>.From(collision.gameObject)?.Destruct();
-    }
-
-    private void Explode()
-    {
-        _particles.explosion.OwnerScore = OwnerScore;
-        _particles.explosion.gameObject.SetActive(true);
-        _particles.explosion.transform.parent = null;
-        _cameraShake.Shake();
-    }
-
-    private void DestroyBulletByPosition()
-    {
-        if(RigidBody.position.y < -5)
-        {
-            DestroyBullet();
-        }
-    }
-
-    private void DestroyBullet()
-    {
-        Explode();
-        _turnController.SetNextTurn(TurnState.Transition);
-        Destroy(gameObject);
-    }
 }
+
+    
+
