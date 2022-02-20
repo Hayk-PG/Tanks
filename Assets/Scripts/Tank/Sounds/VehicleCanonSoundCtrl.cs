@@ -3,35 +3,35 @@
 public class VehicleCanonSoundCtrl : MonoBehaviour
 {
     [SerializeField]
-    private AudioSource _audioSRC;
+    protected AudioSource _audioSRC;
 
     [SerializeField]
-    private AudioClip _clip;
+    protected AudioClip _clip;
 
-    private ICanonRotation _iCanonRotation;
+    protected ShootController _shootController;
 
 
-    private void Awake()
+    protected virtual void Awake()
     {        
-        _iCanonRotation = Get<ICanonRotation>.From(gameObject);
+        _shootController = Get<ShootController>.From(gameObject);
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         SetAudioSrc();
     }
 
     private void OnEnable()
     {
-        if(_iCanonRotation != null) _iCanonRotation.OnCanonRotation += OnCanonRotation;
+        if(_shootController != null) _shootController.OnCanonRotation += OnCanonRotation;
     }
 
     private void OnDisable()
     {
-        if (_iCanonRotation != null) _iCanonRotation.OnCanonRotation -= OnCanonRotation;
+        if (_shootController != null) _shootController.OnCanonRotation -= OnCanonRotation;
     }
 
-    private void SetAudioSrc()
+    protected void SetAudioSrc()
     {
         _audioSRC.volume = 0;
         _audioSRC.Stop();

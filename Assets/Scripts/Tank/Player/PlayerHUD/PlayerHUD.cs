@@ -33,14 +33,14 @@ public class PlayerHUD : MonoBehaviour
 
     private void OnEnable()
     {
-        _shootController.OnUpdatePlayerHUDValues += OnUpdateValues;
-        _vehicleFall.OnVehicleFell += EnablePlayerHUD;
+        if (_shootController != null) _shootController.OnUpdatePlayerHUDValues += OnUpdateValues;
+        if (_vehicleFall != null) _vehicleFall.OnVehicleFell += EnablePlayerHUD;
     }
 
     private void OnDisable()
     {
-        _shootController.OnUpdatePlayerHUDValues -= OnUpdateValues;
-        _vehicleFall.OnVehicleFell -= EnablePlayerHUD;
+        if (_shootController != null) _shootController.OnUpdatePlayerHUDValues -= OnUpdateValues;
+        if (_vehicleFall != null) _vehicleFall.OnVehicleFell -= EnablePlayerHUD;
     }
 
     private void Update()

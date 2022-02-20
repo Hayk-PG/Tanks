@@ -9,6 +9,7 @@ public class HealthController : MonoBehaviour, IDamage
 
     private HealthBar _healthBar;
     private PlayerTurn _playerTurn;
+    private VehiclePool _vehiclePool;
 
     public int Health
     {
@@ -22,11 +23,13 @@ public class HealthController : MonoBehaviour, IDamage
         Health = _maxHealth;
         _healthBar = FindObjectOfType<HealthBar>();
         _playerTurn = Get<PlayerTurn>.From(gameObject);
+        _vehiclePool = Get<VehiclePool>.FromChild(gameObject);
     }
 
     public void Damage(int damage)
     {
         Health -= damage;
         _healthBar.OnUpdateHealthBar(_playerTurn.MyTurn, Health);
+        _vehiclePool.Pool(0, null);
     }
 }

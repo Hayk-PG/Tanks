@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class ShootController : MonoBehaviour, ICanonRotation
+public class ShootController : MonoBehaviour
 {
     private FixedJoystick _joystick;
     private ShootButton _shootButton;
@@ -14,7 +14,8 @@ public class ShootController : MonoBehaviour, ICanonRotation
 
     public float Direction => -_joystick.Vertical;
 
-    public Action<bool> OnCanonRotation { get; set; }
+    public Action<bool> OnCanonRotation;
+    internal Action<bool> OnApplyingForce;
     
     [Serializable]
     private struct Canon
@@ -131,10 +132,14 @@ public class ShootController : MonoBehaviour, ICanonRotation
         if (_shoot._isApplyingForce)
         {
             _shoot._currentForce = Mathf.SmoothDamp(_shoot._currentForce, _shoot._maxForce, ref _shoot._currentVelocity,_shoot._smoothTime * Time.deltaTime, _shoot._maxSpeed);
+
+            OnApplyingForce?.Invoke(true);
         }
         else
         {
             if(_shoot._currentForce != _shoot._minForce) _shoot._currentForce = _shoot._minForce;
+
+            OnApplyingForce?.Invoke(false);
         }
 
         _playerShootTrajectory.TrajectoryPrediction(_shoot._currentForce);
