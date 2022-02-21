@@ -1,11 +1,7 @@
 ﻿using System;
-using UnityEngine;
 
 public class BulletExplosion : GetBulletController, IBulletExplosion
 {
-    [SerializeField]
-    private Explosion _explosion;
-
     private CameraShake _cameraShake;
 
     public Action<IScore> OnBulletExplosion { get; set; }

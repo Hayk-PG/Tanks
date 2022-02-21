@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class BulletWithParachuteVelocity : BulletVelocity
 {
@@ -8,6 +9,8 @@ public class BulletWithParachuteVelocity : BulletVelocity
 
     [SerializeField]
     private GameObject _parachute;
+
+    internal Action OnParachuteOpen;
 
 
     protected override void Start()
@@ -37,6 +40,7 @@ public class BulletWithParachuteVelocity : BulletVelocity
         if (!_parachute.activeInHierarchy)
         {
             _parachute.SetActive(true);
+            OnParachuteOpen?.Invoke();
             OnTrailActivity?.Invoke(false);
         }
     }
