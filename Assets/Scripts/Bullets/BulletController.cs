@@ -9,16 +9,6 @@ public class BulletController : MonoBehaviour
     internal TurnController _turnController;
     private WindSystemController _windSystemController;
 
-    [Serializable]
-    internal struct Particles
-    {
-        [SerializeField] internal ParticleSystem _trail;      
-        [SerializeField] internal ParticleSystem _muzzleFlash;
-    }
-
-    [SerializeField]
-    internal Particles _particles;
-
     private bool _isWindActivated;
     public struct VelocityData
     {
@@ -49,16 +39,13 @@ public class BulletController : MonoBehaviour
         RigidBody = GetComponent<Rigidbody>();
         _turnController = FindObjectOfType<TurnController>();
         _windSystemController = FindObjectOfType<WindSystemController>();
-
-        _particles._muzzleFlash.transform.parent = null;
-
-        Invoke("ActivateTrail", 0.1f);
-        Invoke("ActivateWindForce", 0.5f);
     }
 
     private void Start()
     {
         _turnController.SetNextTurn(TurnState.Other);
+
+        Invoke("ActivateWindForce", 0.5f);
     }
    
     private void OnEnable()
@@ -86,15 +73,13 @@ public class BulletController : MonoBehaviour
         OnExplodeOnCollision?.Invoke(OwnerScore);
     }
 
-    private void ActivateTrail() => _particles._trail.gameObject.SetActive(true);
-
     private void ActivateWindForce() => _isWindActivated = true;
 
     private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
     {
         if(arg1 == TurnState.Other)
         {
-            arg2.SetCameraTarget(transform, 3);
+            arg2.SetCameraTarget(transform, 5, 5);
         }
     }
 }

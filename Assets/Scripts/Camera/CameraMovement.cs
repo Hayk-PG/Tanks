@@ -17,7 +17,9 @@ public class CameraMovement : MonoBehaviour
     private Vector3 _currentVelocity;
 
     [SerializeField]
-    private float _lerp;
+    private float _defaultLerp;
+    private float _followLerp;
+
     [SerializeField]
     private float _currentSize, _defaultCameraSize;
     private float _givenCameraSize;
@@ -52,13 +54,13 @@ public class CameraMovement : MonoBehaviour
     private void KeepCurrentPosition()
     {
         if (_direction != transform.localPosition) _direction = transform.localPosition;
-        if (_currentSize != _defaultCameraSize) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _defaultCameraSize, _lerp * Time.fixedDeltaTime);
+        if (_currentSize != _defaultCameraSize) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _defaultCameraSize, _defaultLerp * Time.fixedDeltaTime);
     }
 
     private void SetTheMovement()
     {
-        if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + _stabilizer, _lerp * Time.fixedDeltaTime);
-        if (_currentSize != _givenCameraSize) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _givenCameraSize, _lerp * Time.fixedDeltaTime);
+        if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + _stabilizer, _followLerp * Time.fixedDeltaTime);
+        if (_currentSize != _givenCameraSize) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _givenCameraSize, _followLerp * Time.fixedDeltaTime);
     }
 
     private void FollowTheTarget()
@@ -72,9 +74,10 @@ public class CameraMovement : MonoBehaviour
         if(_hudCamera != null) _hudCamera.orthographicSize = _currentSize;
     }
 
-    public void SetCameraTarget(Transform target, float cameraSize)
+    public void SetCameraTarget(Transform target, float lerp, float cameraSize)
     {
         _target = target;
+        _followLerp = lerp;
         _givenCameraSize = cameraSize;
     }
 }

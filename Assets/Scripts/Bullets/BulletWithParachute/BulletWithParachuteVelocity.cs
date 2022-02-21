@@ -10,8 +10,10 @@ public class BulletWithParachuteVelocity : BulletVelocity
     private GameObject _parachute;
 
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         _onLookRotAndWindVelocity += BulletLookRotation;
         _onLookRotAndWindVelocity += ApplyWindForceToTheMovement;
         _onDesceding = OnDesceding;
@@ -35,7 +37,7 @@ public class BulletWithParachuteVelocity : BulletVelocity
         if (!_parachute.activeInHierarchy)
         {
             _parachute.SetActive(true);
-            _bulletController._particles._trail.Stop();
+            OnTrailActivity?.Invoke(false);
         }
     }
 }

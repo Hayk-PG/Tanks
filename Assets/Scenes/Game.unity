@@ -646,6 +646,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 425417218, guid: 6a16bc98153c6a0428d2ed63e4fcf647, type: 3}
+      propertyPath: _shoot._activeBulletIndex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 705070919, guid: 6a16bc98153c6a0428d2ed63e4fcf647, type: 3}
       propertyPath: m_Camera
       value: 
@@ -15926,7 +15930,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hudCamera: {fileID: 194454905}
   _stabilizer: {x: 0, y: -0.5, z: 0}
-  _lerp: 2
+  _defaultLerp: 2
   _currentSize: 0
   _defaultCameraSize: 2.5
 --- !u!114 &963194230

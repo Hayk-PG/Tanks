@@ -1,10 +1,23 @@
-﻿using UnityEngine;
+﻿using System;
 
-public class BulletVelocity : GetBulletController
+public class BulletVelocity : GetBulletController, IBulletTrail
 {
+    public Action<bool> OnTrailActivity { get; set; }
+
+
+    protected virtual void Start()
+    {
+        Invoke("ActivateTrail", 0.1f);
+    }
+
     protected virtual void OnEnable()
     {
         if (_bulletController != null) _bulletController.OnBulletVelocity = OnBulletVelocity;
+    }
+
+    protected virtual void ActivateTrail()
+    {
+        OnTrailActivity?.Invoke(true);
     }
 
     protected virtual void OnBulletVelocity(BulletController.VelocityData velocityData)

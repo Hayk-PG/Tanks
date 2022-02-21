@@ -1,12 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class BulletExplosion : GetBulletController
+public class BulletExplosion : GetBulletController, IBulletExplosion
 {
     [SerializeField]
     private Explosion _explosion;
 
     private CameraShake _cameraShake;
 
+    public Action<IScore> OnBulletExplosion { get; set; }
 
     protected override void Awake()
     {
@@ -23,10 +25,9 @@ public class BulletExplosion : GetBulletController
 
     private void OnExplodeOnCollision(IScore ownerScore)
     {
-        _explosion.OwnerScore = ownerScore;
-        _explosion.gameObject.SetActive(true);
-        _explosion.transform.parent = null;
+        OnBulletExplosion?.Invoke(ownerScore);       
         _cameraShake.Shake();
+
         DestroyBullet();
     }
 

@@ -125,6 +125,15 @@ public class ShootController : MonoBehaviour
         bullet.OwnerScore = _iScore;
         bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
         _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
+
+        ChangingBulletIndex();
+    }
+
+    //TEST
+    private void ChangingBulletIndex()
+    {
+        if (_shoot._activeBulletIndex < _shoot._bulletsPrefab.Length) _shoot._activeBulletIndex++;
+        if (_shoot._activeBulletIndex >= _shoot._bulletsPrefab.Length) _shoot._activeBulletIndex = 0;
     }
 
     private void ApplyForce()
