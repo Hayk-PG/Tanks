@@ -8,11 +8,13 @@ public class ShootController : MonoBehaviour
     private Rigidbody _rigidBody;
     private PlayerTurn _playerTurn;
     private IScore _iScore;
+    private PlayerAmmoType _playerAmmoType;
 
     [SerializeField]
     private PlayerShootTrajectory _playerShootTrajectory;
 
     public float Direction => -_joystick.Vertical;
+    public int ActiveAmmoIndex { get; set; }
 
     public Action<bool> OnCanonRotation;
     internal Action<bool> OnApplyingForce;
@@ -38,9 +40,7 @@ public class ShootController : MonoBehaviour
         internal bool _isApplyingForce;
 
         [Header("Bullet")]
-        [SerializeField] internal BulletController[] _bulletsPrefab;
         [SerializeField] internal Transform _shootPoint;
-        [SerializeField] internal int _activeBulletIndex;
     }
 
     [SerializeField]
@@ -72,6 +72,7 @@ public class ShootController : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody>();
         _playerTurn = GetComponent<PlayerTurn>();
         _iScore = Get<IScore>.From(gameObject);
+        _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
     }
 
     private void OnEnable()
@@ -121,19 +122,10 @@ public class ShootController : MonoBehaviour
 
     private void ShootBullet()
     {
-        BulletController bullet = Instantiate(_shoot._bulletsPrefab[_shoot._activeBulletIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
+        BulletController bullet = Instantiate(_playerAmmoType._bulletsPrefab[ActiveAmmoIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
         bullet.OwnerScore = _iScore;
         bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
         _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
-
-        ChangingBulletIndex();
-    }
-
-    //TEST
-    private void ChangingBulletIndex()
-    {
-        if (_shoot._activeBulletIndex < _shoot._bulletsPrefab.Length) _shoot._activeBulletIndex++;
-        if (_shoot._activeBulletIndex >= _shoot._bulletsPrefab.Length) _shoot._activeBulletIndex = 0;
     }
 
     private void ApplyForce()

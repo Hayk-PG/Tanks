@@ -19,7 +19,8 @@ public class BulletWithParachuteParticles : BulletParticles
     {
         base.OnEnable();
 
-        _bulletWithParachuteVelocity.OnParachuteOpen += OnParachuteOpen;
+        if (_bulletWithParachuteVelocity != null && _parachuteOpenExplosion != null)
+            _bulletWithParachuteVelocity.OnParachuteOpen += OnParachuteOpen;
     }
 
     private void OnParachuteOpen()
