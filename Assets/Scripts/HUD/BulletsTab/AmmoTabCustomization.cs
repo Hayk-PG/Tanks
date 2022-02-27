@@ -10,6 +10,16 @@ public class AmmoTabCustomization : MonoBehaviour
     [SerializeField]
     private AmmoTypeButton _ammoTypeButtonPrefab;
 
+    [Serializable]
+    private struct AmmoTypeButtonsParameters
+    {
+        [SerializeField]
+        internal Sprite[] _ammoIcon;
+    }
+
+    [SerializeField]
+    private AmmoTypeButtonsParameters _ammoTypeButtonsParameters;
+
     [HideInInspector]
     public List<AmmoTypeButton> _instantiatedAmmoTypeButtons; 
     public event Action<Action<int>> OnInstantiateAmmoTypeButton;
@@ -24,6 +34,7 @@ public class AmmoTabCustomization : MonoBehaviour
     {
         AmmoTypeButton button = Instantiate(_ammoTypeButtonPrefab, _container);        
         button.ammoTypeIndex = index;
+        if(index < _ammoTypeButtonsParameters._ammoIcon.Length) button.AmmoTypeIcon = _ammoTypeButtonsParameters._ammoIcon[index];
         CacheAmmoTypeButtons(button);
     }
 

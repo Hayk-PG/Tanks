@@ -8,30 +8,48 @@ public class AmmoTypeButton : MonoBehaviour
 
     public int ammoTypeIndex;
 
-    private RectTransform _rectTransform;
-    private Outline _outline;
+    [Header("Images")]
+    [SerializeField]
+    private Image _ammoIcon, ammoButtonSprite;
 
-    private Vector2 _unclickedSize;
-    private Vector2 _clickedSize;
+    [Header("Sprites")]
+    [SerializeField]
+    private Sprite _clickedSprite, _releasedSprite;
+
+    [Header("Text")]
+    [SerializeField]
+    private Text _ammoTypeText;
+
+    public Sprite AmmoTypeIcon
+    {
+        get => _ammoIcon.sprite;
+        set => _ammoIcon.sprite = value;
+    }
+    private Sprite AmmoButtonSprite
+    {
+        get => ammoButtonSprite.sprite;
+        set => ammoButtonSprite.sprite = value;
+    }
+    public string AmmoTypeName
+    {
+        get => _ammoTypeText.text;
+        set => _ammoTypeText.text = value;
+    }
 
     private bool _isClicked;
+
+
 
     private void Awake()
     {
         _ammoTypeController = FindObjectOfType<AmmoTypeController>();
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-
-        _rectTransform = GetComponent<RectTransform>();
-        _outline = Get<Outline>.From(gameObject);
-
-        _unclickedSize = _rectTransform.sizeDelta;
-        _clickedSize = new Vector2(_unclickedSize.x / 1.1f, _unclickedSize.y / 1.1f);
     }
 
     private void Start()
     {
         if (ammoTypeIndex == 0)
-            Interact(_clickedSize, true);
+            Interact(true);
     }
 
     public void OnClickButton()
@@ -47,18 +65,20 @@ public class AmmoTypeButton : MonoBehaviour
         {
             foreach (var button in _ammoTabCustomization._instantiatedAmmoTypeButtons)
             {
-                button.Interact(_unclickedSize, false);
+                button.Interact(false);
             }
 
-            Interact(_clickedSize, true);
+            Interact(true);
         }
     }
 
-    public void Interact(Vector2 size, bool isClicked)
+    public void Interact(bool isClicked)
     {
-        _rectTransform.sizeDelta = size;
         _isClicked = isClicked;
 
-        if (_outline != null) _outline.enabled = isClicked;
+        if (_isClicked)
+            AmmoButtonSprite = _clickedSprite;
+        else
+            AmmoButtonSprite = _releasedSprite;
     }
 }
