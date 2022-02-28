@@ -260,10 +260,10 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 0
+    m_Top: 25
     m_Bottom: 0
   m_ChildAlignment: 2
-  m_Spacing: 0
+  m_Spacing: 25
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -973,7 +973,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 400, y: 0}
+  m_AnchoredPosition: {x: 399.9995, y: 0}
   m_SizeDelta: {x: 475, y: 164}
   m_Pivot: {x: 0.69, y: 0.5}
 --- !u!222 &436770330
@@ -1030,12 +1030,14 @@ MonoBehaviour:
   _container: {fileID: 12492855}
   _ammoTypeButtonPrefab: {fileID: 6967654864245163562, guid: ae87cb978a59533438b68a5f639ca8f3,
     type: 3}
-  _ammoTypeButtonsParameters:
-    _ammoIcon:
-    - {fileID: 21300000, guid: 30f4880c334b5e343810d12db0c59e2f, type: 3}
-    - {fileID: 21300000, guid: 49c5d8e24055c11479a9cbac41fcaad0, type: 3}
-    - {fileID: 21300000, guid: 474117c906e415f40a0f9ab85425bd64, type: 3}
   _instantiatedAmmoTypeButtons: []
+  _ammoParameters:
+  - _icon: {fileID: 21300000, guid: 30f4880c334b5e343810d12db0c59e2f, type: 3}
+    _ammoTypeStars: 0
+  - _icon: {fileID: 21300000, guid: 49c5d8e24055c11479a9cbac41fcaad0, type: 3}
+    _ammoTypeStars: 0
+  - _icon: {fileID: 21300000, guid: 474117c906e415f40a0f9ab85425bd64, type: 3}
+    _ammoTypeStars: 1
 --- !u!1 &457080403
 GameObject:
   m_ObjectHideFlags: 0

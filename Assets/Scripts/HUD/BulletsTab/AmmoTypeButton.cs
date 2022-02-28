@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class AmmoTypeButton : MonoBehaviour
 {
+    public AmmoStars _ammoStars;
+
     private AmmoTypeController _ammoTypeController;
     private AmmoTabCustomization _ammoTabCustomization;
 
