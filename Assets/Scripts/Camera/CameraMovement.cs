@@ -3,6 +3,7 @@
 public class CameraMovement : MonoBehaviour
 {
     private Camera _mainCamera;
+    private CameraTouchMovement _cameraTouchMovement;
 
     [Header("Second Camera")]
     [SerializeField]
@@ -35,6 +36,7 @@ public class CameraMovement : MonoBehaviour
     private void Awake()
     {
         _mainCamera = GetComponent<Camera>();
+        _cameraTouchMovement = GetComponent<CameraTouchMovement>();
     }
 
     private void Start()
@@ -59,7 +61,7 @@ public class CameraMovement : MonoBehaviour
 
     private void SetTheMovement()
     {
-        if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + _stabilizer, _followLerp * Time.fixedDeltaTime);
+        if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + (_stabilizer +=  _cameraTouchMovement.TouchPosition), _followLerp * Time.fixedDeltaTime);
         if (_currentSize != _givenCameraSize) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _givenCameraSize, _followLerp * Time.fixedDeltaTime);
     }
 
