@@ -934,6 +934,7 @@ GameObject:
   - component: {fileID: 207666570}
   - component: {fileID: 6875629340664954971}
   - component: {fileID: 6913948745291774714}
+  - component: {fileID: 45320486}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Player
@@ -1042,12 +1043,7 @@ MonoBehaviour:
     _maxForce: 10
     _smoothTime: 1
     _maxSpeed: 6
-    _bulletsPrefab:
-    - {fileID: 8517823123608504842, guid: e9610e8f33812854c9eef6610036b743, type: 3}
-    - {fileID: 4524670715003089928, guid: 4f31086b50dd6e441951cd6a395a17bc, type: 3}
-    - {fileID: 7730291795798670018, guid: ffb3d92fdab2368418dd44a26528331e, type: 3}
     _shootPoint: {fileID: 6391124024811932370}
-    _activeBulletIndex: 0
 --- !u!114 &4855509778067923813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1100,6 +1096,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _score: 0
+--- !u!114 &45320486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4312543678183950582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e2c10ea0e75f5447928ad4835a520e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _callForAirSupport: 0
 --- !u!1 &4312543678677237571
 GameObject:
   m_ObjectHideFlags: 0
