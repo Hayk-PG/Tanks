@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System;
 
-public class PlayerCallForAirSupport : MonoBehaviour
+public class PlayerRequestAirSupport : MonoBehaviour
 {
     [SerializeField]
     private bool _callForAirSupport;
-    private bool _isAirSupportCalled;
+    private bool _isAirSupportRequested;
 
     private Bomber _bomber;
 
-    private RequestAirSupport _requestAirSupport;
+    private AirSupport _airSupport;
     private PlayerTurn _playerTurn;
     private ShootButton _shootButton;
 
@@ -21,7 +21,7 @@ public class PlayerCallForAirSupport : MonoBehaviour
 
     private void Awake()
     {
-        _requestAirSupport = FindObjectOfType<RequestAirSupport>();
+        _airSupport = FindObjectOfType<AirSupport>();
         _playerTurn = Get<PlayerTurn>.From(gameObject);
         _shootButton = FindObjectOfType<ShootButton>();
     }
@@ -41,13 +41,13 @@ public class PlayerCallForAirSupport : MonoBehaviour
 
     private void OnEnable()
     {
-        _requestAirSupport.OnRequestAirSupport += OnRequestAirSupport;
+        _airSupport.OnRequestAirSupport += OnRequestAirSupport;
         _shootButton.OnClick += OnShootButtonClick;
     }
    
     private void OnDisable()
     {
-        _requestAirSupport.OnRequestAirSupport += OnRequestAirSupport;
+        _airSupport.OnRequestAirSupport += OnRequestAirSupport;
         _shootButton.OnClick -= OnShootButtonClick;
     }
 
@@ -55,23 +55,23 @@ public class PlayerCallForAirSupport : MonoBehaviour
     {
         if (_callForAirSupport && _playerTurn.IsMyTurn)
         {
-            _requestAirSupport.CallOnRequestAirSupport();
-            _isAirSupportCalled = true;
+            _airSupport.CallOnRequestAirSupport();
+            _isAirSupportRequested = true;
             _callForAirSupport = false;
         }
     }
 
-    private void OnRequestAirSupport(Bomber bomber, Action<RequestAirSupport.InstantiateProperties> Bomber)
+    private void OnRequestAirSupport(Bomber bomber, Action<AirSupport.InstantiateProperties> ActivateBomber)
     {
         _bomber = bomber;
-        Bomber?.Invoke(new RequestAirSupport.InstantiateProperties(_bomberPosition(), _bomberRotation()));
+        ActivateBomber?.Invoke(new AirSupport.InstantiateProperties(_bomberPosition(), _bomberRotation()));
     }
 
     private void OnShootButtonClick(bool isTrue)
     {
-        if (isTrue && _isAirSupportCalled)
+        if (isTrue && _isAirSupportRequested)
         {
-            _isAirSupportCalled = false;
+            _isAirSupportRequested = false;
             _bomber?.DropBomb();
         }
     }

@@ -1,11 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-public class RequestAirSupport : MonoBehaviour
+public class AirSupport : MonoBehaviour
 {
     [SerializeField]
     private Bomber _bomber;
-
     public Bomber Bomber => _bomber;
 
     private CameraMovement _cameraMovement;
