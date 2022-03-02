@@ -18,11 +18,15 @@ public class PlayerRequestAirSupport : MonoBehaviour
     private Vector _bomberPosition;
     private Rotation _bomberRotation;
 
+    public IScore _iScore;
+
 
     private void Awake()
     {
-        _airSupport = FindObjectOfType<AirSupport>();
         _playerTurn = Get<PlayerTurn>.From(gameObject);
+        _iScore = Get<IScore>.From(gameObject);
+
+        _airSupport = FindObjectOfType<AirSupport>();
         _shootButton = FindObjectOfType<ShootButton>();
     }
 
@@ -72,7 +76,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
         if (isTrue && _isAirSupportRequested)
         {
             _isAirSupportRequested = false;
-            _bomber?.DropBomb();
+            _bomber?.DropBomb(_iScore);
         }
     }
 }

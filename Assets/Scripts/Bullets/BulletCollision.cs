@@ -6,7 +6,7 @@ public class BulletCollision : GetBulletController
 
     private void OnEnable()
     {
-        _bulletController.OnCollision = OnCollision;
+        _iBulletCollision.OnCollision = OnCollision;
     }
 
     private void OnCollision(Collision collision)

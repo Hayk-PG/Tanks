@@ -13,7 +13,7 @@ public class BulletParticles : MonoBehaviour
 
     protected virtual void Awake()
     {
-        _muzzleFlash.transform.parent = null;
+        if(_muzzleFlash != null) _muzzleFlash.transform.parent = null;
 
         _iBulletTrail = Get<IBulletTrail>.From(gameObject);
         _iBulletExplosion = Get<IBulletExplosion>.From(gameObject);

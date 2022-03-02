@@ -1,12 +1,19 @@
 ﻿using System;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour
+public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, IBulletVelocity<BulletController.VelocityData>, ITurnController
 {
     public Rigidbody RigidBody { get; private set; }
     public IScore OwnerScore { get; set; }
 
-    internal TurnController _turnController;
+    public Action<Collision> OnCollision { get; set; }
+    public Action<IScore> OnExplodeOnCollision { get; set; }
+    public Action<bool> OnExplodeOnLimit { get; set; }
+    public Action<VelocityData> OnBulletVelocity { get; set; }
+
+    public TurnController TurnController { get; set; }
+    public CameraMovement CameraMovement { get; set; }
+
     private WindSystemController _windSystemController;
 
     private bool _isWindActivated;
@@ -28,34 +35,30 @@ public class BulletController : MonoBehaviour
         }
     }
 
-    internal Action<VelocityData> OnBulletVelocity;
-    internal Action<Collision> OnCollision;
-    internal Action<IScore> OnExplodeOnCollision;
-    internal Action<bool> OnExplodeOnLimit;
 
 
     private void Awake()
     {
         RigidBody = GetComponent<Rigidbody>();
-        _turnController = FindObjectOfType<TurnController>();
+        TurnController = FindObjectOfType<TurnController>();
         _windSystemController = FindObjectOfType<WindSystemController>();
     }
 
     private void Start()
     {
-        _turnController.SetNextTurn(TurnState.Other);
+        TurnController.SetNextTurn(TurnState.Other);
 
         Invoke("ActivateWindForce", 0.5f);
     }
    
     private void OnEnable()
     {
-        _turnController.OnTurnChanged += OnTurnChanged;
+        TurnController.OnTurnChanged += OnTurnChanged;
     }
     
     private void OnDisable()
     {
-        _turnController.OnTurnChanged -= OnTurnChanged;
+        TurnController.OnTurnChanged -= OnTurnChanged;
     }
 
     private void FixedUpdate()

@@ -1,14 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
-public class AirSupport : MonoBehaviour
+public class AirSupport : MonoBehaviour, ITurnController
 {
     [SerializeField]
     private Bomber _bomber;
     public Bomber Bomber => _bomber;
 
-    private CameraMovement _cameraMovement;
-    private TurnController _turnController;
+    public TurnController TurnController { get; set; }
+    public CameraMovement CameraMovement { get; set; }
 
     public struct InstantiateProperties
     {
@@ -27,9 +27,9 @@ public class AirSupport : MonoBehaviour
 
 
     private void Awake()
-    {
-        _cameraMovement = FindObjectOfType<CameraMovement>();
-        _turnController = FindObjectOfType<TurnController>();
+    {        
+        TurnController = FindObjectOfType<TurnController>();
+        CameraMovement = FindObjectOfType<CameraMovement>();
     }
 
     public void CallOnRequestAirSupport()
@@ -41,8 +41,8 @@ public class AirSupport : MonoBehaviour
     {
         _bomber.transform.position = properties._position;
         _bomber.transform.rotation = properties._rotation;
+        TurnController.SetNextTurn(TurnState.Other);
+        CameraMovement.SetCameraTarget(_bomber.transform, 10, 5);
         _bomber.gameObject.SetActive(true);
-        _turnController.SetNextTurn(TurnState.Other);
-        _cameraMovement.SetCameraTarget(_bomber.transform, 10, 5);
     }
 }

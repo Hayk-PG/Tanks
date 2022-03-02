@@ -15,8 +15,8 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
 
     private void OnEnable()
     {
-        if (_bulletController != null) _bulletController.OnExplodeOnCollision = OnExplodeOnCollision;
-        if (_bulletController != null) _bulletController.OnExplodeOnLimit = OnExplodeOnLimit;
+        if (_iBulletCollision != null) _iBulletCollision.OnExplodeOnCollision = OnExplodeOnCollision;
+        if (_iBulletLimit != null) _iBulletLimit.OnExplodeOnLimit = OnExplodeOnLimit;
     }
 
     private void OnExplodeOnCollision(IScore ownerScore)
@@ -34,7 +34,7 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
 
     private void DestroyBullet()
     {
-        _bulletController._turnController.SetNextTurn(TurnState.Transition);
+        _iTurnController.TurnController.SetNextTurn(TurnState.Transition);
         Destroy(gameObject);
     }
 }
