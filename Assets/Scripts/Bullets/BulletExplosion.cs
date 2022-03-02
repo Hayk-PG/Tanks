@@ -1,10 +1,13 @@
 ﻿using System;
+using UnityEngine.Events;
 
 public class BulletExplosion : GetBulletController, IBulletExplosion
 {
     private CameraShake _cameraShake;
 
     public Action<IScore> OnBulletExplosion { get; set; }
+    public UnityEvent OnCameraShake;
+
 
     protected override void Awake()
     {
@@ -21,10 +24,20 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
 
     private void OnExplodeOnCollision(IScore ownerScore)
     {
-        OnBulletExplosion?.Invoke(ownerScore);       
-        _cameraShake.Shake();
+        OnBulletExplosion?.Invoke(ownerScore);
+        OnCameraShake?.Invoke();
 
         DestroyBullet();
+    }
+
+    public void CameraShake()
+    {
+        _cameraShake.Shake();
+    }
+
+    public void CameraBigShake()
+    {
+        _cameraShake.BigShake();
     }
 
     private void OnExplodeOnLimit(bool isTrue)

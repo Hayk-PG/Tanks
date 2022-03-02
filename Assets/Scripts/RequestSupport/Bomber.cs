@@ -8,6 +8,21 @@ public class Bomber : MonoBehaviour
     [SerializeField]
     private BombController _bombPrefab;
 
+    public float distanceX;
+
+    private delegate bool Checker();
+    private Checker isOutOfBoundaries;
+
+
+    private void Awake()
+    {
+        isOutOfBoundaries = delegate { return transform.position.x < -distanceX || transform.position.x > distanceX; };
+    }
+
+    private void Update()
+    {
+        Conditions<bool>.Compare(isOutOfBoundaries(), Deactivate, null);
+    }
 
     private void FixedUpdate()
     {
@@ -19,5 +34,10 @@ public class Bomber : MonoBehaviour
     {
         BombController _bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
         _bomb._iScore = _iScore;
+    }
+
+    private void Deactivate()
+    {
+        gameObject.SetActive(false);
     }
 }

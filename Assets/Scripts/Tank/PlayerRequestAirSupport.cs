@@ -20,6 +20,9 @@ public class PlayerRequestAirSupport : MonoBehaviour
 
     public IScore _iScore;
 
+    private Vector3 _rightSpwnPos = new Vector3(15, 3, 0);
+    private Vector3 _leftSpwnPos = new Vector3(-15, 3, 0);
+
 
     private void Awake()
     {
@@ -34,7 +37,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
     {
         _bomberPosition = delegate
         {
-            return _playerTurn.MyTurn == TurnState.Player1 ? new Vector3(15, 3, 0) : new Vector3(-15, 3, 0);
+            return _playerTurn.MyTurn == TurnState.Player1 ? _rightSpwnPos : _leftSpwnPos;
         };
 
         _bomberRotation = delegate
@@ -66,9 +69,11 @@ public class PlayerRequestAirSupport : MonoBehaviour
     }
 
     private void OnRequestAirSupport(Bomber bomber, Action<AirSupport.InstantiateProperties> ActivateBomber)
-    {
-        _bomber = bomber;
+    {       
         ActivateBomber?.Invoke(new AirSupport.InstantiateProperties(_bomberPosition(), _bomberRotation()));
+
+        _bomber = bomber;
+        _bomber.distanceX = _rightSpwnPos.x;
     }
 
     private void OnShootButtonClick(bool isTrue)

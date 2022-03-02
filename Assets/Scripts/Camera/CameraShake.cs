@@ -5,6 +5,7 @@ public class CameraShake : MonoBehaviour
     private Animator _anim;
 
     private const string _shake = "shake";
+    private const string _bigShake = "bigShake";
 
 
 
@@ -18,4 +19,8 @@ public class CameraShake : MonoBehaviour
         _anim.SetTrigger(_shake);
     }
 
+    public void BigShake()
+    {
+        _anim.SetTrigger(_bigShake);
+    }
 }
