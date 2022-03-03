@@ -56,7 +56,7 @@ public class AmmoTypeButton : MonoBehaviour
 
     public void OnClickButton()
     {
-        GlobalFunctions.OnClick(() => _ammoTypeController.OnClickAmmoTypeButton(ammoTypeIndex));
+        _ammoTypeController.OnClickAmmoTypeButton(ammoTypeIndex);
         _ammoTypeController.OnAmmoTabActivity();
         ButtonIsClicked();
     }
