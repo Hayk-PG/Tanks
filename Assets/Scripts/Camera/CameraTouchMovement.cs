@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using UnityEngine.EventSystems;
 
 public class CameraTouchMovement : MonoBehaviour
@@ -12,11 +13,19 @@ public class CameraTouchMovement : MonoBehaviour
 
     private Value _mouseX, _mouseY;
 
-    public Vector3 TouchPosition;
+    public Vector3 TouchPosition { get; set; }
+    public bool IsCameraMoving { get; set; }
+
+    private float _cameraMovementResetTimer;
+
+    private UITouchMovement _uiTouchMovement;
+
 
 
     private void Awake()
     {
+        _uiTouchMovement = FindObjectOfType<UITouchMovement>();
+
         _mouseX = delegate { return Input.GetAxis("Mouse X"); };
         _mouseY = delegate { return Input.GetAxis("Mouse Y"); };
 
@@ -25,18 +34,43 @@ public class CameraTouchMovement : MonoBehaviour
         _isPointerOnUI = delegate { return EventSystem.current.IsPointerOverGameObject(); };
     }
 
-    private void Update()
+    private void OnEnable()
+    {
+        if (_uiTouchMovement != null) _uiTouchMovement.OnCameraCanMove += TouchMovement;
+    }
+
+    private void OnDisable()
+    {
+        if (_uiTouchMovement != null) _uiTouchMovement.OnCameraCanMove -= TouchMovement;
+    }
+
+    private void TouchMovement()
     {
         Conditions<bool>.Compare(_isMousePressed() && _isMovingMouse() && !_isPointerOnUI(), OnMouseMovement, OnStopMouseMovement);
     }
 
     private void OnMouseMovement()
     {
-        TouchPosition = new Vector3(_mouseX(), _mouseY(), 0);
+        IsCameraMoving = true;
+        TouchPosition = new Vector3(Mathf.Clamp(_mouseX(), -1, 1), Mathf.Clamp(_mouseY(), -1, 1), 0); 
     }
 
     private void OnStopMouseMovement()
     {
+        Conditions<bool>.Compare(IsCameraMoving, ResetCameraMovement, null);
+
         TouchPosition = Vector3.zero;
+    }
+
+    private void ResetCameraMovement()
+    {
+        _cameraMovementResetTimer += Time.deltaTime;
+
+        Conditions<float>.Compare(_cameraMovementResetTimer, 1, null, 
+            delegate 
+            {
+                IsCameraMoving = false;
+                _cameraMovementResetTimer = 0;
+            }, null);
     }
 }

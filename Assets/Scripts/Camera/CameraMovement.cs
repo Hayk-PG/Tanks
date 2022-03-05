@@ -15,6 +15,7 @@ public class CameraMovement : MonoBehaviour
     [Header("Parameters")]
     [SerializeField]
     private Vector3 _stabilizer;
+    private Vector3 _updatedStabilizer;
     private Vector3 _currentVelocity;
 
     [SerializeField]
@@ -61,8 +62,20 @@ public class CameraMovement : MonoBehaviour
 
     private void SetTheMovement()
     {
-        if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + (_stabilizer +=  _cameraTouchMovement.TouchPosition), _followLerp * Time.fixedDeltaTime);
+        Conditions<bool>.Compare(_cameraTouchMovement.IsCameraMoving, UpdateStabilizer, Stabilizer);
+
+        if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + _updatedStabilizer, _followLerp * Time.fixedDeltaTime);
         if (_currentSize != _givenCameraSize) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _givenCameraSize, _followLerp * Time.fixedDeltaTime);
+    }
+
+    private void UpdateStabilizer()
+    {
+        _updatedStabilizer += _cameraTouchMovement.TouchPosition;
+    }
+
+    private void Stabilizer()
+    {
+        _updatedStabilizer = _stabilizer;
     }
 
     private void FollowTheTarget()
