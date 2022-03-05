@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class AmmoTabCustomization : MonoBehaviour
+
+public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, AmmoParameters>
 {
-    [SerializeField]
-    private Transform _container;
-
-    [SerializeField]
-    private AmmoTypeButton _ammoTypeButtonPrefab;
-
-    [HideInInspector]
-    public List<AmmoTypeButton> _instantiatedAmmoTypeButtons; 
     public event Action<Action<int>> OnInstantiateAmmoTypeButton;
+    public event Action<AmmoTypeButton> OnSendActiveAmmoToPlayer;
 
-    public AmmoParameters[] _ammoParameters;
 
+
+    private void OnDisable()
+    {
+        UnSubscribeFromAmmoTypeButtonEvents();
+    }
 
     public void CallOnInstantiateAmmoTypeButton()
     {
@@ -24,30 +20,55 @@ public class AmmoTabCustomization : MonoBehaviour
 
     public void InstantiateAmmoTypeButton(int index)
     {
-        AmmoTypeButton button = Instantiate(_ammoTypeButtonPrefab, _container);        
-        Conditions<int>.Compare(index, _ammoParameters.Length, null, null, () => SetAmmoTypeButtonProperties(button, index));
+        AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);        
+        Conditions<int>.Compare(index, _parameters.Length, null, null, () => SetAmmoTypeButtonProperties(button, index));
         CacheAmmoTypeButtons(button);
+    }
+
+    private void SubscribeToAmmoTypeButtonEvents(AmmoTypeButton button)
+    {
+        button.OnClickAmmoTypeButton += OnClickAmmoTypeButton;
+    }
+
+    private void UnSubscribeFromAmmoTypeButtonEvents()
+    {
+        if(_instantiatedButtons != null)
+        {
+            foreach (var button in _instantiatedButtons)
+            {
+                button.OnClickAmmoTypeButton -= OnClickAmmoTypeButton;
+            }
+        }
     }
 
     private void SetAmmoTypeButtonProperties(AmmoTypeButton button, int index)
     {
-        button.ammoTypeIndex = index;
-        button.AmmoTypeIcon = _ammoParameters[index]._icon;
-        button._ammoStars.OnSetStars(_ammoParameters[index]._ammoTypeStars);
+        button._properties.Index = index;
+        button._properties.IconSprite = _parameters[index]._icon;
+        button._ammoStars.OnSetStars(_parameters[index]._ammoTypeStars);
     }
 
     private void CacheAmmoTypeButtons(AmmoTypeButton button)
     {
-        Conditions<AmmoTypeButton[]>.CheckNull(_instantiatedAmmoTypeButtons, ()=> InitializeList(button), () => AddToList(button));
+        _instantiatedButtons.Add(button);
+        SubscribeToAmmoTypeButtonEvents(button);
     }
     
-    private void InitializeList(AmmoTypeButton button)
+    private void OnClickAmmoTypeButton(AmmoTypeButton ammoTypeButton)
     {
-        _instantiatedAmmoTypeButtons = new List<AmmoTypeButton>(1) { button };
+        ChangeAmmoTypeButtonsSprite(ammoTypeButton);
+        OnSendActiveAmmoToPlayer?.Invoke(ammoTypeButton);
+        OnAmmoTypeController?.Invoke();
     }
 
-    private void AddToList(AmmoTypeButton button)
+    private void ChangeAmmoTypeButtonsSprite(AmmoTypeButton ammoTypeButton)
     {
-        _instantiatedAmmoTypeButtons.Add(button);
+        GlobalFunctions.Loop<AmmoTypeButton>.Foreach(_instantiatedButtons,
+            OnAmmoTypeButtons =>
+            {
+                OnAmmoTypeButtons._properties.ButtonSprite = _released;
+            });
+
+        ammoTypeButton._properties.ButtonSprite = _clicked;
     }
 }

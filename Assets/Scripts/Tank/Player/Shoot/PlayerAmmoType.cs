@@ -5,7 +5,6 @@ public class PlayerAmmoType : MonoBehaviour
 {
     private ShootController _shootController;
     private AmmoTabCustomization _ammoTabCustomization;
-    private AmmoTypeController _ammoTypeController;
 
     public BulletController[] _bulletsPrefab;
 
@@ -14,7 +13,6 @@ public class PlayerAmmoType : MonoBehaviour
     {
         _shootController = Get<ShootController>.From(gameObject);
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-        _ammoTypeController = FindObjectOfType<AmmoTypeController>();
     }
 
     private void Start()
@@ -25,13 +23,13 @@ public class PlayerAmmoType : MonoBehaviour
     private void OnEnable()
     {
         _ammoTabCustomization.OnInstantiateAmmoTypeButton += OnInstantiateAmmoTypeButton;
-        _ammoTypeController.OnGetActiveAmmoType += OnGetActiveAmmoType;
+        _ammoTabCustomization.OnSendActiveAmmoToPlayer += OnGetActiveAmmoType;
     }
    
     private void OnDisable()
     {
         _ammoTabCustomization.OnInstantiateAmmoTypeButton -= OnInstantiateAmmoTypeButton;
-        _ammoTypeController.OnGetActiveAmmoType -= OnGetActiveAmmoType;
+        _ammoTabCustomization.OnSendActiveAmmoToPlayer -= OnGetActiveAmmoType;
     }
 
     private void OnInstantiateAmmoTypeButton(Action<int> obj)
@@ -42,8 +40,9 @@ public class PlayerAmmoType : MonoBehaviour
         }
     }
 
-    private void OnGetActiveAmmoType(int index)
+    private void OnGetActiveAmmoType(AmmoTypeButton ammoTypeButton)
     {
-        _shootController.ActiveAmmoIndex = index < _bulletsPrefab.Length ? index : _bulletsPrefab.Length - 1;
+        _shootController.ActiveAmmoIndex = ammoTypeButton._properties.Index < _bulletsPrefab.Length ?
+                                           ammoTypeButton._properties.Index : _bulletsPrefab.Length - 1;
     }
 }

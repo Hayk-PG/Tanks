@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AmmoTypeController : MonoBehaviour
 {
@@ -12,7 +11,8 @@ public class AmmoTypeController : MonoBehaviour
 
     private float _animatorSpeed;
 
-    public event Action<int> OnGetActiveAmmoType;
+    private AmmoTabCustomization _ammoTabCustomization;
+    private SupportsTabCustomization _supportTabCustomization;
 
 
     private void Awake()
@@ -20,16 +20,23 @@ public class AmmoTypeController : MonoBehaviour
         _ammoTabButton = FindObjectOfType<AmmoTabButton>();
         _animator = GetComponent<Animator>();
         _rectTransform = GetComponent<RectTransform>();
+
+        _ammoTabCustomization = Get<AmmoTabCustomization>.From(gameObject);
+        _supportTabCustomization = Get<SupportsTabCustomization>.From(gameObject);
     }
 
     private void OnEnable()
     {
         _ammoTabButton.OnAmmoTabActivity += OnAmmoTabActivity;
+        _ammoTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
+        _supportTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
     }
 
     private void OnDisable()
     {
         _ammoTabButton.OnAmmoTabActivity -= OnAmmoTabActivity;
+        _ammoTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
+        _supportTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
     }
 
     public void OnAmmoTabActivity()
@@ -37,10 +44,5 @@ public class AmmoTypeController : MonoBehaviour
         _animatorSpeed = _rectTransform.anchoredPosition.x > 0 ? 1 : -1;
         _animator.SetFloat(_direction, _animatorSpeed);
         _animator.SetTrigger(_play);
-    }
-
-    public void OnClickAmmoTypeButton(int bulletTypeIndex)
-    {
-        OnGetActiveAmmoType?.Invoke(bulletTypeIndex);
     }
 }

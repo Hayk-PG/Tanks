@@ -3,13 +3,12 @@ using System;
 
 public class PlayerRequestAirSupport : MonoBehaviour
 {
-    [SerializeField]
-    private bool _callForAirSupport;
     private bool _isAirSupportRequested;
 
     private Bomber _bomber;
 
     private AirSupport _airSupport;
+    private SupportsTabCustomization _supportsTabCustomization;
     private PlayerTurn _playerTurn;
     private ShootButton _shootButton;
 
@@ -30,6 +29,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
         _iScore = Get<IScore>.From(gameObject);
 
         _airSupport = FindObjectOfType<AirSupport>();
+        _supportsTabCustomization = FindObjectOfType<SupportsTabCustomization>();
         _shootButton = FindObjectOfType<ShootButton>();
     }
 
@@ -49,22 +49,23 @@ public class PlayerRequestAirSupport : MonoBehaviour
     private void OnEnable()
     {
         _airSupport.OnRequestAirSupport += OnRequestAirSupport;
+        _supportsTabCustomization.OnCallBomber += CallBomber;
         _shootButton.OnClick += OnShootButtonClick;
     }
    
     private void OnDisable()
     {
         _airSupport.OnRequestAirSupport += OnRequestAirSupport;
+        _supportsTabCustomization.OnCallBomber -= CallBomber;
         _shootButton.OnClick -= OnShootButtonClick;
     }
 
-    private void Update()
+    private void CallBomber()
     {
-        if (_callForAirSupport && _playerTurn.IsMyTurn)
+        if (_playerTurn.IsMyTurn)
         {
             _airSupport.CallOnRequestAirSupport();
             _isAirSupportRequested = true;
-            _callForAirSupport = false;
         }
     }
 

@@ -567,7 +567,7 @@ GameObject:
   - component: {fileID: 6967654864245163562}
   - component: {fileID: 3574603844423731600}
   m_Layer: 5
-  m_Name: BulletTypeButton
+  m_Name: AmmoTypeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -699,12 +699,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ammoStars: {fileID: 3574603844423731600}
-  ammoTypeIndex: 0
-  _ammoIcon: {fileID: 2466117870102457358}
-  ammoButtonSprite: {fileID: 7468976360703135250}
-  _clickedSprite: {fileID: 21300000, guid: efcf06717affc4fe28360a42e448a01e, type: 3}
-  _releasedSprite: {fileID: 21300000, guid: c1c7f82c7c2d04c58b74e89020639410, type: 3}
-  _ammoTypeText: {fileID: 9015562045819760262}
+  _properties:
+    _buttonImage: {fileID: 7468976360703135250}
+    _iconImage: {fileID: 2466117870102457358}
+    _titleText: {fileID: 9015562045819760262}
 --- !u!114 &3574603844423731600
 MonoBehaviour:
   m_ObjectHideFlags: 0

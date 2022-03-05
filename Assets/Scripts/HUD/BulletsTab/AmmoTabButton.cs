@@ -7,6 +7,6 @@ public class AmmoTabButton : MonoBehaviour
 
     public void OnClickButton()
     {
-        GlobalFunctions.OnClick(() => OnAmmoTabActivity?.Invoke());
+        OnAmmoTabActivity?.Invoke();
     }
 }

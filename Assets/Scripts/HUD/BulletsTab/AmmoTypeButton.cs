@@ -1,86 +1,43 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class AmmoTypeButton : MonoBehaviour
 {
     public AmmoStars _ammoStars;
 
-    private AmmoTypeController _ammoTypeController;
-    private AmmoTabCustomization _ammoTabCustomization;
-
-    public int ammoTypeIndex;
-
-    [Header("Images")]
-    [SerializeField]
-    private Image _ammoIcon, ammoButtonSprite;
-
-    [Header("Sprites")]
-    [SerializeField]
-    private Sprite _clickedSprite, _releasedSprite;
-
-    [Header("Text")]
-    [SerializeField]
-    private Text _ammoTypeText;
-
-    public Sprite AmmoTypeIcon
+    [Serializable]
+    public struct Properties
     {
-        get => _ammoIcon.sprite;
-        set => _ammoIcon.sprite = value;
-    }
-    private Sprite AmmoButtonSprite
-    {
-        get => ammoButtonSprite.sprite;
-        set => ammoButtonSprite.sprite = value;
-    }
-    public string AmmoTypeName
-    {
-        get => _ammoTypeText.text;
-        set => _ammoTypeText.text = value;
-    }
+        public Image _buttonImage, _iconImage;
+        public Text _titleText;
 
-    private bool _isClicked;
-
-
-
-    private void Awake()
-    {
-        _ammoTypeController = FindObjectOfType<AmmoTypeController>();
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-    }
-
-    private void Start()
-    {
-        if (ammoTypeIndex == 0)
-            Interact(true);
-    }
-
-    public void OnClickButton()
-    {
-        _ammoTypeController.OnClickAmmoTypeButton(ammoTypeIndex);
-        _ammoTypeController.OnAmmoTabActivity();
-        ButtonIsClicked();
-    }
-
-    private void ButtonIsClicked()
-    {
-        if (!_isClicked)
+        public Sprite ButtonSprite
         {
-            foreach (var button in _ammoTabCustomization._instantiatedAmmoTypeButtons)
-            {
-                button.Interact(false);
-            }
-
-            Interact(true);
+            get => _buttonImage.sprite;
+            set => _buttonImage.sprite = value;
         }
-    }
+        public Sprite IconSprite
+        {
+            get => _iconImage.sprite;
+            set => _iconImage.sprite = value;
+        }
+        public string Title
+        {
+            get => _titleText.text;
+            set => _titleText.text = value;
+        }
 
-    public void Interact(bool isClicked)
+        public int Index { get; set; }
+    }
+    public Properties _properties;
+
+    public event Action<AmmoTypeButton> OnClickAmmoTypeButton;
+
+
+
+    public virtual void OnClickButton()
     {
-        _isClicked = isClicked;
-
-        if (_isClicked)
-            AmmoButtonSprite = _clickedSprite;
-        else
-            AmmoButtonSprite = _releasedSprite;
-    }
+        OnClickAmmoTypeButton?.Invoke(this);
+    }   
 }
