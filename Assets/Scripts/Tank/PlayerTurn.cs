@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerTurn : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class PlayerTurn : MonoBehaviour
     }
     public TurnController TurnController { get; private set; }
     public bool IsMyTurn{ get; private set; }
+
+    public event Action<TurnState, TurnState> OnTurnChangeEventReceived;
 
 
     private void Awake()
@@ -30,6 +33,8 @@ public class PlayerTurn : MonoBehaviour
 
     private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
     {
+        OnTurnChangeEventReceived?.Invoke(arg1, MyTurn);
+
         if (arg1 == MyTurn)
         {
             arg2.SetCameraTarget(transform, 2, 2);
