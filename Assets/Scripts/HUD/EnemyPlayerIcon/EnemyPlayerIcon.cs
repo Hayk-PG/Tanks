@@ -4,31 +4,27 @@ using UnityEngine;
 public class EnemyPlayerIcon : MonoBehaviour
 {
     private RectTransform _rectTransform;
-    public Transform EnemyPlayer { get; set; }
-
-    private Vector2 _size;
-    private Vector2 _iconMovementPosition;
-    private Vector3 _iconInitialWorldPosition;
-
-    private struct AnchorPresets
+    private Vector2 Size
     {
-        internal AnchorPresets(EnemyPlayerIcon EnemyPlayerIcon, float minX, float maxX)
-        {
-            EnemyPlayerIcon._rectTransform.anchorMin = new Vector2(minX, 0.5f);
-            EnemyPlayerIcon._rectTransform.anchorMax = new Vector2(maxX, 0.5f);
-        }
-    }//Not needed
-    private struct StartDirectionAndPosition
-    {
-        internal StartDirectionAndPosition(EnemyPlayerIcon enemyPlayerIcon, float scaleX, float anchoredPositionX)
-        {
-            enemyPlayerIcon._rectTransform.localScale = new Vector3(scaleX, 1, 1);
-            enemyPlayerIcon._rectTransform.anchoredPosition = new Vector2(anchoredPositionX, 0);
-        }
+        get => _rectTransform.sizeDelta;
     }
+    private Vector2 FaceDirection
+    {
+        get => _rectTransform.localScale;
+        set => _rectTransform.localScale = value;
+    }
+    
+    private struct Temp
+    {
+        internal Vector2 _iconMovementPosition;
+        internal float _x, _y; 
+    }
+    private Temp _temp;
 
     private CanvasGroup _canvasGroup;
     private HUDBounds _hudBounds;
+
+    public Transform EnemyPlayer { get; set; }
 
     public event Action<Action> OnIconMove;
 
@@ -41,11 +37,6 @@ public class EnemyPlayerIcon : MonoBehaviour
         _hudBounds = Get<HUDBounds>.From(gameObject);
     }
 
-    private void Start()
-    {
-        _size = new Vector2(_rectTransform.sizeDelta.x, _rectTransform.sizeDelta.y);
-    }
-
     private void Update()
     {
         OnIconMove?.Invoke(IconMovement);       
@@ -53,13 +44,7 @@ public class EnemyPlayerIcon : MonoBehaviour
 
     public void SetInitialCoordinates(bool isPlayerOne, Transform enemyPlayer)
     {
-        float anchorMinX = isPlayerOne ? 1 : 0;
-        float anchorMaxX = isPlayerOne ? 1 : 0;
-        float scaleX = isPlayerOne ? 1 : -1;
-        float anchoredPositionX = isPlayerOne ? -_size.x : _size.x;
-
-        StartDirectionAndPosition StartDirectionAndPosition = new StartDirectionAndPosition(this, scaleX, anchoredPositionX);
-        _iconInitialWorldPosition = transform.position;
+        FaceDirection = isPlayerOne ? new Vector2(1, 1) : new Vector2(-1, 1);
 
         EnemyPlayer = enemyPlayer;
     }
@@ -68,13 +53,12 @@ public class EnemyPlayerIcon : MonoBehaviour
     {
         if (EnemyPlayer != null)
         {
-            _iconMovementPosition = CameraSight.ScreenPoint(EnemyPlayer.position);
-            float x = Mathf.Clamp(_iconMovementPosition.x, -_hudBounds._canvasPixelRectMax.x + _size.x, _hudBounds._canvasPixelRectMax.x - _size.x);
-            float y = Mathf.Clamp(_iconMovementPosition.y, -_hudBounds._canvasPixelRectMax.y + _size.y, _hudBounds._canvasPixelRectMax.y - _size.y);
+            _temp._iconMovementPosition = CameraSight.ScreenPoint(EnemyPlayer.position);
+            _temp._x = Mathf.Clamp(_temp._iconMovementPosition.x, -_hudBounds._canvasPixelRectMax.x + Size.x, _hudBounds._canvasPixelRectMax.x - Size.x);
+            _temp._y = Mathf.Clamp(_temp._iconMovementPosition.y, -_hudBounds._canvasPixelRectMax.y + Size.y, _hudBounds._canvasPixelRectMax.y - Size.y);
 
-
-            transform.position = new Vector2(x, y);
-            ////GlobalFunctions.CanvasGroupActivity(_canvasGroup, !CameraSight.IsInCameraSight(EnemyPlayer.position));
+            transform.position = new Vector2(_temp._x, _temp._y);
+            GlobalFunctions.CanvasGroupActivity(_canvasGroup, !CameraSight.IsInCameraSight(EnemyPlayer.position));
         }
     }
 }
