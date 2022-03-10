@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public static class GlobalFunctions 
 {
@@ -42,6 +43,14 @@ public static class GlobalFunctions
                     OnLoop?.Invoke(item);
                 }
             }
+        }
+    }
+
+    public class ObjectsOfType<T> where T: UnityEngine.Object
+    {
+        public static T Find(Predicate<T> p)
+        {
+            return MonoBehaviour.FindObjectsOfType<T>().ToList().Find(p);
         }
     }
 }

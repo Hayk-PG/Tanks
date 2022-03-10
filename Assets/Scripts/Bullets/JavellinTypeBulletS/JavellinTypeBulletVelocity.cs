@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Linq;
 using System;
 
 public class JavellinTypeBulletVelocity : BulletVelocity, ILockedMissile, IBulletTrail
@@ -69,9 +68,9 @@ public class JavellinTypeBulletVelocity : BulletVelocity, ILockedMissile, IBulle
 
         _setTheTarget = delegate
         {
-            if (!_isTargetSet())
+            if (!_isTargetSet() && GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player2) != null)
             {
-                _targetPlayer = FindObjectsOfType<PlayerTurn>().ToList().Find(turn => turn.MyTurn == TurnState.Player2).transform;
+                _targetPlayer = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player2).transform;
             };
         };
 

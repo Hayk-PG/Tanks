@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Linq;
 
 public class EnemyPlayerIconController : MonoBehaviour
 {
@@ -7,7 +6,6 @@ public class EnemyPlayerIconController : MonoBehaviour
     private PlayerTurn _playerTurn;
 
     private bool _isIconInitialCoordiantesSet;
-
 
 
 
@@ -33,13 +31,13 @@ public class EnemyPlayerIconController : MonoBehaviour
     {
         if (!_isIconInitialCoordiantesSet)
         {
-            Conditions<Transform>.CheckNull(FindObjectsOfType<PlayerTurn>().ToList().Find(playerturn => playerturn != _playerTurn), null, () => OnEnemyPlayerIcon(myTurn));
+            Conditions<Transform>.CheckNull(GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn != _playerTurn).transform, null, () => OnEnemyPlayerIcon(myTurn));
         }
     }
 
     private void OnEnemyPlayerIcon(TurnState myTurn)
     {
-        Transform enemyTransform = FindObjectsOfType<PlayerTurn>().ToList().Find(playerturn => playerturn != _playerTurn).transform;
+        Transform enemyTransform = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn != _playerTurn).transform;
         _enemyPlayerIcon.SetInitialCoordinates(myTurn == TurnState.Player1, enemyTransform);
         _isIconInitialCoordiantesSet = true;
     }

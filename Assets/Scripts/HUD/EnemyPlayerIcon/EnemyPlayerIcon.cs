@@ -51,14 +51,13 @@ public class EnemyPlayerIcon : MonoBehaviour
 
     public void IconMovement()
     {
-        if (EnemyPlayer != null)
-        {
-            _temp._iconMovementPosition = CameraSight.ScreenPoint(EnemyPlayer.position);
-            _temp._x = Mathf.Clamp(_temp._iconMovementPosition.x, -_hudBounds._canvasPixelRectMax.x + Size.x, _hudBounds._canvasPixelRectMax.x - Size.x);
-            _temp._y = Mathf.Clamp(_temp._iconMovementPosition.y, -_hudBounds._canvasPixelRectMax.y + Size.y, _hudBounds._canvasPixelRectMax.y - Size.y);
+        if (EnemyPlayer == null) return;
 
-            transform.position = new Vector2(_temp._x, _temp._y);
-            GlobalFunctions.CanvasGroupActivity(_canvasGroup, !CameraSight.IsInCameraSight(EnemyPlayer.position));
-        }
+        _temp._iconMovementPosition = CameraSight.ScreenPoint(EnemyPlayer.position);
+        _temp._x = Mathf.Clamp(_temp._iconMovementPosition.x, -_hudBounds._canvasPixelRectMax.x + Size.x, _hudBounds._canvasPixelRectMax.x - Size.x);
+        _temp._y = Mathf.Clamp(_temp._iconMovementPosition.y, -_hudBounds._canvasPixelRectMax.y + Size.y, _hudBounds._canvasPixelRectMax.y - Size.y);
+
+        transform.position = new Vector2(_temp._x, _temp._y);
+        GlobalFunctions.CanvasGroupActivity(_canvasGroup, !CameraSight.IsInCameraSight(EnemyPlayer.position));
     }
 }
