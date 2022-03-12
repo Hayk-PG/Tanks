@@ -9,6 +9,10 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private Camera _hudCamera;
 
+    [Header("Third Camera")]
+    [SerializeField]
+    private Camera _vehicleCamera;
+
     private Vector3 _direction;
     private Transform _target;
 
@@ -86,7 +90,9 @@ public class CameraMovement : MonoBehaviour
     private void SetTheCamerasSize()
     {
         _mainCamera.orthographicSize = _currentSize;
-        if(_hudCamera != null) _hudCamera.orthographicSize = _currentSize;
+
+        if (_hudCamera != null) _hudCamera.orthographicSize = _currentSize;
+        if (_vehicleCamera != null) _vehicleCamera.orthographicSize = _currentSize;
     }
 
     public void SetCameraTarget(Transform target, float lerp, float cameraSize)
