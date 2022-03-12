@@ -19271,6 +19271,7 @@ GameObject:
   - component: {fileID: 6426842504716612356}
   - component: {fileID: 3888308106955663284}
   - component: {fileID: 6426842504716612358}
+  - component: {fileID: 5208313366466424017}
   - component: {fileID: 2243696797648359738}
   m_Layer: 0
   m_Name: BasicExplosion
@@ -19304,8 +19305,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f283090923dfd0246ac78eb242a24451, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -19404,6 +19405,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _radius: 0.3
   _maxDamageValue: 15
+--- !u!114 &5208313366466424017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6426842504716612361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd03e8d6fbb98b4a895c088301b1714, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: 8300000, guid: 31d03d0e94637b9438531901fda43f08, type: 3}
+  - {fileID: 8300000, guid: f283090923dfd0246ac78eb242a24451, type: 3}
 --- !u!114 &2243696797648359738
 MonoBehaviour:
   m_ObjectHideFlags: 0

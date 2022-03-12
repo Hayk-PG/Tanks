@@ -29,7 +29,6 @@ public class PPController : MonoBehaviour
     private IEnumerator BlurCoroutine()
     {
         float blurAmount = _p.BlurAmount;
-        float blurResetTime = 0;
 
         bool isBlurry = false;
         bool isBlurDisabled = false;
@@ -39,28 +38,27 @@ public class PPController : MonoBehaviour
             if (blurAmount < 1 && !isBlurry)
             {
                 blurAmount = Mathf.Lerp(blurAmount, 1, 10 * Time.deltaTime);
-            }
 
-            if(blurAmount >= 0.9f)
-            {               
-                blurResetTime = Mathf.Lerp(blurResetTime, 1, 10 * Time.deltaTime);
-                blurAmount = 1;
-                isBlurry = true;
-            }
-
-            if (blurResetTime >= 0.95f)
-            {
-                blurAmount = Mathf.Lerp(blurAmount, 0, 10 * Time.deltaTime);
-                blurResetTime = 1;
-
-                if(blurAmount <= 0.1f)
+                if(blurAmount >= 0.95f)
                 {
-                    isBlurDisabled = true;
-                    blurAmount = 0;
+                    blurAmount = 1;
+                    isBlurry = true;
                 }
             }
-                
+
+            if(isBlurry)
+            {
+                blurAmount = Mathf.Lerp(blurAmount, 0, 10 * Time.deltaTime);
+
+                if(blurAmount <= 0.15f)
+                {
+                    blurAmount = 0;
+                    isBlurDisabled = true;
+                }
+            }
+
             _p.BlurAmount = blurAmount;
+
             yield return null;
         }
 

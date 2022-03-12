@@ -82,7 +82,7 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     {
         if(arg1 == TurnState.Other)
         {
-            arg2.SetCameraTarget(transform, 5, 5);
+            arg2.SetCameraTarget(transform, 10, 4);
         }
     }
 }
