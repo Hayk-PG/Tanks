@@ -8,20 +8,13 @@ public class PPController : MonoBehaviour
     [SerializeField]
     private MobilePostProcessing _p;
 
-
     private IEnumerator _blurCoroutine;
-
 
 
     private void Awake()
     {
         if (_instance == null)
             _instance = this;
-    }
-
-    private void Bloom()
-    {
-        _p.BloomAmount = 3;
     }
 
     public static void Blur()

@@ -3,7 +3,10 @@
 public class BulletParticles : MonoBehaviour
 {
     [SerializeField]
-    protected ParticleSystem _muzzleFlash, _trail;
+    protected ParticleSystem _muzzleFlash;
+
+    [SerializeField]
+    protected GameObject _trail;
 
     [SerializeField]
     protected Explosion _explosion;
@@ -27,7 +30,7 @@ public class BulletParticles : MonoBehaviour
 
     protected virtual void OnTrailActivity(bool isActive)
     {
-        _trail.gameObject.SetActive(isActive);
+        if(_trail != null) _trail.SetActive(isActive);
     }
 
     protected virtual void OnExplosion(IScore ownerScore)
