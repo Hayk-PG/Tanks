@@ -45,13 +45,17 @@ public class Explosion : MonoBehaviour
 
     private void Damage(IDamage iDamage)
     {
+        _iDamages.Add(iDamage);
+
         _percentage = 100 - Mathf.InverseLerp(0, _radius, _magnitude) * 100;
         _currentDamageValue = Mathf.RoundToInt(_maxDamageValue / 100 * _percentage);
 
+        Conditions<bool>.Compare(_currentDamageValue * 10 > 0, ()=> DamageAndScore(iDamage), null);
+    }
+
+    private void DamageAndScore(IDamage iDamage)
+    {
         iDamage.Damage(_currentDamageValue);
-
-        Conditions<bool>.Compare(_currentDamageValue * 10 > 0, () => OwnerScore?.GetScore(_currentDamageValue * 10, iDamage), null);
-
-        _iDamages.Add(iDamage);
+        OwnerScore?.GetScore(_currentDamageValue * 10, iDamage);
     }
 }

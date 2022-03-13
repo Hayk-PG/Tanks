@@ -9,8 +9,12 @@ public class HealthBar : MonoBehaviour
     {
         [SerializeField]
         internal Slider _slider;
+
         [SerializeField]
         internal LastHealthFill _lastHealthFill;
+
+        [SerializeField]
+        internal Text _hpText;
     }
 
     [SerializeField]
@@ -29,6 +33,7 @@ public class HealthBar : MonoBehaviour
     private void OnHealthBar(int index, int newValue)
     {
         _sliders[index]._slider.value = newValue;
-        _sliders[index]._lastHealthFill.OnUpdate(_sliders[index]._slider.value / 100);
+        _sliders[index]._hpText.text = newValue + "/" + "100";
+        _sliders[index]._lastHealthFill.OnUpdate(_sliders[index]._slider.value / 100);       
     }
 }

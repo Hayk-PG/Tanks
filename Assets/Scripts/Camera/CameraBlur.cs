@@ -1,23 +1,21 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class PPController : MonoBehaviour
+public class CameraBlur : BaseCameraFX<CameraBlur>
 {
-    private static PPController _instance;
-
-    [SerializeField]
-    private MobilePostProcessing _p;
-
     private IEnumerator _blurCoroutine;
 
+    private bool _isScreenBlurred;
 
-    private void Awake()
+
+    protected override void Awake()
     {
-        if (_instance == null)
-            _instance = this;
+        base.Awake();
+
+        Singleton(this);
     }
 
-    public static void Blur()
+    public static void CameraShakeBlur()
     {
         if(_instance._blurCoroutine == null)
         {
@@ -28,7 +26,7 @@ public class PPController : MonoBehaviour
 
     private IEnumerator BlurCoroutine()
     {
-        float blurAmount = _p.BlurAmount;
+        float blurAmount = 0;
 
         bool isBlurry = false;
         bool isBlurDisabled = false;
@@ -57,12 +55,23 @@ public class PPController : MonoBehaviour
                 }
             }
 
-            _p.BlurAmount = blurAmount;
+            if(!_isScreenBlurred) _pp.BlurAmount = blurAmount;
 
             yield return null;
         }
 
         _instance._blurCoroutine = null;
     }
+
+    public static void ScreenBlur(bool blur)
+    {
+        if (_instance != null)
+        {
+            _instance._isScreenBlurred = blur;
+            _instance._pp.BlurAmount = blur ? 1 : 0;
+        }
+    }
+
+    
 }
 

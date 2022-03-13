@@ -44,5 +44,7 @@ public class AmmoTypeController : MonoBehaviour
         _animatorSpeed = _rectTransform.anchoredPosition.x > 0 ? 1 : -1;
         _animator.SetFloat(_direction, _animatorSpeed);
         _animator.SetTrigger(_play);
+
+        CameraBlur.ScreenBlur(_rectTransform.anchoredPosition.x > 0);
     }
 }

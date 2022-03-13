@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamage
 {
@@ -16,6 +17,7 @@ public class HealthController : MonoBehaviour, IDamage
         get => _currentHealth;
         set => _currentHealth = value;
     }
+    public Action OnTakeDamage { get; set; }
 
 
     private void Awake()
@@ -31,5 +33,7 @@ public class HealthController : MonoBehaviour, IDamage
         Health -= damage;
         _healthBar.OnUpdateHealthBar(_playerTurn.MyTurn, Health);
         _vehiclePool.Pool(0, null);
+
+        OnTakeDamage?.Invoke();
     }
 }
