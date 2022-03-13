@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class ScoreController : MonoBehaviour, IScore
 {
     [SerializeField]
     private int _score;
 
-    private HUDScore _hudScore;
     private PlayerTurn _playerTurn;
     public IDamage IDamage { get; set; }
 
@@ -14,30 +14,26 @@ public class ScoreController : MonoBehaviour, IScore
         get => _score;
         set => _score = value;
     }
-    
+    public Action<int, TurnState, Vector3> OnDisplayTemPoints { get; set; }
+
+
 
     private void Awake()
     {       
-        _hudScore = FindObjectOfType<HUDScore>();
         IDamage = Get<IDamage>.From(gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
 
         Score = 0;
     }
   
-    public void GetScore(int score, IDamage iDamage)
+    public void GetScore(int score, IDamage iDamage, Vector3 position)
     {
-        Conditions<bool>.Compare(iDamage != IDamage || iDamage == null, () => OnUpdateScore(score), null);
+        Conditions<bool>.Compare(iDamage != IDamage || iDamage == null, () => UpdateScore(score, position), null);
     }
 
-    private void OnUpdateScore(int score)
+    private void UpdateScore(int score, Vector3 position)
     {
         Score += score;
-        _hudScore.UpdateScore(Score, ScoreIndex());
+        OnDisplayTemPoints?.Invoke(score, _playerTurn.MyTurn, position);
     }
-
-    private int ScoreIndex()
-    {
-        return _playerTurn.MyTurn == TurnState.Player1 ? 0 : 1;
-    } 
 }
