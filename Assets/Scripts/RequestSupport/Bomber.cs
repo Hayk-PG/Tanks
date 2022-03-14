@@ -33,7 +33,7 @@ public class Bomber : MonoBehaviour
     public void DropBomb(IScore _iScore)
     {
         BombController _bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
-        _bomb._iScore = _iScore;
+        _bomb.OwnerScore = _iScore;
     }
 
     private void Deactivate()

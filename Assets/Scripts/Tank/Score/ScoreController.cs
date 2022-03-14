@@ -6,7 +6,7 @@ public class ScoreController : MonoBehaviour, IScore
     [SerializeField]
     private int _score;
 
-    private PlayerTurn _playerTurn;
+    public PlayerTurn PlayerTurn { get; set; }
     public IDamage IDamage { get; set; }
 
     public int Score
@@ -21,7 +21,7 @@ public class ScoreController : MonoBehaviour, IScore
     private void Awake()
     {       
         IDamage = Get<IDamage>.From(gameObject);
-        _playerTurn = Get<PlayerTurn>.From(gameObject);
+        PlayerTurn = Get<PlayerTurn>.From(gameObject);
 
         Score = 0;
     }
@@ -34,6 +34,6 @@ public class ScoreController : MonoBehaviour, IScore
     private void UpdateScore(int score, Vector3 position)
     {
         Score += score;
-        OnDisplayTemPoints?.Invoke(score, _playerTurn.MyTurn, position);
+        OnDisplayTemPoints?.Invoke(score, PlayerTurn.MyTurn, position);
     }
 }

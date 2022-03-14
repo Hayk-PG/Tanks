@@ -3,6 +3,6 @@ using UnityEngine;
 
 public interface IBulletCollision 
 {
-    Action<Collision> OnCollision { get; set; }
+    Action<Collision, IScore> OnCollision { get; set; }
     Action<IScore> OnExplodeOnCollision { get; set; }
 }

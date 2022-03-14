@@ -6,6 +6,12 @@ public class ScoreText : MonoBehaviour
     private Animator _anim;
     private Text _text;
 
+    private int Score
+    {
+        get => int.Parse(_text.text);
+        set => _text.text = value.ToString();
+    }
+
 
     private void Awake()
     {
@@ -15,7 +21,7 @@ public class ScoreText : MonoBehaviour
 
     public void UpdateScoreText(int score)
     {
-        _text.text = score.ToString();
+        Score += score;
         _anim.SetTrigger("play");
     }
 }

@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class BombController : MonoBehaviour, IBulletCollision, IBulletLimit, ITurnController
 {
-    public Action<Collision> OnCollision { get; set; }
+    public IScore OwnerScore;
+
+    public Action<Collision, IScore> OnCollision { get; set; }
     public Action<IScore> OnExplodeOnCollision { get; set; }
     public TurnController TurnController { get; set; }
     public CameraMovement CameraMovement { get; set; }
     public Action<bool> OnExplodeOnLimit { get; set; }
 
-    public IScore _iScore;
-
+    
 
     private void Awake()
     {
@@ -31,7 +32,7 @@ public class BombController : MonoBehaviour, IBulletCollision, IBulletLimit, ITu
 
     private void OnCollisionEnter(Collision collision)
     {
-        OnCollision?.Invoke(collision);
-        OnExplodeOnCollision?.Invoke(_iScore);
+        OnCollision?.Invoke(collision, OwnerScore);
+        OnExplodeOnCollision?.Invoke(OwnerScore);
     }
 }

@@ -6,7 +6,7 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     public Rigidbody RigidBody { get; private set; }
     public IScore OwnerScore { get; set; }
 
-    public Action<Collision> OnCollision { get; set; }
+    public Action<Collision, IScore> OnCollision { get; set; }
     public Action<IScore> OnExplodeOnCollision { get; set; }
     public Action<bool> OnExplodeOnLimit { get; set; }
     public Action<VelocityData> OnBulletVelocity { get; set; }
@@ -72,7 +72,7 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
 
     private void OnCollisionEnter(Collision collision)
     {
-        OnCollision?.Invoke(collision);
+        OnCollision?.Invoke(collision, OwnerScore);
         OnExplodeOnCollision?.Invoke(OwnerScore);
     }
 

@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TempPoints : MonoBehaviour
 {
     private Animator _animator;
     private CanvasGroup _canvasGroup;
+    private Text _pointsText;
     private GameManager _gameManager;
+    private HUDScore _hudScore;
+    private ScoreController[] _playersScoreControllers;
 
     private const string _tempPointsAnim = "TempPointsAnim";
-
-    private ScoreController _localPlayerScoreController;
-    private HUDScore _hudScore;
 
     private int _localPlayerScoreTextIndex;
 
@@ -22,6 +23,7 @@ public class TempPoints : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _canvasGroup = GetComponent<CanvasGroup>();
+        _pointsText = GetComponentInChildren<Text>();
         _gameManager = FindObjectOfType<GameManager>();
         _hudScore = FindObjectOfType<HUDScore>();
     }
@@ -34,28 +36,44 @@ public class TempPoints : MonoBehaviour
     private void OnDisable()
     {
         _gameManager.OnGameStarted -= GetPlayerOnGameStart;
-        if (_localPlayerScoreController != null) _localPlayerScoreController.OnDisplayTemPoints -= OnDisplayTemPoints;
+
+        if (_playersScoreControllers != null)
+        {
+            foreach (var scoreController in _playersScoreControllers)
+            {
+                scoreController.OnDisplayTemPoints -= OnDisplayTemPoints;
+            }
+        }
     }
 
     private void GetPlayerOnGameStart()
     {
-        _localPlayerScoreController = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(p => p.tag == Tags.Player).GetComponent<ScoreController>();
-        if (_localPlayerScoreController != null) _localPlayerScoreController.OnDisplayTemPoints += OnDisplayTemPoints;
+        _playersScoreControllers = FindObjectsOfType<ScoreController>();
+
+        if (_playersScoreControllers != null)
+        {
+            foreach (var scoreController in _playersScoreControllers)
+            {
+                scoreController.OnDisplayTemPoints += OnDisplayTemPoints;
+            }
+        }
     }
 
     private void OnDisplayTemPoints(int score, TurnState localPlayerTurn, Vector3 position)
     {
-        if(localPlayerTurn == TurnState.Player1)
-        {
-            _localPlayerScoreTextIndex = localPlayerTurn == TurnState.Player1 ? 0: 1;
+        _localPlayerScoreTextIndex = localPlayerTurn == TurnState.Player1 ? 0 : 1;
 
+        if (localPlayerTurn == TurnState.Player1)
             StartCoroutine(Coroutine(score, position));
-        }
+        else
+            OnUpdateScore?.Invoke(score, _localPlayerScoreTextIndex);
+
     }
 
     private IEnumerator Coroutine(int score, Vector3 position)
     {
         transform.position = CameraSight.ScreenPoint(position) + new Vector3(0, 100);
+        _pointsText.text = "+" + score;
         _canvasGroup.alpha = 1;
         _animator.Play(_tempPointsAnim);
 
