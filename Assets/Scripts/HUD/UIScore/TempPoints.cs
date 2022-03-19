@@ -42,7 +42,7 @@ public class TempPoints : MonoBehaviour
         {
             foreach (var scoreController in _playersScoreControllers)
             {
-                scoreController.OnDisplayTemPoints -= OnDisplayTemPoints;
+                scoreController.OnDisplayTempPoints -= OnDisplayTemPoints;
             }
         }
     }
@@ -55,7 +55,7 @@ public class TempPoints : MonoBehaviour
         {
             foreach (var scoreController in _playersScoreControllers)
             {
-                scoreController.OnDisplayTemPoints += OnDisplayTemPoints;
+                scoreController.OnDisplayTempPoints += OnDisplayTemPoints;
             }
         }
     }

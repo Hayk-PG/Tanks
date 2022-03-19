@@ -7,9 +7,10 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
     public event Action<AmmoTypeButton> OnSendActiveAmmoToPlayer;
 
 
-
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         UnSubscribeFromAmmoTypeButtonEvents();
     }
 
@@ -20,7 +21,8 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
 
     public void InstantiateAmmoTypeButton(int index)
     {
-        AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);        
+        AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);
+        if (index == 0) button._properties.ButtonSprite = _clicked;
         Conditions<int>.Compare(index, _parameters.Length, null, null, () => SetAmmoTypeButtonProperties(button, index));
         CacheAmmoTypeButtons(button);
     }
@@ -44,6 +46,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
     private void SetAmmoTypeButtonProperties(AmmoTypeButton button, int index)
     {
         button._properties.Index = index;
+        button._properties.UnlockPoints = _parameters[index]._unlockPoints;
         button._properties.IconSprite = _parameters[index]._icon;
         button._ammoStars.OnSetStars(_parameters[index]._ammoTypeStars);
     }
@@ -70,5 +73,16 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
             });
 
         ammoTypeButton._properties.ButtonSprite = _clicked;
+    }
+
+    public override void GetPlayerPoints(int playerPoints)
+    {
+        if (_instantiatedButtons != null)
+        {
+            for (int i = 0; i < _instantiatedButtons.Count; i++)
+            {
+                _instantiatedButtons[i].DisplayPointsToUnlock(playerPoints);
+            }
+        }
     }
 }

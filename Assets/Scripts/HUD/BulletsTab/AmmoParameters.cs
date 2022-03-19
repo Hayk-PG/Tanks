@@ -7,4 +7,5 @@ public class AmmoParameters
 {
     public Sprite _icon;
     public AmmoTypeStars _ammoTypeStars;
+    public int _unlockPoints;
 }

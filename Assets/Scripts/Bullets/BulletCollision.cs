@@ -16,7 +16,7 @@ public class BulletCollision : GetBulletController
 
         if (_collisionCount <= 1)
         {
-            ownerScore.OnDisplayTemPoints?.Invoke(10, ownerScore.PlayerTurn.MyTurn, collision.transform.position);
+            ownerScore.GetScore(10, null, collision.transform.position);
             Get<IDestruct>.From(collision.gameObject)?.Destruct();           
         }
     }

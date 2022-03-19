@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class AmmoTypeController : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class AmmoTypeController : MonoBehaviour
 
     private AmmoTabCustomization _ammoTabCustomization;
     private SupportsTabCustomization _supportTabCustomization;
+
+    public Action<bool> OnInformAboutTabActivityToTabsCustomization;
 
 
     private void Awake()
@@ -45,6 +48,7 @@ public class AmmoTypeController : MonoBehaviour
         _animator.SetFloat(_direction, _animatorSpeed);
         _animator.SetTrigger(_play);
 
+        OnInformAboutTabActivityToTabsCustomization?.Invoke(_rectTransform.anchoredPosition.x > 0);
         CameraBlur.ScreenBlur(_rectTransform.anchoredPosition.x > 0);
     }
 }
