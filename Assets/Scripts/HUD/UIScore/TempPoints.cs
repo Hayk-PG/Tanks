@@ -14,8 +14,9 @@ public class TempPoints : MonoBehaviour
 
     private const string _tempPointsAnim = "TempPointsAnim";
 
-    private int _localPlayerScoreTextIndex;
+    private int _playerScoreTextIndex;
 
+    public event Action OnPlayerTempPoints;
     public event Action<int, int> OnUpdateScore;
 
 
@@ -61,12 +62,12 @@ public class TempPoints : MonoBehaviour
 
     private void OnDisplayTemPoints(int score, TurnState localPlayerTurn, Vector3 position)
     {
-        _localPlayerScoreTextIndex = localPlayerTurn == TurnState.Player1 ? 0 : 1;
+        _playerScoreTextIndex = localPlayerTurn == TurnState.Player1 ? 0 : 1;
 
         if (localPlayerTurn == TurnState.Player1)
             StartCoroutine(Coroutine(score, position));
         else
-            OnUpdateScore?.Invoke(score, _localPlayerScoreTextIndex);
+            OnUpdateScore?.Invoke(score, _playerScoreTextIndex);
 
     }
 
@@ -84,9 +85,11 @@ public class TempPoints : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        OnPlayerTempPoints?.Invoke();
+
         while (!isReachedToTheDestination)
         {
-            destination = _hudScore._scoresTransform[_localPlayerScoreTextIndex]._scorePosition;
+            destination = _hudScore._scoresTransform[_playerScoreTextIndex]._scorePosition;
             transform.position = Vector2.Lerp(transform.position, destination, 10 * Time.deltaTime);
 
             magnitude = (destination - transform.position).magnitude;
@@ -98,7 +101,7 @@ public class TempPoints : MonoBehaviour
                 if(_canvasGroup.alpha <= 0.1f)
                 {
                     _canvasGroup.alpha = 0;
-                    OnUpdateScore?.Invoke(score, _localPlayerScoreTextIndex);
+                    OnUpdateScore?.Invoke(score, _playerScoreTextIndex);
                     isReachedToTheDestination = true;
                 }
             }

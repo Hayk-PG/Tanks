@@ -21,6 +21,11 @@ public static class GlobalFunctions
         }
     }
 
+    public static bool LocalPlayerChecker(bool isLocalPlayer)
+    {
+        return isLocalPlayer;
+    }
+
     public class Loop<T>
     {
         public static void Foreach(T[] t, Action<T> OnLoop)
