@@ -1,48 +1,74 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class PlayerAmmoType : MonoBehaviour
 {
     private ShootController _shootController;
+    private GameManager _gameManager;
     private AmmoTabCustomization _ammoTabCustomization;
 
-    public BulletController[] _bulletsPrefab;
+    [Header("Scriptable objects")]
+    public WeaponProperties[] _weapons;
+
+    [Header("Cached bullets count from scriptable objects")]
+    public List<int> _weaponsBulletsCount = new List<int>();
+
 
 
     private void Awake()
     {
         _shootController = Get<ShootController>.From(gameObject);
+        _gameManager = FindObjectOfType<GameManager>();
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-    }
 
-    private void Start()
-    {
-        _ammoTabCustomization.CallOnInstantiateAmmoTypeButton();
+        CacheBulletsCount();
     }
 
     private void OnEnable()
     {
-        _ammoTabCustomization.OnInstantiateAmmoTypeButton += OnInstantiateAmmoTypeButton;
+        _gameManager.OnGameStarted += OnGameStart;
         _ammoTabCustomization.OnSendActiveAmmoToPlayer += OnGetActiveAmmoType;
     }
    
     private void OnDisable()
     {
-        _ammoTabCustomization.OnInstantiateAmmoTypeButton -= OnInstantiateAmmoTypeButton;
+        _gameManager.OnGameStarted -= OnGameStart;
         _ammoTabCustomization.OnSendActiveAmmoToPlayer -= OnGetActiveAmmoType;
     }
 
-    private void OnInstantiateAmmoTypeButton(Action<int> obj)
+    private void CacheBulletsCount()
     {
-        for (int i = 0; i < _bulletsPrefab.Length; i++)
+        if (_weapons != null)
         {
-            obj?.Invoke(i);
+            for (int i = 0; i < _weapons.Length; i++)
+            {
+                _weaponsBulletsCount.Add(_weapons[i]._bulletsLeft);
+            }
+        }
+    }
+
+    private void OnGameStart()
+    {
+        if(_weapons != null)
+        {
+            for (int i = 0; i < _weapons.Length; i++)
+            {
+                _ammoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
+            }
         }
     }
 
     private void OnGetActiveAmmoType(AmmoTypeButton ammoTypeButton)
     {
-        _shootController.ActiveAmmoIndex = ammoTypeButton._properties.Index < _bulletsPrefab.Length ?
-                                           ammoTypeButton._properties.Index : _bulletsPrefab.Length - 1;
+        _shootController.ActiveAmmoIndex = ammoTypeButton._properties.Index < _weapons.Length ?
+                                           ammoTypeButton._properties.Index : _weapons.Length - 1;
+
+        UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
+    }
+
+    public void UpdateDisplayedWeapon(int index)
+    {
+        _ammoTabCustomization.OnUpdateDisplayedWeapon?.Invoke(_weapons[index], _weaponsBulletsCount[index]);
     }
 }

@@ -9,6 +9,7 @@ public class ShootController : MonoBehaviour
     private PlayerTurn _playerTurn;
     private IScore _iScore;
     private PlayerAmmoType _playerAmmoType;
+    private AmmoTabCustomization _ammoTabCustomization;
 
     [SerializeField]
     private PlayerShootTrajectory _playerShootTrajectory;
@@ -73,6 +74,7 @@ public class ShootController : MonoBehaviour
         _playerTurn = GetComponent<PlayerTurn>();
         _iScore = Get<IScore>.From(gameObject);
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
+        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
     }
 
     private void OnEnable()
@@ -120,29 +122,36 @@ public class ShootController : MonoBehaviour
         _shoot._isApplyingForce = isTrue;
     }
 
-    private void ShootBullet()
-    {
-        BulletController bullet = Instantiate(_playerAmmoType._bulletsPrefab[ActiveAmmoIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
-        bullet.OwnerScore = _iScore;
-        bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
-        _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
-    }
-
     private void ApplyForce()
     {
         if (_shoot._isApplyingForce)
         {
-            _shoot._currentForce = Mathf.SmoothDamp(_shoot._currentForce, _shoot._maxForce, ref _shoot._currentVelocity,_shoot._smoothTime * Time.deltaTime, _shoot._maxSpeed);
+            _shoot._currentForce = Mathf.SmoothDamp(_shoot._currentForce, _shoot._maxForce, ref _shoot._currentVelocity, _shoot._smoothTime * Time.deltaTime, _shoot._maxSpeed);
 
             OnApplyingForce?.Invoke(true);
         }
         else
         {
-            if(_shoot._currentForce != _shoot._minForce) _shoot._currentForce = _shoot._minForce;
+            if (_shoot._currentForce != _shoot._minForce) _shoot._currentForce = _shoot._minForce;
 
             OnApplyingForce?.Invoke(false);
         }
 
         _playerShootTrajectory.TrajectoryPrediction(_shoot._currentForce);
+    }
+
+    private void ShootBullet()
+    {
+        if(_playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0)
+        {
+            BulletController bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._bulletPrefab, _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
+
+            bullet.OwnerScore = _iScore;
+            bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
+            _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
+
+            _playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] -= 1;
+            _playerAmmoType.UpdateDisplayedWeapon(ActiveAmmoIndex);           
+        }
     }
 }

@@ -3,8 +3,8 @@
 
 public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, AmmoParameters>
 {
-    public event Action<Action<int>> OnInstantiateAmmoTypeButton;
     public event Action<AmmoTypeButton> OnSendActiveAmmoToPlayer;
+    public Action<WeaponProperties, int> OnUpdateDisplayedWeapon { get; set; }
 
 
     protected override void OnDisable()
@@ -14,17 +14,23 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
         UnSubscribeFromAmmoTypeButtonEvents();
     }
 
-    public void CallOnInstantiateAmmoTypeButton()
-    {
-        OnInstantiateAmmoTypeButton?.Invoke(delegate (int index) { InstantiateAmmoTypeButton(index); });
-    }
-
-    public void InstantiateAmmoTypeButton(int index)
+    public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, int loopIndex)
     {
         AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);
-        if (index == 0) button._properties.ButtonSprite = _clicked;
-        Conditions<int>.Compare(index, _parameters.Length, null, null, () => SetAmmoTypeButtonProperties(button, index));
+
+        button._properties.Index = weaponProperty._ammoIndex;
+        button._properties.UnlockPoints = weaponProperty._unlockPoints;
+        button._properties.IconSprite = weaponProperty._icon;
+        button._ammoStars.OnSetStars(weaponProperty._ammoTypeStars);
+
+        Conditions<bool>.Compare(loopIndex == 0, () => SetDefaultAmmo(button, weaponProperty), null);
         CacheAmmoTypeButtons(button);
+    }
+
+    private void SetDefaultAmmo(AmmoTypeButton button, WeaponProperties weaponProperty)
+    {
+        button._properties.ButtonSprite = _clicked;
+        OnUpdateDisplayedWeapon?.Invoke(weaponProperty, weaponProperty._bulletsLeft);
     }
 
     private void SubscribeToAmmoTypeButtonEvents(AmmoTypeButton button)
@@ -41,14 +47,6 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
                 button.OnClickAmmoTypeButton -= OnClickAmmoTypeButton;
             }
         }
-    }
-
-    private void SetAmmoTypeButtonProperties(AmmoTypeButton button, int index)
-    {
-        button._properties.Index = index;
-        button._properties.UnlockPoints = _parameters[index]._unlockPoints;
-        button._properties.IconSprite = _parameters[index]._icon;
-        button._ammoStars.OnSetStars(_parameters[index]._ammoTypeStars);
     }
 
     private void CacheAmmoTypeButtons(AmmoTypeButton button)
