@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class ShowCurrentWeapon : MonoBehaviour
 {
+    private CanvasGroup _canvasGroup;
     private AmmoTabCustomization _ammoTabCustomization;
 
     [Serializable]
@@ -41,6 +42,7 @@ public class ShowCurrentWeapon : MonoBehaviour
 
     private void Awake()
     {
+        _canvasGroup = GetComponent<CanvasGroup>();
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
     }
 
@@ -58,5 +60,6 @@ public class ShowCurrentWeapon : MonoBehaviour
     {
         _properties.CurrentWeaponIcon = weaponProperty._icon;
         _properties.BulletsLeft = bulletsLeft;
+        GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
     }
 }

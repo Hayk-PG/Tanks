@@ -14981,8 +14981,8 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.6078231, g: 0.6906298, b: 0.8207547, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.4392157, g: 0.48235294, b: 0.5568628, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -15101,17 +15101,17 @@ MonoBehaviour:
   BlurAmount: 0
   BlurMask: {fileID: 0}
   Bloom: 1
-  BloomColor: {r: 1, g: 1, b: 1, a: 1}
-  BloomAmount: 0
+  BloomColor: {r: 1, g: 0.94783837, b: 0.6273585, a: 1}
+  BloomAmount: 1
   BloomDiffuse: 1
-  BloomThreshold: 0
+  BloomThreshold: 0.308
   BloomSoftness: 0
   LUT: 1
   LutAmount: 1
-  SourceLut: {fileID: 2800000, guid: 157e4acb108277a46a624fee7afb59d5, type: 3}
-  ImageFiltering: 1
+  SourceLut: {fileID: 2800000, guid: db598c4b872795041bd2fac2033a4a74, type: 3}
+  ImageFiltering: 0
   Color: {r: 1, g: 1, b: 1, a: 1}
-  Contrast: 0
+  Contrast: 0.158
   Brightness: 0
   Saturation: 0
   Exposure: 0
@@ -15123,10 +15123,10 @@ MonoBehaviour:
   GlitchAmount: 0
   Distortion: 0
   LensDistortion: 0
-  Vignette: 0
+  Vignette: 1
   VignetteColor: {r: 0, g: 0, b: 0, a: 1}
-  VignetteAmount: 0
-  VignetteSoftness: 0.0001
+  VignetteAmount: 0.043
+  VignetteSoftness: 0.391
   material: {fileID: 2100000, guid: 3aeedadbfc1ffb644834cb2b7d57aa77, type: 2}
 --- !u!114 &963194234
 MonoBehaviour:
@@ -20049,7 +20049,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1298562269}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: fd920f50178ea3d48bcaac9ffd902e98, type: 2}
   m_CullingMode: 0

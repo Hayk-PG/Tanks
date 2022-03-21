@@ -81,19 +81,19 @@ public class AmmoTypeButton : MonoBehaviour
     protected virtual void OnPointsEquals()
     {
         Interactability();
-        _properties.PointsToUnlock = "<color=#FFFFFF>" + _properties.PlayerPoints + "</color>" + "<color=#FFFFFF>" + "/" + _properties.UnlockPoints + "</color>";
+        _properties.PointsToUnlock = "<color=#6CE246>" + _properties.PlayerPoints + "</color>" + "<color=#6CE246>" + "/" + _properties.UnlockPoints + "</color>";
     }
 
     protected virtual void OnPlayerPointsGreater()
     {
         Interactability();
-        _properties.PointsToUnlock = "<color=#FFFFFF>" + _properties.PlayerPoints + "</color>" + "<color=#FFFFFF>" + "/" + _properties.UnlockPoints + "</color>";
+        _properties.PointsToUnlock = "<color=#6CE246>" + _properties.PlayerPoints + "</color>" + "<color=#6CE246>" + "/" + _properties.UnlockPoints + "</color>";
     }
 
     protected virtual void OnPlayerPointsLesser()
     {
         _properties.ButtonInteractability = false;
-        _properties.PointsToUnlock = "<color=#EB3817>" + _properties.PlayerPoints + "</color>" + "<color=#FFFFFF>" + "/" + _properties.UnlockPoints + "</color>";
+        _properties.PointsToUnlock = "<color=#6CE246>" + _properties.PlayerPoints + "</color>" + "<color=#FFFFFF>" + "/" + _properties.UnlockPoints + "</color>";
     }
 
     protected virtual void Interactability()
