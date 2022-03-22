@@ -6,6 +6,8 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
     private CameraShake _cameraShake;
 
     public Action<IScore> OnBulletExplosion { get; set; }
+    public Action OnBulletExplosionWithoutHitting { get; set; }
+
     public UnityEvent OnCameraShake;
 
 
@@ -42,7 +44,11 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
 
     private void OnExplodeOnLimit(bool isTrue)
     {
-        if(isTrue) DestroyBullet();
+        if (isTrue)
+        {
+            OnBulletExplosionWithoutHitting?.Invoke();
+            DestroyBullet();
+        }
     }
 
     private void DestroyBullet()

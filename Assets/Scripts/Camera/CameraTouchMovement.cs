@@ -7,9 +7,8 @@ public class CameraTouchMovement : MonoBehaviour
     private delegate bool Checker();
     private delegate float Value();
 
-    private Checker _isMousePressed;
-    private Checker _isMovingMouse;
-    private Checker _isPointerOnUI;
+    private Checker _touchPhaseMoved;
+    private Checker __touchInputReleased;
 
     private Value _mouseX, _mouseY;
 
@@ -18,35 +17,35 @@ public class CameraTouchMovement : MonoBehaviour
 
     private float _cameraMovementResetTimer;
 
-    private UITouchMovement _uiTouchMovement;
-
 
 
     private void Awake()
     {
-        _uiTouchMovement = FindObjectOfType<UITouchMovement>();
+        _mouseX = delegate { return Input.GetAxis("Mouse X") * 3 * Time.deltaTime; };
+        _mouseY = delegate { return Input.GetAxis("Mouse Y") * 3 * Time.deltaTime; };
 
-        _mouseX = delegate { return Input.GetAxis("Mouse X"); };
-        _mouseY = delegate { return Input.GetAxis("Mouse Y"); };
+        _touchPhaseMoved = delegate 
+        {
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+                return !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+            else
+                return false;
+        };
 
-        _isMousePressed = delegate { return Input.GetMouseButton(0); };
-        _isMovingMouse = delegate { return _mouseX() != 0 || _mouseY() != 0; };
-        _isPointerOnUI = delegate { return EventSystem.current.IsPointerOverGameObject(); };
+        __touchInputReleased = delegate
+        {
+            return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended;
+        };
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        if (_uiTouchMovement != null) _uiTouchMovement.OnCameraCanMove += TouchMovement;
-    }
-
-    private void OnDisable()
-    {
-        if (_uiTouchMovement != null) _uiTouchMovement.OnCameraCanMove -= TouchMovement;
+        TouchMovement();
     }
 
     private void TouchMovement()
     {
-        Conditions<bool>.Compare(_isMousePressed() && _isMovingMouse() && !_isPointerOnUI(), OnMouseMovement, OnStopMouseMovement);
+        Conditions<bool>.Compare(_touchPhaseMoved(), OnMouseMovement, OnStopMouseMovement);
     }
 
     private void OnMouseMovement()
@@ -57,20 +56,23 @@ public class CameraTouchMovement : MonoBehaviour
 
     private void OnStopMouseMovement()
     {
-        Conditions<bool>.Compare(IsCameraMoving, ResetCameraMovement, null);
+        if (IsCameraMoving)
+        {
+            Stop();
+        }
 
         TouchPosition = Vector3.zero;
     }
 
-    private void ResetCameraMovement()
+    private void Stop()
     {
-        _cameraMovementResetTimer += Time.deltaTime;
+        Conditions<bool>.Compare(__touchInputReleased(), ()=> _cameraMovementResetTimer = 0, () => _cameraMovementResetTimer += Time.deltaTime);
+        Conditions<float>.Compare(_cameraMovementResetTimer, 1, null, ResetTouchMovementTimer, null);
+    }
 
-        Conditions<float>.Compare(_cameraMovementResetTimer, 1, null, 
-            delegate 
-            {
-                IsCameraMoving = false;
-                _cameraMovementResetTimer = 0;
-            }, null);
+    private void ResetTouchMovementTimer()
+    {
+        IsCameraMoving = false;
+        _cameraMovementResetTimer = 0;
     }
 }

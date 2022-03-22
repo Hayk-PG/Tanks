@@ -11,6 +11,10 @@ public class BulletParticles : MonoBehaviour
     [SerializeField]
     protected Explosion _explosion;
 
+    [Header("Optional non collided explosion")]
+    [SerializeField]
+    protected GameObject _optionalExplosion;
+
     protected IBulletTrail _iBulletTrail;
     protected IBulletExplosion _iBulletExplosion;
 
@@ -26,6 +30,7 @@ public class BulletParticles : MonoBehaviour
     {
         if (_iBulletTrail != null) _iBulletTrail.OnTrailActivity += OnTrailActivity;
         if (_iBulletExplosion != null) _iBulletExplosion.OnBulletExplosion += OnExplosion;
+        if (_iBulletExplosion != null) _iBulletExplosion.OnBulletExplosionWithoutHitting += OnBulletExplosionWithoutHitting;
     }
 
     protected virtual void OnTrailActivity(bool isActive)
@@ -38,5 +43,14 @@ public class BulletParticles : MonoBehaviour
         _explosion.OwnerScore = ownerScore;
         _explosion.gameObject.SetActive(true);
         _explosion.transform.parent = null;
+    }
+
+    protected virtual void OnBulletExplosionWithoutHitting()
+    {
+        if(_optionalExplosion != null)
+        {
+            _optionalExplosion.SetActive(true);
+            _optionalExplosion.transform.parent = null;
+        }
     }
 }
