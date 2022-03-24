@@ -4,7 +4,7 @@ public class Tile : MonoBehaviour, IDestruct
 {
     private Collider _collider;
     private ChangeTiles _changeTiles;
-    private PoolVFX _poolVFX;
+    private GroundSlam _groundSlam;
 
     [SerializeField]
     private GameObject _explosion;
@@ -18,7 +18,7 @@ public class Tile : MonoBehaviour, IDestruct
     {
         _collider = GetComponent<Collider>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
-        _poolVFX = FindObjectOfType<PoolVFX>();
+        _groundSlam = FindObjectOfType<GroundSlam>();
 
         _tileSize = _collider.bounds.size;
     }
@@ -54,7 +54,7 @@ public class Tile : MonoBehaviour, IDestruct
     private void SnapTheTileToTheDesiredPosition()
     {
         transform.position = _desiredPosition;
-        _poolVFX.Pool(0, new Vector3(transform.position.x, transform.position.y - (_tileSize.y / 2), transform.position.z), true);
+        _groundSlam.Vfx(new Vector3(transform.position.x, transform.position.y - (_tileSize.y / 2), transform.position.z));
         _isSuspended = false;
         _changeTiles.UpdateTiles();
     }

@@ -16,6 +16,11 @@ public class TurnController : MonoBehaviour
     private List<PlayerTurn> _playersTurn;
 
     public event Action<TurnState,CameraMovement> OnTurnChanged;
+
+    /// <summary>
+    /// 0: PlayerOne 1:PlayerTwo
+    /// </summary>
+    public static List<PlayerTurn> Players { get; set; } = new List<PlayerTurn>();
     
 
     private void Awake()
@@ -40,7 +45,16 @@ public class TurnController : MonoBehaviour
 
         for (int i = 0; i < _playersTurn.Count; i++)
         {
-            _playersTurn[i].MyTurn = _playersTurn[i].transform.position.x < 0 ? _playersTurn[i].MyTurn = TurnState.Player1 : TurnState.Player2;
+            if(_playersTurn[i].transform.position.x < 0)
+            {
+                _playersTurn[i].MyTurn = TurnState.Player1;
+                Players.Add(_playersTurn[i]);
+            }
+            else
+            {
+                _playersTurn[i].MyTurn = TurnState.Player2;
+                Players.Add(_playersTurn[i]);
+            }
         }
     }
 
@@ -49,7 +63,7 @@ public class TurnController : MonoBehaviour
         SharePlayersTurnOrder();
         SetNextTurn(RandomTurn());
     }
-   
+
     private TurnState RandomTurn()
     {
         int randomTurn = UnityEngine.Random.Range(0, 2);
