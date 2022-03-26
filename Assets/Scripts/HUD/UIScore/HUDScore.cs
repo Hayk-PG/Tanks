@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HUDScore : MonoBehaviour
 {
@@ -8,30 +7,14 @@ public class HUDScore : MonoBehaviour
     /// 1:Player2
     /// </summary>
     [SerializeField]
-    private ScoreText[] _scores;
-
-    [Serializable]
-    public struct ScoresTransform
-    {
-        public Vector2 _scorePosition;
-
-        public ScoresTransform(Vector2 scorePosition)
-        {
-            _scorePosition = scorePosition;
-        }
-    }
-    public ScoresTransform[] _scoresTransform;
-
+    private ScoreText _scoreText;
     private TempPoints _tempPoints;
+
+    public Transform ScoreTextTransform { get => _scoreText.transform; }
 
 
     private void Awake()
     {
-        ScoresTransform scoreTr1 = new ScoresTransform(new Vector2(_scores[0].transform.position.x + _scores[0].GetComponent<RectTransform>().sizeDelta.x / 2, _scores[0].transform.position.y));
-        ScoresTransform scoreTr2 = new ScoresTransform(new Vector2(_scores[1].transform.position.x - _scores[1].GetComponent<RectTransform>().sizeDelta.x / 2, _scores[1].transform.position.y));
-
-        _scoresTransform = new ScoresTransform[2] { scoreTr1 , scoreTr2 };
-
         _tempPoints = FindObjectOfType<TempPoints>();
     }
 
@@ -45,8 +28,8 @@ public class HUDScore : MonoBehaviour
         _tempPoints.OnUpdateScore -= UpdateScore;
     }
 
-    public void UpdateScore(int score, int scoreIndex)
+    public void UpdateScore(int score)
     {
-        _scores[scoreIndex].UpdateScoreText(score);
+        _scoreText.UpdateScoreText(score);
     }
 }

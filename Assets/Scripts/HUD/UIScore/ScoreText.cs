@@ -22,6 +22,6 @@ public class ScoreText : MonoBehaviour
     public void UpdateScoreText(int score)
     {
         Score += score;
-        _anim.SetTrigger("play");
+        if(_anim != null) _anim.SetTrigger("play");
     }
 }

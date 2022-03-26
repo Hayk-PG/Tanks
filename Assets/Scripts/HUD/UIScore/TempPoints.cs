@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,16 +9,15 @@ public class TempPoints : MonoBehaviour
     private Animator _animator;
     private CanvasGroup _canvasGroup;
     private Text _pointsText;
-    private GameManager _gameManager;
     private HUDScore _hudScore;
-    private ScoreController[] _playersScoreControllers;
+    private TurnController _turnController;
 
     private const string _tempPointsAnim = "TempPointsAnim";
 
-    private int _playerScoreTextIndex;
-
     public event Action OnPlayerTempPoints;
-    public event Action<int, int> OnUpdateScore;
+    public event Action<int> OnUpdateScore;
+
+    private ScoreController _localPlayerScoreController;
 
 
     private void Awake()
@@ -25,50 +25,37 @@ public class TempPoints : MonoBehaviour
         _animator = GetComponent<Animator>();
         _canvasGroup = GetComponent<CanvasGroup>();
         _pointsText = GetComponentInChildren<Text>();
-        _gameManager = FindObjectOfType<GameManager>();
+        _turnController = FindObjectOfType<TurnController>();
         _hudScore = FindObjectOfType<HUDScore>();
     }
 
     private void OnEnable()
     {
-        _gameManager.OnGameStarted += GetPlayerOnGameStart;
+        _turnController.OnPlayers += SubscribeToScoreController;
     }
 
     private void OnDisable()
     {
-        _gameManager.OnGameStarted -= GetPlayerOnGameStart;
+        _turnController.OnPlayers -= SubscribeToScoreController;
 
-        if (_playersScoreControllers != null)
+        if (_localPlayerScoreController != null)
+            _localPlayerScoreController.OnDisplayTempPoints -= OnDisplayTemPoints;
+    }
+
+    private void SubscribeToScoreController(List<PlayerTurn> localPlayer)
+    {
+        //PHOTON
+
+        if(localPlayer.Find(localplayer => localplayer.tag == Tags.Player) != null)
         {
-            foreach (var scoreController in _playersScoreControllers)
-            {
-                scoreController.OnDisplayTempPoints -= OnDisplayTemPoints;
-            }
+            _localPlayerScoreController = localPlayer.Find(localplayer => localplayer.tag == Tags.Player).GetComponent<ScoreController>();
+            _localPlayerScoreController.OnDisplayTempPoints += OnDisplayTemPoints;
         }
     }
 
-    private void GetPlayerOnGameStart()
+    private void OnDisplayTemPoints(int score, Vector3 position)
     {
-        _playersScoreControllers = FindObjectsOfType<ScoreController>();
-
-        if (_playersScoreControllers != null)
-        {
-            foreach (var scoreController in _playersScoreControllers)
-            {
-                scoreController.OnDisplayTempPoints += OnDisplayTemPoints;
-            }
-        }
-    }
-
-    private void OnDisplayTemPoints(int score, TurnState localPlayerTurn, Vector3 position)
-    {
-        _playerScoreTextIndex = localPlayerTurn == TurnState.Player1 ? 0 : 1;
-
-        if (localPlayerTurn == TurnState.Player1)
-            StartCoroutine(Coroutine(score, position));
-        else
-            OnUpdateScore?.Invoke(score, _playerScoreTextIndex);
-
+        StartCoroutine(Coroutine(score, position));
     }
 
     private IEnumerator Coroutine(int score, Vector3 position)
@@ -89,7 +76,7 @@ public class TempPoints : MonoBehaviour
 
         while (!isReachedToTheDestination)
         {
-            destination = _hudScore._scoresTransform[_playerScoreTextIndex]._scorePosition;
+            destination = _hudScore.ScoreTextTransform.position;
             transform.position = Vector2.Lerp(transform.position, destination, 10 * Time.deltaTime);
 
             magnitude = (destination - transform.position).magnitude;
@@ -98,14 +85,14 @@ public class TempPoints : MonoBehaviour
             {
                 _canvasGroup.alpha -= 100 * Time.deltaTime;
 
-                if(_canvasGroup.alpha <= 0.1f)
+                if (_canvasGroup.alpha <= 0.1f)
                 {
                     _canvasGroup.alpha = 0;
-                    OnUpdateScore?.Invoke(score, _playerScoreTextIndex);
+                    OnUpdateScore?.Invoke(score);
                     isReachedToTheDestination = true;
                 }
             }
-          
+
             yield return null;
         }
     }

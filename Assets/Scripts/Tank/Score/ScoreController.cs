@@ -15,7 +15,7 @@ public class ScoreController : MonoBehaviour, IScore
         get => _score;
         set => _score = value;
     }
-    public Action<int, TurnState, Vector3> OnDisplayTempPoints { get; set; }
+    public Action<int, Vector3> OnDisplayTempPoints { get; set; }
 
     private IGetPlayerPoints[] _iGetPlayerPoints;
 
@@ -43,7 +43,7 @@ public class ScoreController : MonoBehaviour, IScore
     private void UpdateScore(int score, Vector3 position)
     {
         Score += score;
-        OnDisplayTempPoints?.Invoke(score, PlayerTurn.MyTurn, position);
+        OnDisplayTempPoints?.Invoke(score, position);
     }
 
     private void SubscribeToIGetPlayerPointsEvent()

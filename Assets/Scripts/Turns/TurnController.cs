@@ -21,6 +21,7 @@ public class TurnController : MonoBehaviour
     /// 0: PlayerOne 1:PlayerTwo
     /// </summary>
     public static List<PlayerTurn> Players { get; set; } = new List<PlayerTurn>();
+    public event Action<List<PlayerTurn>> OnPlayers;
     
 
     private void Awake()
@@ -56,6 +57,8 @@ public class TurnController : MonoBehaviour
                 Players.Add(_playersTurn[i]);
             }
         }
+
+        OnPlayers?.Invoke(_playersTurn);
     }
 
     private void SetPlayersTurnOnGameStart()

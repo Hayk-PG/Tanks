@@ -38,9 +38,9 @@ public class HUDSoundController : MonoBehaviour
         PlaySoundFX(_audioSrc, _clips[0]);
     }
 
-    private void OnUpdateScore(int score, int scoreTextIndex)
+    private void OnUpdateScore(int score)
     {
-        if(GlobalFunctions.LocalPlayerChecker(scoreTextIndex == 0)) PlaySoundFX(_audioSrc, _clips[1]);
+        PlaySoundFX(_audioSrc, _clips[1]);
     }
 
     private void PlaySoundFX(AudioSource audioSrc, AudioClip clip)

@@ -30,10 +30,13 @@ public class HealthController : MonoBehaviour, IDamage
 
     public void Damage(int damage)
     {
-        Health = (Health - damage) > 0 ? Health - damage : 0;
-        _healthBar.OnUpdateHealthBar(_playerTurn.MyTurn, Health);
-        _vehiclePool.Pool(0, null);
+        if (_healthBar != null)
+        {
+            Health = (Health - damage) > 0 ? Health - damage : 0;
+            _healthBar.OnUpdateHealthBar(_playerTurn.MyTurn, Health);
+            _vehiclePool.Pool(0, null);
 
-        OnTakeDamage?.Invoke();
+            OnTakeDamage?.Invoke();
+        }
     }
 }
