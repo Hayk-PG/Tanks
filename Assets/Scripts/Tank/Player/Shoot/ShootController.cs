@@ -9,7 +9,6 @@ public class ShootController : MonoBehaviour
     private PlayerTurn _playerTurn;
     private IScore _iScore;
     private PlayerAmmoType _playerAmmoType;
-    private AmmoTabCustomization _ammoTabCustomization;
 
     [SerializeField]
     private PlayerShootTrajectory _playerShootTrajectory;
@@ -74,7 +73,6 @@ public class ShootController : MonoBehaviour
         _playerTurn = GetComponent<PlayerTurn>();
         _iScore = Get<IScore>.From(gameObject);
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
     }
 
     private void OnEnable()
