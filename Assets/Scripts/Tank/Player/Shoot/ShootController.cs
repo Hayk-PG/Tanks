@@ -151,7 +151,8 @@ public class ShootController : MonoBehaviour
             _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
 
             _playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] -= 1;
-            _playerAmmoType.UpdateDisplayedWeapon(ActiveAmmoIndex);           
+            _playerAmmoType.UpdateDisplayedWeapon(ActiveAmmoIndex);
+            _playerAmmoType.SwitchToDefaultWeapon(ActiveAmmoIndex);
         }
     }
 }

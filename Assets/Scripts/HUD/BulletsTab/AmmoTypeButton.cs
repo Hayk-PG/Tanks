@@ -9,11 +9,19 @@ public class AmmoTypeButton : MonoBehaviour
     [Serializable]
     public struct Properties
     {
-        internal Button _button;
-        public Image _buttonImage, _iconImage;
-        public Text _titleText;
-        public Text _pointsToUnlockText;
+        [SerializeField]
+        private Button _button;
 
+        [SerializeField]
+        private Image _buttonImage, _iconImage;
+
+        [SerializeField]
+        private Text _titleText;
+
+        [SerializeField]
+        private Text _pointsToUnlockText;
+
+        public Button Button { get => _button; }
         public Sprite ButtonSprite
         {
             get => _buttonImage.sprite;
@@ -36,23 +44,12 @@ public class AmmoTypeButton : MonoBehaviour
         }
 
         public int Index { get; set; }
+        public int Value { get; set; }
+        public int CurrentValue { get; set; }
         public int UnlockPoints { get; set; }
-        public int PlayerPoints { get; set; }
+        public int CurrentPoints { get; set; }
 
-        public bool IsClicked { get; set; }
-        public bool ButtonInteractability
-        {
-            get
-            {
-                if (_button != null) return _button.interactable;
-                else return false;
-            }
-            set
-            {
-                if (_button != null) _button.interactable = value;
-            }
-        }
-        public bool CanUseIt { get; set; }
+        public bool IsUnlocked { get; set; }
     }
     public Properties _properties;
 
@@ -60,44 +57,33 @@ public class AmmoTypeButton : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        _properties._button = GetComponent<Button>();
-        _properties.CanUseIt = true;
-    }
-
     public virtual void OnClickButton()
     {
         OnClickAmmoTypeButton?.Invoke(this);
-    }   
-
-    public virtual void DisplayPointsToUnlock(int playerPoints)
-    {
-        _properties.PlayerPoints = playerPoints;
-
-        Conditions<int>.Compare(_properties.PlayerPoints, _properties.UnlockPoints, OnPointsEquals, OnPlayerPointsGreater, OnPlayerPointsLesser);
     }
 
-    protected virtual void OnPointsEquals()
+    public virtual void DisplayPointsToUnlock(int playerPoints, int bulletsCount)
     {
-        Interactability();
-        _properties.PointsToUnlock = "<color=#6CE246>" + _properties.PlayerPoints + "</color>" + "<color=#6CE246>" + "/" + _properties.UnlockPoints + "</color>";
-    }
+        _properties.CurrentPoints = playerPoints;
+        _properties.CurrentValue = bulletsCount;
+        _properties.PointsToUnlock = _properties.CurrentPoints + "/" + _properties.UnlockPoints;
 
-    protected virtual void OnPlayerPointsGreater()
-    {
-        Interactability();
-        _properties.PointsToUnlock = "<color=#6CE246>" + _properties.PlayerPoints + "</color>" + "<color=#6CE246>" + "/" + _properties.UnlockPoints + "</color>";
-    }
+        if (_properties.CurrentValue > 0)
+        {
+            _properties.IsUnlocked = true;
+        }
+        else
+        {
+            _properties.IsUnlocked = false;
 
-    protected virtual void OnPlayerPointsLesser()
-    {
-        _properties.ButtonInteractability = false;
-        _properties.PointsToUnlock = "<color=#6CE246>" + _properties.PlayerPoints + "</color>" + "<color=#FFFFFF>" + "/" + _properties.UnlockPoints + "</color>";
-    }
-
-    protected virtual void Interactability()
-    {
-        if(_properties.CanUseIt) _properties.ButtonInteractability = true;
-    }
+            if (_properties.CurrentPoints < _properties.UnlockPoints)
+            {
+                _properties.Button.interactable = false;
+            }
+            else
+            {
+                _properties.Button.interactable = true;
+            }            
+        }
+    }    
 }

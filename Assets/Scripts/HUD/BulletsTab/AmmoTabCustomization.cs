@@ -1,10 +1,11 @@
 ﻿using System;
-
+using System.Collections.Generic;
 
 public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, AmmoParameters>
 {
-    public event Action<AmmoTypeButton> OnSendActiveAmmoToPlayer;
     public Action<WeaponProperties, int> OnUpdateDisplayedWeapon { get; set; }
+
+    public AmmoTypeButton DefaultAmmoTypeButton { get; set; }
 
 
     protected override void OnDisable()
@@ -19,18 +20,24 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
         AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);
 
         button._properties.Index = weaponProperty._ammoIndex;
+        button._properties.Value = weaponProperty._value;
         button._properties.UnlockPoints = weaponProperty._unlockPoints;
         button._properties.IconSprite = weaponProperty._icon;
         button._ammoStars.OnSetStars(weaponProperty._ammoTypeStars);
 
-        Conditions<bool>.Compare(loopIndex == 0, () => SetDefaultAmmo(button, weaponProperty), null);
+        Conditions<bool>.Compare(loopIndex == 0, () => SetDefaultAmmo(button), null);
         CacheAmmoTypeButtons(button);
     }
 
-    private void SetDefaultAmmo(AmmoTypeButton button, WeaponProperties weaponProperty)
+    public void SetDefaultAmmo(AmmoTypeButton button)
     {
-        button._properties.ButtonSprite = _clicked;
-        OnUpdateDisplayedWeapon?.Invoke(weaponProperty, weaponProperty._bulletsLeft);
+        if(DefaultAmmoTypeButton == null)
+        {
+            DefaultAmmoTypeButton = button;
+        }
+
+        ChangeAmmoTypeButtonsSprite(DefaultAmmoTypeButton);
+        OnPlayerWeaponChanged?.Invoke(DefaultAmmoTypeButton);
     }
 
     private void SubscribeToAmmoTypeButtonEvents(AmmoTypeButton button)
@@ -58,7 +65,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
     private void OnClickAmmoTypeButton(AmmoTypeButton ammoTypeButton)
     {
         ChangeAmmoTypeButtonsSprite(ammoTypeButton);
-        OnSendActiveAmmoToPlayer?.Invoke(ammoTypeButton);
+        OnPlayerWeaponChanged?.Invoke(ammoTypeButton);
         OnAmmoTypeController?.Invoke();
     }
 
@@ -73,13 +80,14 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
         ammoTypeButton._properties.ButtonSprite = _clicked;
     }
 
-    public override void GetPlayerPoints(int playerPoints)
+    public override void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount)
     {
+
         if (_instantiatedButtons != null)
         {
             for (int i = 0; i < _instantiatedButtons.Count; i++)
             {
-                _instantiatedButtons[i].DisplayPointsToUnlock(playerPoints);
+                _instantiatedButtons[i].DisplayPointsToUnlock(playerPoints, bulletsCount[i]);
             }
         }
     }

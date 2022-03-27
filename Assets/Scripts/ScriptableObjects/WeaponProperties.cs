@@ -7,7 +7,7 @@ public class WeaponProperties : ScriptableObject
     public BulletController _bulletPrefab;
 
     public int _ammoIndex;
-    public int _bulletsLeft;
+    public int _value;
 
     [Header("HUD")]
     public Sprite _icon;

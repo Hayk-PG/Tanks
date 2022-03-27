@@ -20,12 +20,12 @@ public class HUDScore : MonoBehaviour
 
     private void OnEnable()
     {
-        _tempPoints.OnUpdateScore += UpdateScore;
+        _tempPoints.OnScoreTextUpdated += UpdateScore;
     }
 
     private void OnDisable()
     {
-        _tempPoints.OnUpdateScore -= UpdateScore;
+        _tempPoints.OnScoreTextUpdated -= UpdateScore;
     }
 
     public void UpdateScore(int score)

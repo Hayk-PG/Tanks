@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 public class SupportsTabCustomization : BaseAmmoTabCustomization<SupportsTypeButton, SupportParameters>
 {
@@ -38,13 +39,13 @@ public class SupportsTabCustomization : BaseAmmoTabCustomization<SupportsTypeBut
         OnAmmoTypeController?.Invoke();
     }
 
-    public override void GetPlayerPoints(int playerPoints)
+    public override void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount)
     {
         if (_instantiatedButtons != null)
         {
             for (int i = 0; i < _instantiatedButtons.Count; i++)
             {
-                _instantiatedButtons[i].DisplayPointsToUnlock(playerPoints);
+                _instantiatedButtons[i].DisplayPointsToUnlock(playerPoints, bulletsCount[i]);
             }
         }
     }

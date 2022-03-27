@@ -23,22 +23,22 @@ public class HUDSoundController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_tempPoints != null) _tempPoints.OnPlayerTempPoints += OnLocalPlayerTempPointsSoundFX;
-        if (_tempPoints != null) _tempPoints.OnUpdateScore += OnUpdateScore;
+        if (_tempPoints != null) _tempPoints.OnTempPointsMotionSoundFX += OnTempPointsMotionSoundFX;
+        if (_tempPoints != null) _tempPoints.OnScoreTextUpdated += OnTempPointsReachedSoundFX;
     }
 
     private void OnDisable()
     {
-        if (_tempPoints != null) _tempPoints.OnPlayerTempPoints -= OnLocalPlayerTempPointsSoundFX;
-        if (_tempPoints != null) _tempPoints.OnUpdateScore += OnUpdateScore;
+        if (_tempPoints != null) _tempPoints.OnTempPointsMotionSoundFX -= OnTempPointsMotionSoundFX;
+        if (_tempPoints != null) _tempPoints.OnScoreTextUpdated += OnTempPointsReachedSoundFX;
     }
 
-    private void OnLocalPlayerTempPointsSoundFX()
+    private void OnTempPointsMotionSoundFX()
     {
         PlaySoundFX(_audioSrc, _clips[0]);
     }
 
-    private void OnUpdateScore(int score)
+    private void OnTempPointsReachedSoundFX(int score)
     {
         PlaySoundFX(_audioSrc, _clips[1]);
     }

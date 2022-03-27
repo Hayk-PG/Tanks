@@ -16,8 +16,9 @@ public class ScoreController : MonoBehaviour, IScore
         set => _score = value;
     }
     public Action<int, Vector3> OnDisplayTempPoints { get; set; }
+    public Action<int> OnTempPointsWithoutDisplaying { get; set; }
 
-    private IGetPlayerPoints[] _iGetPlayerPoints;
+    private AmmoTabCustomization _ammoTabCustomization;
 
 
     private void Awake()
@@ -25,16 +26,31 @@ public class ScoreController : MonoBehaviour, IScore
         IDamage = Get<IDamage>.From(gameObject);
         PlayerTurn = Get<PlayerTurn>.From(gameObject);
 
-        Score = 0;
+        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
 
-        SubscribeToIGetPlayerPointsEvent();
+        Score = 0;    
+    }
+
+    private void OnEnable()
+    {
+        _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
     }
 
     private void OnDisable()
     {
-        UnsubscribeIGetPlayerPointsEvents();
+        _ammoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
     }
- 
+
+    private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
+    {
+        if (!ammoTypeButton._properties.IsUnlocked)
+        {
+            Score -= ammoTypeButton._properties.UnlockPoints;
+            OnTempPointsWithoutDisplaying?.Invoke(-ammoTypeButton._properties.UnlockPoints);
+        }
+    }
+
+
     public void GetScore(int score, IDamage iDamage, Vector3 position)
     {
         Conditions<bool>.Compare(iDamage != IDamage || iDamage == null, () => UpdateScore(score, position), null);
@@ -44,34 +60,5 @@ public class ScoreController : MonoBehaviour, IScore
     {
         Score += score;
         OnDisplayTempPoints?.Invoke(score, position);
-    }
-
-    private void SubscribeToIGetPlayerPointsEvent()
-    {
-        _iGetPlayerPoints = FindObjectsOfType<MonoBehaviour>().OfType<IGetPlayerPoints>().ToArray();
-
-        if(_iGetPlayerPoints != null)
-        {
-            foreach (var points in _iGetPlayerPoints)
-            {
-                points.OnGetPlayerPointsCount += OnIGetPlayerPointsCount;
-            }
-        }
-    }
-
-    private void UnsubscribeIGetPlayerPointsEvents()
-    {
-        if (_iGetPlayerPoints != null)
-        {
-            foreach (var points in _iGetPlayerPoints)
-            {
-                points.OnGetPlayerPointsCount -= OnIGetPlayerPointsCount;
-            }
-        }
-    }
-
-    private void OnIGetPlayerPointsCount(Action<int> OnMyPoints)
-    {
-        OnMyPoints?.Invoke(Score);
     }
 }
