@@ -22,6 +22,7 @@ public class BaseAmmoTabCustomization<T, T1> : MonoBehaviour, IGetPointsAndAmmoD
     public Action<T> OnPlayerWeaponChanged { get; set; }
     public Action OnAmmoTypeController { get; set; }
     public Action<Action<int, List<int>>> OnGetPointsAndAmmoDataFromPlayer { get; set; }
+    public Action<int> OnSendWeaponPointsToUnlock { get; set; }
 
     
     protected virtual void Awake()

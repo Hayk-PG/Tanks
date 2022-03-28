@@ -16,6 +16,7 @@ public class ScoreController : MonoBehaviour, IScore
         set => _score = value;
     }
     public Action<int, Vector3, float> OnDisplayTempPoints { get; set; }
+    public Action<int> OnPlayerGetsPoints { get; set; }
 
     private AmmoTabCustomization _ammoTabCustomization;
 
@@ -27,7 +28,7 @@ public class ScoreController : MonoBehaviour, IScore
 
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
 
-        Score = 0;    
+        Score = 0;
     }
 
     private void OnEnable()
@@ -59,5 +60,6 @@ public class ScoreController : MonoBehaviour, IScore
     {
         Score += score;
         OnDisplayTempPoints?.Invoke(score, position, 0.5f);
+        OnPlayerGetsPoints?.Invoke(Score);
     }
 }
