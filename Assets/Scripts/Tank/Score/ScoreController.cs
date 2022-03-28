@@ -15,8 +15,7 @@ public class ScoreController : MonoBehaviour, IScore
         get => _score;
         set => _score = value;
     }
-    public Action<int, Vector3> OnDisplayTempPoints { get; set; }
-    public Action<int> OnTempPointsWithoutDisplaying { get; set; }
+    public Action<int, Vector3, float> OnDisplayTempPoints { get; set; }
 
     private AmmoTabCustomization _ammoTabCustomization;
 
@@ -46,7 +45,7 @@ public class ScoreController : MonoBehaviour, IScore
         if (!ammoTypeButton._properties.IsUnlocked)
         {
             Score -= ammoTypeButton._properties.UnlockPoints;
-            OnTempPointsWithoutDisplaying?.Invoke(-ammoTypeButton._properties.UnlockPoints);
+            OnDisplayTempPoints?.Invoke(-ammoTypeButton._properties.UnlockPoints, transform.position, 0);
         }
     }
 
@@ -59,6 +58,6 @@ public class ScoreController : MonoBehaviour, IScore
     private void UpdateScore(int score, Vector3 position)
     {
         Score += score;
-        OnDisplayTempPoints?.Invoke(score, position);
+        OnDisplayTempPoints?.Invoke(score, position, 0.5f);
     }
 }

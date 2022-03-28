@@ -19,7 +19,7 @@ public class AmmoTypeButton : MonoBehaviour
         private Text _titleText;
 
         [SerializeField]
-        private Text _pointsToUnlockText;
+        internal Text _pointsToUnlockText;
 
         public Button Button { get => _button; }
         public Sprite ButtonSprite
@@ -50,6 +50,7 @@ public class AmmoTypeButton : MonoBehaviour
         public int CurrentPoints { get; set; }
 
         public bool IsUnlocked { get; set; }
+        public bool IsSelected { get; set; }
     }
     public Properties _properties;
 
@@ -59,7 +60,7 @@ public class AmmoTypeButton : MonoBehaviour
 
     public virtual void OnClickButton()
     {
-        OnClickAmmoTypeButton?.Invoke(this);
+        if(!_properties.IsSelected) OnClickAmmoTypeButton?.Invoke(this);
     }
 
     public virtual void DisplayPointsToUnlock(int playerPoints, int bulletsCount)
@@ -67,7 +68,7 @@ public class AmmoTypeButton : MonoBehaviour
         _properties.CurrentPoints = playerPoints;
         _properties.CurrentValue = bulletsCount;
         _properties.PointsToUnlock = _properties.CurrentPoints + "/" + _properties.UnlockPoints;
-
+        
         if (_properties.CurrentValue > 0)
         {
             _properties.IsUnlocked = true;
@@ -85,5 +86,7 @@ public class AmmoTypeButton : MonoBehaviour
                 _properties.Button.interactable = true;
             }            
         }
+
+        _properties._pointsToUnlockText.gameObject.SetActive(!_properties.IsUnlocked);
     }    
 }

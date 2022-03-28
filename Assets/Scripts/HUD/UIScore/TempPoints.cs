@@ -42,7 +42,6 @@ public class TempPoints : MonoBehaviour
         if (_localPlayerScoreController != null)
         {
             _localPlayerScoreController.OnDisplayTempPoints -= OnDisplayTemPoints;
-            _localPlayerScoreController.OnTempPointsWithoutDisplaying -= OnTempPointsWithoutDisplaying;
         }           
     }
 
@@ -54,21 +53,15 @@ public class TempPoints : MonoBehaviour
         {
             _localPlayerScoreController = localPlayer.Find(localplayer => localplayer.tag == Tags.Player).GetComponent<ScoreController>();
             _localPlayerScoreController.OnDisplayTempPoints += OnDisplayTemPoints;
-            _localPlayerScoreController.OnTempPointsWithoutDisplaying += OnTempPointsWithoutDisplaying;
         }
     }
 
-    private void OnTempPointsWithoutDisplaying(int score)
+    private void OnDisplayTemPoints(int score, Vector3 position, float waitForSeconds)
     {
-        OnScoreTextUpdated?.Invoke(score);
+        StartCoroutine(Coroutine(score, position, waitForSeconds));
     }
 
-    private void OnDisplayTemPoints(int score, Vector3 position)
-    {
-        StartCoroutine(Coroutine(score, position));
-    }
-
-    private IEnumerator Coroutine(int score, Vector3 position)
+    private IEnumerator Coroutine(int score, Vector3 position, float waitForSeconds)
     {
         transform.position = CameraSight.ScreenPoint(position) + new Vector3(0, 100);
         _pointsText.text = "+" + score;
@@ -80,7 +73,7 @@ public class TempPoints : MonoBehaviour
 
         Vector3 destination;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(waitForSeconds);
 
         OnTempPointsMotionSoundFX?.Invoke();
 

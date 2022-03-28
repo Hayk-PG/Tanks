@@ -15,4 +15,6 @@ public static class Names
     public static string T = "T";
     public static string TL = "TL";
     public static string TR = "TR";
+
+    public static string Play = "play";
 }

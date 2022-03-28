@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class CurrentWeaponStatus : MonoBehaviour
 {
     private AmmoTabCustomization _ammoTabCustomization;
+    private Animator _animator;
 
     [Serializable]
     private struct Properties
@@ -42,6 +43,7 @@ public class CurrentWeaponStatus : MonoBehaviour
     private void Awake()
     {
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void OnEnable()
@@ -58,5 +60,6 @@ public class CurrentWeaponStatus : MonoBehaviour
     {
         _properties.CurrentWeaponIcon = weaponProperty._icon;
         _properties.BulletsLeft = bulletsLeft;
+        if (_animator != null) _animator.SetTrigger(Names.Play);
     }
 }
