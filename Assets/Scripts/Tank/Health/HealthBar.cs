@@ -7,11 +7,13 @@ public class HealthBar : MonoBehaviour
     private Slider _healthBar;
 
     private HealthController _healthController;
+    private LastHealthFill _lastHealthFill;
 
 
     private void Awake()
     {
         _healthController = Get<HealthController>.From(gameObject);
+        _lastHealthFill = GetComponentInChildren<LastHealthFill>();
     }
 
     private void OnEnable()
@@ -27,6 +29,6 @@ public class HealthBar : MonoBehaviour
     private void OnHealthBar(int newValue)
     {
         _healthBar.value = newValue;
-        //_sliders[index]._lastHealthFill.OnUpdate(_sliders[index]._slider.value / 100);       
+        if(_lastHealthFill != null) _lastHealthFill.OnUpdate(_healthBar.value / 100);       
     }
 }

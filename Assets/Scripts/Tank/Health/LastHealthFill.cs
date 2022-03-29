@@ -8,7 +8,6 @@ public class LastHealthFill : MonoBehaviour
     private Animator _animator;
     private RectTransform _rectTransform;
 
-    private string _animTriggerName = "play";
     private float _anchorMax;
 
 
@@ -34,6 +33,6 @@ public class LastHealthFill : MonoBehaviour
     private IEnumerator PlayAnimation()
     {
         yield return new WaitForSeconds(1);
-        _animator.SetTrigger(_animTriggerName);
+        _animator.SetTrigger(Names.Play);
     }
 }
