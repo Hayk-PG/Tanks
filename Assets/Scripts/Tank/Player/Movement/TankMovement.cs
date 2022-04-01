@@ -23,7 +23,7 @@ public class TankMovement : BaseTankMovement
     {
         MotorTorque();
         Brake();
-        RigidbodyTransform();
+        RigidbodyEulerAngles();
 
         if (_playerTurn.IsMyTurn)
         {
@@ -43,6 +43,7 @@ public class TankMovement : BaseTankMovement
         _wheelColliderController.RotateWheels();
 
         OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
+        OnRigidbodyPosition?.Invoke(_rigidBody);
     }
 
     private void UpdateSpeedAndPush()
@@ -64,10 +65,9 @@ public class TankMovement : BaseTankMovement
         _wheelColliderController.BrakeTorque(_currentBrake);
     }
 
-    private void RigidbodyTransform()
+    private void RigidbodyEulerAngles()
     {
         _rigidBody.transform.eulerAngles = new Vector3(_rigidBody.transform.eulerAngles.x, InitialRotationYAxis, 0);
-        _rigidBody.position = new Vector3(_rigidBody.transform.position.x, _rigidBody.transform.position.y, 0);
     }
 
     private void RigidbodyCenterOfMass()

@@ -62,7 +62,7 @@ public class AITankMovement : BaseTankMovement
         OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
 
         Brake();
-        RigidbodyTransform();
+        RigidbodyEulerAngles();
         OnDestinationReached();
         OnStuck();
 
@@ -135,10 +135,9 @@ public class AITankMovement : BaseTankMovement
         _wheelColliderController.BrakeTorque(_currentBrake);
     }
 
-    public void RigidbodyTransform()
+    public void RigidbodyEulerAngles()
     {
         _rigidBody.transform.eulerAngles = new Vector3(_rigidBody.transform.eulerAngles.x, InitialRotationYAxis, 0);
-        _rigidBody.position = new Vector3(_rigidBody.transform.position.x, _rigidBody.transform.position.y, 0);
     }
 
     public void RigidbodyCenterOfMass()
