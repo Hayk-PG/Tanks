@@ -22,8 +22,8 @@ public class BaseTankMovement : MonoBehaviour
     public virtual float Direction { get; set; }     
     protected float InitialRotationYAxis { get; set; }
 
-    internal Action<float> OnVehicleMove;
-    public Action<Rigidbody> OnRigidbodyPosition;
+    internal Action<float> OnVehicleMove { get; set; }
+    public Action<Rigidbody> OnRigidbodyPosition { get; set; }
 
 
     protected virtual void Awake()

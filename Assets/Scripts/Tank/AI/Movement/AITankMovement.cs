@@ -60,6 +60,7 @@ public class AITankMovement : BaseTankMovement
         _wheelColliderController.RotateWheels();
 
         OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
+        OnRigidbodyPosition?.Invoke(_rigidBody);
 
         Brake();
         RigidbodyEulerAngles();

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class TempPoints : MonoBehaviour
 {
+    private RectTransform _rectTransform;
+
     private Animator _animator;
     private CanvasGroup _canvasGroup;
     private Text _pointsText;
@@ -23,6 +25,8 @@ public class TempPoints : MonoBehaviour
 
     private void Awake()
     {
+        _rectTransform = GetComponent<RectTransform>();
+
         _animator = GetComponent<Animator>();
         _canvasGroup = GetComponent<CanvasGroup>();
         _pointsText = GetComponentInChildren<Text>();
@@ -56,14 +60,14 @@ public class TempPoints : MonoBehaviour
         }
     }
 
-    private void OnDisplayTemPoints(int score, Vector3 position, float waitForSeconds)
+    private void OnDisplayTemPoints(int score, float waitForSeconds)
     {
-        StartCoroutine(Coroutine(score, position, waitForSeconds));
+        StartCoroutine(Coroutine(score, waitForSeconds));
     }
 
-    private IEnumerator Coroutine(int score, Vector3 position, float waitForSeconds)
+    private IEnumerator Coroutine(int score, float waitForSeconds)
     {
-        transform.position = CameraSight.ScreenPoint(position) + new Vector3(0, 100);
+        _rectTransform.position = _hudScore.TempPointsStartPoint.position;
         _pointsText.text = "+" + score;
         _canvasGroup.alpha = 1;
         _animator.Play(_tempPointsAnim);

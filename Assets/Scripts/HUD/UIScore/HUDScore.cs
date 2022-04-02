@@ -10,6 +10,13 @@ public class HUDScore : MonoBehaviour
     private ScoreText _scoreText;
     private TempPoints _tempPoints;
 
+    [SerializeField]
+    private RectTransform _tempPointsStartPoint;
+    public RectTransform TempPointsStartPoint
+    {
+        get => _tempPointsStartPoint;
+    }
+
     public Transform ScoreTextTransform { get => _scoreText.transform; }
 
 

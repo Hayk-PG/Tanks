@@ -5,7 +5,7 @@ public class VehicleRigidbodyPosition : MonoBehaviour
     private BaseTankMovement _baseTankMovement;
 
     private float _xPositionMinLimit = -5.1f;
-    private float _xPositionMaxLimit = 5.1f;
+    private float _xPositionMaxLimit = 10.6f;
 
     private delegate bool Checker(Rigidbody rigidBody);
     private Checker _isLesserThanMinLimit;
@@ -51,6 +51,6 @@ public class VehicleRigidbodyPosition : MonoBehaviour
 
     private void AtAllowedPosition(Rigidbody rigidBody)
     {
-        rigidBody.position = new Vector3(rigidBody.transform.position.x, rigidBody.transform.position.y, 0);
+        rigidBody.position = new Vector3(rigidBody.position.x, rigidBody.position.y, 0);
     }
 }

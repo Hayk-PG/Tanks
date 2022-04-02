@@ -33,6 +33,6 @@ public class GroundSlam : MonoBehaviour
     private void GivePlayerPoints(Vector3 position)
     {
         _iScore = TurnController.Players.Find(turn => turn.MyTurn == _turnController._previousTurnState).GetComponent<IScore>();
-        _iScore.GetScore(100, null, position);
+        _iScore.GetScore(100, null);
     }
 }

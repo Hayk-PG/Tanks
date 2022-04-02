@@ -16,7 +16,7 @@ public class BulletCollision : GetBulletController
 
         if (_collisionCount <= 1)
         {
-            ownerScore.GetScore(10, null, collision.transform.position);
+            ownerScore.GetScore(10, null);
             Get<IDestruct>.From(collision.gameObject)?.Destruct();           
         }
     }

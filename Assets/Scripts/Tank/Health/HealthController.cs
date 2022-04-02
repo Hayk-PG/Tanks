@@ -15,7 +15,7 @@ public class HealthController : MonoBehaviour, IDamage
         get => _currentHealth;
         set => _currentHealth = value;
     }
-    public Action OnTakeDamage { get; set; }
+    public Action<int> OnTakeDamage { get; set; }
     public Action<int> OnUpdateHealthBar { get; set; }
 
     private void Awake()
@@ -30,6 +30,6 @@ public class HealthController : MonoBehaviour, IDamage
         _vehiclePool.Pool(0, null);
 
         OnUpdateHealthBar?.Invoke(Health);       
-        OnTakeDamage?.Invoke();
+        OnTakeDamage?.Invoke(damage);
     }
 }
