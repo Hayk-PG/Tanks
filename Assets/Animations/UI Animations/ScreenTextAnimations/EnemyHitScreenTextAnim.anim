@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerDamageScreenTextAnim
+  m_Name: EnemyHitScreenTextAnim
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -24,7 +24,7 @@ AnimationClip:
         time: 0
         value: 0
         inSlope: 0
-        outSlope: 0
+        outSlope: 5
         tangentMode: 1
         weightedMode: 0
         inWeight: 0.33333334
@@ -32,7 +32,7 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.2
         value: 1
-        inSlope: 0
+        inSlope: 5
         outSlope: 0
         tangentMode: 1
         weightedMode: 0
@@ -41,16 +41,16 @@ AnimationClip:
       - serializedVersion: 3
         time: 1.2
         value: 1
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0
+        outSlope: -5.000002
         tangentMode: 1
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.4
-        value: 0.03
-        inSlope: 0
+        value: 0
+        inSlope: -5.000002
         outSlope: 0
         tangentMode: 1
         weightedMode: 0
@@ -78,16 +78,16 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.08
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0
+        outSlope: 8.333333
         tangentMode: 1
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.2
-        value: 0.78431374
-        inSlope: 0
+        value: 1
+        inSlope: 8.333333
         outSlope: 0
         tangentMode: 1
         weightedMode: 0
@@ -95,9 +95,9 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.2
-        value: 0.78431374
-        inSlope: 0
-        outSlope: 0
+        value: 1
+        inSlope: -0
+        outSlope: -5.000002
         tangentMode: 1
         weightedMode: 0
         inWeight: 0.33333334
@@ -105,7 +105,7 @@ AnimationClip:
       - serializedVersion: 3
         time: 1.4
         value: 0
-        inSlope: 0
+        inSlope: -5.000002
         outSlope: 0
         tangentMode: 1
         weightedMode: 0
@@ -141,7 +141,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.2
-        value: 0.78431374
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 1
@@ -150,7 +150,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.2
-        value: 0.78431374
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 1
@@ -170,7 +170,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.a
-    path: DamageText
+    path: HitText
     classID: 114
     script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_PPtrCurves: []
@@ -196,7 +196,7 @@ AnimationClip:
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 2805119050
+      path: 1943808792
       attribute: 304273561
       script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
       typeID: 114
@@ -231,7 +231,7 @@ AnimationClip:
         time: 0
         value: 0
         inSlope: 0
-        outSlope: 0
+        outSlope: 5
         tangentMode: 1
         weightedMode: 0
         inWeight: 0.33333334
@@ -239,7 +239,7 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.2
         value: 1
-        inSlope: 0
+        inSlope: 5
         outSlope: 0
         tangentMode: 1
         weightedMode: 0
@@ -248,16 +248,16 @@ AnimationClip:
       - serializedVersion: 3
         time: 1.2
         value: 1
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0
+        outSlope: -5.000002
         tangentMode: 1
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.4
-        value: 0.03
-        inSlope: 0
+        value: 0
+        inSlope: -5.000002
         outSlope: 0
         tangentMode: 1
         weightedMode: 0
@@ -285,16 +285,16 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.08
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0
+        outSlope: 8.333333
         tangentMode: 1
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.2
-        value: 0.78431374
-        inSlope: 0
+        value: 1
+        inSlope: 8.333333
         outSlope: 0
         tangentMode: 1
         weightedMode: 0
@@ -302,9 +302,9 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.2
-        value: 0.78431374
-        inSlope: 0
-        outSlope: 0
+        value: 1
+        inSlope: -0
+        outSlope: -5.000002
         tangentMode: 1
         weightedMode: 0
         inWeight: 0.33333334
@@ -312,7 +312,7 @@ AnimationClip:
       - serializedVersion: 3
         time: 1.4
         value: 0
-        inSlope: 0
+        inSlope: -5.000002
         outSlope: 0
         tangentMode: 1
         weightedMode: 0
@@ -348,7 +348,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.2
-        value: 0.78431374
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 1
@@ -357,7 +357,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.2
-        value: 0.78431374
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 1
@@ -377,7 +377,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.a
-    path: DamageText
+    path: HitText
     classID: 114
     script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_EulerEditorCurves: []

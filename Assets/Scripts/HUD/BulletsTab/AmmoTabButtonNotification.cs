@@ -47,7 +47,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
         if(pointsToUnlock > 0) _weaponsPointsToUnlock.Add(pointsToUnlock);
     }
 
-    public void GetPlayerScoreAndSubscibeToEvent(ScoreController scoreController)
+    public void CallPlayerEvents(ScoreController scoreController)
     {
         _playerScoreController = scoreController;
         _playerScoreController.OnPlayerGetsPoints += PlayerGetsPoints;

@@ -57,5 +57,6 @@ public class Explosion : MonoBehaviour
     {
         iDamage.Damage(_currentDamageValue);
         OwnerScore?.GetScore(_currentDamageValue * 100, iDamage);
+        OwnerScore?.HitEnemyAndGetScore(_currentDamageValue * 10, iDamage);
     }
 }

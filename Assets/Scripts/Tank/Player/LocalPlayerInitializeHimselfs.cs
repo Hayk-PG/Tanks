@@ -10,6 +10,7 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
     private TurnController _turnController;
     private AmmoTabButtonNotification _ammoTabButtonNotification;
     private ScreenText _screenText;
+    private TempPoints _tempPoints;
 
 
     private void Awake()
@@ -21,6 +22,7 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
         _turnController = FindObjectOfType<TurnController>();
         _ammoTabButtonNotification = FindObjectOfType<AmmoTabButtonNotification>();
         _screenText = FindObjectOfType<ScreenText>();
+        _tempPoints = FindObjectOfType<TempPoints>();
     }
 
     private void OnEnable()
@@ -41,11 +43,9 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
         {
             if (players.Find(playerTurn => playerTurn == _playerTurn))
             {
-                if (_scoreController != null)
-                {
-                    _ammoTabButtonNotification.GetPlayerScoreAndSubscibeToEvent(_scoreController);
-                    _screenText.GetPlayerHealthControllerAndSubscribeToEvent(_healthController);
-                }    
+                _ammoTabButtonNotification.CallPlayerEvents(_scoreController);
+                _screenText.CallPlayerEvents(_healthController, _scoreController);
+                _tempPoints.CallPlayerEvents(_scoreController);
             }
         }    
     }

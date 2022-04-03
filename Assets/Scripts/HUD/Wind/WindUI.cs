@@ -5,7 +5,10 @@ public class WindUI : MonoBehaviour
     private WindSystemController _windSystemController;
 
     [SerializeField]
-    private GameObject[] _icons;
+    private GameObject[] _arrows;
+
+    [SerializeField]
+    private GameObject _windIcon;
 
 
     private void Awake()
@@ -25,7 +28,7 @@ public class WindUI : MonoBehaviour
 
     private void OnWindForce(int windForce)
     {
-        IconsActivity(_icons.Length, windForce, false);
+        IconsActivity(_arrows.Length, windForce, false);
         IconsActivity(Mathf.Abs(windForce), windForce, true);
     }
 
@@ -33,8 +36,10 @@ public class WindUI : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            _icons[i].SetActive(isActive);
-            _icons[i].transform.rotation = Quaternion.Euler(0, windForce > 0 ? -180: 0, 0); 
+            _arrows[i].SetActive(isActive);
+            _arrows[i].transform.rotation = Quaternion.Euler(0, windForce > 0 ? -180: 0, 0); 
         }
+
+        _windIcon.SetActive(isActive);
     }
 }

@@ -10,6 +10,8 @@ public class ScoreController : MonoBehaviour, IScore
     public PlayerTurn PlayerTurn { get; set; }
     public IDamage IDamage { get; set; }
 
+    private AmmoTabCustomization _ammoTabCustomization;
+
     public int Score
     {
         get => _score;
@@ -17,8 +19,8 @@ public class ScoreController : MonoBehaviour, IScore
     }
     public Action<int, float> OnDisplayTempPoints { get; set; }
     public Action<int> OnPlayerGetsPoints { get; set; }
+    public Action<int> OnHitEnemy { get; set; }
 
-    private AmmoTabCustomization _ammoTabCustomization;
 
 
     private void Awake()
@@ -26,7 +28,7 @@ public class ScoreController : MonoBehaviour, IScore
         IDamage = Get<IDamage>.From(gameObject);
         PlayerTurn = Get<PlayerTurn>.From(gameObject);
 
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
+        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>(); 
 
         Score = 0;
     }
@@ -61,5 +63,10 @@ public class ScoreController : MonoBehaviour, IScore
         Score += score;
         OnDisplayTempPoints?.Invoke(score, 0.5f);
         OnPlayerGetsPoints?.Invoke(Score);
+    }
+
+    public void HitEnemyAndGetScore(int score, IDamage enemyDamage)
+    {
+        if (enemyDamage != IDamage) OnHitEnemy?.Invoke(score);
     }
 }
