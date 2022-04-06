@@ -12,4 +12,9 @@ public class Tab_Base<T> : MonoBehaviour where T: MonoBehaviour
         CanvasGroup = Get<CanvasGroup>.From(gameObject);
         _object = FindObjectOfType<T>();
     }
+
+    public virtual void OpenTab()
+    {
+        MenuTabs.Activity(CanvasGroup);
+    }
 }

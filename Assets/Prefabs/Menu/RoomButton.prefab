@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4097270071714978958}
   - component: {fileID: 4097270071714978959}
   m_Layer: 5
-  m_Name: JoinText
+  m_Name: Text_Join
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 4097270071996718557}
   - component: {fileID: 4097270071996718562}
   m_Layer: 5
-  m_Name: Server name text
+  m_Name: Text_RoomName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 4097270073050907621}
   - component: {fileID: 4097270073050907626}
   m_Layer: 5
-  m_Name: PlayersCountText
+  m_Name: Text_PlayersCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 4097270073143313755}
   - component: {fileID: 4097270073143313752}
   m_Layer: 5
-  m_Name: Additional info text
+  m_Name: Text_AdditionalInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -356,8 +356,9 @@ GameObject:
   - component: {fileID: 8004141986011984682}
   - component: {fileID: 8004141986011984684}
   - component: {fileID: 8004141986011984683}
+  - component: {fileID: 737595412983511274}
   m_Layer: 5
-  m_Name: ServerButton
+  m_Name: RoomButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -421,6 +422,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &737595412983511274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004141986011984681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3066a8e514a5d0046b54dc93a051cb85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text_roomNameText: {fileID: 4097270071996718562}
+  _text_additionalInfoText: {fileID: 4097270073143313752}
+  _text_playersCountText: {fileID: 4097270073050907626}
+  _image_roomIcon: {fileID: 8004141986225465691}
 --- !u!1 &8004141986057113915
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,7 +525,7 @@ GameObject:
   - component: {fileID: 8004141986225465692}
   - component: {fileID: 8004141986225465691}
   m_Layer: 5
-  m_Name: ItemIcon
+  m_Name: Image_Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -812,7 +829,7 @@ GameObject:
   - component: {fileID: 8004141987838075356}
   - component: {fileID: 8004141987838075355}
   m_Layer: 5
-  m_Name: Join Button
+  m_Name: Button_Join
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -917,4 +934,15 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8004141987838075356}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 737595412983511274}
+        m_MethodName: OnClickToJoin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

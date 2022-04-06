@@ -1,17 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public class Tab_StartGame : MonoBehaviour
+public class Tab_StartGame : Tab_Base<MyPhotonCallbacks>
 {
-    public CanvasGroup CanvasGroup { get; set; }
     public Action OnStartPlayVsAi { get; set; }
     public Action OnStartPlayVsOtherPlayer { get; set; }
 
-
-    private void Awake()
-    {
-        CanvasGroup = GetComponent<CanvasGroup>();
-    }
 
     public void OnClickVsAiButton()
     {
@@ -21,5 +15,11 @@ public class Tab_StartGame : MonoBehaviour
     public void OnClickVsPlayerButton()
     {
         OnStartPlayVsOtherPlayer?.Invoke();
+    }
+
+    public override void OpenTab()
+    {
+        MyPhoton.Disconnect();
+        base.OpenTab();
     }
 }

@@ -43,7 +43,7 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
 
     private void OnPhotonConnectedToMaster()
     {
-        MenuTabs.Activity(MenuTabs.Tab_SignUp.CanvasGroup);
+        base.OpenTab();
     }
 
     private void ButtonSignUpInteractability()

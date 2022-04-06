@@ -6,6 +6,11 @@ public partial class MyPhoton : MonoBehaviour
 {
     public static void StartConnection()
     {
-        PhotonNetwork.ConnectUsingSettings();
+        if (!PhotonNetwork.IsConnected) PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public static void Disconnect()
+    {
+        if (PhotonNetwork.IsConnected) PhotonNetwork.Disconnect();
     }
 }

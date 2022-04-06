@@ -84,6 +84,7 @@ GameObject:
   - component: {fileID: 2948652785991102559}
   - component: {fileID: 2948652785991102557}
   - component: {fileID: 2948652785991102558}
+  - component: {fileID: 1584921601275431340}
   m_Layer: 5
   m_Name: TopBar
   m_TagString: Untagged
@@ -150,6 +151,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1584921601275431340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2948652785991102544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4104586e623266346ae19a12e9945277, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnBackButton:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2948652786564600693
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +283,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2948652786564600690}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1584921601275431340}
+        m_MethodName: OnClickButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2948652787695265530
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,7 +636,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Servers
+  m_Text: SIGN UP
 --- !u!1 &7310795987744791294
 GameObject:
   m_ObjectHideFlags: 0

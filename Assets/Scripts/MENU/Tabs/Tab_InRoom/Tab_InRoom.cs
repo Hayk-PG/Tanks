@@ -19,17 +19,26 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
     private void OnEnable()
     {
         _object.OnRoomJoined += OnRoomJoined;
+        _object.OnRoomPlayerEntered += OnRoomPlayerEntered;
+        _object.OnRoomPlayerLeft += OnRoomPlayerEntered;
     }
 
     private void OnDisable()
     {
         _object.OnRoomJoined += OnRoomJoined;
+        _object.OnRoomPlayerEntered -= OnRoomPlayerEntered;
+        _object.OnRoomPlayerLeft -= OnRoomPlayerEntered;
     }
 
     private void OnRoomJoined(Room room)
     {
-        MenuTabs.Activity(MenuTabs.Tab_InRoom.CanvasGroup);        
+        base.OpenTab();  
         RoomName = room.Name;
+        UpdatePlayersInRoom();
+    }
+
+    private void OnRoomPlayerEntered(Player player)
+    {
         UpdatePlayersInRoom();
     }
 
