@@ -5,53 +5,53 @@ using UnityEngine.UI;
 public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
 {
     [SerializeField] private InputField _inputFieldEmail;
-    [SerializeField] private InputField _inputFieldId;
-    [SerializeField] private InputField _inputFieldPassword;
+    [SerializeField] protected InputField _inputFieldId;
+    [SerializeField] protected InputField _inputFieldPassword;
 
-    [SerializeField] private Button _buttonSignUp;
+    [SerializeField] private Button _confirmButton;
 
     private string Email
     {
         get => _inputFieldEmail.text;
     }
-    private string Id
+    protected string Id
     {
         get => _inputFieldId.text;
     }
-    private string Password
+    protected string Password
     {
         get => _inputFieldPassword.text;
     }
 
-    public Action<string, string, string> OnSignedUp { get; set; }
+    public Action<string, string, string> OnSigned { get; set; }
 
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         _object.OnPhotonConnectedToMaster += OnPhotonConnectedToMaster;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         _object.OnPhotonConnectedToMaster += OnPhotonConnectedToMaster;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         ButtonSignUpInteractability();
     }
 
-    private void OnPhotonConnectedToMaster()
+    protected virtual void OnPhotonConnectedToMaster()
     {
         base.OpenTab();
     }
 
-    private void ButtonSignUpInteractability()
+    protected virtual void ButtonSignUpInteractability()
     {
-        _buttonSignUp.interactable = Id.Length > 6 && Password.Length > 4 ? true : false;
+        _confirmButton.interactable = Id.Length > 6 && Password.Length > 4 ? true : false;
     }
 
-    public void OnClickSignUpButton()
+    public virtual void OnClickConfirmButton()
     {
         MyPhoton.SetNickName(Id);
     }

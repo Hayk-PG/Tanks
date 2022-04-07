@@ -31,7 +31,7 @@ public class Tab_Lobby : Tab_Base<MyPhotonCallbacks>
         if(_transform_Content.Find(roomInfo.Name) == null)
         {
             _copy_roomButton = Instantiate(_prefab_roomButton, _transform_Content);
-            _copy_roomButton.Instantiate(new RoomButton.UI(roomInfo.Name, "---", roomInfo.PlayerCount + "/" + roomInfo.MaxPlayers, null));
+            _copy_roomButton.AssignRoomButton(new RoomButton.UI(roomInfo.Name, "---", roomInfo.PlayerCount + "/" + roomInfo.MaxPlayers, null));
         }
         else
         {

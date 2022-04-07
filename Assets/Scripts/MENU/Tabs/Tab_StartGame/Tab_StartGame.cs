@@ -19,7 +19,10 @@ public class Tab_StartGame : Tab_Base<MyPhotonCallbacks>
 
     public override void OpenTab()
     {
+        MyPhoton.LeaveRoom();
+        MyPhoton.LeaveLobby();
         MyPhoton.Disconnect();
+
         base.OpenTab();
     }
 }

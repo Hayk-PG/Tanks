@@ -9,8 +9,7 @@ public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
     public Action<short, string> OnRoomFailedToCreate { get; set; }
     public Action<RoomInfo> OnUpdateRoomList { get; set; }
     public Action<Room> OnRoomJoined { get; set; }
-    public Action<Player> OnRoomPlayerEntered { get; set; }
-    public Action<Player> OnRoomPlayerLeft { get; set; }
+    public Action<Player> OnRoomPlayerEntered { get; set; }   
     public Action<short, string> OnRoomFailedToJoin { get; set; }
 
 
@@ -34,12 +33,7 @@ public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
     {
         OnRoomPlayerEntered?.Invoke(newPlayer);
     }
-
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        OnRoomPlayerLeft?.Invoke(otherPlayer);
-    }
-
+    
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         OnRoomFailedToJoin?.Invoke(returnCode, message);

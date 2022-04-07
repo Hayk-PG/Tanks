@@ -28,7 +28,7 @@ public class RoomButton : MonoBehaviour
         }
     }
 
-    public void Instantiate(UI ui)
+    public void AssignRoomButton(UI ui)
     {
         name = ui._roomName;
 
@@ -36,7 +36,7 @@ public class RoomButton : MonoBehaviour
         _text_additionalInfoText.text = ui._additionalInfo;
         _text_playersCountText.text = ui._playersCount;
 
-        if(_image_roomIcon.sprite != null) _image_roomIcon.sprite = ui._roomIcon;
+        if(ui._roomIcon != null) _image_roomIcon.sprite = ui._roomIcon;
     }
 
     public void OnClickToJoin()

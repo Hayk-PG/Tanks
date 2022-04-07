@@ -3,11 +3,11 @@ using UnityEngine.Events;
 
 public class TopBarBackButton : MonoBehaviour
 {
-    [SerializeField] private UnityEvent OnBackButton;
+    [SerializeField] protected UnityEvent OnButtonEvent;
 
 
     public void OnClickButton()
     {
-        OnBackButton?.Invoke();
+        OnButtonEvent?.Invoke();
     }
 }

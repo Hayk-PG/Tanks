@@ -8,5 +8,5 @@ public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         OnPhotonJoinedLobby?.Invoke();
-    }
+    }  
 }

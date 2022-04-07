@@ -46,7 +46,7 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
     {
         foreach (var item in _playersInRoom)
         {
-            item.DisplayProperties(new PlayerInRoom.Properties(null, false));
+            item.Hide();
         }
     }
 
@@ -56,7 +56,7 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
 
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
-            _playersInRoom[i].DisplayProperties(new PlayerInRoom.Properties(PhotonNetwork.PlayerList[i].NickName, true));
+            _playersInRoom[i].AssignPlayerInRoom(new PlayerInRoom.Properties(PhotonNetwork.PlayerList[i].NickName, PhotonNetwork.PlayerList[i].ActorNumber, true));
         }
     }
 }
