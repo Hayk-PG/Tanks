@@ -27,7 +27,7 @@ public class Network : MonoBehaviour
 
     public void InvokeRPCMethode(Player localPlayer)
     {
-        PhotonView.RPC("RPC", RpcTarget.AllBuffered, PhotonNetwork.LocalPlayer);
+        PhotonView.RPC("RPC", RpcTarget.AllBufferedViaServer, PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]

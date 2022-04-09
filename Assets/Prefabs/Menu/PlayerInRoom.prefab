@@ -109,7 +109,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -735,6 +735,7 @@ GameObject:
   - component: {fileID: 5181414768966009115}
   - component: {fileID: 4716968260128536783}
   - component: {fileID: 6647581268863238402}
+  - component: {fileID: 4132592719969576204}
   m_Layer: 5
   m_Name: PlayerInRoom
   m_TagString: Untagged
@@ -895,6 +896,18 @@ MonoBehaviour:
   - {r: 1, g: 0.5284843, b: 0.4764151, a: 1}
   _imageFrame: {fileID: 7666708143361005785}
   _imageBackground: {fileID: 7666708144183573274}
+--- !u!114 &4132592719969576204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292993762518654130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 533aa9e5ec5834942baea455b6c93fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1292993762583074122
 GameObject:
   m_ObjectHideFlags: 0
@@ -1432,7 +1445,7 @@ GameObject:
   - component: {fileID: 7666708144179804182}
   - component: {fileID: 7666708144179804183}
   m_Layer: 5
-  m_Name: Button_Status
+  m_Name: Button_Ready
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1503,8 +1516,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6647581268863238402}
-        m_MethodName: OnClickStatusButton
+      - m_Target: {fileID: 4132592719969576204}
+        m_MethodName: OnClickReadyButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

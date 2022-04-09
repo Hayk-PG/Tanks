@@ -12,6 +12,7 @@
 
     private void OnStartPlayVsAi()
     {
-        MySceneManager.Instance.LoadScene(MySceneManager.SceneName.Game);
+        MyPhotonNetwork.OfflineMode(true);
+        MyScene.Manager.LoadScene(MyScene.SceneName.Game);
     }
 }

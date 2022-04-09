@@ -7,6 +7,7 @@ public partial class MyPhoton : MonoBehaviour
     public static void CreateRoom(string roomName, string password, bool isPasswordSet)
     {
         RoomOptions roomOptions = new RoomOptions();
+        roomOptions.CleanupCacheOnLeave = true;
         roomOptions.MaxPlayers = 2;
         roomOptions.IsVisible = true;
         roomOptions.IsOpen = true;

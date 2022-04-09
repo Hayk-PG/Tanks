@@ -28,12 +28,12 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
 
     protected virtual void OnEnable()
     {
-        _object.OnPhotonConnectedToMaster += OnPhotonConnectedToMaster;
+        _object._OnConnectedToMaster += OnPhotonConnectedToMaster;
     }
 
     protected virtual void OnDisable()
     {
-        _object.OnPhotonConnectedToMaster += OnPhotonConnectedToMaster;
+        _object._OnConnectedToMaster += OnPhotonConnectedToMaster;
     }
 
     protected virtual void Update()

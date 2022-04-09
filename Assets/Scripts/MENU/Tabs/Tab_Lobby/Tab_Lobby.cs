@@ -11,14 +11,14 @@ public class Tab_Lobby : Tab_Base<MyPhotonCallbacks>
 
     private void OnEnable()
     {
-        _object.OnPhotonJoinedLobby += OnPhotonJoinedLobby;
-        _object.OnUpdateRoomList += OnUpdateRoomList;
+        _object._OnJoinedLobby += OnPhotonJoinedLobby;
+        _object._OnRoomListUpdate += OnUpdateRoomList;
     }
 
     private void OnDisable()
     {
-        _object.OnPhotonJoinedLobby -= OnPhotonJoinedLobby;
-        _object.OnUpdateRoomList -= OnUpdateRoomList;
+        _object._OnJoinedLobby -= OnPhotonJoinedLobby;
+        _object._OnRoomListUpdate -= OnUpdateRoomList;
     }
 
     private void OnPhotonJoinedLobby()

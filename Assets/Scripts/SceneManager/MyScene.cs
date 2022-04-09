@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MySceneManager : MonoBehaviour
+public class MyScene : MonoBehaviour
 {   
     public enum SceneName { Menu, Game}
 
     [HideInInspector]
     public SceneName _sceneName;
 
-    public static MySceneManager Instance { get; private set; }
+    public static MyScene Manager { get; private set; }
     public string MenuSceneName { get; private set; } = "Menu";
     public string GameSceneName { get; private set; } = "Game";
     public Scene CurrentScene { get => SceneManager.GetActiveScene(); }
@@ -18,9 +18,9 @@ public class MySceneManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if(Manager == null)
         {
-            Instance = this;
+            Manager = this;
             DontDestroyOnLoad(gameObject);
         }
         else

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerInRoom : MonoBehaviour
@@ -18,28 +19,39 @@ public class PlayerInRoom : MonoBehaviour
     {
         public string _playerName;
         public int _actorNumber;
-        public bool _isActive;
+        public bool _isPlayerReady;
 
-        public Properties(string playerName, int actorNumber, bool isActive)
+        public Properties(string playerName, int actorNumber, bool isPlayerReady)
         {
             _playerName = playerName;
             _actorNumber = actorNumber;
-            _isActive = isActive;
+            _isPlayerReady = isPlayerReady;
         }
     }
 
-
     public void AssignPlayerInRoom(Properties properties)
     {
-        name = properties._actorNumber.ToString();
-
-        PlayerName = properties._playerName;
-        PlayerActorNumber = properties._actorNumber;
-        GlobalFunctions.CanvasGroupActivity(_canvasGroup, properties._isActive);
+        SetObjectName(properties._actorNumber.ToString());
+        SetPlayerInformation(properties._playerName, properties._actorNumber, properties._isPlayerReady);
+        GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
     }
 
-    public void Hide()
+    public void ResetPlayerInRoom()
     {
+        SetObjectName("PlayerInRoom");
+        SetPlayerInformation("", 0, false);
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
+    }
+
+    private void SetObjectName(string name)
+    {
+        this.name = name;
+    }
+
+    private void SetPlayerInformation(string name, int actorNumber, bool isPlayerReady)
+    {
+        PlayerName = name;
+        PlayerActorNumber = actorNumber;
+        IsPlayerReady = isPlayerReady;
     }
 }

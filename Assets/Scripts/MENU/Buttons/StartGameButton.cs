@@ -7,7 +7,7 @@ public class StartGameButton : MonoBehaviour, IOnButtonInteract
 
     public void StartTheGame()
     {
-        MySceneManager.Instance.LoadScene(MySceneManager.SceneName.Game);
+        MyScene.Manager.LoadScene(MyScene.SceneName.Game);
         GlobalOnButtonInteract?.OnChangeButtonSpriteAndColor(GlobalOnButtonInteract.ButtonState.Clicked);
     }
 }

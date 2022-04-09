@@ -3,10 +3,10 @@ using System;
 
 public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
 {
-    public Action OnPhotonJoinedLobby { get; set; }
+    public Action _OnJoinedLobby { get; set; }
 
     public override void OnJoinedLobby()
     {
-        OnPhotonJoinedLobby?.Invoke();
+        _OnJoinedLobby?.Invoke();
     }  
 }

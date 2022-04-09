@@ -12,6 +12,7 @@
 
     private void OnStartPlayVsOtherPlayer()
     {
+        MyPhotonNetwork.OfflineMode(false);
         MyPhoton.StartConnection();
     }
 }

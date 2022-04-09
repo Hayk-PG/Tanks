@@ -4,12 +4,12 @@ using System;
 
 public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
 {
-    public Action OnPhotonConnectedToMaster { get; set; }
+    public Action _OnConnectedToMaster { get; set; }
 
 
     public override void OnConnectedToMaster()
     {
-        OnPhotonConnectedToMaster?.Invoke();          
+        _OnConnectedToMaster?.Invoke();          
     }
 
     public override void OnDisconnected(DisconnectCause cause)

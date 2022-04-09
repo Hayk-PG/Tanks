@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 using Photon.Realtime;
 
 public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
@@ -15,48 +14,74 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
     }
 
 
-
     private void OnEnable()
     {
-        _object.OnRoomJoined += OnRoomJoined;
-        _object.OnRoomPlayerEntered += OnRoomPlayerEntered;
-        _object.OnRoomPlayerLeft += OnRoomPlayerEntered;
+        _object._OnJoinedRoom += OnJoinedRoom;
+        _object._OnPlayerEnteredRoom += OnPlayerEnteredRoom;
+        _object._OnPlayerLeftRoom += OnPlayerLeftRoom;
+        _object._OnLeftRoom += OnLeftRoom;
     }
 
     private void OnDisable()
     {
-        _object.OnRoomJoined += OnRoomJoined;
-        _object.OnRoomPlayerEntered -= OnRoomPlayerEntered;
-        _object.OnRoomPlayerLeft -= OnRoomPlayerEntered;
+        _object._OnJoinedRoom += OnJoinedRoom;
+        _object._OnPlayerEnteredRoom -= OnPlayerEnteredRoom;
+        _object._OnPlayerLeftRoom -= OnPlayerLeftRoom;
+        _object._OnLeftRoom -= OnLeftRoom;
     }
 
-    private void OnRoomJoined(Room room)
+    private void OnJoinedRoom(Room room)
     {
-        base.OpenTab();  
         RoomName = room.Name;
         UpdatePlayersInRoom();
+        base.OpenTab();              
     }
 
-    private void OnRoomPlayerEntered(Player player)
+    private void OnPlayerEnteredRoom(Player player)
     {
         UpdatePlayersInRoom();
     }
 
-    private void HideAllPlayersInRoom()
+    private void OnPlayerLeftRoom(Player player)
     {
-        foreach (var item in _playersInRoom)
-        {
-            item.Hide();
-        }
+        UpdatePlayersInRoom();
+    }
+
+    private void OnLeftRoom()
+    {
+        ResetPlayersInRoom();
     }
 
     private void UpdatePlayersInRoom()
     {
-        HideAllPlayersInRoom();
+        ResetPlayersInRoom();
+        AssignPlayersInRoom();
+    }
 
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+    private void ResetPlayersInRoom()
+    {
+        foreach (var playerInRoom in _playersInRoom)
         {
-            _playersInRoom[i].AssignPlayerInRoom(new PlayerInRoom.Properties(PhotonNetwork.PlayerList[i].NickName, PhotonNetwork.PlayerList[i].ActorNumber, true));
+            playerInRoom.ResetPlayerInRoom();
         }
+    }
+
+    private void AssignPlayersInRoom()
+    {
+        for (int i = 0; i < MyPhotonNetwork.PlayersList.Length; i++)
+        {
+            _playersInRoom[i].AssignPlayerInRoom(new PlayerInRoom.Properties
+                (
+                MyPhotonNetwork.PlayersList[i].NickName,
+                MyPhotonNetwork.PlayersList[i].ActorNumber,
+                IsPlayerReady(MyPhotonNetwork.PlayersList[i])
+                ));
+        }
+    }
+
+    private bool IsPlayerReady(Player player)
+    {
+        return !player.CustomProperties.ContainsKey(PlayerCustomPropertiesKeys.IsPlayerReady) ? false :
+                (bool)player.CustomProperties[PlayerCustomPropertiesKeys.IsPlayerReady];
     }
 }

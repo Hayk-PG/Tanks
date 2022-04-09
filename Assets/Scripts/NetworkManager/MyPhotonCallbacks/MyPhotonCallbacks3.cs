@@ -1,27 +1,26 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
 using System;
-using System.Collections.Generic;
 
 public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
 {
-    public Action OnLobbyLeft { get; set; }
-    public Action OnRoomLeft { get; set; }
-    public Action<Player> OnRoomPlayerLeft { get; set; }
+    public Action _OnLeftLobby { get; set; }
+    public Action _OnLeftRoom { get; set; }
+    public Action<Player> _OnPlayerLeftRoom { get; set; }
 
 
     public override void OnLeftLobby()
     {
-        OnLobbyLeft?.Invoke();
+        _OnLeftLobby?.Invoke();
     }
 
     public override void OnLeftRoom()
     {
-        OnRoomLeft?.Invoke();
+        _OnLeftRoom?.Invoke();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        OnRoomPlayerLeft?.Invoke(otherPlayer);
+        _OnPlayerLeftRoom?.Invoke(otherPlayer);
     }
 }
