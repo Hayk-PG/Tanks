@@ -14,7 +14,7 @@ public class Network : MonoBehaviour
     {
         if(Manager != null)
         {
-            Destroy(Manager);
+            Destroy(gameObject);
         }
         else
         {

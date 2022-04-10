@@ -1,10 +1,12 @@
 ﻿using Photon.Realtime;
+using System;
 using UnityEngine;
 
 public class PlayerInRoomOnClickReadyButton : MonoBehaviour
 {
     private PlayerInRoom _playerInRoom;
     private Network _netWork;
+
 
     private void Awake()
     {
@@ -24,7 +26,11 @@ public class PlayerInRoomOnClickReadyButton : MonoBehaviour
 
     public void OnClickReadyButton()
     {
-        if (_netWork != null && _playerInRoom.PlayerActorNumber == MyPhotonNetwork.LocalPlayer.ActorNumber) _netWork.InvokeRPCMethode(MyPhotonNetwork.LocalPlayer);
+        if (_netWork != null && _playerInRoom.PlayerActorNumber == MyPhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            _netWork.InvokeRPCMethode(MyPhotonNetwork.LocalPlayer);
+            MyPlugins.StartService();
+        }
     }
 
     private void OnPlayerReady(Player localPlayer)
