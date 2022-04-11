@@ -79,7 +79,7 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
         }
     }
 
-    private bool IsPlayerReady(Player player)
+    public bool IsPlayerReady(Player player)
     {
         return !player.CustomProperties.ContainsKey(PlayerCustomPropertiesKeys.IsPlayerReady) ? false :
                 (bool)player.CustomProperties[PlayerCustomPropertiesKeys.IsPlayerReady];

@@ -7,7 +7,9 @@ public class Network : MonoBehaviour
 {
     public static Network Manager { get; set; }
     public PhotonView PhotonView { get; set; }
+
     public Action<Player> OnInvokeRPCMethode { get; set; }
+    public Action<Player> OnLoadLevelRPC { get; set; }
 
 
     private void Awake()
@@ -34,5 +36,16 @@ public class Network : MonoBehaviour
     private void RPC(Player localPlayer)
     {
         OnInvokeRPCMethode?.Invoke(localPlayer);
+    }
+
+    public void LoadLevelRPC(Player localPlayer)
+    {
+        PhotonView.RPC("LoadLevel", RpcTarget.All, PhotonNetwork.LocalPlayer);
+    }
+
+    [PunRPC]
+    private void LoadLevel(Player localPlayer)
+    {
+        OnLoadLevelRPC?.Invoke(localPlayer);
     }
 }

@@ -23,14 +23,16 @@ public partial class MyPlugins : MonoBehaviour
         _pluginInstance = new AndroidJavaObject(pluginName);
 
         _pluginInstance.CallStatic("GetUnityActivity", _unityActivity);
+
+        StartService();
     }
 
-    public static void StartService()
+    public void StartService()
     {
         _pluginInstance.CallStatic("StartService");
     }
 
-    public static void StopService()
+    public void StopService()
     {
         _pluginInstance.CallStatic("StopService");
     }

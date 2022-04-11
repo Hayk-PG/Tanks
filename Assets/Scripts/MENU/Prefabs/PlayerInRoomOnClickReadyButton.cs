@@ -1,17 +1,20 @@
-﻿using Photon.Realtime;
-using System;
+﻿using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class PlayerInRoomOnClickReadyButton : MonoBehaviour
 {
     private PlayerInRoom _playerInRoom;
     private Network _netWork;
+    private LoadLevel _loadLevel;
+
 
 
     private void Awake()
     {
         _playerInRoom = Get<PlayerInRoom>.From(gameObject);
         _netWork = FindObjectOfType<Network>();
+        _loadLevel = FindObjectOfType<LoadLevel>();
     }
 
     private void OnEnable()
@@ -26,19 +29,19 @@ public class PlayerInRoomOnClickReadyButton : MonoBehaviour
 
     public void OnClickReadyButton()
     {
-        if (_netWork != null && _playerInRoom.PlayerActorNumber == MyPhotonNetwork.LocalPlayer.ActorNumber)
+        if (_netWork != null && _playerInRoom.PlayerActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {
-            _netWork.InvokeRPCMethode(MyPhotonNetwork.LocalPlayer);
-            MyPlugins.StartService();
+            _netWork.InvokeRPCMethode(PhotonNetwork.LocalPlayer);
+            _loadLevel.Run(PhotonNetwork.LocalPlayer);
         }
     }
 
     private void OnPlayerReady(Player localPlayer)
     {
         if (_playerInRoom.PlayerActorNumber == localPlayer.ActorNumber)
-        {
+        {           
             _playerInRoom.IsPlayerReady = !_playerInRoom.IsPlayerReady;
-            MyPlayerCustomProperties.UpdatePlayerCustomProperties(localPlayer, PlayerCustomPropertiesKeys.IsPlayerReady, _playerInRoom.IsPlayerReady);            
+            PlayerCustomProperties.Update(localPlayer, PlayerCustomPropertiesKeys.IsPlayerReady, _playerInRoom.IsPlayerReady);            
         }
     }
 }
