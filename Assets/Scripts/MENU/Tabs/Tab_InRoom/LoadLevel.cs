@@ -31,17 +31,30 @@ public class LoadLevel : MonoBehaviour
 
     private void OnDisable()
     {
-        _myPlugins.OnPluginService -= OnPluginService;
+        UnsuscribeFromPluginService();
         _network.OnLoadLevelRPC -= OnLoadLevelRPC;
         _myPhotonCallbacks._OnLeftRoom -= OnLeftRoom;
+    }
+
+    private void SubscribeToPluginService()
+    {
+        _myPlugins.OnPluginService += OnPluginService;
+    }
+
+    private void UnsuscribeFromPluginService()
+    {
+        _myPlugins.OnPluginService -= OnPluginService;
     }
 
     public void Run(Player localPlayer)
     {
         if (localPlayer.IsMasterClient)
         {
-            _myPlugins.OnPluginService -= OnPluginService;
-            _myPlugins.OnPluginService += OnPluginService;
+            //UnsuscribeFromPluginService();
+            //SubscribeToPluginService();
+
+            //Test 
+            MyPhotonNetwork.LoadLevel();
         }
     }
 
@@ -57,14 +70,27 @@ public class LoadLevel : MonoBehaviour
 
     private void OnLoadLevelRPC(Player player)
     {
+        Conditions<bool>.Compare(player.IsMasterClient, MasterClientLoadLevel, null);
+    }
+
+    private void MasterClientLoadLevel()
+    {
+        int readyPlayersCount = 0;
+
         foreach (var p in MyPhotonNetwork.PlayersList)
         {
-            print(p.NickName + "/" + _tabInRoom.IsPlayerReady(p) + "/" + _playerInRoom.Find(number => number.PlayerActorNumber == p.ActorNumber)?.IsPlayerReady);
+            if (_tabInRoom.IsPlayerReady(p)) readyPlayersCount++;
+        }
+
+        if (readyPlayersCount == MyPhotonNetwork.PlayersList.Length)
+        {
+            UnsuscribeFromPluginService();
+            MyPhotonNetwork.LoadLevel();
         }
     }
 
     private void OnLeftRoom()
     {
-        _myPlugins.OnPluginService -= OnPluginService;
+        UnsuscribeFromPluginService();
     }
 }

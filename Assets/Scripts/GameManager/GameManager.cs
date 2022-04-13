@@ -1,34 +1,42 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPun
 {
-    public delegate void OnEvents();
-
     public bool IsGameStarted { get; private set; }
     public bool IsGameFinished { get; private set; }
     public bool IsGameRunning => IsGameStarted && !IsGameFinished;
     public float TimeToStartTheGame { get; private set; }
+    public Action OnGameStarted { get; set; }
+    
 
-    public event OnEvents OnGameStarted;
-
-
-    void Update()
+    private void Start()
     {
-        StartTheGame();
+        StartCoroutine(StartGameCoroutine());
     }
 
-    void StartTheGame()
+    private IEnumerator StartGameCoroutine()
     {
-        if (!IsGameStarted)
-        {
-            TimeToStartTheGame += 1 * Time.deltaTime;
+        yield return new WaitForSeconds(1);
 
-            if (TimeToStartTheGame >= 1)
-            {
-                IsGameStarted = true;
-                OnGameStarted?.Invoke();
-            }
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode && !IsGameStarted, StartOfflineMode, StartOnlineMode);
+    }
+
+    private void StartOfflineMode()
+    {
+        IsGameStarted = true;
+        OnGameStarted?.Invoke();
+    }
+
+    private void StartOnlineMode()
+    {
+        if (photonView.IsMine)
+        {
+            PhotonNetwork.RaiseEvent(EventInfo._code_InstantiatePlayers, EventInfo._content_InstantiatePlayers, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
         }
     }
 }

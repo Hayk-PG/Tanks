@@ -40,7 +40,7 @@ public class Network : MonoBehaviour
 
     public void LoadLevelRPC(Player localPlayer)
     {
-        PhotonView.RPC("LoadLevel", RpcTarget.All, PhotonNetwork.LocalPlayer);
+        PhotonView.RPC("LoadLevel", RpcTarget.AllViaServer, PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]
