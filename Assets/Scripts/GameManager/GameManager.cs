@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviourPun
     public bool IsGameFinished { get; private set; }
     public bool IsGameRunning => IsGameStarted && !IsGameFinished;
     public float TimeToStartTheGame { get; private set; }
+    public Action OnInstantiateOfflinePlayers { get; set; }
+
     public Action OnGameStarted { get; set; }
     
 
@@ -28,8 +30,7 @@ public class GameManager : MonoBehaviourPun
 
     private void StartOfflineMode()
     {
-        IsGameStarted = true;
-        OnGameStarted?.Invoke();
+        OnInstantiateOfflinePlayers?.Invoke();
     }
 
     private void StartOnlineMode()

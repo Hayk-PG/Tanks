@@ -2,7 +2,7 @@
 using Photon.Realtime;
 using UnityEngine;
 
-public class PhotonPlayer : MonoBehaviour
+public class PhotonPlayer : BasePlayer
 {
     [SerializeField] private PhotonView _photonView;
     [SerializeField] private string _nickName;
@@ -34,5 +34,6 @@ public class PhotonPlayer : MonoBehaviour
     {
         NickName = player.NickName;
         ActorNumber = player.ActorNumber;
+        AssignGameObjectName(NickName);
     }
 }

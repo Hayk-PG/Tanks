@@ -4,9 +4,9 @@ using UnityEngine.UI;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 
-public class InstantiatePhotonPlayers : MonoBehaviour
+public class InstantiateOnlinePlayers : MonoBehaviour
 {
-    private const string _playerPrefabName = "PhotonPlayer";
+    private readonly string _onlinePlayer = "OnlinePlayer";
 
     [SerializeField] private Text _playersText;
 
@@ -25,9 +25,9 @@ public class InstantiatePhotonPlayers : MonoBehaviour
     {
         if (data.Code == EventInfo._code_InstantiatePlayers)
         {
-            GameObject playerObj = PhotonNetwork.Instantiate(_playerPrefabName, Vector3.zero, Quaternion.identity);
-            Player player = PhotonNetwork.CurrentRoom.GetPlayer(playerObj.GetComponent<PhotonView>().CreatorActorNr);
-            PhotonPlayer photonPlayer = playerObj.GetComponent<PhotonPlayer>();
+            GameObject onlinePlayer = PhotonNetwork.Instantiate(_onlinePlayer, Vector3.zero, Quaternion.identity);
+            Player player = PhotonNetwork.CurrentRoom.GetPlayer(onlinePlayer.GetComponent<PhotonView>().CreatorActorNr);
+            PhotonPlayer photonPlayer = onlinePlayer.GetComponent<PhotonPlayer>();
             photonPlayer.InitializePlayer(player);
             _playersText.text += player.NickName + "/" + player.ActorNumber + "/" + photonPlayer.PhotonView.ViewID;
         }
