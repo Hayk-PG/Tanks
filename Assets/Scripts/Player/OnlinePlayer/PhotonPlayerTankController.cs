@@ -1,29 +1,11 @@
-﻿using UnityEngine;
-
-public class PhotonPlayerTankController : BasePlayerTankController<TankController>
+﻿
+public class PhotonPlayerTankController : BasePlayerTankController<BasePlayer>
 {
-    private PhotonPlayerController _photonPlayerController;
-
-    internal TankMovement _tankMovement;
-    internal Rigidbody _tankRigidbody;
-
-
-    private void Awake()
+    protected override void GetTankControl()
     {
-        _photonPlayerController = Get<PhotonPlayerController>.From(gameObject);
-    }
-
-    public override void GetControl(TankController tank)
-    {
-        OwnTank = tank;
-        Conditions<bool>.Compare(photonView.IsMine, OnPhotonViewIsMine, null);
-
-        _tankMovement = OwnTank?.GetComponent<TankMovement>();
-        _tankRigidbody = OwnTank?.GetComponent<Rigidbody>();
-    }
-
-    private void OnPhotonViewIsMine()
-    {
-        OwnTank.GetTankControl(_photonPlayerController);
+        if (photonView.IsMine)
+        {
+            OwnTank?.GetTankControl(_playerController);
+        }
     }
 }

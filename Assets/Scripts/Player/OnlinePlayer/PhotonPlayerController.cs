@@ -22,13 +22,6 @@ public class PhotonPlayerController : BasePlayer
         set => _actorNumber = value;
     }
 
-    private PlayerTankSpawner _tankSpawner;
-
-
-    private void Awake()
-    {
-        _tankSpawner = Get<PlayerTankSpawner>.From(gameObject);
-    }
 
     public void InitializePlayer(Player player)
     {
@@ -41,6 +34,6 @@ public class PhotonPlayerController : BasePlayer
         NickName = player.NickName;
         ActorNumber = player.ActorNumber;
         AssignGameObjectName(NickName);
-        _tankSpawner.SpawnTanks(0, player.IsMasterClient ? 0 : 1);
+        Get<PhotonPlayerTankSpawner>.From(gameObject).SpawnTanks(0, player.IsMasterClient ? 0 : 1);
     }
 }

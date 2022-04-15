@@ -3,13 +3,13 @@
 public class InstantiateOfflinePlayer : MonoBehaviour
 {
     private GameManager _gameManager;
-    private OfflinePlayer _offlinePlayer;
+    private OfflinePlayerController _offlinePlayer;
 
 
     private void Awake()
     {
         _gameManager = Get<GameManager>.From(gameObject);
-        _offlinePlayer = Resources.Load<OfflinePlayer>("OfflinePlayer");
+        _offlinePlayer = Resources.Load<OfflinePlayerController>("OfflinePlayer");
     }
 
     private void OnEnable()
@@ -24,6 +24,7 @@ public class InstantiateOfflinePlayer : MonoBehaviour
 
     private void Instantiate()
     {
-        OfflinePlayer offlinePlayer = Instantiate(_offlinePlayer);
+        OfflinePlayerController offlinePlayer = Instantiate(_offlinePlayer);
+        offlinePlayer.Initialize();
     }
 }

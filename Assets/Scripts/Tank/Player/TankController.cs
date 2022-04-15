@@ -7,7 +7,7 @@ public class TankController : MonoBehaviour
     private Subscription _subscribeToPlayerJoystick;
     private Subscription _unsubscribeFromPlayerJosytick;
     
-    private PhotonPlayerController _player;
+    private BasePlayer _player;
     private PlayerJoystick _playerJoystick;
 
     internal Action<float> OnHorizontalJoystick { get; set; }
@@ -36,7 +36,7 @@ public class TankController : MonoBehaviour
         _unsubscribeFromPlayerJosytick?.Invoke(_playerJoystick != null);
     }
 
-    public void GetTankControl(PhotonPlayerController player)
+    public void GetTankControl(BasePlayer player)
     {
         _player = player;
 
