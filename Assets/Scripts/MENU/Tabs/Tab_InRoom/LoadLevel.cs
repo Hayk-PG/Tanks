@@ -50,11 +50,11 @@ public class LoadLevel : MonoBehaviour
     {
         if (localPlayer.IsMasterClient)
         {
-            //UnsuscribeFromPluginService();
-            //SubscribeToPluginService();
+            UnsuscribeFromPluginService();
+            SubscribeToPluginService();
 
             //Test 
-            MyPhotonNetwork.LoadLevel();
+            //MyPhotonNetwork.LoadLevel();
         }
     }
 

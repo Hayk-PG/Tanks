@@ -27,7 +27,7 @@ public class InstantiateOnlinePlayers : MonoBehaviour
         {
             GameObject onlinePlayer = PhotonNetwork.Instantiate(_onlinePlayer, Vector3.zero, Quaternion.identity);
             Player player = PhotonNetwork.CurrentRoom.GetPlayer(onlinePlayer.GetComponent<PhotonView>().CreatorActorNr);
-            PhotonPlayer photonPlayer = onlinePlayer.GetComponent<PhotonPlayer>();
+            PhotonPlayerController photonPlayer = onlinePlayer.GetComponent<PhotonPlayerController>();
             photonPlayer.InitializePlayer(player);
             _playersText.text += player.NickName + "/" + player.ActorNumber + "/" + photonPlayer.PhotonView.ViewID;
         }

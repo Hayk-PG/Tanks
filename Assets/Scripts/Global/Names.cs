@@ -17,4 +17,7 @@ public static class Names
     public static string TR = "TR";
 
     public static string Play = "play";
+
+    public static string Tank_FirstPlayer = "Tank1";
+    public static string Tank_SecondPlayer = "Tank2";
 }

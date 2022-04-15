@@ -13,8 +13,8 @@ public class PlayerJoystick : MonoBehaviourPun
 
     protected virtual void Awake()
     {
-        _horizontalJoystick = GameObject.Find("HorizontalJoystick").GetComponent<FixedJoystick>();
-        _verticalJoystick = GameObject.Find("VerticalJoystick").GetComponent<FixedJoystick>();
+        _horizontalJoystick = GameObject.Find(Names.HorizontalJoystick).GetComponent<FixedJoystick>();
+        _verticalJoystick = GameObject.Find(Names.VerticalJoystick).GetComponent<FixedJoystick>();
     }
 
     private void Update()

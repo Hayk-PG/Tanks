@@ -2,16 +2,29 @@
 
 public class TankMovement : BaseTankMovement
 {
-    private FixedJoystick _joystick;
+    private TankController _tankController;
 
 
     protected override void Awake()
     {
-        base.Awake();
-
-        _joystick = GameObject.Find(Names.HorizontalJoystick).GetComponent<FixedJoystick>();
-
+        base.Awake();      
         RigidbodyCenterOfMass();
+        _tankController = Get<TankController>.From(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        _tankController.OnHorizontalJoystick += OnHorizontalJoystick;
+    }
+
+    private void OnDisable()
+    {
+        _tankController.OnHorizontalJoystick -= OnHorizontalJoystick;
+    }
+
+    private void OnHorizontalJoystick(float horizontal)
+    {
+        Direction = name == Names.Tank_FirstPlayer ? horizontal: -horizontal;
     }
 
     private void FixedUpdate()
@@ -25,16 +38,8 @@ public class TankMovement : BaseTankMovement
         Brake();
         RigidbodyEulerAngles();
 
-        if (_playerTurn.IsMyTurn)
-        {
-            Raycasts();
-            UpdateSpeedAndPush();
-            Direction = _joystick.Horizontal;
-        }
-        else
-        {
-            Direction = 0;
-        }
+        Raycasts();
+        UpdateSpeedAndPush();
     }
 
     private void MotorTorque()

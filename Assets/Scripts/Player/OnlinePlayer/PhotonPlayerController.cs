@@ -2,12 +2,11 @@
 using Photon.Realtime;
 using UnityEngine;
 
-public class PhotonPlayer : BasePlayer
+public class PhotonPlayerController : BasePlayer
 {
     [SerializeField] private PhotonView _photonView;
     [SerializeField] private string _nickName;
     [SerializeField] private int _actorNumber;
-
     public PhotonView PhotonView
     {
         get => _photonView;
@@ -23,6 +22,13 @@ public class PhotonPlayer : BasePlayer
         set => _actorNumber = value;
     }
 
+    private PlayerTankSpawner _tankSpawner;
+
+
+    private void Awake()
+    {
+        _tankSpawner = Get<PlayerTankSpawner>.From(gameObject);
+    }
 
     public void InitializePlayer(Player player)
     {
@@ -35,5 +41,6 @@ public class PhotonPlayer : BasePlayer
         NickName = player.NickName;
         ActorNumber = player.ActorNumber;
         AssignGameObjectName(NickName);
+        _tankSpawner.SpawnTanks(0, player.IsMasterClient ? 0 : 1);
     }
 }
