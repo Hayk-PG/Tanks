@@ -6,5 +6,6 @@ public class OfflinePlayerController : BasePlayer
     {
         AssignGameObjectName("Player");
         Get<OfflinePlayerTankSpawner>.From(gameObject).SpawnTanks(0, 0);
+        PlayerReady(0);
     }
 }

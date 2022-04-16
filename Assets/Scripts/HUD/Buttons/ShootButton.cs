@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class ShootButton : MonoBehaviour
 {
-    public delegate void OnButton(bool isTrue);
-
-    public event OnButton OnPointer;
-    public event OnButton OnClick;
+    public Action<bool> OnPointer { get; set; }
+    public Action<bool> OnClick { get; set; }
 
     [SerializeField] bool p;
 

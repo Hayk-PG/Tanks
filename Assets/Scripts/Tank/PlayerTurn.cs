@@ -5,30 +5,30 @@ public class PlayerTurn : MonoBehaviour
 {
     [SerializeField]
     private TurnState _myTurn;
+    private TurnController _turnController;
+
     public TurnState MyTurn
     {
         get => _myTurn;
         set => _myTurn = value;
-    }
-    public TurnController TurnController { get; private set; }
-    public bool IsMyTurn{ get; private set; }
-
+    }  
+    public bool IsMyTurn{ get; set; }
     public event Action<TurnState, TurnState> OnTurnChangeEventReceived;
 
 
     private void Awake()
     {
-        TurnController = FindObjectOfType<TurnController>();
+        _turnController = FindObjectOfType<TurnController>();
     }
 
     private void OnEnable()
     {
-        TurnController.OnTurnChanged += OnTurnChanged;
+        _turnController.OnTurnChanged += OnTurnChanged;
     }
    
     private void OnDisable()
     {
-        TurnController.OnTurnChanged -= OnTurnChanged;
+        _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
     private void OnTurnChanged(TurnState arg1, CameraMovement arg2)

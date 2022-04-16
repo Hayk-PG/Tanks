@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using System;
-using System.Linq;
+using Photon.Pun;
 
 public enum TurnState { None, Transition, Player1, Player2, Other}
 
-public class TurnController : MonoBehaviour
+public class TurnController : MonoBehaviourPun
 {
     public TurnState _turnState;
     public TurnState _previousTurnState;
@@ -15,7 +14,7 @@ public class TurnController : MonoBehaviour
 
     private List<PlayerTurn> _playersTurn;
 
-    public event Action<TurnState,CameraMovement> OnTurnChanged;
+    public Action<TurnState,CameraMovement> OnTurnChanged { get; set; }
 
     /// <summary>
     /// 0: PlayerOne 1:PlayerTwo
@@ -26,7 +25,7 @@ public class TurnController : MonoBehaviour
 
     private void Awake()
     {
-        _gameManager = FindObjectOfType<GameManager>();
+        _gameManager = Get<GameManager>.From(gameObject);
         _cameraMovement = FindObjectOfType<CameraMovement>();
     }
 
@@ -40,46 +39,26 @@ public class TurnController : MonoBehaviour
         _gameManager.OnGameStarted -= SetPlayersTurnOnGameStart;
     }
 
-    private void SharePlayersTurnOrder()
-    {
-        _playersTurn = FindObjectsOfType<PlayerTurn>().ToList();
-
-        for (int i = 0; i < _playersTurn.Count; i++)
-        {
-            if(_playersTurn[i].transform.position.x < 0)
-            {
-                _playersTurn[i].MyTurn = TurnState.Player1;
-                Players.Add(_playersTurn[i]);
-            }
-            else
-            {
-                _playersTurn[i].MyTurn = TurnState.Player2;
-                Players.Add(_playersTurn[i]);
-            }
-        }
-
-        OnPlayers?.Invoke(_playersTurn);
-    }
-
     private void SetPlayersTurnOnGameStart()
     {
-        SharePlayersTurnOrder();
-        SetNextTurn(RandomTurn());
-    }
-
-    private TurnState RandomTurn()
-    {
-        int randomTurn = UnityEngine.Random.Range(0, 2);
-        _turnState = randomTurn == 0 ? TurnState.Player1 : TurnState.Player2;
-
-        return _turnState;
+        SetNextTurn(TurnState.Player1);
     }
 
     public void SetNextTurn(TurnState turnState)
     {
-        if(_turnState == TurnState.Player1 || _turnState == TurnState.Player2) _previousTurnState = _turnState;
-        _turnState = turnState;
+        if (!MyPhotonNetwork.IsOfflineMode && photonView.IsMine)
+            photonView.RPC("NextTurn", RpcTarget.AllViaServer, (int)turnState);
+        else if (MyPhotonNetwork.IsOfflineMode)
+            NextTurn((int)turnState);
+    }
 
+    [PunRPC]
+    private void NextTurn(int turnStateIndex)
+    {
+        if ((TurnState)turnStateIndex == TurnState.Player1 || (TurnState)turnStateIndex == TurnState.Player2)
+            _previousTurnState = _turnState;
+
+        _turnState = (TurnState)turnStateIndex;
         Invoke("NextTurnFromTransition", 2);
         OnTurnChanged?.Invoke(_turnState, _cameraMovement);
     }

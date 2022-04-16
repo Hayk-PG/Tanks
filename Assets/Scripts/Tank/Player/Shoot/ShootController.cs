@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class ShootController : MonoBehaviour
 {
-    private FixedJoystick _joystick;
-    private ShootButton _shootButton;
+    private TankController _tankController;
     private Rigidbody _rigidBody;
     private PlayerTurn _playerTurn;
     private IScore _iScore;
@@ -13,7 +12,7 @@ public class ShootController : MonoBehaviour
     [SerializeField]
     private PlayerShootTrajectory _playerShootTrajectory;
 
-    public float Direction => -_joystick.Vertical;
+    public float Direction { get; set; }
     public int ActiveAmmoIndex { get; set; }
 
     public Action<bool> OnCanonRotation;
@@ -67,8 +66,7 @@ public class ShootController : MonoBehaviour
 
     private void Awake()
     {
-        _joystick = GameObject.Find(Names.VerticalJoystick).GetComponent<FixedJoystick>();
-        _shootButton = FindObjectOfType<ShootButton>();
+        _tankController = Get<TankController>.From(gameObject);
         _rigidBody = GetComponent<Rigidbody>();
         _playerTurn = GetComponent<PlayerTurn>();
         _iScore = Get<IScore>.From(gameObject);
@@ -77,14 +75,16 @@ public class ShootController : MonoBehaviour
 
     private void OnEnable()
     {
-        _shootButton.OnPointer += OnShootButtonPointer;
-        _shootButton.OnClick += OnShootButtonClick;
+        _tankController.OnVerticalJoystick += OnVerticalJoystick;
+        _tankController.OnShootButtonPointer += OnShootButtonPointer;
+        _tankController.OnShootButtonClick += OnShootButtonClick;
     }
 
     private void OnDisable()
     {
-        _shootButton.OnPointer -= OnShootButtonPointer;
-        _shootButton.OnClick -= OnShootButtonClick;
+        _tankController.OnVerticalJoystick -= OnVerticalJoystick;
+        _tankController.OnShootButtonPointer -= OnShootButtonPointer;
+        _tankController.OnShootButtonClick -= OnShootButtonClick;
     }
 
     private void Update()
@@ -98,6 +98,11 @@ public class ShootController : MonoBehaviour
         }
     }
 
+    private void OnVerticalJoystick(float value)
+    {
+        Direction = value;
+    }
+
     public void RotateCanon()
     {
         _canon._currentEulerAngleX = _canon._canonPivotPoint.localEulerAngles.x;
@@ -109,15 +114,15 @@ public class ShootController : MonoBehaviour
 
         OnCanonRotation?.Invoke(Direction != 0);
     }
-
-    private void OnShootButtonClick(bool isTrue)
-    {
-        if(_playerTurn.IsMyTurn) ShootBullet();
-    }
-
+    
     private void OnShootButtonPointer(bool isTrue)
     {
         _shoot._isApplyingForce = isTrue;
+    }
+
+    private void OnShootButtonClick(bool isTrue)
+    {
+        if (_playerTurn.IsMyTurn) ShootBullet();
     }
 
     private void ApplyForce()

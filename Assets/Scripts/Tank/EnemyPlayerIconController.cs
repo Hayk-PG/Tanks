@@ -17,14 +17,14 @@ public class EnemyPlayerIconController : MonoBehaviour
 
     private void OnEnable()
     {
-        _playerTurn.OnTurnChangeEventReceived += OnTurnChangeEventReceived;
-        _enemyPlayerIcon.OnIconMove += OnIconMove;
+        //_playerTurn.OnTurnChangeEventReceived += OnTurnChangeEventReceived;
+        //_enemyPlayerIcon.OnIconMove += OnIconMove;
     }
    
     private void OnDisable()
     {
-        _playerTurn.OnTurnChangeEventReceived -= OnTurnChangeEventReceived;
-        _enemyPlayerIcon.OnIconMove -= OnIconMove;
+        //_playerTurn.OnTurnChangeEventReceived -= OnTurnChangeEventReceived;
+        //_enemyPlayerIcon.OnIconMove -= OnIconMove;
     }
 
     private void OnTurnChangeEventReceived(TurnState currentTurn, TurnState myTurn)

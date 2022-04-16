@@ -23,6 +23,11 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
                 stream.SendNext(_photonPlayerTankController._tankRigidbody.position);
                 stream.SendNext(_photonPlayerTankController._tankRigidbody.rotation);
             }
+
+            if(_photonPlayerTankController._playerTurn != null)
+            {
+                stream.SendNext(_photonPlayerTankController._playerTurn.IsMyTurn);
+            }
         }
         else
         {
@@ -33,6 +38,11 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             {
                 _photonPlayerTankController._tankRigidbody.position = (Vector3)stream.ReceiveNext();
                 _photonPlayerTankController._tankRigidbody.rotation = (Quaternion)stream.ReceiveNext();
+            }
+
+            if (_photonPlayerTankController._playerTurn != null)
+            {
+                _photonPlayerTankController._playerTurn.IsMyTurn = (bool)stream.ReceiveNext();
             }
         }
     }
