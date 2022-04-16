@@ -7,12 +7,12 @@ using ExitGames.Client.Photon;
 
 public class GameManager : MonoBehaviourPun
 {
-    public bool IsGameStarted { get; private set; }
+    public static bool MasterPlayerReady { get; set; }
+    public static bool SecondPlayerReady { get; set; }
+    public static bool IsGameStarted { get; internal set; }
     public bool IsGameFinished { get; private set; }
     public bool IsGameRunning => IsGameStarted && !IsGameFinished;
-    public float TimeToStartTheGame { get; private set; }
     public Action OnInstantiateOfflinePlayers { get; set; }
-
     public Action OnGameStarted { get; set; }
     
 

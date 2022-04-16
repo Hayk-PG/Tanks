@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
@@ -35,5 +36,6 @@ public class PhotonPlayerController : BasePlayer
         ActorNumber = player.ActorNumber;
         AssignGameObjectName(NickName);
         Get<PhotonPlayerTankSpawner>.From(gameObject).SpawnTanks(0, player.IsMasterClient ? 0 : 1);
+        PlayerReady(player.IsMasterClient ? 0 : 1);
     }
 }

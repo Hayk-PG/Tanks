@@ -6,4 +6,12 @@ public class BasePlayer : MonoBehaviour
     {
         this.name = name;
     }
+
+    protected virtual void PlayerReady(int playerIndex)
+    {
+        if (playerIndex == 0)
+            GameManager.MasterPlayerReady = true;
+        else
+            GameManager.SecondPlayerReady = true;
+    }
 }

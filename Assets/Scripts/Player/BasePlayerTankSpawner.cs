@@ -27,10 +27,17 @@ public class BasePlayerTankSpawner<T> : MonoBehaviourPun
         tank.name = spawnPointIndex == 0 ? Names.Tank_FirstPlayer : Names.Tank_SecondPlayer;
 
         CacheSpawnedTank(tank);
+        SetSpawnedTanksTurn(spawnPointIndex, tank);
     }
 
     protected virtual void CacheSpawnedTank(TankController tank)
     {
         
+    }
+
+    protected virtual void SetSpawnedTanksTurn(int spawnPointIndex, TankController tank)
+    {
+        PlayerTurn playerTurn = tank?.GetComponent<PlayerTurn>();
+        if(playerTurn != null) playerTurn.MyTurn = spawnPointIndex == 0 ? TurnState.Player1 : TurnState.Player2;
     }
 }
