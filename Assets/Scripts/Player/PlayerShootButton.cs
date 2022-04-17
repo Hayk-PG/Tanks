@@ -16,13 +16,16 @@ public class PlayerShootButton : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        _shootButton.OnPointer += OnShootButtonPointer;
-        _shootButton.OnClick += OnShootButtonClick;
+        _shootButton.OnPointer += OnPointer;
+        _shootButton.OnClick += OnClick;
     }
 
     protected virtual void OnDisable()
     {
-        _shootButton.OnPointer -= OnShootButtonPointer;
-        _shootButton.OnClick += OnShootButtonClick;
+        _shootButton.OnPointer -= OnPointer;
+        _shootButton.OnClick += OnClick;
     }
+
+    private void OnClick(bool t) => OnShootButtonClick?.Invoke(t);
+    private void OnPointer(bool t) => OnShootButtonPointer?.Invoke(t);
 }

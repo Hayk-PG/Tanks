@@ -10,8 +10,6 @@ public class LoadLevel : MonoBehaviour
     private Network _network;
     private MyPhotonCallbacks _myPhotonCallbacks;
 
-    private List<PlayerInRoom> _playerInRoom;
-
 
     private void Awake()
     {
@@ -19,8 +17,6 @@ public class LoadLevel : MonoBehaviour
         _myPlugins = FindObjectOfType<MyPlugins>();
         _network = FindObjectOfType<Network>();
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
-
-        _playerInRoom = GetComponentsInChildren<PlayerInRoom>().ToList();
     }
 
     private void OnEnable()
@@ -50,11 +46,11 @@ public class LoadLevel : MonoBehaviour
     {
         if (localPlayer.IsMasterClient)
         {
-            //UnsuscribeFromPluginService();
-            //SubscribeToPluginService();
+            UnsuscribeFromPluginService();
+            SubscribeToPluginService();
 
             //Test 
-            MyPhotonNetwork.LoadLevel();
+            //MyPhotonNetwork.LoadLevel();
         }
     }
 

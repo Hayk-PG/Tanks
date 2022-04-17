@@ -4,22 +4,13 @@ using UnityEngine;
 public class ShootController : MonoBehaviour
 {
     private TankController _tankController;
+    private PhotonPlayerShootRPC _photonPlayerShootRPC;
     private Rigidbody _rigidBody;
     private PlayerTurn _playerTurn;
     private IScore _iScore;
     private PlayerAmmoType _playerAmmoType;
-
-    [SerializeField]
-    private PlayerShootTrajectory _playerShootTrajectory;
-
-    public float Direction { get; set; }
-    public int ActiveAmmoIndex { get; set; }
-
-    public Action<bool> OnCanonRotation;
-    internal Action<bool> OnApplyingForce;
-    
-    [Serializable]
-    private struct Canon
+        
+    [Serializable] private struct Canon
     {
         internal float _currentEulerAngleX;
         [SerializeField] internal float _minEulerAngleX, _maxEulerAngleX;
@@ -28,8 +19,7 @@ public class ShootController : MonoBehaviour
         [SerializeField] internal Transform _canonPivotPoint;
         [SerializeField] internal Vector3 _rotationStabilizer;
     }
-    [Serializable]
-    private struct Shoot
+    [Serializable] private struct Shoot
     {
         [Header("Force")]
         [SerializeField] internal float _currentForce;
@@ -41,12 +31,6 @@ public class ShootController : MonoBehaviour
         [Header("Bullet")]
         [SerializeField] internal Transform _shootPoint;
     }
-
-    [SerializeField]
-    private Canon _canon;
-    [SerializeField]
-    private Shoot _shoot;
-
     internal class PlayerHUDValues
     {
         internal float _currentAngle, _minAngle, _maxAngle;
@@ -62,7 +46,31 @@ public class ShootController : MonoBehaviour
             this._maxForce = _maxForce;
         }
     }
+    [SerializeField] private Canon _canon;
+    [SerializeField] private Shoot _shoot;
+    [SerializeField] private PlayerShootTrajectory _playerShootTrajectory; 
+
+    public float Direction { get; set; }
+    public float CurrentForce
+    {
+        get => _shoot._currentForce;
+        set => _shoot._currentForce = value;
+    }
+    public int ActiveAmmoIndex { get; set; }
+    public Transform CanonPivotPoint
+    {
+        get => _canon._canonPivotPoint;
+    }
+    public bool IsApplyingForce
+    {
+        get => _shoot._isApplyingForce;
+        set => _shoot._isApplyingForce = value;
+    }
+   
+    public Action<bool> OnCanonRotation;
+    internal Action<bool> OnApplyingForce;
     internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
+
 
     private void Awake()
     {
@@ -89,18 +97,15 @@ public class ShootController : MonoBehaviour
 
     private void Update()
     {
-        if (_playerTurn.IsMyTurn)
-        {
-            RotateCanon();
-            ApplyForce();
+        RotateCanon();
+        ApplyForce();
 
-            OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canon._canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
-        }
+        OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canon._canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
     }
 
     private void OnVerticalJoystick(float value)
     {
-        Direction = value;
+        Direction = -value;
     }
 
     public void RotateCanon()
@@ -117,45 +122,61 @@ public class ShootController : MonoBehaviour
     
     private void OnShootButtonPointer(bool isTrue)
     {
-        _shoot._isApplyingForce = isTrue;
+        IsApplyingForce = isTrue;
     }
 
     private void OnShootButtonClick(bool isTrue)
     {
-        if (_playerTurn.IsMyTurn) ShootBullet();
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, ()=> ShootBullet(CurrentForce), ()=> ShootBulletRPC(CurrentForce));
+        AmmoUpdate();
     }
 
     private void ApplyForce()
     {
-        if (_shoot._isApplyingForce)
-        {
-            _shoot._currentForce = Mathf.SmoothDamp(_shoot._currentForce, _shoot._maxForce, ref _shoot._currentVelocity, _shoot._smoothTime * Time.deltaTime, _shoot._maxSpeed);
-
-            OnApplyingForce?.Invoke(true);
-        }
-        else
-        {
-            if (_shoot._currentForce != _shoot._minForce) _shoot._currentForce = _shoot._minForce;
-
-            OnApplyingForce?.Invoke(false);
-        }
-
-        _playerShootTrajectory.TrajectoryPrediction(_shoot._currentForce);
+        Conditions<bool>.Compare(IsApplyingForce, OnForceApplied, OnForceReleased);
+        _playerShootTrajectory.TrajectoryPrediction(CurrentForce);
     }
 
-    private void ShootBullet()
+    private void OnForceApplied()
+    {
+        CurrentForce = Mathf.SmoothDamp(CurrentForce, _shoot._maxForce, ref _shoot._currentVelocity, _shoot._smoothTime * Time.deltaTime, _shoot._maxSpeed);
+        OnApplyingForce?.Invoke(true);
+    }
+
+    private void OnForceReleased()
+    {
+        if (CurrentForce != _shoot._minForce) CurrentForce = _shoot._minForce;
+        OnApplyingForce?.Invoke(false);
+    }
+
+    public void ShootBullet(float force)
     {
         if(_playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0)
         {
             BulletController bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._bulletPrefab, _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
 
             bullet.OwnerScore = _iScore;
-            bullet.RigidBody.velocity = bullet.transform.forward * _shoot._currentForce;
-            _rigidBody.AddForce(transform.forward * _shoot._currentForce * 1000, ForceMode.Impulse);
+            bullet.RigidBody.velocity = bullet.transform.forward * force;
+            _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
+            print(force);
+        }
+    }
 
+    private void AmmoUpdate()
+    {
+        if (_playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0)
+        {
             _playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] -= 1;
             _playerAmmoType.UpdateDisplayedWeapon(ActiveAmmoIndex);
             _playerAmmoType.SwitchToDefaultWeapon(ActiveAmmoIndex);
         }
     }
+
+    private void ShootBulletRPC(float force)
+    {
+        if (_photonPlayerShootRPC == null)
+            _photonPlayerShootRPC = _tankController.BasePlayer.GetComponent<PhotonPlayerShootRPC>();
+
+        _photonPlayerShootRPC?.CallShootRPC(force);
+    }  
 }

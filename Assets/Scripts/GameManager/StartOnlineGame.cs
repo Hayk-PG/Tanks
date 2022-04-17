@@ -5,7 +5,7 @@ public class StartOnlineGame : BaseStartGame
     [PunRPC]
     private void OnPlayersReadyStartTheGame()
     {
-        if (GameManager.MasterPlayerReady /*&& GameManager.SecondPlayerReady*/)
+        if (GameManager.MasterPlayerReady && GameManager.SecondPlayerReady)
         {
             _gameManager.OnGameStarted?.Invoke();
             GameManager.IsGameStarted = true;

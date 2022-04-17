@@ -6,8 +6,9 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
     public TankController OwnTank { get; set; }
     protected T _playerController;
 
-    internal TankMovement _tankMovement;
+    internal TankMovement _tankMovement;   
     internal Rigidbody _tankRigidbody;
+    internal ShootController _shootController;
     internal PlayerTurn _playerTurn;
 
 
@@ -20,8 +21,9 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
     {
         OwnTank = tank;
         GetTankControl();
-        _tankMovement = OwnTank?.GetComponent<TankMovement>();
+        _tankMovement = OwnTank?.GetComponent<TankMovement>();       
         _tankRigidbody = OwnTank?.GetComponent<Rigidbody>();
+        _shootController = OwnTank?.GetComponent<ShootController>();
         _playerTurn = OwnTank?.GetComponent<PlayerTurn>();
     }
 
