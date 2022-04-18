@@ -2,11 +2,8 @@
 
 public class GroundSlam : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject _groundSlamVfx;
-
+    [SerializeField] private GameObject _groundSlamVfx;
     private CameraShake _cameraShake;
-
     private TurnController _turnController;
     private IScore _iScore;
 
