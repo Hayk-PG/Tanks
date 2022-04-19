@@ -12,15 +12,15 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)
+        if (stream.IsWriting && info.Sender.IsMasterClient)
         {
-            //stream.SendNext(_turnController._turnState);
-            //stream.SendNext(_turnController._previousTurnState);
+            stream.SendNext(_turnController._turnState);
+            stream.SendNext(_turnController._previousTurnState);
         }
         else
         {
-            //_turnController._turnState = (TurnState)stream.ReceiveNext();
-            //_turnController._previousTurnState = (TurnState)stream.ReceiveNext();
+            _turnController._turnState = (TurnState)stream.ReceiveNext();
+            _turnController._previousTurnState = (TurnState)stream.ReceiveNext();
         }
     }    
 }

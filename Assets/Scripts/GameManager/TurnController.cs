@@ -14,16 +14,8 @@ public class TurnController : MonoBehaviourPun
     private GameManager _gameManager;
     private CameraMovement _cameraMovement;
 
-    private List<PlayerTurn> _playersTurn;
-
     public Action<TurnState,CameraMovement> OnTurnChanged { get; set; }
-
-    /// <summary>
-    /// 0: PlayerOne 1:PlayerTwo
-    /// </summary>
-    public static List<PlayerTurn> Players { get; set; } = new List<PlayerTurn>();
-    public event Action<List<PlayerTurn>> OnPlayers;
-    
+  
 
     private void Awake()
     {
@@ -48,50 +40,43 @@ public class TurnController : MonoBehaviourPun
 
     public void SetNextTurn(TurnState turnState)
     {
-        if (!MyPhotonNetwork.IsOfflineMode && photonView.IsMine)
+        if(!MyPhotonNetwork.IsOfflineMode && photonView.IsMine && photonView.AmController)
         {
-            photonView.RPC("NextTurn", RpcTarget.AllViaServer,(int)_turnState, (int)turnState);
-            StartCoroutine(NextTurnFromTransitionCoroutine((int)_turnState));
+            SetPreviousTurnState();
+            SetCurrentTurnState(turnState);
+            Invoke("NextTurnFromTransition", 2);
+            photonView.RPC("OnTurnChangedRPC", RpcTarget.AllViaServer, (int)_turnState);
         }
-            
-        else if (MyPhotonNetwork.IsOfflineMode)
+        if (MyPhotonNetwork.IsOfflineMode)
         {
-            NextTurn((int)_turnState, (int)turnState);
-            StartCoroutine(NextTurnFromTransitionCoroutine((int)_turnState));
+            SetPreviousTurnState();
+            SetCurrentTurnState(turnState);
+            Invoke("NextTurnFromTransition", 2);
+            OnTurnChanged?.Invoke(_turnState, _cameraMovement);
         }
     }
 
-    [PunRPC]
-    private void NextTurn(int currentTurnState, int nextTurnState)
+    private void SetPreviousTurnState()
     {
-        if ((TurnState)currentTurnState == TurnState.Player1 || (TurnState)currentTurnState == TurnState.Player2)
-            _previousTurnState = (TurnState)currentTurnState;
-
-        _turnState = (TurnState)nextTurnState;
-        OnTurnChanged?.Invoke(_turnState, _cameraMovement);
-
-        print("b");
-    }
-    
-    private IEnumerator NextTurnFromTransitionCoroutine(int currentTurnState)
-    {
-        yield return new WaitForSeconds(2);
-
-        if (!MyPhotonNetwork.IsOfflineMode)
-            photonView.RPC("NextTurnFromTransition", RpcTarget.AllViaServer, currentTurnState);
-        else
-            NextTurnFromTransition(currentTurnState);
-
+        if (_turnState == TurnState.Player1 || _turnState == TurnState.Player2)
+            _previousTurnState = _turnState;
     }
 
-    [PunRPC]
-    private void NextTurnFromTransition(int currentTurnState)
+    private void SetCurrentTurnState(TurnState turnState)
     {
-        if ((TurnState)currentTurnState == TurnState.Transition)
-        {
+        _turnState = turnState;
+    }
+
+    private void NextTurnFromTransition()
+    {
+        if (_turnState == TurnState.Transition)
             SetNextTurn(_previousTurnState == TurnState.Player1 ? TurnState.Player2 : TurnState.Player1);
-        }
+    }
 
-        print("a");
+    [PunRPC]
+    private void OnTurnChangedRPC(int currentTurnState)
+    {
+        OnTurnChanged?.Invoke((TurnState)currentTurnState, _cameraMovement);
+        print("OnTurnChanged" + "/" + currentTurnState);
     }
 }

@@ -27,12 +27,12 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
 
     private void OnEnable()
     {
-        _turnController.OnPlayers += OnPlayersCached;
+        //_turnController.OnPlayers += OnPlayersCached;
     }
 
     private void OnDisable()
     {
-        _turnController.OnPlayers -= OnPlayersCached;
+        //_turnController.OnPlayers -= OnPlayersCached;
     }
 
     private void OnPlayersCached(List<PlayerTurn> players)

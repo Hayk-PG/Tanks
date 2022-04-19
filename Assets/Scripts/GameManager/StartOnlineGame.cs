@@ -5,16 +5,17 @@ public class StartOnlineGame : BaseStartGame
     [PunRPC]
     private void OnPlayersReadyStartTheGame()
     {
-        if (GameManager.MasterPlayerReady && GameManager.SecondPlayerReady)
-        {
-            _gameManager.OnGameStarted?.Invoke();
-            GameManager.IsGameStarted = true;
-        }
+        _gameManager.OnGameStarted?.Invoke();
+        GameManager.IsGameStarted = true;
+        print("Online game has started");
     }
 
     protected override void StartGame()
     {
-        photonView.RPC("OnPlayersReadyStartTheGame", RpcTarget.AllViaServer);
+        if (GameManager.MasterPlayerReady && GameManager.SecondPlayerReady)
+        {
+            photonView.RPC("OnPlayersReadyStartTheGame", RpcTarget.AllViaServer);
+        }
     }
 
     protected override bool CanStartGame()
