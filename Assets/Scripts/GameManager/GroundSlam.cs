@@ -25,9 +25,14 @@ public class GroundSlam : MonoBehaviourPun
         _groundSlamVfx.SetActive(true);
         _cameraShake.Shake();
 
-        if (!MyPhotonNetwork.IsOfflineMode && photonView.IsMine)
+        OnScore();
+    }
+
+    private void OnScore()
+    {
+        if (!MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
             photonView.RPC("GetScoreRPC", RpcTarget.AllViaServer, (int)_turnController._previousTurnState);
-        else if(MyPhotonNetwork.IsOfflineMode)
+        else if (MyPhotonNetwork.IsOfflineMode)
             GetScore((int)_turnController._previousTurnState);
     }
     
@@ -44,5 +49,7 @@ public class GroundSlam : MonoBehaviourPun
 
         if (_tankController != null && _tankController.BasePlayer != null && _tankController.BasePlayer.photonView.IsMine)
             GetScore(previousTurnIndex);
+
+        print("GroundSlam" + "/" + previousTurnIndex);
     }
 }

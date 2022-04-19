@@ -40,7 +40,7 @@ public class TurnController : MonoBehaviourPun
 
     public void SetNextTurn(TurnState turnState)
     {
-        if(!MyPhotonNetwork.IsOfflineMode && photonView.IsMine && photonView.AmController)
+        if(!MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
             SetPreviousTurnState();
             SetCurrentTurnState(turnState);

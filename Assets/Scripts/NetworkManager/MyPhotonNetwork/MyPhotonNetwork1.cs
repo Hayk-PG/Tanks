@@ -11,4 +11,9 @@ public static partial class MyPhotonNetwork
     {
         return player.IsMasterClient;
     }
+
+    public static bool AmPhotonViewOwner(PhotonView photonView)
+    {
+        return photonView.IsMine && photonView.AmOwner;
+    }
 }

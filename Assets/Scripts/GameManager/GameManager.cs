@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviourPun
 
     private void StartOnlineMode()
     {
-        if (photonView.IsMine)
+        if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
             PhotonNetwork.RaiseEvent(EventInfo._code_InstantiatePlayers, EventInfo._content_InstantiatePlayers, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
         }

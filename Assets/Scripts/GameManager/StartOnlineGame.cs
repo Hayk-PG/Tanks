@@ -20,6 +20,6 @@ public class StartOnlineGame : BaseStartGame
 
     protected override bool CanStartGame()
     {
-        return photonView.IsMine && !MyPhotonNetwork.IsOfflineMode && !GameManager.IsGameStarted;
+        return MyPhotonNetwork.AmPhotonViewOwner(photonView) && !MyPhotonNetwork.IsOfflineMode && !GameManager.IsGameStarted;
     }     
 }
