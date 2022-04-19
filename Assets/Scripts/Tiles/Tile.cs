@@ -54,7 +54,7 @@ public class Tile : MonoBehaviour, IDestruct
     private void SnapTheTileToTheDesiredPosition()
     {
         transform.position = _desiredPosition;
-        _groundSlam.Vfx(new Vector3(transform.position.x, transform.position.y - (_tileSize.y / 2), transform.position.z));
+        _groundSlam.OnGroundSlam(new Vector3(transform.position.x, transform.position.y - (_tileSize.y / 2), transform.position.z));
         _isSuspended = false;
         _changeTiles.UpdateTiles();
     }

@@ -8,8 +8,14 @@ public class TankController : MonoBehaviour
     private Subscription _unsubscribeFromPlayerJosytick;
     private Subscription _subscribeToPlayerShootButton;
     private Subscription _unsubscribeFromPlayerShootButton;
-    
-    internal BasePlayer BasePlayer { get; set; }
+
+    [SerializeField] private BasePlayer _basePlayer;
+
+    internal BasePlayer BasePlayer
+    {
+        get => _basePlayer;
+        private set => _basePlayer = value;
+    }
     private PlayerJoystick _playerJoystick;
     private PlayerShootButton _playerShootButton;
 

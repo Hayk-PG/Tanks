@@ -3,7 +3,13 @@ using UnityEngine;
 
 public abstract class BasePlayerTankController<T> : MonoBehaviourPun
 {
-    public TankController OwnTank { get; set; }
+    [SerializeField] protected TankController _tankController;
+
+    public TankController OwnTank
+    {
+        get => _tankController;
+        protected set => _tankController = value;
+    }
     protected T _playerController;
 
     internal TankMovement _tankMovement;   

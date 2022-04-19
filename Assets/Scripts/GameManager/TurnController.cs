@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using Photon.Pun;
+using System.Collections;
+using UnityEngine;
 
 public enum TurnState { None, Transition, Player1, Player2, Other}
 
@@ -47,27 +49,49 @@ public class TurnController : MonoBehaviourPun
     public void SetNextTurn(TurnState turnState)
     {
         if (!MyPhotonNetwork.IsOfflineMode && photonView.IsMine)
-            photonView.RPC("NextTurn", RpcTarget.AllViaServer, (int)turnState);
+        {
+            photonView.RPC("NextTurn", RpcTarget.AllViaServer,(int)_turnState, (int)turnState);
+            StartCoroutine(NextTurnFromTransitionCoroutine((int)_turnState));
+        }
+            
         else if (MyPhotonNetwork.IsOfflineMode)
-            NextTurn((int)turnState);
+        {
+            NextTurn((int)_turnState, (int)turnState);
+            StartCoroutine(NextTurnFromTransitionCoroutine((int)_turnState));
+        }
     }
 
     [PunRPC]
-    private void NextTurn(int turnStateIndex)
+    private void NextTurn(int currentTurnState, int nextTurnState)
     {
-        if ((TurnState)turnStateIndex == TurnState.Player1 || (TurnState)turnStateIndex == TurnState.Player2)
-            _previousTurnState = _turnState;
+        if ((TurnState)currentTurnState == TurnState.Player1 || (TurnState)currentTurnState == TurnState.Player2)
+            _previousTurnState = (TurnState)currentTurnState;
 
-        _turnState = (TurnState)turnStateIndex;
-        Invoke("NextTurnFromTransition", 2);
+        _turnState = (TurnState)nextTurnState;
         OnTurnChanged?.Invoke(_turnState, _cameraMovement);
+
+        print("b");
+    }
+    
+    private IEnumerator NextTurnFromTransitionCoroutine(int currentTurnState)
+    {
+        yield return new WaitForSeconds(2);
+
+        if (!MyPhotonNetwork.IsOfflineMode)
+            photonView.RPC("NextTurnFromTransition", RpcTarget.AllViaServer, currentTurnState);
+        else
+            NextTurnFromTransition(currentTurnState);
+
     }
 
-    private void NextTurnFromTransition()
+    [PunRPC]
+    private void NextTurnFromTransition(int currentTurnState)
     {
-        if (_turnState == TurnState.Transition)
+        if ((TurnState)currentTurnState == TurnState.Transition)
         {
             SetNextTurn(_previousTurnState == TurnState.Player1 ? TurnState.Player2 : TurnState.Player1);
         }
+
+        print("a");
     }
 }

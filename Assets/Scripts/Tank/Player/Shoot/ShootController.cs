@@ -158,7 +158,6 @@ public class ShootController : MonoBehaviour
             bullet.OwnerScore = _iScore;
             bullet.RigidBody.velocity = bullet.transform.forward * force;
             _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
-            print(force);
         }
     }
 
