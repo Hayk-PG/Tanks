@@ -1,20 +1,23 @@
-﻿using System;
+﻿using Photon.Pun;
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class WindSystemController : MonoBehaviour
+public class WindSystemController : MonoBehaviourPun
 {
-    [SerializeField]
-    private int _currentWindForce, _minWindForce, _maxWindForce;
-    [SerializeField]
-    private int _currentInterval, _minInterval, _maxInterval;
-
     private IEnumerator _windCoroutine;
     private GameManager _gameManager;
 
-    public int WindForce => _currentWindForce;
+    [SerializeField]
+    private int _minWindForce, _maxWindForce;
+    [SerializeField]
+    private int _minInterval, _maxInterval;
 
-    public event Action<int> OnWindForce;
+    public int CurrentWindForce { get; set; }
+    public int CurrentInternval { get; set; }
+    public int WindForce => CurrentWindForce;
+
+    public Action<int> OnWindForce { get; set; }
 
 
     private void Awake()
@@ -33,9 +36,9 @@ public class WindSystemController : MonoBehaviour
     }
 
     public void StartWindCoroutine()
-    {
+    {       
         StopWindCoroutine();
-        _windCoroutine = WindCoroutine(_gameManager.IsGameRunning);
+        _windCoroutine = WindCoroutine(!_gameManager.IsGameFinished);
         StartCoroutine(_windCoroutine);
     }
 
@@ -46,14 +49,40 @@ public class WindSystemController : MonoBehaviour
 
     private IEnumerator WindCoroutine(bool isGameRunning)
     {
+        print("aaa");
+
         while (isGameRunning)
         {
-            _currentWindForce = UnityEngine.Random.Range(_minWindForce, _maxWindForce);
-            _currentInterval = UnityEngine.Random.Range(_minInterval, _maxInterval);
-
-            OnWindForce?.Invoke(_currentWindForce);
-
-            yield return new WaitForSeconds(_currentInterval);
+            AssignWindValues();          
+            yield return new WaitForSeconds(CurrentInternval);
         }
+    }
+
+    private void AssignWindValues()
+    {
+        if (!MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        {
+            WindValues();
+            photonView.RPC("ShareWindForceValue", RpcTarget.AllViaServer, CurrentWindForce);
+        }
+            
+        if (MyPhotonNetwork.IsOfflineMode)
+        {
+            WindValues();
+            ShareWindForceValue(CurrentWindForce);
+        }           
+    }
+
+    private void WindValues()
+    {
+        CurrentWindForce = UnityEngine.Random.Range(_minWindForce, _maxWindForce);
+        CurrentInternval = UnityEngine.Random.Range(_minInterval, _maxInterval);
+    }
+
+    [PunRPC]
+    private void ShareWindForceValue(int currentWindForce)
+    {
+        OnWindForce?.Invoke(currentWindForce);
+        print("Wind is " + currentWindForce);
     }
 }
