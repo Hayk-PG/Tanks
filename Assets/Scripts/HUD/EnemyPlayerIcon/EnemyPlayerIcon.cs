@@ -1,9 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyPlayerIcon : MonoBehaviour
 {
     private RectTransform _rectTransform;
+    public Transform EnemyPlayer { get; set; }
     private Vector2 Size
     {
         get => _rectTransform.sizeDelta;
@@ -12,8 +12,7 @@ public class EnemyPlayerIcon : MonoBehaviour
     {
         get => _rectTransform.localScale;
         set => _rectTransform.localScale = value;
-    }
-    
+    }  
     private struct Temp
     {
         internal Vector2 _iconMovementPosition;
@@ -23,11 +22,6 @@ public class EnemyPlayerIcon : MonoBehaviour
 
     private CanvasGroup _canvasGroup;
     private HUDBounds _hudBounds;
-
-    public Transform EnemyPlayer { get; set; }
-
-    public event Action<Action> OnIconMove;
-
 
 
     private void Awake()
@@ -39,25 +33,27 @@ public class EnemyPlayerIcon : MonoBehaviour
 
     private void Update()
     {
-        OnIconMove?.Invoke(IconMovement);       
+        IconMovement();
     }
 
-    public void SetInitialCoordinates(bool isPlayerOne, Transform enemyPlayer)
+    public void SetInitialCoordinates(Transform enemyPlayer)
     {
-        FaceDirection = isPlayerOne ? new Vector2(1, 1) : new Vector2(-1, 1);
-
-        EnemyPlayer = enemyPlayer;
+        if(enemyPlayer != null)
+        {
+            FaceDirection = enemyPlayer.name == Names.Tank_FirstPlayer ? new Vector2(-1, 1): new Vector2(1, 1);
+            EnemyPlayer = enemyPlayer;
+        }
     }
 
     public void IconMovement()
     {
-        if (EnemyPlayer == null) return;
-
-        _temp._iconMovementPosition = CameraSight.ScreenPoint(EnemyPlayer.position);
-        _temp._x = Mathf.Clamp(_temp._iconMovementPosition.x, -_hudBounds._canvasPixelRectMax.x + Size.x, _hudBounds._canvasPixelRectMax.x - Size.x);
-        _temp._y = Mathf.Clamp(_temp._iconMovementPosition.y, -_hudBounds._canvasPixelRectMax.y + Size.y, _hudBounds._canvasPixelRectMax.y - Size.y);
-
-        transform.position = new Vector2(_temp._x, _temp._y);
-        GlobalFunctions.CanvasGroupActivity(_canvasGroup, !CameraSight.IsInCameraSight(EnemyPlayer.position));
+        if(EnemyPlayer != null)
+        {
+            _temp._iconMovementPosition = CameraSight.ScreenPoint(EnemyPlayer.position);
+            _temp._x = Mathf.Clamp(_temp._iconMovementPosition.x, _hudBounds._canvasPixelRectMin.x + Size.x, _hudBounds._canvasPixelRectMax.x - Size.x);
+            _temp._y = Mathf.Clamp(_temp._iconMovementPosition.y, -_hudBounds._canvasPixelRectMin.y + Size.y, _hudBounds._canvasPixelRectMax.y - Size.y);
+            transform.position = new Vector2(_temp._x, _temp._y);
+            GlobalFunctions.CanvasGroupActivity(_canvasGroup, !CameraSight.IsInCameraSight(EnemyPlayer.position));
+        }
     }
 }

@@ -2,48 +2,36 @@
 
 public class EnemyPlayerIconController : MonoBehaviour
 {
+    private TankController _tankController;
+    private GameManager _gameManager;
     private EnemyPlayerIcon _enemyPlayerIcon;
-    private PlayerTurn _playerTurn;
-
-    private bool _isIconInitialCoordiantesSet;
-
 
 
     private void Awake()
     {
+        _tankController = Get<TankController>.From(gameObject);
+        _gameManager = FindObjectOfType<GameManager>();
         _enemyPlayerIcon = FindObjectOfType<EnemyPlayerIcon>();
-        _playerTurn = Get<PlayerTurn>.From(gameObject);
     }
 
     private void OnEnable()
     {
-        //_playerTurn.OnTurnChangeEventReceived += OnTurnChangeEventReceived;
-        //_enemyPlayerIcon.OnIconMove += OnIconMove;
+        _gameManager.OnGameStarted += OnGameStarted;
     }
    
     private void OnDisable()
     {
-        //_playerTurn.OnTurnChangeEventReceived -= OnTurnChangeEventReceived;
-        //_enemyPlayerIcon.OnIconMove -= OnIconMove;
+        _gameManager.OnGameStarted -= OnGameStarted;
     }
 
-    private void OnTurnChangeEventReceived(TurnState currentTurn, TurnState myTurn)
+    private void OnGameStarted()
     {
-        if (!_isIconInitialCoordiantesSet)
+        if(_tankController.BasePlayer != null)
         {
-            Conditions<Transform>.CheckNull(GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn != _playerTurn).transform, null, () => OnEnemyPlayerIcon(myTurn));
+            Transform enemyPlayer = name == Names.Tank_FirstPlayer ? GameObject.Find(Names.Tank_SecondPlayer)?.transform :
+                                    name == Names.Tank_SecondPlayer ? GameObject.Find(Names.Tank_FirstPlayer)?.transform : null;
+
+            _enemyPlayerIcon?.SetInitialCoordinates(enemyPlayer);
         }
-    }
-
-    private void OnEnemyPlayerIcon(TurnState myTurn)
-    {
-        Transform enemyTransform = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn != _playerTurn).transform;
-        _enemyPlayerIcon.SetInitialCoordinates(myTurn == TurnState.Player1, enemyTransform);
-        _isIconInitialCoordiantesSet = true;
-    }
-
-    private void OnIconMove(System.Action obj)
-    {
-        obj?.Invoke();
     }
 }
