@@ -6,7 +6,7 @@ public class ShootController : MonoBehaviour
     private TankController _tankController;
     private PhotonPlayerShootRPC _photonPlayerShootRPC;
     private Rigidbody _rigidBody;
-    private PlayerTurn _playerTurn;
+    private GameManagerBulletSerializer _gameManagerBulletSerializer;
     private IScore _iScore;
     private PlayerAmmoType _playerAmmoType;
         
@@ -48,8 +48,14 @@ public class ShootController : MonoBehaviour
     }
     [SerializeField] private Canon _canon;
     [SerializeField] private Shoot _shoot;
-    [SerializeField] private PlayerShootTrajectory _playerShootTrajectory; 
+    [SerializeField] private PlayerShootTrajectory _playerShootTrajectory;
+    [SerializeField] private BulletController _instantiatedBullet;
 
+    public BulletController Bullet
+    {
+        get => _instantiatedBullet;
+        set => _instantiatedBullet = value;
+    }
     public float Direction { get; set; }
     public float CurrentForce
     {
@@ -76,7 +82,7 @@ public class ShootController : MonoBehaviour
     {
         _tankController = Get<TankController>.From(gameObject);
         _rigidBody = GetComponent<Rigidbody>();
-        _playerTurn = GetComponent<PlayerTurn>();
+        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
         _iScore = Get<IScore>.From(gameObject);
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
     }
@@ -153,10 +159,10 @@ public class ShootController : MonoBehaviour
     {
         if(_playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0)
         {
-            BulletController bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._bulletPrefab, _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
-
-            bullet.OwnerScore = _iScore;
-            bullet.RigidBody.velocity = bullet.transform.forward * force;
+            Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._bulletPrefab, _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
+            Bullet.OwnerScore = _iScore;
+            Bullet.RigidBody.velocity = Bullet.transform.forward * force;
+            _gameManagerBulletSerializer.BulletController = Bullet;
             _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
         }
     }
