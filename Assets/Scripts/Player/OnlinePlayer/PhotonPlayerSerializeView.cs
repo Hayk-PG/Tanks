@@ -37,6 +37,16 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             {
                 stream.SendNext(_photonPlayerTankController._playerTurn.IsMyTurn);
             }
+
+            if(_photonPlayerTankController._healthController != null)
+            {
+                stream.SendNext(_photonPlayerTankController._healthController.Health);
+            }
+
+            if(_photonPlayerTankController._healthBar != null)
+            {
+                stream.SendNext(_photonPlayerTankController._healthBar.Value);
+            }
         }
         else
         {
@@ -61,6 +71,16 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             if (_photonPlayerTankController._playerTurn != null)
             {
                 _photonPlayerTankController._playerTurn.IsMyTurn = (bool)stream.ReceiveNext();
+            }
+
+            if(_photonPlayerTankController._healthController != null)
+            {
+                _photonPlayerTankController._healthController.Health = (int)stream.ReceiveNext();
+            }
+
+            if(_photonPlayerTankController._healthBar != null)
+            {
+                _photonPlayerTankController._healthBar.Value = (float)stream.ReceiveNext();
             }
         }
     }

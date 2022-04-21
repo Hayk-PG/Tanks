@@ -1,17 +1,7 @@
 ﻿using Photon.Pun;
 
-public class PhotonPlayerShootRPC : MonoBehaviourPun
+public class PhotonPlayerShootRPC : PhotonPlayerBaseRPC
 {
-    private PhotonPlayerController _photonPlayerController;
-    private PhotonPlayerTankController _photonPlayerTankController;
-
-
-    private void Awake()
-    {
-        _photonPlayerController = Get<PhotonPlayerController>.From(gameObject);
-        _photonPlayerTankController = Get<PhotonPlayerTankController>.From(gameObject);
-    }
-
     public void CallShootRPC(float force)
     {
         _photonPlayerController.PhotonView.RPC("ShootRPC", RpcTarget.AllViaServer, force);

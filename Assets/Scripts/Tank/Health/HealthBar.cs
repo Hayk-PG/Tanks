@@ -3,17 +3,23 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField]
-    private Slider _healthBar;
-
+    [SerializeField] private Slider _healthBar;
+    [SerializeField] private LastHealthFill _lastHealthFill;
     private HealthController _healthController;
-    private LastHealthFill _lastHealthFill;
+    private TankController _tankController;
+    private PhotonPlayerLastHealthFillUpdateRPC _photonPlayerLastHealthFillUpdateRPC;
 
+    public float Value
+    {
+        get => _healthBar.value;
+        set => _healthBar.value = value;
+    }
+    public LastHealthFill LastHealthFill => _lastHealthFill;
 
     private void Awake()
     {
         _healthController = Get<HealthController>.From(gameObject);
-        _lastHealthFill = GetComponentInChildren<LastHealthFill>();
+        _tankController = Get<TankController>.From(gameObject);
     }
 
     private void OnEnable()
@@ -28,7 +34,20 @@ public class HealthBar : MonoBehaviour
 
     private void OnHealthBar(int newValue)
     {
-        _healthBar.value = newValue;
-        if(_lastHealthFill != null) _lastHealthFill.OnUpdate(_healthBar.value / 100);       
+        Value = newValue;
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, UpdateLastHealthFill, UpdateLastHealthFillRPC);
+    }
+
+    private void UpdateLastHealthFill()
+    {
+        if (LastHealthFill != null) LastHealthFill.OnUpdate(Value / 100);
+    }
+
+    private void UpdateLastHealthFillRPC()
+    {
+        if (_photonPlayerLastHealthFillUpdateRPC != null)
+            _photonPlayerLastHealthFillUpdateRPC = _tankController?.BasePlayer.GetComponent<PhotonPlayerLastHealthFillUpdateRPC>();
+
+        if (LastHealthFill != null) _photonPlayerLastHealthFillUpdateRPC?.CallHealthBarLastFillUpdateRPC(Value / 100);
     }
 }
