@@ -16,12 +16,14 @@ public class Explosion : MonoBehaviour
     private float _magnitude;
 
     private List<IDamage> _iDamages;
+    private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
     
     private void Awake()
     {
         _iDamages = new List<IDamage>();
         _colliders = Physics.OverlapSphere(transform.position, _radius);
+        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
     }
 
     private void Start()
@@ -55,8 +57,22 @@ public class Explosion : MonoBehaviour
 
     private void DamageAndScore(IDamage iDamage)
     {
-        iDamage.Damage(_currentDamageValue);
-        OwnerScore?.GetScore(_currentDamageValue * 100, iDamage);
-        OwnerScore?.HitEnemyAndGetScore(_currentDamageValue * 10, iDamage);
+        int scoreValue = _currentDamageValue * 100;
+        int hitEnemyAndGetScoreValue = _currentDamageValue * 10;
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
+        () => DamageAndScoreInOfflineMode(iDamage, _currentDamageValue, scoreValue, hitEnemyAndGetScoreValue),
+        () => DamageAndScoreInOlineMode(iDamage, _currentDamageValue, scoreValue, hitEnemyAndGetScoreValue));
+    }
+
+    private void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int scoreValue, int hitEnemyAndGetScoreValue)
+    {
+        iDamage.Damage(damageValue);
+        OwnerScore?.GetScore(scoreValue, iDamage);
+        OwnerScore?.HitEnemyAndGetScore(hitEnemyAndGetScoreValue, iDamage);
+    }
+
+    private void DamageAndScoreInOlineMode(IDamage iDamage, int damageValue, int scoreValue, int hitEnemyAndGetScoreValue)
+    {
+        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scoreValue, hitEnemyAndGetScoreValue);
     }
 }

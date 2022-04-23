@@ -34,5 +34,42 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
         IScore iScore = GameObject.Find(ownerName)?.GetComponent<IScore>();
         iScore?.GetScore(10, null);
+
+        print("(BulletCollision) " + collisionName + "/" + ownerName + "/" + collisionPosition);
+    }
+
+    public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int scoreValue, int hitEnemyAndGetScoreValue)
+    {
+        if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        {
+            string iDamageOwnerName = GlobalFunctions.ObjectsOfType<HealthController>.Find(health => health.GetComponent<IDamage>() == iDamage).name;
+            string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(score => score.GetComponent<IScore>() == iScore).name;
+            object[] data = new object[]
+            {
+                iDamageOwnerName,
+                ownerName,
+                damageValue,
+                scoreValue,
+                hitEnemyAndGetScoreValue
+            };
+
+            photonView.RPC("DamageAndScoreRPC", RpcTarget.AllViaServer, data);
+        }
+    }
+
+    [PunRPC]
+    private void DamageAndScoreRPC(object[] data)
+    {
+        if(data != null)
+        {
+            IDamage iDamage = GameObject.Find((string)data[0])?.GetComponent<IDamage>();
+            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>();
+
+            iDamage?.Damage((int)data[2]);
+            iScore?.GetScore((int)data[3], iDamage);
+            iScore?.HitEnemyAndGetScore((int)data[4], iDamage);
+
+            print("(Explosion) " + (string)data[0] + "/" + (int)data[2] + "/" + (string)data[1] + "/" + (int)data[3] + "/" + (int)data[4]);
+        }
     }
 }

@@ -49,8 +49,6 @@ public class WindSystemController : MonoBehaviourPun
 
     private IEnumerator WindCoroutine(bool isGameRunning)
     {
-        print("aaa");
-
         while (isGameRunning)
         {
             AssignWindValues();          
