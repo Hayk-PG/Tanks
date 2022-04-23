@@ -1,14 +1,11 @@
 ﻿using UnityEngine;
 using Photon.Pun;
-using UnityEngine.UI;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 
 public class InstantiateOnlinePlayers : MonoBehaviour
 {
     private readonly string _onlinePlayer = "OnlinePlayer";
-
-    [SerializeField] private Text _playersText;
 
 
     private void OnEnable()
@@ -29,7 +26,6 @@ public class InstantiateOnlinePlayers : MonoBehaviour
             Player player = PhotonNetwork.CurrentRoom.GetPlayer(onlinePlayer.GetComponent<PhotonView>().CreatorActorNr);
             PhotonPlayerController photonPlayer = onlinePlayer.GetComponent<PhotonPlayerController>();
             photonPlayer.InitializePlayer(player);
-            _playersText.text += player.NickName + "/" + player.ActorNumber + "/" + photonPlayer.PhotonView.ViewID;
         }
     }
 }
