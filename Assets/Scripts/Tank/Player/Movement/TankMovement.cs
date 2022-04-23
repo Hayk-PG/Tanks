@@ -24,7 +24,10 @@ public class TankMovement : BaseTankMovement
 
     private void OnHorizontalJoystick(float horizontal)
     {
-        Direction = name == Names.Tank_FirstPlayer ? horizontal: -horizontal;
+        if (_playerTurn.IsMyTurn)
+            Direction = name == Names.Tank_FirstPlayer ? horizontal : -horizontal;
+        else
+            Direction = 0;
     }
 
     private void FixedUpdate()
@@ -38,8 +41,11 @@ public class TankMovement : BaseTankMovement
         Brake();
         RigidbodyEulerAngles();
 
-        Raycasts();
-        UpdateSpeedAndPush();
+        if (_playerTurn.IsMyTurn)
+        {
+            Raycasts();
+            UpdateSpeedAndPush();
+        }
     }
 
     private void MotorTorque()

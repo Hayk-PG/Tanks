@@ -6,6 +6,7 @@ public class ShootController : MonoBehaviour
     private TankController _tankController;
     private PhotonPlayerShootRPC _photonPlayerShootRPC;
     private Rigidbody _rigidBody;
+    private PlayerTurn _playerTurn;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
     private IScore _iScore;
     private PlayerAmmoType _playerAmmoType;
@@ -82,6 +83,7 @@ public class ShootController : MonoBehaviour
     {
         _tankController = Get<TankController>.From(gameObject);
         _rigidBody = GetComponent<Rigidbody>();
+        _playerTurn = GetComponent<PlayerTurn>();
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
         _iScore = Get<IScore>.From(gameObject);
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
@@ -103,10 +105,12 @@ public class ShootController : MonoBehaviour
 
     private void Update()
     {
-        RotateCanon();
-        ApplyForce();
-
-        OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canon._canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
+        if (_playerTurn.IsMyTurn)
+        {
+            RotateCanon();
+            ApplyForce();
+            OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canon._canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
+        }
     }
 
     private void OnVerticalJoystick(float value)
@@ -133,8 +137,11 @@ public class ShootController : MonoBehaviour
 
     private void OnShootButtonClick(bool isTrue)
     {
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, ()=> ShootBullet(CurrentForce), ()=> ShootBulletRPC(CurrentForce));
-        AmmoUpdate();
+        if (_playerTurn.IsMyTurn)
+        {
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => ShootBullet(CurrentForce), () => ShootBulletRPC(CurrentForce));
+            AmmoUpdate();
+        }
     }
 
     private void ApplyForce()
