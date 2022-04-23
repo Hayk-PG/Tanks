@@ -4,7 +4,6 @@ public class BulletCollision : GetBulletController
 {
     private int _collisionCount;
 
-
     private void OnEnable()
     {
         _iBulletCollision.OnCollision = OnCollision;
@@ -15,9 +14,17 @@ public class BulletCollision : GetBulletController
         _collisionCount++;
 
         if (_collisionCount <= 1)
-        {
-            ownerScore.GetScore(10, null);
-            Get<IDestruct>.From(collision.gameObject)?.Destruct();           
-        }
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => OnCollisionInOfflineMode(collision, ownerScore), () => OnCollisionInOnlineMode(collision, ownerScore));
+    }
+
+    private void OnCollisionInOfflineMode(Collision collision, IScore ownerScore)
+    {
+        ownerScore.GetScore(10, null);
+        Get<IDestruct>.From(collision.gameObject)?.Destruct();
+    }
+
+    private void OnCollisionInOnlineMode(Collision collision, IScore ownerScore)
+    {
+        _gameManagerBulletSerializer.CallOnCollisionRPC(collision, ownerScore);
     }
 }
