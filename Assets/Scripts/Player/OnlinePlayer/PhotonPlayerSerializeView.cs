@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
@@ -31,6 +32,11 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
                 stream.SendNext(_photonPlayerTankController._shootController.CanonPivotPoint.eulerAngles);
                 stream.SendNext(_photonPlayerTankController._shootController.CurrentForce);
                 stream.SendNext(_photonPlayerTankController._shootController.IsApplyingForce);
+            }
+
+            if(_photonPlayerTankController._playerAmmoType != null)
+            {
+                stream.SendNext(_photonPlayerTankController._playerAmmoType.WeaponsBulletsCount);
             }
 
             if (_photonPlayerTankController._playerTurn != null)
@@ -66,6 +72,11 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
                 _photonPlayerTankController._shootController.CanonPivotPoint.eulerAngles = (Vector3)stream.ReceiveNext();
                 _photonPlayerTankController._shootController.CurrentForce = (float)stream.ReceiveNext();
                 _photonPlayerTankController._shootController.IsApplyingForce = (bool)stream.ReceiveNext();
+            }
+
+            if(_photonPlayerTankController._playerAmmoType != null)
+            {
+                _photonPlayerTankController._playerAmmoType.WeaponsBulletsCount = (int[])stream.ReceiveNext();
             }
 
             if (_photonPlayerTankController._playerTurn != null)

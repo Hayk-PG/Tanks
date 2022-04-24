@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerAmmoType : MonoBehaviour
 {
@@ -13,7 +14,12 @@ public class PlayerAmmoType : MonoBehaviour
     [Header("Cached bullets count from scriptable objects")]
     public List<int> _weaponsBulletsCount;
 
-
+    //Serialized
+    public int[] WeaponsBulletsCount
+    {
+        get => _weaponsBulletsCount.ToArray();
+        set => _weaponsBulletsCount = value.ToList();
+    }
 
     private void Awake()
     {

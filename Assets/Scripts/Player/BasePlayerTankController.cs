@@ -18,6 +18,7 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
     internal PlayerTurn _playerTurn;
     internal HealthController _healthController;
     internal HealthBar _healthBar;
+    internal PlayerAmmoType _playerAmmoType;
 
 
     protected virtual void Awake()
@@ -35,6 +36,7 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
         _playerTurn = OwnTank?.GetComponent<PlayerTurn>();
         _healthController = OwnTank?.GetComponent<HealthController>();
         _healthBar = OwnTank?.GetComponentInChildren<HealthBar>();
+        _playerAmmoType = OwnTank?.GetComponent<PlayerAmmoType>();
     }
 
     protected abstract void GetTankControl();
