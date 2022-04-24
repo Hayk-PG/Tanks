@@ -6,12 +6,14 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
     private TurnController _turnController;
     private WindSystemController _windSystemController;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
+    private TurnTimer _turnTimer;
 
     private void Awake()
     {
         _turnController = Get<TurnController>.From(gameObject);
         _windSystemController = Get<WindSystemController>.From(gameObject);
         _gameManagerBulletSerializer = Get<GameManagerBulletSerializer>.From(gameObject);
+        _turnTimer = Get<TurnTimer>.From(gameObject);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -29,6 +31,11 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 stream.SendNext(_gameManagerBulletSerializer.BulletController.RigidBody.position);
                 stream.SendNext(_gameManagerBulletSerializer.BulletController.RigidBody.rotation);
             }
+
+            stream.SendNext(_turnTimer.Timer);
+            stream.SendNext(_turnTimer.IconPlayer1Alpha);
+            stream.SendNext(_turnTimer.IconPlayer2Alpha);
+            stream.SendNext(_turnTimer.IsTurnChanged);
         }
         else
         {
@@ -43,6 +50,11 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 _gameManagerBulletSerializer.BulletController.RigidBody.position = (Vector3)stream.ReceiveNext();
                 _gameManagerBulletSerializer.BulletController.RigidBody.rotation = (Quaternion)stream.ReceiveNext();
             }
+
+            _turnTimer.Timer = (int)stream.ReceiveNext();
+            _turnTimer.IconPlayer1Alpha = (float)stream.ReceiveNext();
+            _turnTimer.IconPlayer2Alpha = (float)stream.ReceiveNext();
+            _turnTimer.IsTurnChanged = (bool)stream.ReceiveNext();
         }
     }    
 }

@@ -16,6 +16,11 @@ public partial class MyPlugins : MonoBehaviour
         InitializePlugin("com.defaultcompany.unityplugin.ServiceIntent");
     }
 
+    private void OnDestroy()
+    {
+        StopService();
+    }
+
     private void InitializePlugin(string pluginName)
     {
         _unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
