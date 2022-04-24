@@ -25,12 +25,12 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
 
     private void OnEnable()
     {
-        _tankController.OnInitializeHimself += OnInitializeHimself;
+        _tankController.OnInitialize += OnInitializeHimself;
     }
 
     private void OnDisable()
     {
-        _tankController.OnInitializeHimself -= OnInitializeHimself;
+        _tankController.OnInitialize -= OnInitializeHimself;
     }
 
     private void OnInitializeHimself()

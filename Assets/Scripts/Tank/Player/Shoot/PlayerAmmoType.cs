@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class PlayerAmmoType : MonoBehaviour
 {
+    private TankController _tankController;
     private ShootController _shootController;
-    private GameManager _gameManager;
     private AmmoTabCustomization _ammoTabCustomization;
 
     [Header("Scriptable objects")]
@@ -17,34 +17,35 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void Awake()
     {
+        _tankController = Get<TankController>.From(gameObject);
         _shootController = Get<ShootController>.From(gameObject);
-        _gameManager = FindObjectOfType<GameManager>();
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-
-        InitializeBulletsCountList();
     }
 
     private void OnEnable()
     {
-        _gameManager.OnGameStarted += OnGameStart;
-        _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
+        _tankController.OnInitialize += OnInitialize;       
     }
    
     private void OnDisable()
     {
-        _gameManager.OnGameStarted -= OnGameStart;
+        _tankController.OnInitialize -= OnInitialize;
         _ammoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
+    }
+
+    private void OnInitialize()
+    {
+        _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
+        InitializeBulletsCountList();
+        InstantiateAmmoTypeButton();       
     }
 
     private void InitializeBulletsCountList()
     {
-        foreach (var item in _weapons)
-        {
-            _weaponsBulletsCount.Add(0);
-        }
+        GlobalFunctions.Loop<WeaponProperties>.Foreach(_weapons, weapon => { _weaponsBulletsCount.Add(0); });
     }
 
-    private void OnGameStart()
+    private void InstantiateAmmoTypeButton()
     {
         if(_weapons != null)
         {
@@ -57,14 +58,10 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
     {
-        if(ammoTypeButton._properties.Index < _weapons.Length)
-        {
-            _shootController.ActiveAmmoIndex = ammoTypeButton._properties.Index;            
-        }
+        if (ammoTypeButton._properties.Index < _weapons.Length)
+            _shootController.ActiveAmmoIndex = ammoTypeButton._properties.Index;
         else
-        {
             _shootController.ActiveAmmoIndex = _weapons.Length - 1;
-        }
 
         GetMoreBullets(ammoTypeButton);
         UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
@@ -73,9 +70,7 @@ public class PlayerAmmoType : MonoBehaviour
     private void GetMoreBullets(AmmoTypeButton ammoTypeButton)
     {
         if (_weaponsBulletsCount[_shootController.ActiveAmmoIndex] <= 0)
-        {
             _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += ammoTypeButton._properties.Value;
-        }
     }
 
     public void UpdateDisplayedWeapon(int index)
@@ -86,8 +81,6 @@ public class PlayerAmmoType : MonoBehaviour
     public void SwitchToDefaultWeapon(int index)
     {
         if (_weaponsBulletsCount[index] <= 0)
-        {
             _ammoTabCustomization.SetDefaultAmmo(null);
-        }
     }
 }

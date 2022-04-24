@@ -23,7 +23,7 @@ public class TankController : MonoBehaviour
     internal Action<float> OnVerticalJoystick { get; set; }
     internal Action<bool> OnShootButtonPointer { get; set; }
     internal Action<bool> OnShootButtonClick { get; set; }
-    internal Action OnInitializeHimself { get; set; }
+    internal Action OnInitialize { get; set; }
 
 
     private void Awake()
@@ -79,7 +79,7 @@ public class TankController : MonoBehaviour
             _subscribeToPlayerJoystick?.Invoke(_playerJoystick != null);
             _subscribeToPlayerShootButton?.Invoke(_playerShootButton != null);
 
-            OnInitializeHimself?.Invoke();
+            OnInitialize?.Invoke();
         }
     }
 }

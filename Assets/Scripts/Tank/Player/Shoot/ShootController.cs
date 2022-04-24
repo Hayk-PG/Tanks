@@ -51,6 +51,7 @@ public class ShootController : MonoBehaviour
     [SerializeField] private Shoot _shoot;
     [SerializeField] private PlayerShootTrajectory _playerShootTrajectory;
     [SerializeField] private BulletController _instantiatedBullet;
+    [SerializeField] private int _activeAmmoIndex;
 
     public BulletController Bullet
     {
@@ -63,7 +64,11 @@ public class ShootController : MonoBehaviour
         get => _shoot._currentForce;
         set => _shoot._currentForce = value;
     }
-    public int ActiveAmmoIndex { get; set; }
+    public int ActiveAmmoIndex
+    {
+        get => _activeAmmoIndex;
+        set => _activeAmmoIndex = value;
+    }
     public Transform CanonPivotPoint
     {
         get => _canon._canonPivotPoint;
