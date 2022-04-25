@@ -29,6 +29,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             if(_gameManagerBulletSerializer.BulletController != null)
             {
                 stream.SendNext(_gameManagerBulletSerializer.BulletController.RigidBody.position);
+                stream.SendNext(_gameManagerBulletSerializer.BulletController.RigidBody.velocity);
                 stream.SendNext(_gameManagerBulletSerializer.BulletController.RigidBody.rotation);
             }
 
@@ -48,7 +49,11 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             if (_gameManagerBulletSerializer.BulletController != null)
             {
                 _gameManagerBulletSerializer.BulletController.RigidBody.position = (Vector3)stream.ReceiveNext();
+                _gameManagerBulletSerializer.BulletController.RigidBody.velocity = (Vector3)stream.ReceiveNext();
                 _gameManagerBulletSerializer.BulletController.RigidBody.rotation = (Quaternion)stream.ReceiveNext();
+
+                float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+                _gameManagerBulletSerializer.BulletController.RigidBody.position += (_gameManagerBulletSerializer.BulletController.RigidBody.velocity * lag);
             }
 
             _turnTimer.Timer = (int)stream.ReceiveNext();

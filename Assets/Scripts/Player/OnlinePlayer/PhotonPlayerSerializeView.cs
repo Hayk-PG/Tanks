@@ -22,6 +22,7 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             if (_photonPlayerTankController._tankRigidbody != null)
             {
                 stream.SendNext(_photonPlayerTankController._tankRigidbody.position);
+                stream.SendNext(_photonPlayerTankController._tankRigidbody.velocity);
                 stream.SendNext(_photonPlayerTankController._tankRigidbody.rotation);
             }
 
@@ -62,7 +63,11 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             if (_photonPlayerTankController._tankRigidbody != null)
             {
                 _photonPlayerTankController._tankRigidbody.position = (Vector3)stream.ReceiveNext();
+                _photonPlayerTankController._tankRigidbody.velocity = (Vector3)stream.ReceiveNext();
                 _photonPlayerTankController._tankRigidbody.rotation = (Quaternion)stream.ReceiveNext();
+
+                float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+                _photonPlayerTankController._tankRigidbody.position += (_photonPlayerTankController._tankRigidbody.velocity * lag);
             }
 
             if (_photonPlayerTankController._shootController != null)
