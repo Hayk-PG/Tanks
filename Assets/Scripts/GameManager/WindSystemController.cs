@@ -38,7 +38,7 @@ public class WindSystemController : MonoBehaviourPun
     public void StartWindCoroutine()
     {       
         StopWindCoroutine();
-        _windCoroutine = WindCoroutine(!_gameManager.IsGameFinished);
+        _windCoroutine = WindCoroutine(!_gameManager.IsGameEnded);
         StartCoroutine(_windCoroutine);
     }
 

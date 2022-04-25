@@ -10,6 +10,8 @@ public class BasePlayerTankSpawner<T> : MonoBehaviourPun
 
     protected T _tankController;
 
+    private GameManager _gameManager;
+
 
     protected virtual void Awake()
     {
@@ -17,6 +19,7 @@ public class BasePlayerTankSpawner<T> : MonoBehaviourPun
         _spawnPointForPlayer2 = GameObject.Find("2PlayerStartPoint").transform;
 
         _tankController = Get<T>.From(gameObject);
+        _gameManager = FindObjectOfType<GameManager>();
     }
 
     public virtual void SpawnTanks(int tankIndex, int spawnPointIndex)
@@ -28,11 +31,18 @@ public class BasePlayerTankSpawner<T> : MonoBehaviourPun
 
         CacheSpawnedTank(tank);
         SetSpawnedTanksTurn(spawnPointIndex, tank);
+        InitializeGameManagerTankController(spawnPointIndex, tank);
     }
 
     protected virtual void CacheSpawnedTank(TankController tank)
     {
         
+    }
+
+    protected virtual void InitializeGameManagerTankController(int playerIndex, TankController tank)
+    {
+        if (playerIndex == 0) _gameManager.Tank1 = tank;
+        if (playerIndex == 1) _gameManager.Tank2 = tank;
     }
 
     protected virtual void SetSpawnedTanksTurn(int spawnPointIndex, TankController tank)

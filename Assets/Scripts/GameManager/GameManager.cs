@@ -10,10 +10,11 @@ public class GameManager : MonoBehaviourPun
     public static bool MasterPlayerReady { get; set; }
     public static bool SecondPlayerReady { get; set; }
     public static bool IsGameStarted { get; internal set; }
-    public bool IsGameFinished { get; private set; }
-    public bool IsGameRunning => IsGameStarted && !IsGameFinished;
+    public bool IsGameEnded { get; internal set; }
     public Action OnInstantiateOfflinePlayers { get; set; }
     public Action OnGameStarted { get; set; }
+    public TankController Tank1 { get; set; }
+    public TankController Tank2 { get; set; }
     
 
     private void Start()
