@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Photon.Pun;
+﻿using Photon.Pun;
 
 public class EndOnlineGame : BaseEndGame
 {
@@ -19,15 +18,17 @@ public class EndOnlineGame : BaseEndGame
         }
     }
     
-    protected override void OnGameEnded(string playHasWon)
+    protected override void OnGameEnded(string successedPlayerName, string defeatedPlayerName)
     {
-        photonView.RPC("RPC", RpcTarget.AllViaServer, playHasWon);
+        photonView.RPC("RPC", RpcTarget.AllViaServer, successedPlayerName, defeatedPlayerName);
     }
 
     [PunRPC]
-    private void RPC(string playHasWon)
+    private void RPC(string successedPlayerName, string defeatedPlayerName)
     {
-        print(playHasWon);
-        UnsubscribeFromPluginService();
+        print(successedPlayerName + " won/" + defeatedPlayerName + " lost");
+        _gameManager.OnGameEnded?.Invoke();
+        OnEndGameTab?.Invoke(successedPlayerName, defeatedPlayerName);
+        UnsubscribeFromPluginService();       
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Photon.Pun;
-using UnityEngine;
+using System;
 
 public class BaseEndGame : MonoBehaviourPun
 {
@@ -8,6 +8,8 @@ public class BaseEndGame : MonoBehaviourPun
 
     protected HealthController _healthTank1;
     protected HealthController _healthTank2;
+
+    public Action<string, string> OnEndGameTab { get; set; }
 
 
     protected virtual void Awake()
@@ -51,10 +53,10 @@ public class BaseEndGame : MonoBehaviourPun
         if(TanksSet())
         {
             if (FirstPlayerWon())
-                OnGameEnded("Player 1 has won");
+                OnGameEnded(_healthTank1.name, _healthTank2.name);
 
             if (SecondPlayerWon())
-                OnGameEnded("Player 2 has won");
+                OnGameEnded(_healthTank2.name, _healthTank1.name);
         }
     }
 
@@ -73,9 +75,9 @@ public class BaseEndGame : MonoBehaviourPun
         return _healthTank1.Health <= 0 || _healthTank1.transform.position.y <= -5;
     }
 
-    protected virtual void OnGameEnded(string playHasWon)
+    protected virtual void OnGameEnded(string successedPlayerName, string defeatedPlayerName)
     {
-        print(playHasWon);
+        print(successedPlayerName + " won/" + defeatedPlayerName + " lost");
         UnsubscribeFromPluginService();
     }
 }
