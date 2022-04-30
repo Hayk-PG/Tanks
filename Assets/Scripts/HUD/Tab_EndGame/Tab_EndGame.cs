@@ -62,10 +62,12 @@ public class Tab_EndGame : MonoBehaviour
         }
     }
 
-    private void Display(Color colorTitleGlow, string textTitle, int level)
+    private void Display(Color colorTitleGlow, string textTitle)
     {
         _ui._imageTitleGlow.color = colorTitleGlow;
         _ui._textTitle.text = textTitle;
-        _ui._textLevel.text = level.ToString();
+        _ui._textLevel.text = Data.Manager.Level.ToString();
+        _ui._sliderXP.minValue = Data.Manager.PointsSliderMinAndMaxValues[Data.Manager.Level, 0];
+        _ui._sliderXP.value = Data.Manager.Points;
     }
 }
