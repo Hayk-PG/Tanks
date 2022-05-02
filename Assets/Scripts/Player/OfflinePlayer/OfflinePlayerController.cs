@@ -1,11 +1,10 @@
-﻿using UnityEngine;
-
+﻿
 public class OfflinePlayerController : BasePlayer
 {
     public void Initialize()
     {
         AssignGameObjectName("Player");
-        Get<OfflinePlayerTankSpawner>.From(gameObject).SpawnTanks(0, 0);
+        Get<OfflinePlayerTankSpawner>.From(gameObject).SpawnTanks(Data.Manager.SelectedTankIndex, 0);
         PlayerReady(0);
     }
 }

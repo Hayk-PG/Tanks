@@ -25,16 +25,16 @@ public class PhotonPlayerController : BasePlayer
 
     public void InitializePlayer(Player player)
     {
-        PhotonView.RPC("Initialize", RpcTarget.AllViaServer, player);
+        PhotonView.RPC("Initialize", RpcTarget.AllViaServer, player, Data.Manager.SelectedTankIndex);
     }
 
     [PunRPC]
-    private void Initialize(Player player)
+    private void Initialize(Player player, int spawnTankIndex)
     {
         NickName = player.NickName;
         ActorNumber = player.ActorNumber;
         AssignGameObjectName(NickName);
-        Get<PhotonPlayerTankSpawner>.From(gameObject).SpawnTanks(0, player.IsMasterClient ? 0 : 1);
+        Get<PhotonPlayerTankSpawner>.From(gameObject).SpawnTanks(spawnTankIndex, player.IsMasterClient ? 0 : 1);
         PlayerReady(player.IsMasterClient ? 0 : 1);
     }
 }
