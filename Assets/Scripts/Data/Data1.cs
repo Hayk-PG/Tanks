@@ -16,7 +16,7 @@ public partial class Data
         {9900, 24560}
     };
     public int SelectedTankIndex => PlayerPrefs.GetInt(Keys.SelectedTankIndex, 0);
-
+    
     [SerializeField] private TankProperties[] _availableTanks;
     public TankProperties[] AvailableTanks
     {

@@ -5,6 +5,7 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
 {
     private PlayVsAi _playVsAi;
     public Action OnPhotonOnlineTankSelected { get; set; }
+    public Action OnOfflineTankSelected { get; set; }
 
 
     protected override void Awake()
@@ -28,7 +29,7 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
     public void OnClickSelectButton()
     {
         if (MyPhotonNetwork.IsOfflineMode)
-            MyScene.Manager.LoadScene(MyScene.SceneName.Game);
+            OnOfflineTankSelected?.Invoke();
         else
             OnPhotonOnlineTankSelected?.Invoke();
     }

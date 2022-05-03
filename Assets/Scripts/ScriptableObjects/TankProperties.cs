@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "New tank", menuName = "Tank")]
 public class TankProperties : ScriptableObject

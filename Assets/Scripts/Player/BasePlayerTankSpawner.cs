@@ -7,7 +7,7 @@ public class BasePlayerTankSpawner<T> : MonoBehaviourPun
     protected Transform _spawnPointForPlayer2;
     protected T _tankController;
 
-    private GameManager _gameManager;
+    protected GameManager _gameManager;
 
 
     protected virtual void Awake()

@@ -1,37 +1,20 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
+﻿using UnityEngine.EventSystems;
 
-public class SelectTankButton : MonoBehaviour
+public class SelectTankButton : BaseSelectTankButton
 {
-    [SerializeField] private int _index;
-    [SerializeField] private Image _iconTank;
-    private Button _button;
-    private Data _data;
-
     private SelectTankButton[] _selectTankButtons;
 
-    private void Awake()
+
+    protected override void Awake()
     {
-        _button = Get<Button>.From(gameObject);
-        _data = FindObjectOfType<Data>();
+        base.Awake();
         _selectTankButtons = FindObjectsOfType<SelectTankButton>();
     }
 
-    private void Start()
+    protected override void Start()
     {
-        InitializeButton();
+        base.Start();
         SimulateButtonClick();
-    }
-
-    private bool IsIndexCorrect()
-    {
-        return _index < _data.AvailableTanks.Length;
-    }
-
-    private void InitializeButton()
-    {
-        if (IsIndexCorrect()) _iconTank.sprite = _data.AvailableTanks[_index]._iconTank;
     }
 
     private void SimulateButtonClick()
@@ -48,7 +31,7 @@ public class SelectTankButton : MonoBehaviour
         _button.OnDeselect(new PointerEventData(EventSystem.current));
     }
 
-    public void OnClickTankButton()
+    public override void OnClickTankButton()
     {
         if (IsIndexCorrect())
         {
