@@ -3,27 +3,30 @@ using UnityEngine;
 
 public class Tab_Lobby : Tab_Base<MyPhotonCallbacks>
 {
+    private Tab_SelectedTanks _tab_selectedTanks;
+
     [SerializeField] private Transform _transform_Content;
     [SerializeField] private RoomButton _prefab_roomButton;
 
     private RoomButton _copy_roomButton;
 
 
+    protected override void Awake()
+    {
+        base.Awake();
+        _tab_selectedTanks = FindObjectOfType<Tab_SelectedTanks>();
+    }
+
     private void OnEnable()
     {
-        _object._OnJoinedLobby += OnPhotonJoinedLobby;
+        _tab_selectedTanks.OnPhotonOnlineTankSelected += base.OpenTab;
         _object._OnRoomListUpdate += OnUpdateRoomList;
     }
 
     private void OnDisable()
     {
-        _object._OnJoinedLobby -= OnPhotonJoinedLobby;
+        _tab_selectedTanks.OnPhotonOnlineTankSelected -= base.OpenTab;
         _object._OnRoomListUpdate -= OnUpdateRoomList;
-    }
-
-    private void OnPhotonJoinedLobby()
-    {
-        base.OpenTab();
     }
 
     private void OnUpdateRoomList(RoomInfo roomInfo)

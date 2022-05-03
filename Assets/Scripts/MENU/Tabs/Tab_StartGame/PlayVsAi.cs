@@ -1,5 +1,9 @@
-﻿public class PlayVsAi : BasePlayVs
-{  
+﻿using System;
+
+public class PlayVsAi : BasePlayVs
+{
+    public Action OnClickedPlayVsAIButton { get; set; }
+
     private void OnEnable()
     {
         _tabStartGame.OnStartPlayVsAi += OnStartPlayVsAi;
@@ -13,6 +17,6 @@
     private void OnStartPlayVsAi()
     {
         MyPhotonNetwork.OfflineMode(true);
-        MyScene.Manager.LoadScene(MyScene.SceneName.Game);
+        OnClickedPlayVsAIButton?.Invoke();
     }
 }

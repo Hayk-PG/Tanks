@@ -9,17 +9,19 @@ public class SelectTankButton : MonoBehaviour
     private Button _button;
     private Data _data;
 
+    private SelectTankButton[] _selectTankButtons;
 
     private void Awake()
     {
         _button = Get<Button>.From(gameObject);
-        _data = FindObjectOfType<Data>();            
+        _data = FindObjectOfType<Data>();
+        _selectTankButtons = FindObjectsOfType<SelectTankButton>();
     }
 
     private void Start()
     {
         InitializeButton();
-        Conditions<bool>.Compare(_index == _data.SelectedTankIndex, SimulateButtonClick, null);
+        SimulateButtonClick();
     }
 
     private bool IsIndexCorrect()
@@ -34,15 +36,27 @@ public class SelectTankButton : MonoBehaviour
 
     private void SimulateButtonClick()
     {
-        _button.OnPointerDown(new PointerEventData(EventSystem.current));
-        _button.OnSelect(new PointerEventData(EventSystem.current));
-        _button.OnPointerUp(new PointerEventData(EventSystem.current));
+        if (_index == _data.SelectedTankIndex)
+        {
+            _button.OnSelect(new PointerEventData(EventSystem.current));
+            print("Player selected tank button is auto highlighted at the game start/ " + _data.SelectedTankIndex);
+        }
+    }
 
-        print("Player selected tank button is auto highlighted at the game start/ " + _data.SelectedTankIndex);
+    private void OnDeselect()
+    {
+        _button.OnDeselect(new PointerEventData(EventSystem.current));
     }
 
     public void OnClickTankButton()
     {
-        if (IsIndexCorrect()) _data.SetData(new Data.NewData { SelectedTankIndex = _data.AvailableTanks[_index]._tankIndex });        
+        if (IsIndexCorrect())
+        {
+            GlobalFunctions.Loop<SelectTankButton>.Foreach(_selectTankButtons, button => 
+            {
+                if (button != this) button.OnDeselect();
+            });
+            _data.SetData(new Data.NewData { SelectedTankIndex = _data.AvailableTanks[_index]._tankIndex });
+        }      
     }
 }
