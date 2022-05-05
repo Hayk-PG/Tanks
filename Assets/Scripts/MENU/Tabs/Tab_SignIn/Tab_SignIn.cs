@@ -14,6 +14,29 @@ public class Tab_SignIn : Tab_SignUp
 
     protected override void OnPhotonConnectedToMaster()
     {
-        //base.OnPhotonConnectedToMaster();
+        if (_data.IsAutoSignInChecked)
+        {
+            Id = _data.Id;
+            Password = _data.Password;
+            IsAutoSignInChecked = true;
+            base.OpenTab();
+        }          
+    }
+
+    public override void OnClickConfirmButton()
+    {
+        if(Id == _data.Id && Password == _data.Password)
+        {
+            OnAutoSignChecked();
+            base.OnClickConfirmButton();
+        }  
+    }
+
+    private void OnAutoSignChecked()
+    {
+        if (IsAutoSignInChecked)
+            _data.SetData(new Data.NewData { AutoSignIn = 1 });
+        else
+            _data.DeleteData(Keys.AutoSignIn);
     }
 }

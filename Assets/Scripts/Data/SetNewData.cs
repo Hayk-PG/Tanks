@@ -1,28 +1,18 @@
 ﻿using UnityEngine;
 
 public partial class Data
-{  
+{
     public struct NewData
     {
         public int? Points { get; internal set; }
         public int? Level { get; internal set; }
         public int? SelectedTankIndex { get; internal set; }
-    }
-    public int Points => PlayerPrefs.GetInt(Keys.Points, 0);
-    public int Level => PlayerPrefs.GetInt(Keys.Level, 0);
-    public int[,] PointsSliderMinAndMaxValues { get; private set; } = new int[,]
-    {
-        { 0, 9900},
-        {9900, 24560}
-    };
-    public int SelectedTankIndex => PlayerPrefs.GetInt(Keys.SelectedTankIndex, 0);
-    
-    [SerializeField] private TankProperties[] _availableTanks;
-    public TankProperties[] AvailableTanks
-    {
-        get => _availableTanks;
-    }
 
+        //SignIn or SingUp
+        public string Id { get; internal set; }
+        public string Password { get; internal set; }
+        public int? AutoSignIn { get; internal set; }
+    }
 
     public void OnDestroy()
     {
@@ -34,5 +24,13 @@ public partial class Data
         if (newData.Points != null) PlayerPrefs.SetInt(Keys.Points, (int)newData.Points);
         if (newData.Level != null) PlayerPrefs.SetInt(Keys.Level, (int)newData.Level);
         if (newData.SelectedTankIndex != null) PlayerPrefs.SetInt(Keys.SelectedTankIndex, (int)newData.SelectedTankIndex);
+        if (newData.Id != null) PlayerPrefs.SetString(Keys.Id, newData.Id);
+        if (newData.Password != null) PlayerPrefs.SetString(Keys.Password, newData.Password);
+        if (newData.AutoSignIn != null) PlayerPrefs.SetInt(Keys.AutoSignIn, (int)newData.AutoSignIn);
+    }
+
+    public void DeleteData(string key)
+    {
+        PlayerPrefs.DeleteKey(key);
     }
 }

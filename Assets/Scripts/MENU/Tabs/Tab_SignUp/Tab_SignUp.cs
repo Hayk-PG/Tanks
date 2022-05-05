@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
 {
+    protected Data _data;
+
     [SerializeField] private InputField _inputFieldEmail;
     [SerializeField] protected InputField _inputFieldId;
     [SerializeField] protected InputField _inputFieldPassword;
@@ -13,18 +15,25 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
     private string Email
     {
         get => _inputFieldEmail.text;
+        set => _inputFieldEmail.text = value;
     }
     protected string Id
     {
         get => _inputFieldId.text;
+        set => _inputFieldId.text = value;
     }
     protected string Password
     {
         get => _inputFieldPassword.text;
+        set => _inputFieldPassword.text = value;
     }
 
-    public Action<string, string, string> OnSigned { get; set; }
 
+    protected override void Awake()
+    {
+        base.Awake();
+        _data = FindObjectOfType<Data>();
+    }
 
     protected virtual void OnEnable()
     {
@@ -43,7 +52,8 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
 
     protected virtual void OnPhotonConnectedToMaster()
     {
-        base.OpenTab();
+        if (!_data.IsAutoSignInChecked)
+            base.OpenTab();
     }
 
     protected virtual void ButtonSignUpInteractability()
@@ -54,5 +64,11 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
     public virtual void OnClickConfirmButton()
     {
         MyPhoton.SetNickName(Id);
+        SaveAccount();
+    }
+
+    protected virtual void SaveAccount()
+    {
+        _data.SetData(new Data.NewData { Id = Id, Password = Password });
     }
 }

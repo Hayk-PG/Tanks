@@ -2,9 +2,8 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Button_MinimizedCurrentRoom : MonoBehaviour
+public class Button_MinimizedCurrentRoom : BaseButtonWithUnityEvent
 {
-    [SerializeField] private UnityEvent OnClickMinimizedCurrentRoomButton;
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Text _textCurrentRoomName;
     [SerializeField] private Text _textCurrentRoomPlayersCount;
@@ -27,9 +26,9 @@ public class Button_MinimizedCurrentRoom : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
     }
 
-    public void OnClick()
-    {        
-        OnClickMinimizedCurrentRoomButton?.Invoke();
+    public override void OnClick()
+    {
+        base.OnClick();
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
     }
 }
