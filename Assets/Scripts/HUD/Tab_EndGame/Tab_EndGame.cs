@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Tab_EndGame : MonoBehaviour
+public partial class Tab_EndGame : MonoBehaviour
 {
     private CanvasGroup _canvasGroup;
     private BaseEndGame _baseEndGame;
@@ -64,10 +64,12 @@ public class Tab_EndGame : MonoBehaviour
 
     private void Display(Color colorTitleGlow, string textTitle)
     {
-        _ui._imageTitleGlow.color = colorTitleGlow;
-        _ui._textTitle.text = textTitle;
-        _ui._textLevel.text = Data.Manager.Level.ToString();
-        _ui._sliderXP.minValue = Data.Manager.PointsSliderMinAndMaxValues[Data.Manager.Level, 0];
-        _ui._sliderXP.value = Data.Manager.Points;
+        //SetImageTitleGlowColor(colorTitleGlow);
+        //SetTitleText(textTitle);
+        //SetLevelText();
+        //SetSliderXPMinAndMaxValues();
+        //SetSliderXPValue();
+
+        //StartCoroutine(DisplayController());
     }
 }
