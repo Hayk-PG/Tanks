@@ -26,9 +26,6 @@ public class EndOnlineGame : BaseEndGame
     [PunRPC]
     private void RPC(string successedPlayerName, string defeatedPlayerName)
     {
-        print(successedPlayerName + " won/" + defeatedPlayerName + " lost");
-        _gameManager.OnGameEnded?.Invoke();
-        OnEndGameTab?.Invoke(successedPlayerName, defeatedPlayerName);
-        UnsubscribeFromPluginService();       
+        base.OnGameEnded(successedPlayerName, defeatedPlayerName);      
     }
 }

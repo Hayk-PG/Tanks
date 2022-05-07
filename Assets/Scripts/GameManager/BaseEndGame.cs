@@ -1,5 +1,7 @@
 ﻿using Photon.Pun;
 using System;
+using System.Collections;
+using UnityEngine;
 
 public class BaseEndGame : MonoBehaviourPun
 {
@@ -34,8 +36,15 @@ public class BaseEndGame : MonoBehaviourPun
         _healthTank1 = _gameManager?.Tank1.GetComponent<HealthController>();
         _healthTank2 = _gameManager?.Tank2.GetComponent<HealthController>();
 
-        UnsubscribeFromPluginService();
-        SubscribeToPluginService();
+        if (PlatformChecker.IsEditor)
+        {
+            StartCoroutine(RunningGameEndChecker());
+        }
+        else
+        {
+            UnsubscribeFromPluginService();
+            SubscribeToPluginService();
+        }
     }
 
     protected void UnsubscribeFromPluginService()
@@ -50,7 +59,21 @@ public class BaseEndGame : MonoBehaviourPun
 
     protected virtual void OnPluginService()
     {
-        if(TanksSet())
+        GameEndChecker();
+    }
+
+    protected IEnumerator RunningGameEndChecker()
+    {
+        while (!_gameManager.IsGameEnded)
+        {
+            GameEndChecker();
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    protected virtual void GameEndChecker()
+    {
+        if (TanksSet())
         {
             if (FirstPlayerWon())
                 OnGameEnded(_healthTank1.name, _healthTank2.name);
@@ -77,7 +100,9 @@ public class BaseEndGame : MonoBehaviourPun
 
     protected virtual void OnGameEnded(string successedPlayerName, string defeatedPlayerName)
     {
-        print(successedPlayerName + " won/" + defeatedPlayerName + " lost");
         UnsubscribeFromPluginService();
+        _gameManager.OnGameEnded?.Invoke();
+        OnEndGameTab?.Invoke(successedPlayerName, defeatedPlayerName);
+        _gameManager.IsGameEnded = true;
     }
 }

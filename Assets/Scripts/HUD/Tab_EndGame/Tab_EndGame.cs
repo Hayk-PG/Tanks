@@ -26,7 +26,7 @@ public class Tab_EndGame : MonoBehaviour
     private void Awake()
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _baseEndGame = FindObjectOfType<BaseEndGame>();
+        _baseEndGame = MyPhotonNetwork.IsOfflineMode ? (BaseEndGame)FindObjectOfType<EndOfflineGame>() : FindObjectOfType<EndOnlineGame>();
 
         _successed = delegate (TankController successedTank) { return MyPhotonNetwork.IsOfflineMode && successedTank?.BasePlayer != null || !MyPhotonNetwork.IsOfflineMode && successedTank?.BasePlayer != null && successedTank.BasePlayer.photonView.IsMine; };
         _defeated = delegate (TankController defeatedTank) { return MyPhotonNetwork.IsOfflineMode && defeatedTank?.BasePlayer != null || !MyPhotonNetwork.IsOfflineMode && defeatedTank?.BasePlayer != null && defeatedTank.BasePlayer.photonView.IsMine; };
@@ -54,11 +54,11 @@ public class Tab_EndGame : MonoBehaviour
     {
         if(_successed(successedTank))
         {
-            //Display
+            Display(_ui.colorTitleGlow[0], "Victory");
         }
         else if(_defeated(defeatedTank))
         {
-            //Display
+            Display(_ui.colorTitleGlow[1], "Defeat");
         }
     }
 
