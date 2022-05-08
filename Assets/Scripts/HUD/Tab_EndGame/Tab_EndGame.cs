@@ -1,23 +1,9 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public partial class Tab_EndGame : MonoBehaviour
 {
     private CanvasGroup _canvasGroup;
     private BaseEndGame _baseEndGame;
-
-    [Serializable] private struct UI
-    {
-        [SerializeField] internal Color[] colorTitleGlow;
-        [SerializeField] internal Image _imageTitleGlow;
-        [SerializeField] internal Text _textTitle;
-        [SerializeField] internal Text _textXP;
-        [SerializeField] internal Text _textLevel;
-        [SerializeField] internal Slider _sliderXP;
-    }
-    [SerializeField] UI _ui;
-
     private delegate bool Checker(TankController tank);
     private Checker _successed;
     private Checker _defeated;
@@ -47,29 +33,29 @@ public partial class Tab_EndGame : MonoBehaviour
         TankController successedTank = GameObject.Find(successedPlayerName)?.GetComponent<TankController>();
         TankController defeatedTank = GameObject.Find(defeatedPlayerName)?.GetComponent<TankController>();
         OnGameEndScreen(successedTank, defeatedTank);
-        GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
     }
 
     private void OnGameEndScreen(TankController successedTank, TankController defeatedTank)
     {
-        if(_successed(successedTank))
+        ScoreController successedTanksScore = successedTank?.GetComponent<ScoreController>();
+        ScoreController defeatedTanksScore = defeatedTank?.GetComponent<ScoreController>();
+
+        if (_successed(successedTank))
         {
-            Display(_ui.colorTitleGlow[0], "Victory");
+            print("successedTank");
+            Display(_ui.colorTitleGlow[0], "Victory", new Values(Data.Manager.Level, 50, 150, 300, (int)(_ui._sliderXP.value), successedTanksScore.Score));          
         }
         else if(_defeated(defeatedTank))
         {
-            Display(_ui.colorTitleGlow[1], "Defeat");
+            print("defeatedTank");
+            Display(_ui.colorTitleGlow[1], "Defeat", new Values(Data.Manager.Level, 50, 150, 0, (int)(_ui._sliderXP.value), defeatedTanksScore.Score));
         }
     }
 
-    private void Display(Color colorTitleGlow, string textTitle)
+    private void Display(Color colorTitleGlow, string textTitle, Values values)
     {
-        //SetImageTitleGlowColor(colorTitleGlow);
-        //SetTitleText(textTitle);
-        //SetLevelText();
-        //SetSliderXPMinAndMaxValues();
-        //SetSliderXPValue();
-
-        //StartCoroutine(DisplayController());
+        SetImageTitleGlowColor(colorTitleGlow);
+        SetTitleText(textTitle);
+        StartCoroutine(DisplayController(_isCoroutineRunning, values));
     }
 }
