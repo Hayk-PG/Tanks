@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
 {

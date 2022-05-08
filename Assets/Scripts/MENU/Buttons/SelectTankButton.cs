@@ -1,45 +1,37 @@
-﻿using UnityEngine.EventSystems;
-
+﻿
 public class SelectTankButton : BaseSelectTankButton
 {
-    private SelectTankButton[] _selectTankButtons;
+    private Tab_SelectedTanks _tab_SelectedTanks;
 
 
     protected override void Awake()
     {
         base.Awake();
-        _selectTankButtons = FindObjectsOfType<SelectTankButton>();
+        _tab_SelectedTanks = Get<Tab_SelectedTanks>.From(gameObject);
     }
 
-    protected override void Start()
+    private void OnEnable()
     {
-        base.Start();
-        SimulateButtonClick();
+        _tab_SelectedTanks.OnTabOpened += SimulateButtonClick;
     }
 
-    private void SimulateButtonClick()
+    private void OnDisable()
     {
-        if (_index == _data.SelectedTankIndex)
-        {
-            _button.OnSelect(new PointerEventData(EventSystem.current));
-            print("Player selected tank button is auto highlighted at the game start/ " + _data.SelectedTankIndex);
-        }
+        _tab_SelectedTanks.OnTabOpened -= SimulateButtonClick;
     }
 
-    private void OnDeselect()
+    protected override bool IsIndexCorrect()
     {
-        _button.OnDeselect(new PointerEventData(EventSystem.current));
+        return _index < _data.AvailableTanks.Length;
     }
 
-    public override void OnClickTankButton()
+    protected override bool CanAutoClick()
     {
-        if (IsIndexCorrect())
-        {
-            GlobalFunctions.Loop<SelectTankButton>.Foreach(_selectTankButtons, button => 
-            {
-                if (button != this) button.OnDeselect();
-            });
-            _data.SetData(new Data.NewData { SelectedTankIndex = _data.AvailableTanks[_index]._tankIndex });
-        }      
+        return _index == _data.SelectedTankIndex;
+    }
+
+    protected override void SetData()
+    {
+        _data.SetData(new Data.NewData { SelectedTankIndex = _data.AvailableTanks[_index]._tankIndex });
     }
 }
