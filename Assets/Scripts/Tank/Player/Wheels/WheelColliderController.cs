@@ -2,62 +2,109 @@
 
 public class WheelColliderController : MonoBehaviour
 {
-    [SerializeField]
-    private WheelCollider[] _wheelCollider;
-    [SerializeField]
-    private Transform[] _wheelTransforms;
-
     private Vector3 _wheelWorldPosition;
     private Quaternion _wheelWorldRotation;
+    private Transform _wheelsGameObjectsContainer;
+    private struct Wheels
+    {
+        internal Transform _wheelTransform;
+        internal WheelCollider _wheelCollider;
+    }
+    private Wheels[] _wheels;
 
+
+    private void Awake()
+    {
+        InitializeWheels();
+    }
+
+    private void InitializeWheels()
+    {
+        _wheelsGameObjectsContainer = transform.parent?.Find("Wheels");
+        int? _wheelsCount = _wheelsGameObjectsContainer?.childCount;
+
+        if (_wheelsCount != null)
+        {
+            _wheels = new Wheels[(int)_wheelsCount];
+
+            for (int i = 0; i < _wheels.Length; i++)
+            {
+                _wheels[i]._wheelTransform = _wheelsGameObjectsContainer.GetChild(i);
+                _wheels[i]._wheelCollider = transform.GetChild(i).GetComponent<WheelCollider>();
+            }
+        }
+    }
 
     public void RotateWheels()
     {
-        for (int i = 0; i < _wheelCollider.Length; i++)
+        if (_wheels != null)
         {
-            _wheelCollider[i].GetWorldPose(out _wheelWorldPosition, out _wheelWorldRotation);
-            _wheelTransforms[i].transform.position = _wheelWorldPosition;
-            _wheelTransforms[i].transform.rotation = _wheelWorldRotation;
+            for (int i = 0; i < _wheels.Length; i++)
+            {
+                _wheels[i]._wheelCollider.GetWorldPose(out _wheelWorldPosition, out _wheelWorldRotation);
+                _wheels[i]._wheelTransform.position = _wheelWorldPosition;
+                _wheels[i]._wheelTransform.rotation = _wheelWorldRotation;
+            }
         }
     }
 
     public void MotorTorque(float torque)
     {
-        foreach (var wheel in _wheelCollider)
+        if (_wheels != null)
         {
-            wheel.motorTorque = torque;
+            foreach (var wheel in _wheels)
+            {
+                wheel._wheelCollider.motorTorque = torque;
+            }
         }
     }
 
     public void BrakeTorque(float torque)
     {
-        foreach (var wheel in _wheelCollider)
+        if (_wheels != null)
         {
-            wheel.brakeTorque = torque;
+            foreach (var wheel in _wheels)
+            {
+                wheel._wheelCollider.brakeTorque = torque;
+            }
         }
     }
 
     public float WheelRPM()
     {
-        float rpm = 0;
-
-        foreach (var wheel in _wheelCollider)
+        if (_wheels != null)
         {
-            rpm = wheel.rpm;
-        }
+            float rpm = 0;
 
-        return rpm;
+            foreach (var wheel in _wheels)
+            {
+                rpm = wheel._wheelCollider.rpm;
+            }
+
+            return rpm;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public bool AreWheelsGrounded()
     {
-        int groundedWheels = 0;
-
-        for (int i = 0; i < _wheelCollider.Length; i++)
+        if (_wheels != null)
         {
-            if (_wheelCollider[i].isGrounded) groundedWheels++;
-        }
+            int groundedWheels = 0;
 
-        return groundedWheels == _wheelCollider.Length ? true : false;
+            for (int i = 0; i < _wheels.Length; i++)
+            {
+                if (_wheels[i]._wheelCollider.isGrounded) groundedWheels++;
+            }
+
+            return groundedWheels == _wheels.Length ? true : false;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
