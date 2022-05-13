@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public class ShootController : MonoBehaviour
-{
+{   
     private TankController _tankController;
     private PhotonPlayerShootRPC _photonPlayerShootRPC;
     private Rigidbody _rigidBody;
@@ -10,28 +10,6 @@ public class ShootController : MonoBehaviour
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
     private IScore _iScore;
     private PlayerAmmoType _playerAmmoType;
-        
-    [Serializable] private struct Canon
-    {
-        internal float _currentEulerAngleX;
-        [SerializeField] internal float _minEulerAngleX, _maxEulerAngleX;
-        [SerializeField] internal float _rotationSpeed;
-
-        [SerializeField] internal Transform _canonPivotPoint;
-        [SerializeField] internal Vector3 _rotationStabilizer;
-    }
-    [Serializable] private struct Shoot
-    {
-        [Header("Force")]
-        [SerializeField] internal float _currentForce;
-        [SerializeField] internal float _minForce, _maxForce;
-        [SerializeField] internal float _smoothTime, _maxSpeed;
-        internal float _currentVelocity;
-        internal bool _isApplyingForce;
-
-        [Header("Bullet")]
-        [SerializeField] internal Transform _shootPoint;
-    }
     internal class PlayerHUDValues
     {
         internal float _currentAngle, _minAngle, _maxAngle;
@@ -47,9 +25,41 @@ public class ShootController : MonoBehaviour
             this._maxForce = _maxForce;
         }
     }
-    [SerializeField] private Canon _canon;
+
+    public struct Canon
+    {
+        internal float _currentEulerAngleX;
+
+        [Header("Canon rotation parameters")]
+        public float _minEulerAngleX;
+        public float _maxEulerAngleX;
+        public float _rotationSpeed;
+        public Vector3 _rotationStabilizer;  
+        
+        [Header("Canon")]
+        [SerializeField] internal Transform _canonPivotPoint; 
+    }
+    public Canon _canon;
+
+    [Serializable] private struct Shoot
+    {
+        internal float _currentForce;
+
+        [Header("Force")]
+        [SerializeField] internal float _minForce;
+        [SerializeField] internal float _maxForce;
+        [SerializeField] internal float _smoothTime;
+        [SerializeField] internal float _maxSpeed;
+        internal float _currentVelocity;
+        internal bool _isApplyingForce;
+
+        [Header("Shoot point")]
+        [SerializeField] internal Transform _shootPoint;
+        [SerializeField] internal PlayerShootTrajectory _playerShootTrajectory;
+    }       
     [SerializeField] private Shoot _shoot;
-    [SerializeField] private PlayerShootTrajectory _playerShootTrajectory;
+    
+    [Header("Active weapon")]
     [SerializeField] private BulletController _instantiatedBullet;
     [SerializeField] private int _activeAmmoIndex;
 
@@ -152,7 +162,7 @@ public class ShootController : MonoBehaviour
     private void ApplyForce()
     {
         Conditions<bool>.Compare(IsApplyingForce, OnForceApplied, OnForceReleased);
-        _playerShootTrajectory.TrajectoryPrediction(CurrentForce);
+        _shoot._playerShootTrajectory.TrajectoryPrediction(CurrentForce);
     }
 
     private void OnForceApplied()

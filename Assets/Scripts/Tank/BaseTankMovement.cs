@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class BaseTankMovement : MonoBehaviour
 {
-    [SerializeField] protected float _normalSpeed, _accelerated;
-    [SerializeField] protected float _currentBrake, _maxBrake;
+    [Header("Movement parameters")]
+    public float _normalSpeed;
+    public float _accelerated;    
+    public float _maxBrake;
+    public Vector3 _normalCenterOfMass;
+    protected float _currentBrake;
 
-    [SerializeField] protected Vector3 _normalCenterOfMass;
-
+    [Header("Components")]
     [SerializeField] protected WheelColliderController _wheelColliderController;
     [SerializeField] protected Rigidbody _rigidBody;
     [SerializeField] protected Raycasts _rayCasts;

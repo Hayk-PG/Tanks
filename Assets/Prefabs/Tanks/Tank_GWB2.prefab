@@ -1745,7 +1745,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _normalSpeed: 450
   _accelerated: 1750
-  _currentBrake: 0
   _maxBrake: 450
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
   _wheelColliderController: {fileID: 1125968736385147458}
@@ -1796,16 +1795,15 @@ MonoBehaviour:
     _minEulerAngleX: -46
     _maxEulerAngleX: 0
     _rotationSpeed: 20
-    _canonPivotPoint: {fileID: 3367524021226763771}
     _rotationStabilizer: {x: 0, y: 0, z: 0}
+    _canonPivotPoint: {fileID: 3367524021226763771}
   _shoot:
-    _currentForce: 0
     _minForce: 3
     _maxForce: 13
     _smoothTime: 1
     _maxSpeed: 3
     _shootPoint: {fileID: 6464335072595851167}
-  _playerShootTrajectory: {fileID: 2285112907527561401}
+    _playerShootTrajectory: {fileID: 2285112907527561401}
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
 --- !u!114 &1482357454173442973
@@ -21742,16 +21740,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 196617ee90986af44a24853628f2a3fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wheelCollider:
-  - {fileID: 7794233845027335856}
-  - {fileID: 4893661545537804099}
-  - {fileID: 1699991073807745961}
-  - {fileID: 121224659113681994}
-  _wheelTransforms:
-  - {fileID: 6830550172539810229}
-  - {fileID: 6568791343333532981}
-  - {fileID: 5708839510807627182}
-  - {fileID: 1353995691158868154}
 --- !u!1 &7889055350041701031
 GameObject:
   m_ObjectHideFlags: 0
