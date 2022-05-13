@@ -26,7 +26,7 @@ public class ShootController : MonoBehaviour
         }
     }
 
-    public struct Canon
+    [Serializable] public struct Canon
     {
         internal float _currentEulerAngleX;
 
