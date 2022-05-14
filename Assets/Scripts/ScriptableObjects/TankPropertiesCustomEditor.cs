@@ -17,6 +17,22 @@ public class TankPropertiesCustomEditor : Editor
     }
 }
 
+[CustomEditor(typeof(AITankProperties))]
+public class AITankPropertiesCustomEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        AITankProperties aiTankProperties = (AITankProperties)target;
+
+        if (GUILayout.Button("Get values from ai tank prefab", GUILayout.Height(40)))
+        {
+            aiTankProperties.GetValuesFromTankPrefab();
+        }
+    }
+}
+
 [CustomEditor(typeof(TankSciptableComponents))]
 public class ScriptableComponentsCustomEditor : Editor
 {

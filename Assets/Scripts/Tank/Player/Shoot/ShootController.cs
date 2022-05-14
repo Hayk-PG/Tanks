@@ -61,8 +61,9 @@ public class ShootController : BaseShootController
     internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
    
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _tankController = Get<TankController>.From(gameObject);
         _rigidBody = GetComponent<Rigidbody>();
         _playerTurn = GetComponent<PlayerTurn>();

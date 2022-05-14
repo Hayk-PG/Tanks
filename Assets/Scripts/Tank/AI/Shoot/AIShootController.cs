@@ -2,47 +2,24 @@
 using System.Collections;
 using UnityEngine;
 
-public class AIShootController : MonoBehaviour
+public class AIShootController : BaseShootController
 {
-    [Serializable]
-    private struct Canon
-    {
-        [SerializeField]
-        internal Transform _canonPivotPoint;
-        [SerializeField]
-        internal float _x, _y, _z;
-        internal float _t;
-
-        internal Quaternion _lookRot, _rot, _desiredRotation;
-    }
-    [Serializable]
-    private struct Shoot
-    {
-        [SerializeField]
-        internal AIShootTrajectory _aIShootTrajectory;
-
-        [Header("Bullet")]
-        [SerializeField]
-        internal BulletController[] _bulletsPrefab;
-        [SerializeField]
-        internal Transform _shootPoint;
-        [SerializeField]
-        internal int _activeBulletIndex;
-    }
-
-    [SerializeField]
-    private Canon _canon;
-    [SerializeField]
-    private Shoot _shoot;
-
     private Transform _player;
     private Vector3 _target;
     private Rigidbody _rigidBody;
     private AITankMovement _aiTankMovement;
     private IScore _iScore;
+    private Quaternion _lookRot;
+    private Quaternion _rot;
+    private Quaternion _desiredRotation;
 
-    private void Awake()
+    [SerializeField] private BulletController[] _bulletsPrefab;
+    [SerializeField] private int _activeBulletIndex;
+
+    
+    protected override void Awake()
     {
+        base.Awake();
         _player = GameObject.FindGameObjectWithTag("Player").transform;
         _rigidBody = GetComponent<Rigidbody>();
         _aiTankMovement = GetComponent<AITankMovement>();
@@ -61,20 +38,19 @@ public class AIShootController : MonoBehaviour
 
     private void Update()
     {
-        if (_player != null) _target = _shoot._aIShootTrajectory.PredictedTrajectory(_player.position, transform.position, 1);
+        if (_player != null) _target = _trajectory.PredictedTrajectory(_player.position, transform.position, 1);
 
         RotateCanon();
     }
 
     public void RotateCanon()
     {
-        _canon._lookRot = Quaternion.LookRotation(Vector3.forward, _target);
-        _canon._rot = _canon._lookRot * Quaternion.Euler(_canon._x, _canon._y, _canon._z);
-        _canon._desiredRotation = Quaternion.Slerp(_canon._desiredRotation, _canon._rot, _canon._t);
+        _lookRot = Quaternion.LookRotation(Vector3.forward, _target);
+        _rot = _lookRot * Quaternion.Euler(_canon._rotationStabilizer.x, _canon._rotationStabilizer.y, _canon._rotationStabilizer.z);
+        _desiredRotation = Quaternion.Slerp(_desiredRotation, _rot, _canon._rotationSpeed);
 
-        _canon._t = 2 * Time.deltaTime;
-
-        _canon._canonPivotPoint.rotation = _canon._desiredRotation;
+        _canon._rotationSpeed = 2 * Time.deltaTime;
+        _canonPivotPoint.rotation = _desiredRotation;
     }
 
     private void ShootBullet()
@@ -86,7 +62,7 @@ public class AIShootController : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
 
-        BulletController bullet = Instantiate(_shoot._bulletsPrefab[_shoot._activeBulletIndex], _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
+        BulletController bullet = Instantiate(_bulletsPrefab[_activeBulletIndex], _shootPoint.position, _canonPivotPoint.rotation);
         bullet.OwnerScore = _iScore;
         bullet.RigidBody.velocity = _target;
         _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);

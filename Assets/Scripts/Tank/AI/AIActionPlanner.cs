@@ -8,8 +8,6 @@ public class AIActionPlanner : MonoBehaviour
     private ChangeTiles _changeTiles;
     private TilesData _tilesGenerator;
     private PlayerTurn _playerTurn;
-    
-    [SerializeField]
     private Raycasts _rayCasts;
 
     public event Action<Vector3, int> OnActionPlanner;
@@ -50,6 +48,7 @@ public class AIActionPlanner : MonoBehaviour
 
     private void Awake()
     {
+        _rayCasts = Get<Raycasts>.FromChild(gameObject);
         _turnController = FindObjectOfType<TurnController>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
         _tilesGenerator = FindObjectOfType<TilesData>();

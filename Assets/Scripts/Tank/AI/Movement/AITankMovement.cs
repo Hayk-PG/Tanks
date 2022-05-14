@@ -18,9 +18,7 @@ public class AITankMovement : BaseTankMovement
     protected override void Awake()
     {
         base.Awake();
-
         _aiActionPlanner = GetComponent<AIActionPlanner>();
-
         RigidbodyCenterOfMass();
     }
 

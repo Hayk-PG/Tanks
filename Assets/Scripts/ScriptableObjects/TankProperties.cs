@@ -22,17 +22,33 @@ public class TankProperties : ScriptableObject
     [Header("Tank prefab canon parameters")]
     public float _minEulerAngleX;
     public float _maxEulerAngleX;
+    public float _rotationSpeed;
+    public Vector3 _rotationStabilizer;
+
+    [Header("Shoot force")]
+    public float _minForce;
+    public float _maxForce;
+    public float _smoothTime;
+    public float _maxSpeed;
 
 
     public virtual void GetValuesFromTankPrefab()
     {
-        _rigidbodyMass = _tank.GetComponent<Rigidbody>().mass;
-        _normalSpeed = _tank.GetComponent<TankMovement>()._normalSpeed;
-        _accelerated = _tank.GetComponent<TankMovement>()._accelerated;
-        _maxBrake = _tank.GetComponent<TankMovement>()._maxBrake;
-        _normalCenterOfMass = _tank.GetComponent<TankMovement>()._normalCenterOfMass;
-        _minEulerAngleX = _tank.GetComponent<ShootController>()._canon._minEulerAngleX;
-        _maxEulerAngleX = _tank.GetComponent<ShootController>()._canon._maxEulerAngleX;
+        _rigidbodyMass = Get<Rigidbody>.From(_tank.gameObject).mass; 
+        _normalSpeed = Get<BaseTankMovement>.From(_tank.gameObject)._normalSpeed;
+        _accelerated = Get<BaseTankMovement>.From(_tank.gameObject)._accelerated;
+        _maxBrake = Get<BaseTankMovement>.From(_tank.gameObject)._maxBrake;
+        _normalCenterOfMass = Get<BaseTankMovement>.From(_tank.gameObject)._normalCenterOfMass;
+
+        _minEulerAngleX = Get<BaseShootController>.From(_tank.gameObject)._canon._minEulerAngleX;
+        _maxEulerAngleX = Get<BaseShootController>.From(_tank.gameObject)._canon._maxEulerAngleX;
+        _rotationSpeed = Get<BaseShootController>.From(_tank.gameObject)._canon._rotationSpeed;
+        _rotationStabilizer = Get<BaseShootController>.From(_tank.gameObject)._canon._rotationStabilizer;
+
+        _minForce = Get<BaseShootController>.From(_tank.gameObject)._shoot._minForce;
+        _maxForce = Get<BaseShootController>.From(_tank.gameObject)._shoot._maxForce;
+        _smoothTime = Get<BaseShootController>.From(_tank.gameObject)._shoot._smoothTime;
+        _maxSpeed = Get<BaseShootController>.From(_tank.gameObject)._shoot._maxSpeed;
 
         EditorUtility.SetDirty(this);
     }

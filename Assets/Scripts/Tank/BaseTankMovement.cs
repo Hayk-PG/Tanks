@@ -11,12 +11,11 @@ public class BaseTankMovement : MonoBehaviour
     public Vector3 _normalCenterOfMass;
     protected float _currentBrake;
 
-    [Header("Components")]
-    public WheelColliderController _wheelColliderController;
-    public Rigidbody _rigidBody;
-    public Raycasts _rayCasts;
+    protected Rigidbody _rigidBody;
     protected PlayerTurn _playerTurn;
-
+    protected WheelColliderController _wheelColliderController;   
+    protected Raycasts _rayCasts;
+    
     protected bool _isOnRightSlope, _isOnLeftSlope;
     protected string[] _slopesNames;
     protected Vector3 _vectorRight;
@@ -32,8 +31,11 @@ public class BaseTankMovement : MonoBehaviour
 
     protected virtual void Awake()
     {
-        _playerTurn = GetComponent<PlayerTurn>();
-
+        _rigidBody = Get<Rigidbody>.From(gameObject);
+        _playerTurn = Get<PlayerTurn>.From(gameObject);
+        _wheelColliderController = Get<WheelColliderController>.FromChild(gameObject);
+        _rayCasts = Get<Raycasts>.FromChild(gameObject);
+        
         Initialize();
     }
 

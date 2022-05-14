@@ -2,6 +2,7 @@
 using System;
 using UnityEditor;
 using UnityEditorInternal;
+using System.Linq;
 
 [CreateAssetMenu(fileName = "New components", menuName = "Tank components")]
 public class TankSciptableComponents : ScriptableComponents
@@ -10,9 +11,10 @@ public class TankSciptableComponents : ScriptableComponents
     private WheelColliderController _wheelColliderController;
     private WheelCollider _wheelCollider;
 
-
     public override void OnClickGetComponents()
     {
+        IsComponentsHolderIsAITank();
+
         _scripts = _componentsHolder.GetComponents<MonoBehaviour>();
         _rigidbody = Get<Rigidbody>.From(_componentsHolder);
         _wheelColliderController = Get<WheelColliderController>.FromChild(_componentsHolder);
@@ -33,9 +35,14 @@ public class TankSciptableComponents : ScriptableComponents
         }
     }
 
+    private bool IsComponentsHolderIsAITank()
+    {
+        return _componentsHolder.GetComponents<MonoBehaviour>().ToList().Find(m => m.GetType() == typeof(AITankMovement));
+    }
+
     private void TagAndLayer()
     {
-        _target.tag = Tags.Player;
+        _target.tag = IsComponentsHolderIsAITank()? Tags.AI: Tags.Player;
         _target.layer = LayerMask.NameToLayer(Layers.Vehicle);
     }
 
@@ -73,31 +80,31 @@ public class TankSciptableComponents : ScriptableComponents
 
             var newScript = _target.GetComponent(scriptType);
 
-            if (newScript.GetType() == typeof(TankMovement))
-            {
-                TankMovement tankMovement = (TankMovement)newScript;
-                tankMovement._wheelColliderController = Get<WheelColliderController>.FromChild(_target);
-                tankMovement._rigidBody = Get<Rigidbody>.From(_target);
-                tankMovement._rayCasts = Get<Raycasts>.FromChild(_target);
-            }
+            //if (newScript.GetType().BaseType == typeof(BaseTankMovement))
+            //{
+            //    BaseTankMovement baseTankMovement = (BaseTankMovement)newScript;
+            //    baseTankMovement._wheelColliderController = Get<WheelColliderController>.FromChild(_target);
+            //    baseTankMovement._rigidBody = Get<Rigidbody>.From(_target);
+            //    baseTankMovement._rayCasts = Get<Raycasts>.FromChild(_target);
+            //}
 
-            if (newScript.GetType() == typeof(ShootController))
-            {
-                ShootController shootController = (ShootController)newScript;
-                shootController._canonPivotPoint = _target.transform.Find("CanonPivotPoint");
-                shootController._shootPoint = shootController._canonPivotPoint.GetChild(0).transform.Find("ShootPoint");
-                shootController._trajectory = Get<PlayerShootTrajectory>.From(shootController._shootPoint.gameObject);
-            }
+            //if (newScript.GetType().BaseType == typeof(BaseShootController))
+            //{
+            //    BaseShootController baseShootController = (BaseShootController)newScript;
+            //    baseShootController._canonPivotPoint = _target.transform.Find("CanonPivotPoint");
+            //    baseShootController._shootPoint = Get<BaseTrajectory>.FromChild(baseShootController._canonPivotPoint.gameObject).transform;    //baseShootController._canonPivotPoint.GetChild(0).transform.Find("ShootPoint");
+            //    baseShootController._trajectory = Get<BaseTrajectory>.From(baseShootController._shootPoint.gameObject);
+            //}
 
-            if (newScript.GetType() == typeof(VehicleFall))
-            {
-                VehicleFall vehicleFall = (VehicleFall)newScript;
+            //if (newScript.GetType() == typeof(VehicleFall))
+            //{
+            //    VehicleFall vehicleFall = (VehicleFall)newScript;
 
-                GlobalFunctions.Loop<ParticleSystem>.Foreach(_target.GetComponentsInChildren<ParticleSystem>(true), particle => 
-                {
-                    if (particle.name == "SmokeCircleBright") vehicleFall._smoke = particle.gameObject;
-                });
-            }
+            //    GlobalFunctions.Loop<ParticleSystem>.Foreach(_target.GetComponentsInChildren<ParticleSystem>(true), particle =>
+            //    {
+            //        if (particle.name == "SmokeCircleBright") vehicleFall._smoke = particle.gameObject;
+            //    });
+            //}
         });
     }
 
