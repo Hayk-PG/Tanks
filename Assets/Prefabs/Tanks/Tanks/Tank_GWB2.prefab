@@ -461,19 +461,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f735b49fc3d1154f92c7fab11fbb35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canonPivotPoint: {fileID: 3367524021226763771}
+  _shootPoint: {fileID: 4622052714090082058}
+  _trajectory: {fileID: 3187167007009751526}
   _canon:
     _minEulerAngleX: -46
-    _maxEulerAngleX: 0
+    _maxEulerAngleX: 27
     _rotationSpeed: 20
     _rotationStabilizer: {x: 0, y: 0, z: 0}
-    _canonPivotPoint: {fileID: 3367524021226763771}
   _shoot:
     _minForce: 3
-    _maxForce: 13
+    _maxForce: 10
     _smoothTime: 1
-    _maxSpeed: 3
-    _shootPoint: {fileID: 4622052714090082058}
-    _playerShootTrajectory: {fileID: 3187167007009751526}
+    _maxSpeed: 5
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
 --- !u!114 &1482357454173442973
@@ -651,6 +651,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1482959699630332132}
   - component: {fileID: 1125968736385147458}
+  - component: {fileID: 1517764692595521328}
   m_Layer: 0
   m_Name: WheelColliders
   m_TagString: Untagged
@@ -688,6 +689,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 196617ee90986af44a24853628f2a3fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!146 &1517764692595521328
+WheelCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291708374641767491}
+  m_Center: {x: 0, y: 0.25, z: 0}
+  m_Radius: 0.45
+  m_SuspensionSpring:
+    spring: 100000
+    damper: 4500
+    targetPosition: 0.5
+  m_SuspensionDistance: 0.5
+  m_ForceAppPointDistance: 0
+  m_Mass: 20
+  m_WheelDampingRate: 0.25
+  m_ForwardFriction:
+    m_ExtremumSlip: 0.4
+    m_ExtremumValue: 1
+    m_AsymptoteSlip: 0.8
+    m_AsymptoteValue: 0.5
+    m_Stiffness: 1
+  m_SidewaysFriction:
+    m_ExtremumSlip: 0.2
+    m_ExtremumValue: 1
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 0.75
+    m_Stiffness: 2
+  m_Enabled: 1
 --- !u!1 &7889055350041701031
 GameObject:
   m_ObjectHideFlags: 0

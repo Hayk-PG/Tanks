@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class AIShootTrajectory : MonoBehaviour
+public class AIShootTrajectory : BaseTrajectory
 {
     Vector3 _distance, _distanceX, _result;
     float _sy, _sx, _vx, _vy;
 
 
-    public Vector3 PredictedTrajectory(Vector3 target, Vector3 origin, float time)
+    public override Vector3 PredictedTrajectory(Vector3 target, Vector3 origin, float time)
     {
         _distance = target - origin;
         _distanceX = _distance;

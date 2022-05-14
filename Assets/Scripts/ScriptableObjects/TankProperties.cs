@@ -17,7 +17,7 @@ public class TankProperties : ScriptableObject
     public float _normalSpeed;
     public float _accelerated;
     public float _maxBrake;
-    public Vector3 _centerOfMass;
+    public Vector3 _normalCenterOfMass;
 
     [Header("Tank prefab canon parameters")]
     public float _minEulerAngleX;
@@ -30,7 +30,7 @@ public class TankProperties : ScriptableObject
         _normalSpeed = _tank.GetComponent<TankMovement>()._normalSpeed;
         _accelerated = _tank.GetComponent<TankMovement>()._accelerated;
         _maxBrake = _tank.GetComponent<TankMovement>()._maxBrake;
-        _centerOfMass = _tank.GetComponent<TankMovement>()._normalCenterOfMass;
+        _normalCenterOfMass = _tank.GetComponent<TankMovement>()._normalCenterOfMass;
         _minEulerAngleX = _tank.GetComponent<ShootController>()._canon._minEulerAngleX;
         _maxEulerAngleX = _tank.GetComponent<ShootController>()._canon._maxEulerAngleX;
 

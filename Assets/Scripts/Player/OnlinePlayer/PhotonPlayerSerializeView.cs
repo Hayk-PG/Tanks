@@ -30,7 +30,7 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             {
                 stream.SendNext(_photonPlayerTankController._shootController.Direction);
                 stream.SendNext(_photonPlayerTankController._shootController.ActiveAmmoIndex);
-                stream.SendNext(_photonPlayerTankController._shootController.CanonPivotPoint.eulerAngles);
+                stream.SendNext(_photonPlayerTankController._shootController.CanonPivotPointEulerAngles);
                 stream.SendNext(_photonPlayerTankController._shootController.CurrentForce);
                 stream.SendNext(_photonPlayerTankController._shootController.IsApplyingForce);
             }
@@ -74,7 +74,7 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             {
                 _photonPlayerTankController._shootController.Direction = (float)stream.ReceiveNext();
                 _photonPlayerTankController._shootController.ActiveAmmoIndex = (int)stream.ReceiveNext();
-                _photonPlayerTankController._shootController.CanonPivotPoint.eulerAngles = (Vector3)stream.ReceiveNext();
+                _photonPlayerTankController._shootController.CanonPivotPointEulerAngles = (Vector3)stream.ReceiveNext();
                 _photonPlayerTankController._shootController.CurrentForce = (float)stream.ReceiveNext();
                 _photonPlayerTankController._shootController.IsApplyingForce = (bool)stream.ReceiveNext();
             }

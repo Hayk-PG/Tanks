@@ -169,6 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5808447055233794317}
   - component: {fileID: 982276668146843584}
+  - component: {fileID: -3266847314293043811}
   m_Layer: 0
   m_Name: WheelColliders
   m_TagString: Untagged
@@ -206,6 +207,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 196617ee90986af44a24853628f2a3fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!146 &-3266847314293043811
+WheelCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2879256229276199479}
+  m_Center: {x: 0, y: 0.25, z: 0}
+  m_Radius: 0.45
+  m_SuspensionSpring:
+    spring: 100000
+    damper: 4500
+    targetPosition: 0.5
+  m_SuspensionDistance: 0.5
+  m_ForceAppPointDistance: 0
+  m_Mass: 20
+  m_WheelDampingRate: 0.25
+  m_ForwardFriction:
+    m_ExtremumSlip: 0.4
+    m_ExtremumValue: 1
+    m_AsymptoteSlip: 0.8
+    m_AsymptoteValue: 0.5
+    m_Stiffness: 1
+  m_SidewaysFriction:
+    m_ExtremumSlip: 0.2
+    m_ExtremumValue: 1
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 0.75
+    m_Stiffness: 2
+  m_Enabled: 1
 --- !u!1 &3103405126691158200
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,19 +1034,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f735b49fc3d1154f92c7fab11fbb35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canonPivotPoint: {fileID: 6338006563552913628}
+  _shootPoint: {fileID: 4817475866753221258}
+  _trajectory: {fileID: 3370063831702613094}
   _canon:
     _minEulerAngleX: -44
     _maxEulerAngleX: 10
-    _rotationSpeed: 20
+    _rotationSpeed: 30
     _rotationStabilizer: {x: 0, y: 0, z: 0}
-    _canonPivotPoint: {fileID: 6338006563552913628}
   _shoot:
     _minForce: 3
     _maxForce: 16
     _smoothTime: 1
-    _maxSpeed: 6
-    _shootPoint: {fileID: 4817475866753221258}
-    _playerShootTrajectory: {fileID: 3370063831702613094}
+    _maxSpeed: 3
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
 --- !u!114 &8479949394606955785

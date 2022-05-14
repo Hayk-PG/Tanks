@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Get<T> : MonoBehaviour 
 {
@@ -11,5 +12,10 @@ public class Get<T> : MonoBehaviour
     public static T FromChild(GameObject obj)
     {
         return obj.GetComponentInChildren<T>() != null ? obj.GetComponentInChildren<T>() : default;
+    }
+
+    public static Type Type(object obj)
+    {
+        return obj.GetType();
     }
 }

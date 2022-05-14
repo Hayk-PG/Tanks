@@ -8,8 +8,7 @@ public class VehicleFall : MonoBehaviour
     private bool _isVehicleFalling;
     private bool _isVehicleFelt;
 
-    [SerializeField]
-    private GameObject _smoke;
+    public GameObject _smoke;
 
     internal Action OnVehicleFell;
         

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerShootTrajectory : MonoBehaviour
+public class PlayerShootTrajectory : BaseTrajectory
 {
     [SerializeField] GameObject pointsPrefab;
     [SerializeField] int numberOfPoints;
@@ -44,7 +44,7 @@ public class PlayerShootTrajectory : MonoBehaviour
         return pointPos;
     }
 
-    internal void TrajectoryPrediction(float force)
+    public override void PredictedTrajectory(float force)
     {
         for (int i = 0; i < points.Length; i++)
         {

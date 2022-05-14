@@ -1,15 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-public class ShootController : MonoBehaviour
-{   
-    private TankController _tankController;
-    private PhotonPlayerShootRPC _photonPlayerShootRPC;
-    private Rigidbody _rigidBody;
-    private PlayerTurn _playerTurn;
-    private GameManagerBulletSerializer _gameManagerBulletSerializer;
-    private IScore _iScore;
-    private PlayerAmmoType _playerAmmoType;
+public class ShootController : BaseShootController
+{
     internal class PlayerHUDValues
     {
         internal float _currentAngle, _minAngle, _maxAngle;
@@ -25,43 +18,16 @@ public class ShootController : MonoBehaviour
             this._maxForce = _maxForce;
         }
     }
-
-    [Serializable] public struct Canon
-    {
-        internal float _currentEulerAngleX;
-
-        [Header("Canon rotation parameters")]
-        public float _minEulerAngleX;
-        public float _maxEulerAngleX;
-        public float _rotationSpeed;
-        public Vector3 _rotationStabilizer;  
-        
-        [Header("Canon")]
-        [SerializeField] internal Transform _canonPivotPoint; 
-    }
-    public Canon _canon;
-
-    [Serializable] private struct Shoot
-    {
-        internal float _currentForce;
-
-        [Header("Force")]
-        [SerializeField] internal float _minForce;
-        [SerializeField] internal float _maxForce;
-        [SerializeField] internal float _smoothTime;
-        [SerializeField] internal float _maxSpeed;
-        internal float _currentVelocity;
-        internal bool _isApplyingForce;
-
-        [Header("Shoot point")]
-        [SerializeField] internal Transform _shootPoint;
-        [SerializeField] internal PlayerShootTrajectory _playerShootTrajectory;
-    }       
-    [SerializeField] private Shoot _shoot;
-    
-    [Header("Active weapon")]
-    [SerializeField] private BulletController _instantiatedBullet;
-    [SerializeField] private int _activeAmmoIndex;
+    private TankController _tankController;
+    private PhotonPlayerShootRPC _photonPlayerShootRPC;
+    private Rigidbody _rigidBody;
+    private PlayerTurn _playerTurn;
+    private GameManagerBulletSerializer _gameManagerBulletSerializer;
+    private IScore _iScore;
+    private PlayerAmmoType _playerAmmoType;
+ 
+    [HideInInspector] [SerializeField] private BulletController _instantiatedBullet;
+    [HideInInspector] [SerializeField] private int _activeAmmoIndex;
 
     public BulletController Bullet
     {
@@ -79,20 +45,21 @@ public class ShootController : MonoBehaviour
         get => _activeAmmoIndex;
         set => _activeAmmoIndex = value;
     }
-    public Transform CanonPivotPoint
+    public Vector3 CanonPivotPointEulerAngles
     {
-        get => _canon._canonPivotPoint;
+        get => _canonPivotPoint.eulerAngles;
+        set => _canonPivotPoint.eulerAngles = value;
     }
     public bool IsApplyingForce
     {
         get => _shoot._isApplyingForce;
         set => _shoot._isApplyingForce = value;
     }
-   
+ 
     public Action<bool> OnCanonRotation;
     internal Action<bool> OnApplyingForce;
     internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
-
+   
 
     private void Awake()
     {
@@ -124,7 +91,7 @@ public class ShootController : MonoBehaviour
         {
             RotateCanon();
             ApplyForce();
-            OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canon._canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
+            OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
         }
     }
 
@@ -135,12 +102,12 @@ public class ShootController : MonoBehaviour
 
     public void RotateCanon()
     {
-        _canon._currentEulerAngleX = _canon._canonPivotPoint.localEulerAngles.x;
+        _canon._currentEulerAngleX = _canonPivotPoint.localEulerAngles.x;
 
         if (Direction > 0 && Converter.AngleConverter(_canon._currentEulerAngleX) > _canon._maxEulerAngleX) return;
         if (Direction < 0 && Converter.AngleConverter(_canon._currentEulerAngleX) < _canon._minEulerAngleX) return;
 
-        _canon._canonPivotPoint.localEulerAngles = new Vector3(_canon._currentEulerAngleX += (_canon._rotationSpeed * Direction * Time.deltaTime), 0, 0) + _canon._rotationStabilizer;
+        _canonPivotPoint.localEulerAngles = new Vector3(_canon._currentEulerAngleX += (_canon._rotationSpeed * Direction * Time.deltaTime), 0, 0) + _canon._rotationStabilizer;
 
         OnCanonRotation?.Invoke(Direction != 0);
     }
@@ -162,7 +129,7 @@ public class ShootController : MonoBehaviour
     private void ApplyForce()
     {
         Conditions<bool>.Compare(IsApplyingForce, OnForceApplied, OnForceReleased);
-        _shoot._playerShootTrajectory.TrajectoryPrediction(CurrentForce);
+        _trajectory.PredictedTrajectory(CurrentForce);
     }
 
     private void OnForceApplied()
@@ -181,7 +148,7 @@ public class ShootController : MonoBehaviour
     {
         if(_playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0)
         {
-            Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._bulletPrefab, _shoot._shootPoint.position, _canon._canonPivotPoint.rotation);
+            Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._bulletPrefab, _shootPoint.position, _canonPivotPoint.rotation);
             Bullet.OwnerScore = _iScore;
             Bullet.RigidBody.velocity = Bullet.transform.forward * force;
             _gameManagerBulletSerializer.BulletController = Bullet;

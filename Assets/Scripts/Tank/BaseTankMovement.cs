@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
+[Serializable]
 public class BaseTankMovement : MonoBehaviour
 {
     [Header("Movement parameters")]
@@ -11,9 +12,9 @@ public class BaseTankMovement : MonoBehaviour
     protected float _currentBrake;
 
     [Header("Components")]
-    [SerializeField] protected WheelColliderController _wheelColliderController;
-    [SerializeField] protected Rigidbody _rigidBody;
-    [SerializeField] protected Raycasts _rayCasts;
+    public WheelColliderController _wheelColliderController;
+    public Rigidbody _rigidBody;
+    public Raycasts _rayCasts;
     protected PlayerTurn _playerTurn;
 
     protected bool _isOnRightSlope, _isOnLeftSlope;
