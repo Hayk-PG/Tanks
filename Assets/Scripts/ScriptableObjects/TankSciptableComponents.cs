@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System;
 using UnityEditor;
 using UnityEditorInternal;
@@ -94,3 +95,4 @@ public class TankSciptableComponents : ScriptableComponents
         });
     }
 }
+#endif

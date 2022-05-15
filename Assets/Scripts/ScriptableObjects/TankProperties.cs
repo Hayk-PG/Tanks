@@ -50,6 +50,8 @@ public class TankProperties : ScriptableObject
         _smoothTime = Get<BaseShootController>.From(_tank.gameObject)._shoot._smoothTime;
         _maxSpeed = Get<BaseShootController>.From(_tank.gameObject)._shoot._maxSpeed;
 
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
     }
 }

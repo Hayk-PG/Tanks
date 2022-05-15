@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(TankProperties))]
@@ -53,3 +54,4 @@ public class ScriptableComponentsCustomEditor : Editor
         }
     }
 }
+#endif
