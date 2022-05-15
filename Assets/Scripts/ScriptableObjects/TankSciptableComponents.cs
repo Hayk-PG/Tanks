@@ -77,34 +77,6 @@ public class TankSciptableComponents : ScriptableComponents
 
             if (_target.GetComponent(scriptType) == null) ComponentUtility.PasteComponentAsNew(_target);
             if (_target.GetComponent(scriptType) != null) ComponentUtility.PasteComponentValues(_target.GetComponent(scriptType));
-
-            var newScript = _target.GetComponent(scriptType);
-
-            //if (newScript.GetType().BaseType == typeof(BaseTankMovement))
-            //{
-            //    BaseTankMovement baseTankMovement = (BaseTankMovement)newScript;
-            //    baseTankMovement._wheelColliderController = Get<WheelColliderController>.FromChild(_target);
-            //    baseTankMovement._rigidBody = Get<Rigidbody>.From(_target);
-            //    baseTankMovement._rayCasts = Get<Raycasts>.FromChild(_target);
-            //}
-
-            //if (newScript.GetType().BaseType == typeof(BaseShootController))
-            //{
-            //    BaseShootController baseShootController = (BaseShootController)newScript;
-            //    baseShootController._canonPivotPoint = _target.transform.Find("CanonPivotPoint");
-            //    baseShootController._shootPoint = Get<BaseTrajectory>.FromChild(baseShootController._canonPivotPoint.gameObject).transform;    //baseShootController._canonPivotPoint.GetChild(0).transform.Find("ShootPoint");
-            //    baseShootController._trajectory = Get<BaseTrajectory>.From(baseShootController._shootPoint.gameObject);
-            //}
-
-            //if (newScript.GetType() == typeof(VehicleFall))
-            //{
-            //    VehicleFall vehicleFall = (VehicleFall)newScript;
-
-            //    GlobalFunctions.Loop<ParticleSystem>.Foreach(_target.GetComponentsInChildren<ParticleSystem>(true), particle =>
-            //    {
-            //        if (particle.name == "SmokeCircleBright") vehicleFall._smoke = particle.gameObject;
-            //    });
-            //}
         });
     }
 

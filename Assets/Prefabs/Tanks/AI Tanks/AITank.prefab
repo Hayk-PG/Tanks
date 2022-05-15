@@ -691,9 +691,6 @@ MonoBehaviour:
   _accelerated: 2500
   _maxBrake: 500
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
-  _wheelColliderController: {fileID: 2716530727854926117}
-  _rigidBody: {fileID: 7732026768825822122}
-  _rayCasts: {fileID: 3890668842825273375}
 --- !u!114 &9016647994722164227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,19 +703,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 610f775894f87ac41bd296284e97573e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canonPivotPoint: {fileID: 0}
-  _shootPoint: {fileID: 0}
-  _trajectory: {fileID: 0}
   _canon:
-    _minEulerAngleX: 0
-    _maxEulerAngleX: 0
-    _rotationSpeed: 0
+    _minEulerAngleX: -70
+    _maxEulerAngleX: 27
+    _rotationSpeed: 50
     _rotationStabilizer: {x: -90, y: -90, z: 0}
   _shoot:
-    _minForce: 0
-    _maxForce: 0
-    _smoothTime: 0
-    _maxSpeed: 0
+    _minForce: 3
+    _maxForce: 10
+    _smoothTime: 1
+    _maxSpeed: 6
   _bulletsPrefab:
   - {fileID: 8517823123608504842, guid: e9610e8f33812854c9eef6610036b743, type: 3}
   _activeBulletIndex: 0
@@ -759,7 +753,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f36e5f0d1e666943a490cefe9cf08e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _smoke: {fileID: 135824738987289845}
 --- !u!114 &1446118484376267940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1269,18 +1262,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 325960191828942073}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3890668842825273375 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3564710858764717286, guid: 3e29ccfa0b0c9e647afb92e5d6855871,
-    type: 3}
-  m_PrefabInstance: {fileID: 325960191828942073}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c93a55e906329b4438ca76e5ee7a5bc6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1766922502433627389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1725,12 +1706,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d36392250cf9ac459ad974fcd29715f, type: 3}
---- !u!1 &135824738987289845 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8629258924084072668, guid: 3d36392250cf9ac459ad974fcd29715f,
-    type: 3}
-  m_PrefabInstance: {fileID: 8512861734248823849}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &139161429952101695 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8632736593872961814, guid: 3d36392250cf9ac459ad974fcd29715f,

@@ -48,9 +48,14 @@ public class AIShootController : BaseShootController
         _lookRot = Quaternion.LookRotation(Vector3.forward, _target);
         _rot = _lookRot * Quaternion.Euler(_canon._rotationStabilizer.x, _canon._rotationStabilizer.y, _canon._rotationStabilizer.z);
         _desiredRotation = Quaternion.Slerp(_desiredRotation, _rot, _canon._rotationSpeed);
-
         _canon._rotationSpeed = 2 * Time.deltaTime;
-        _canonPivotPoint.rotation = _desiredRotation;
+        _canon._currentEulerAngleX = _desiredRotation.eulerAngles.x;
+
+        if (Converter.AngleConverter(_canon._currentEulerAngleX) < _canon._maxEulerAngleX && 
+            Converter.AngleConverter(_canon._currentEulerAngleX) > _canon._minEulerAngleX)
+        {
+            _canonPivotPoint.rotation = _desiredRotation;
+        }  
     }
 
     private void ShootBullet()
