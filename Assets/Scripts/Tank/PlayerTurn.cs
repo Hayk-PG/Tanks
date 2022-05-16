@@ -13,7 +13,6 @@ public class PlayerTurn : MonoBehaviour
         set => _myTurn = value;
     }  
     public bool IsMyTurn{ get; set; }
-    public event Action<TurnState, TurnState> OnTurnChangeEventReceived;
 
 
     private void Awake()
@@ -33,8 +32,6 @@ public class PlayerTurn : MonoBehaviour
 
     private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
     {
-        OnTurnChangeEventReceived?.Invoke(arg1, MyTurn);
-
         if (arg1 == MyTurn)
         {
             arg2.SetCameraTarget(transform, 5, 2);

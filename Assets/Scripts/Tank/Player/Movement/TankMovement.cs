@@ -3,6 +3,8 @@
 public class TankMovement : BaseTankMovement
 {
     private TankController _tankController;
+    private Fuel _fuel;
+    private bool _isEnoughFuel = true;
 
 
     protected override void Awake()
@@ -15,6 +17,7 @@ public class TankMovement : BaseTankMovement
     private void OnEnable()
     {
         _tankController.OnHorizontalJoystick += OnHorizontalJoystick;
+        if (_fuel != null) _fuel.OnFuelValue -= OnFuelValue;
     }
 
     private void OnDisable()
@@ -24,7 +27,7 @@ public class TankMovement : BaseTankMovement
 
     private void OnHorizontalJoystick(float horizontal)
     {
-        if (_playerTurn.IsMyTurn)
+        if (_playerTurn.IsMyTurn && _isEnoughFuel)
             Direction = name == Names.Tank_FirstPlayer ? horizontal : -horizontal;
         else
             Direction = 0;
@@ -54,7 +57,8 @@ public class TankMovement : BaseTankMovement
         _wheelColliderController.RotateWheels();
 
         OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
-        OnRigidbodyPosition?.Invoke(_rigidBody);
+        OnFuel?.Invoke(_wheelColliderController.WheelRPM(), _playerTurn.IsMyTurn);
+        OnRigidbodyPosition?.Invoke(_rigidBody);       
     }
 
     private void UpdateSpeedAndPush()
@@ -99,5 +103,16 @@ public class TankMovement : BaseTankMovement
     private bool IsVehicleStopped(float value)
     {
         return value == 0;
+    }
+
+    internal void SubscribeToFuelEvents(Fuel fuel)
+    {
+        _fuel = fuel;
+        _fuel.OnFuelValue += OnFuelValue;
+    }
+
+    private void OnFuelValue(bool isEnoughFuel)
+    {
+        _isEnoughFuel = isEnoughFuel;
     }
 }
