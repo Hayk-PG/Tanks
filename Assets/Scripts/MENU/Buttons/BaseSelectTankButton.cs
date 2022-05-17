@@ -25,6 +25,7 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
     protected virtual void Start()
     {
         SetIcon();
+        InitializeTankStats();
     }
 
     protected virtual void Update()
@@ -36,6 +37,27 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
     protected virtual void SetIcon()
     {
         if (IsIndexCorrect()) _iconTank.sprite = _data.AvailableTanks[_index]._iconTank;
+    }
+
+    protected virtual void InitializeTankStats()
+    {
+        if (IsIndexCorrect())
+        {
+            Transform statsContainer = transform.Find("Stats");
+            Slider[] _statsSliders = statsContainer.GetComponentsInChildren<Slider>();
+
+            for (int i = 0; i < _statsSliders.Length; i++)
+            {
+                if (i == 0)
+                    _statsSliders[i].value = _data.AvailableTanks[_index]._normalSpeed; 
+
+                if (i == 1)
+                    _statsSliders[i].value = _data.AvailableTanks[_index]._maxForce;
+
+                if (i == 2)
+                    _statsSliders[i].value = _data.AvailableTanks[_index]._armor;
+            }
+        }
     }
 
     public void ButtonSprite(bool isSelected)

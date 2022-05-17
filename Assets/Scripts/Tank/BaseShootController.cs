@@ -23,8 +23,8 @@ public class BaseShootController: MonoBehaviour
         internal float _currentForce;
 
         [Header("Shoot force")]
-        public float _minForce;
-        public float _maxForce;
+        [Range(0, 3)] public float _minForce;
+        [Range(0, 50)] public float _maxForce;
         public float _smoothTime;
         public float _maxSpeed;
         internal float _currentVelocity;

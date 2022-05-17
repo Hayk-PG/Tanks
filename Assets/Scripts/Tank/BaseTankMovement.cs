@@ -5,7 +5,7 @@ using UnityEngine;
 public class BaseTankMovement : MonoBehaviour
 {
     [Header("Movement parameters")]
-    public float _normalSpeed;
+    [Range(0, 1000)] public float _normalSpeed;
     public float _accelerated;    
     public float _maxBrake;
     public Vector3 _normalCenterOfMass;

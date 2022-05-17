@@ -4,7 +4,7 @@ using UnityEngine;
 public class HealthController : MonoBehaviour, IDamage
 {
     [SerializeField] private int _currentHealth;
-    [SerializeField] private int _armor;
+    [SerializeField][Range(0, 100)] private int _armor;
     private int _minHealth = 0;
     private int _maxHealth = 100;
     public int Health
