@@ -15,6 +15,11 @@ public class TankPropertiesCustomEditor : Editor
         {
             tankProperties.GetValuesFromTankPrefab();
         }
+
+        if (GUILayout.Button("Apply values to the same type AI Tank", GUILayout.Height(40)))
+        {
+            tankProperties.ApplyValuesToSameTypeAITank();
+        }
     }
 }
 
