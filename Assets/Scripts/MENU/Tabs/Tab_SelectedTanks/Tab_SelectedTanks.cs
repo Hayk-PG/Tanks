@@ -4,6 +4,7 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
 {
     private PlayVsAi _playVsAi;
     public Action OnPhotonOnlineTankSelected { get; set; }
+    public Action OnPhotonOnlineInRoomTankSelected { get; set; }
     public Action OnOfflineTankSelected { get; set; }
 
 
@@ -30,6 +31,9 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
         if (MyPhotonNetwork.IsOfflineMode)
             OnOfflineTankSelected?.Invoke();
         else
-            OnPhotonOnlineTankSelected?.Invoke();
+        {
+            if (!MyPhotonNetwork.IsInRoom) OnPhotonOnlineTankSelected?.Invoke();
+            if (MyPhotonNetwork.IsInRoom) OnPhotonOnlineInRoomTankSelected?.Invoke(); 
+        }
     }
 }
