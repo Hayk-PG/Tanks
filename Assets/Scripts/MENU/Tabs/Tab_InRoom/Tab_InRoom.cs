@@ -83,6 +83,7 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
                 (
                 MyPhotonNetwork.PlayersList[i].NickName,
                 MyPhotonNetwork.PlayersList[i].ActorNumber,
+                (int)MyPhotonNetwork.PlayersList[i].CustomProperties[Keys.Level],
                 IsPlayerReady(MyPhotonNetwork.PlayersList[i])
                 ));
         }

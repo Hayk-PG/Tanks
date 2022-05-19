@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using System.Linq;
 
-[CreateAssetMenu(fileName = "New components", menuName = "Tank components")]
+[CreateAssetMenu(menuName = "Scriptable objects/Component/New tank's component")]
 public class TankSciptableComponents : ScriptableComponents
 {
     private Rigidbody _rigidbody;

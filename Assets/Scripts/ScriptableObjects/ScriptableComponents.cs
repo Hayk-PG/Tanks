@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New components", menuName = "Components")]
+[CreateAssetMenu(menuName = "Scriptable objects/Component/New component")]
 public abstract class ScriptableComponents : ScriptableObject
 {
     [Header("Original game object")]

@@ -6,6 +6,7 @@ public class PlayerInRoom : MonoBehaviour
 {
     [SerializeField] CanvasGroup _canvasGroup;
     [SerializeField] private Text _text_playerName;
+    [SerializeField] private Badge _badge;
 
     public string PlayerName
     {
@@ -19,12 +20,14 @@ public class PlayerInRoom : MonoBehaviour
     {
         public string _playerName;
         public int _actorNumber;
+        public int _playerLevel;
         public bool _isPlayerReady;
 
-        public Properties(string playerName, int actorNumber, bool isPlayerReady)
+        public Properties(string playerName, int actorNumber, int playerLevel, bool isPlayerReady)
         {
             _playerName = playerName;
             _actorNumber = actorNumber;
+            _playerLevel = playerLevel;
             _isPlayerReady = isPlayerReady;
         }
     }
@@ -32,14 +35,14 @@ public class PlayerInRoom : MonoBehaviour
     public void AssignPlayerInRoom(Properties properties)
     {
         SetObjectName(properties._actorNumber.ToString());
-        SetPlayerInformation(properties._playerName, properties._actorNumber, properties._isPlayerReady);
+        SetPlayerInformation(properties._playerName, properties._actorNumber, properties._playerLevel, properties._isPlayerReady);
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
     }
 
     public void ResetPlayerInRoom()
     {
         SetObjectName("PlayerInRoom");
-        SetPlayerInformation("", 0, false);
+        SetPlayerInformation("", 0, 0, false);
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
     }
 
@@ -48,10 +51,11 @@ public class PlayerInRoom : MonoBehaviour
         this.name = name;
     }
 
-    private void SetPlayerInformation(string name, int actorNumber, bool isPlayerReady)
+    private void SetPlayerInformation(string name, int actorNumber,int playerLevel, bool isPlayerReady)
     {
         PlayerName = name;
         PlayerActorNumber = actorNumber;
+        _badge.Set(playerLevel);
         IsPlayerReady = isPlayerReady;
     }
 }

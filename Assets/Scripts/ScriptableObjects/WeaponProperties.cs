@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New weapon", menuName = "Weapon")]
+[CreateAssetMenu(menuName = "Scriptable objects/Weapons/New weapon")]
 public class WeaponProperties : ScriptableObject
 {
     [Header("Shoot parameters")]

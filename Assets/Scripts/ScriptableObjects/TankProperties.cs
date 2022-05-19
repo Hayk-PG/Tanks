@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New tank", menuName = "Tank")]
+[CreateAssetMenu(menuName = "Scriptable objects/Tanks/New tank")]
 public class TankProperties : ScriptableObject
 {
     public int _tankIndex;

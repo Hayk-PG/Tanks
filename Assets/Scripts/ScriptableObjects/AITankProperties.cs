@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New AI tank", menuName = "AI Tank")]
+[CreateAssetMenu(menuName = "Scriptable objects/Tanks/New ai tank")]
 public class AITankProperties : TankProperties
 {
     
