@@ -3,9 +3,10 @@
 public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
 {
     private PlayVsAi _playVsAi;
-    public Action OnPhotonOnlineTankSelected { get; set; }
-    public Action OnPhotonOnlineInRoomTankSelected { get; set; }
-    public Action OnOfflineTankSelected { get; set; }
+
+    public Action OnSingleGameTankSelected { get; set; }
+    public Action OnOnlineGameTankChanged { get; set; }
+    
 
 
     protected override void Awake()
@@ -17,23 +18,27 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
     private void OnEnable()
     {
         _playVsAi.OnClickedPlayVsAIButton += base.OpenTab;
-        _object._OnJoinedLobby += base.OpenTab;
+        MyPhoton.OnNickNameSet += base.OpenTab;
     }
 
     private void OnDisable()
     {
         _playVsAi.OnClickedPlayVsAIButton -= base.OpenTab;
-        _object._OnJoinedLobby -= base.OpenTab;
+        MyPhoton.OnNickNameSet -= base.OpenTab;
     }
 
     public void OnClickSelectButton()
     {
         if (MyPhotonNetwork.IsOfflineMode)
-            OnOfflineTankSelected?.Invoke();
+        {
+            OnSingleGameTankSelected?.Invoke();
+        }
         else
         {
-            if (!MyPhotonNetwork.IsInRoom) OnPhotonOnlineTankSelected?.Invoke();
-            if (MyPhotonNetwork.IsInRoom) OnPhotonOnlineInRoomTankSelected?.Invoke(); 
+            if (!MyPhotonNetwork.IsInRoom)
+                MyPhoton.JoinLobby();
+            if (MyPhotonNetwork.IsInRoom)
+                OnOnlineGameTankChanged?.Invoke(); ;
         }
     }
 }

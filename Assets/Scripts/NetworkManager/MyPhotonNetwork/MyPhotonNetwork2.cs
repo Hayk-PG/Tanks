@@ -5,6 +5,7 @@ public partial class MyPhotonNetwork
 {
     public static Room CurrentRoom => PhotonNetwork.CurrentRoom;
     public static bool IsInRoom => PhotonNetwork.InRoom;
+    public static bool IsInLobby => PhotonNetwork.InLobby;
 
     public static void LoadLevel()
     {

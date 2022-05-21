@@ -9,6 +9,7 @@ public class MenuTabs : MonoBehaviour
     public static Tab_SelectedAITanks Tab_SelectedAITanks { get; private set; }
     public static Tab_Lobby Tab_Lobby { get; private set; }
     public static Tab_InRoom Tab_InRoom { get; private set; }
+    public static Tab_Message Tab_Message { get; private set; }
 
 
     private void Awake()
@@ -20,6 +21,7 @@ public class MenuTabs : MonoBehaviour
         Tab_SelectedAITanks = Get<Tab_SelectedAITanks>.FromChild(gameObject);
         Tab_Lobby = Get<Tab_Lobby>.FromChild(gameObject);
         Tab_InRoom = Get<Tab_InRoom>.FromChild(gameObject);
+        Tab_Message = Get<Tab_Message>.FromChild(gameObject);
     }
 
     public static void Activity(CanvasGroup activeCanvasGroup)
@@ -31,6 +33,7 @@ public class MenuTabs : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(Tab_SelectedAITanks.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_Lobby.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_InRoom.CanvasGroup, false);
+        GlobalFunctions.CanvasGroupActivity(Tab_Message.CanvasGroup, false);
 
         if (activeCanvasGroup != null) GlobalFunctions.CanvasGroupActivity(activeCanvasGroup, true);
     }

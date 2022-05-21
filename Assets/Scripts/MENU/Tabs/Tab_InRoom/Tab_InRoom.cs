@@ -27,7 +27,7 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
         _object._OnPlayerEnteredRoom += OnPlayerEnteredRoom;
         _object._OnPlayerLeftRoom += OnPlayerLeftRoom;
         _object._OnLeftRoom += OnLeftRoom;
-        _tab_SelectedTanks.OnPhotonOnlineInRoomTankSelected += base.OpenTab;
+        _tab_SelectedTanks.OnOnlineGameTankChanged += base.OpenTab;
     }
 
     private void OnDisable()
@@ -36,7 +36,7 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
         _object._OnPlayerEnteredRoom -= OnPlayerEnteredRoom;
         _object._OnPlayerLeftRoom -= OnPlayerLeftRoom;
         _object._OnLeftRoom -= OnLeftRoom;
-        _tab_SelectedTanks.OnPhotonOnlineInRoomTankSelected -= base.OpenTab;
+        _tab_SelectedTanks.OnOnlineGameTankChanged -= base.OpenTab;
     }
 
     private void OnJoinedRoom(Room room)

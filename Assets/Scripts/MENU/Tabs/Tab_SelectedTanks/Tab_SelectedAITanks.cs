@@ -3,12 +3,12 @@ public class Tab_SelectedAITanks : Tab_Base<Tab_SelectedTanks>
 {
     private void OnEnable()
     {
-        _object.OnOfflineTankSelected += base.OpenTab;
+        _object.OnSingleGameTankSelected += base.OpenTab;
     }
 
     private void OnDisable()
     {
-        _object.OnOfflineTankSelected -= base.OpenTab;
+        _object.OnSingleGameTankSelected -= base.OpenTab;
     }
 
     public void OnClickSelectButton()

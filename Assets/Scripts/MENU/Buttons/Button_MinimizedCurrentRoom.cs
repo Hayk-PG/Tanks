@@ -1,12 +1,30 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Button_MinimizedCurrentRoom : BaseButtonWithUnityEvent
 {
+    private MyPhotonCallbacks _myPhotonCallbacks;
+
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Text _textCurrentRoomName;
     [SerializeField] private Text _textCurrentRoomPlayersCount;
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
+    }
+
+    private void OnEnable()
+    {
+        _myPhotonCallbacks._OnLeftRoom += () => GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
+    }
+
+    private void OnDisable()
+    {
+        _myPhotonCallbacks._OnLeftRoom -= ()=> GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
+    }
 
     private void Update()
     {
