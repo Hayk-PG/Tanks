@@ -7,6 +7,7 @@ public class Bomber : MonoBehaviour
 
     [SerializeField]
     private BombController _bombPrefab;
+    private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
     public float distanceX;
 
@@ -14,9 +15,11 @@ public class Bomber : MonoBehaviour
     private Checker isOutOfBoundaries;
 
 
+
     private void Awake()
     {
         isOutOfBoundaries = delegate { return transform.position.x < -distanceX || transform.position.x > distanceX; };
+        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
     }
 
     private void Update()
@@ -33,6 +36,7 @@ public class Bomber : MonoBehaviour
     public void DropBomb(IScore _iScore)
     {
         BombController _bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
+        _gameManagerBulletSerializer.BulletController = _bomb;
         _bomb.OwnerScore = _iScore;
     }
 

@@ -1,25 +1,15 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class BombController : MonoBehaviour, IBulletCollision, IBulletLimit, ITurnController
+public class BombController : BulletController
 {
-    public IScore OwnerScore;
-
-    public Action<Collision, IScore> OnCollision { get; set; }
-    public Action<IScore> OnExplodeOnCollision { get; set; }
-    public TurnController TurnController { get; set; }
-    public CameraMovement CameraMovement { get; set; }
-    public Action<bool> OnExplodeOnLimit { get; set; }
-
-    
-
-    private void Awake()
+    protected override void Awake()
     {
+        RigidBody = GetComponent<Rigidbody>();
         TurnController = FindObjectOfType<TurnController>();
         CameraMovement = FindObjectOfType<CameraMovement>();
     }
 
-    private void Start()
+    protected override void Start()
     {
         TurnController.SetNextTurn(TurnState.Other);
         CameraMovement.SetCameraTarget(transform.transform, 10, 2);
@@ -27,12 +17,6 @@ public class BombController : MonoBehaviour, IBulletCollision, IBulletLimit, ITu
 
     private void Update()
     {
-        OnExplodeOnLimit?.Invoke(transform.position.y < -5);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        OnCollision?.Invoke(collision, OwnerScore);
-        OnExplodeOnCollision?.Invoke(OwnerScore);
+        base.ExplodeOnLimit();
     }
 }
