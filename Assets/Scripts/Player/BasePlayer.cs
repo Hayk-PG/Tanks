@@ -1,7 +1,14 @@
 ﻿using Photon.Pun;
 
 public class BasePlayer : MonoBehaviourPun
-{  
+{
+    private GameManager _gameManager;
+
+    private void Awake()
+    {
+        _gameManager = FindObjectOfType<GameManager>();
+    }
+
     protected virtual void AssignGameObjectName(string name)
     {
         this.name = name;
@@ -9,8 +16,8 @@ public class BasePlayer : MonoBehaviourPun
     protected virtual void PlayerReady(int playerIndex)
     {
         if (playerIndex == 0)
-            GameManager.MasterPlayerReady = true;
+            _gameManager.MasterPlayerReady = true;
         else
-            GameManager.SecondPlayerReady = true;
+            _gameManager.SecondPlayerReady = true;
     }
 }

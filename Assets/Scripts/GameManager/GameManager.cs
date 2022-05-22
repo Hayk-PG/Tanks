@@ -7,9 +7,9 @@ using ExitGames.Client.Photon;
 
 public class GameManager : MonoBehaviourPun
 {
-    public static bool MasterPlayerReady { get; set; }
-    public static bool SecondPlayerReady { get; set; }
-    public static bool IsGameStarted { get; internal set; }
+    public bool MasterPlayerReady { get; set; }
+    public bool SecondPlayerReady { get; set; }
+    public bool IsGameStarted { get; internal set; }
     public bool IsGameEnded { get; internal set; }
     public Action OnInstantiateOfflinePlayers { get; set; }
     public Action OnGameStarted { get; set; }

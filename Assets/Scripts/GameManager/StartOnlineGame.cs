@@ -6,13 +6,13 @@ public class StartOnlineGame : BaseStartGame
     private void OnPlayersReadyStartTheGame()
     {
         _gameManager.OnGameStarted?.Invoke();
-        GameManager.IsGameStarted = true;
+        _gameManager.IsGameStarted = true;
         print("Online game has started");
     }
 
     protected override void StartGame()
     {
-        if (GameManager.MasterPlayerReady && GameManager.SecondPlayerReady)
+        if (_gameManager.MasterPlayerReady && _gameManager.SecondPlayerReady)
         {
             photonView.RPC("OnPlayersReadyStartTheGame", RpcTarget.AllViaServer);
         }
@@ -20,6 +20,6 @@ public class StartOnlineGame : BaseStartGame
 
     protected override bool CanStartGame()
     {
-        return MyPhotonNetwork.AmPhotonViewOwner(photonView) && !MyPhotonNetwork.IsOfflineMode && !GameManager.IsGameStarted;
+        return MyPhotonNetwork.AmPhotonViewOwner(photonView) && !MyPhotonNetwork.IsOfflineMode && !_gameManager.IsGameStarted;
     }     
 }

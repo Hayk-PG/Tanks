@@ -2,30 +2,27 @@
 using UnityEngine;
 
 public class AmmoTypeController : MonoBehaviour
-{
-    private AmmoTabButton _ammoTabButton;
+{    
     private Animator _animator;
     private RectTransform _rectTransform;
-
-    private const string _play = "play";
-    private const string _direction = "speed";
-
-    private float _animatorSpeed;
-
     private AmmoTabCustomization _ammoTabCustomization;
     private SupportsTabCustomization _supportTabCustomization;
-
+    private AmmoTabButton _ammoTabButton;
+    private CameraBlur _cameraBlur;
+    private const string _play = "play";
+    private const string _direction = "speed";
+    private float _animatorSpeed;   
     public Action<bool> OnInformAboutTabActivityToTabsCustomization;
 
 
     private void Awake()
     {
-        _ammoTabButton = FindObjectOfType<AmmoTabButton>();
         _animator = GetComponent<Animator>();
         _rectTransform = GetComponent<RectTransform>();
-
         _ammoTabCustomization = Get<AmmoTabCustomization>.From(gameObject);
         _supportTabCustomization = Get<SupportsTabCustomization>.From(gameObject);
+        _ammoTabButton = FindObjectOfType<AmmoTabButton>();
+        _cameraBlur = FindObjectOfType<CameraBlur>();
     }
 
     private void OnEnable()
@@ -49,6 +46,6 @@ public class AmmoTypeController : MonoBehaviour
         _animator.SetTrigger(_play);
 
         OnInformAboutTabActivityToTabsCustomization?.Invoke(_rectTransform.anchoredPosition.x > 0);
-        CameraBlur.ScreenBlur(_rectTransform.anchoredPosition.x > 0);
+        _cameraBlur.ScreenBlur(_rectTransform.anchoredPosition.x > 0);
     }
 }

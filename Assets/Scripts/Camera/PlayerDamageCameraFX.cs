@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerDamageCameraFX : BaseCameraFX<PlayerDamageCameraFX>
+public class PlayerDamageCameraFX : BaseCameraFX
 {
     private Animator _animator;
 

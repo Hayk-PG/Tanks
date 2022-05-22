@@ -1,27 +1,19 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class CameraBlur : BaseCameraFX<CameraBlur>
+public class CameraBlur : BaseCameraFX
 {
-    private IEnumerator _blurCoroutine;
-
     private bool _isScreenBlurred;
 
 
     protected override void Awake()
     {
         base.Awake();
-
-        Singleton(this);
     }
 
-    public static void CameraShakeBlur()
+    public void CameraShakeBlur()
     {
-        if(_instance._blurCoroutine == null)
-        {
-            _instance._blurCoroutine = _instance.BlurCoroutine();
-            _instance.StartCoroutine(_instance._blurCoroutine);
-        }
+        StartCoroutine(BlurCoroutine());
     }
 
     private IEnumerator BlurCoroutine()
@@ -59,19 +51,12 @@ public class CameraBlur : BaseCameraFX<CameraBlur>
 
             yield return null;
         }
-
-        _instance._blurCoroutine = null;
     }
 
-    public static void ScreenBlur(bool blur)
+    public void ScreenBlur(bool blur)
     {
-        if (_instance != null)
-        {
-            _instance._isScreenBlurred = blur;
-            _instance._pp.BlurAmount = blur ? 1 : 0;
-        }
+        _isScreenBlurred = blur;
+        _pp.BlurAmount = blur ? 1 : 0;
     }
-
-    
 }
 

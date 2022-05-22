@@ -3,12 +3,12 @@ public class StartOfflineGame : BaseStartGame
 {
     protected override bool CanStartGame()
     {
-        return MyPhotonNetwork.IsOfflineMode && GameManager.MasterPlayerReady && !GameManager.IsGameStarted;
+        return MyPhotonNetwork.IsOfflineMode && _gameManager.MasterPlayerReady && !_gameManager.IsGameStarted;
     }
 
     protected override void StartGame()
     {
         _gameManager.OnGameStarted?.Invoke();
-        GameManager.IsGameStarted = true;
+        _gameManager.IsGameStarted = true;
     }
 }
