@@ -7,14 +7,32 @@ public class Network : MonoBehaviour
 {
     public static Network Manager { get; set; }
     public PhotonView PhotonView { get; set; }
-
     public Action<Player> OnInvokeRPCMethode { get; set; }
     public Action<Player> OnLoadLevelRPC { get; set; }
+
+    private MyScene _myScene;
 
 
     private void Awake()
     {
-        if(Manager != null)
+        Instance();
+        _myScene = FindObjectOfType<MyScene>();
+        PhotonView = Get<PhotonView>.From(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        _myScene.OnDestroyOnLoadMenuScene += DestroyGameObject;
+    }
+
+    private void OnDisable()
+    {
+        _myScene.OnDestroyOnLoadMenuScene -= DestroyGameObject;
+    }
+
+    private void Instance()
+    {
+        if (Manager != null)
         {
             Destroy(gameObject);
         }
@@ -23,8 +41,11 @@ public class Network : MonoBehaviour
             Manager = this;
             DontDestroyOnLoad(gameObject);
         }
+    }
 
-        PhotonView = Get<PhotonView>.From(gameObject);
+    private void DestroyGameObject()
+    {
+        Destroy(gameObject);
     }
 
     public void InvokeRPCMethode(Player localPlayer)

@@ -50,10 +50,17 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
         ButtonSignUpInteractability();
     }
 
+    public override void OpenTab()
+    {
+        MyPhoton.LeaveRoom();
+        MyPhoton.LeaveLobby();
+        base.OpenTab();
+    }
+
     protected virtual void OnPhotonConnectedToMaster()
     {
         if (!_data.IsAutoSignInChecked)
-            base.OpenTab();
+            OpenTab();
     }
 
     protected virtual void ButtonSignUpInteractability()

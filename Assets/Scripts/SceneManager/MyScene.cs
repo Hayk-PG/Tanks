@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MyScene : MonoBehaviour
@@ -13,7 +14,7 @@ public class MyScene : MonoBehaviour
     public string GameSceneName { get; private set; } = "Game";
     public Scene CurrentScene { get => SceneManager.GetActiveScene(); }
 
-
+    public Action OnDestroyOnLoadMenuScene { get; set; }
 
 
     private void Awake()
@@ -33,7 +34,7 @@ public class MyScene : MonoBehaviour
     {
         switch (sceneName)
         {
-            case SceneName.Menu: SceneManager.LoadScene(MenuSceneName); break;
+            case SceneName.Menu: OnDestroyOnLoadMenuScene?.Invoke(); SceneManager.LoadScene(MenuSceneName); break;
             case SceneName.Game: SceneManager.LoadScene(GameSceneName); break;
         }
     }
