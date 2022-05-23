@@ -7,8 +7,6 @@ public class TopBarSettingsButtons : BaseButtonWithUnityEvent
     public enum ButtonPurpose { Sound, Music, BackMainMenu, Quit, Settings }
     public ButtonPurpose _buttonPurpose;
 
-    public Action<bool> OnSoundButtonClicked { get; set; }
-    public Action<bool> OnMusicButtonClicked { get; set; }
     public Action OnSettingsButtonClicked { get; set; }
 
     [SerializeField] private Image _iconImage;
@@ -22,23 +20,60 @@ public class TopBarSettingsButtons : BaseButtonWithUnityEvent
 
 
     private void Start()
+    {  
+        if (_buttonPurpose == ButtonPurpose.Music)
+        {
+            OnStart(Keys.IsMusicOn);
+            SoundController.MusicSRCCondition(_isOn);
+        }  
+        
+        if (_buttonPurpose == ButtonPurpose.Sound)
+        {
+            OnStart(Keys.IsSoundOn);
+        }
+    }
+
+    private void GetCurrentCondition(string key)
     {
-        _isOn = true;
-        ChangeIcon(_isOn);
+        int i = PlayerPrefs.GetInt(key, 1);
+        _isOn = i == 0 ? false : true;
+    }
+
+    private int CurrentConditionIndex()
+    {
+        return !_isOn ? 0 : 1;
+    }
+
+    private void ChangeIcon()
+    {
+        if (_iconSprites.Length > 0)
+        {
+            Icon = _isOn ? _iconSprites[0] : _iconSprites[1];
+        }
+    }
+
+    private void OnStart(string key)
+    {
+        GetCurrentCondition(key);       
+        ChangeIcon();
     }
 
     public void OnClickSoundButton()
     {
-        _isOn = !_isOn;
-        ChangeIcon(_isOn);
-        OnSoundButtonClicked?.Invoke(_isOn);
+        Result(Keys.IsSoundOn);
     }
 
     public void OnClickMusicButton()
     {
+        Result(Keys.IsMusicOn);
+        SoundController.MusicSRCCondition(_isOn);
+    }
+
+    private void Result(string key)
+    {
         _isOn = !_isOn;
-        ChangeIcon(_isOn);
-        OnMusicButtonClicked?.Invoke(_isOn);
+        ChangeIcon();
+        PlayerPrefs.SetInt(key, CurrentConditionIndex());       
     }
 
     public void OnClickBackToMainMenuButton()
@@ -54,13 +89,5 @@ public class TopBarSettingsButtons : BaseButtonWithUnityEvent
     public void OnClickSettingsButton()
     {
         OnSettingsButtonClicked?.Invoke();
-    }
-
-    private void ChangeIcon(bool isOn)
-    {
-        if (_iconSprites.Length > 0)
-        {
-            Icon = isOn ? _iconSprites[0] : _iconSprites[1];
-        }
-    }
+    }    
 }

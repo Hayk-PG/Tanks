@@ -6,5 +6,7 @@
     public static string Id { get; private set; } = "Id";
     public static string Password { get; private set; } = "Password";
     public static string AutoSignIn { get; private set; } = "AutoSignIn";
-    public static string IsPlayerReady { get; private set; } = "IsPlayerReady";
+    public static string IsSoundOn { get; private set; } = "IsSoundOn";
+    public static string IsMusicOn { get; private set; } = "IsMusicOn";
+    public static string IsPlayerReady { get; private set; } = "IsPlayerReady";    
 }
