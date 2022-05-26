@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 
 public partial class Data
-{     
+{
+    [SerializeField] ScriptableObject_BadgesSprites _scriptableBadgeSprites;
     public int Points => PlayerPrefs.GetInt(Keys.Points, 0);
     public int Level => PlayerPrefs.GetInt(Keys.Level, 0);
+    public int MaxLevel => _scriptableBadgeSprites.BadgesCount;
     public int[,] PointsSliderMinAndMaxValues { get; private set; } = new int[,]
     {
       { 0, 9900},

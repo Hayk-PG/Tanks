@@ -8,6 +8,6 @@
     public static string[] ActionInOfflineModeErrorMessage { get; private set; } = new string[2]
     {
         "FAILED TO CONNECT TO THE SERVER",
-        "Sorry this action is not available in offline mode. Return to the Main Menu?"
+        "Sorry, this action is not available in offline mode. Return to the Main Menu?"
     };
 }

@@ -78,6 +78,7 @@ public class TopBarSettingsButtons : BaseButtonWithUnityEvent
 
     public void OnClickBackToMainMenuButton()
     {
+        if (!MyPhotonNetwork.IsOfflineMode) MyPhoton.LeaveRoom();
         MyScene.Manager.LoadScene(MyScene.SceneName.Menu);
     }
 
