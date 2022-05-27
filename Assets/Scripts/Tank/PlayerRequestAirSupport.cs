@@ -40,7 +40,6 @@ public class PlayerRequestAirSupport : MonoBehaviour
     private void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
-        _airSupport.OnRequestAirSupport += OnRequestAirSupport;
         _supportsTabCustomization.OnCallBomber -= CallBomber;
         _shootButton.OnClick -= OnShootButtonClick;
     }
@@ -53,7 +52,6 @@ public class PlayerRequestAirSupport : MonoBehaviour
 
     private void SubscribeToEvents()
     {
-        _airSupport.OnRequestAirSupport += OnRequestAirSupport;
         _supportsTabCustomization.OnCallBomber += CallBomber;
         _shootButton.OnClick += OnShootButtonClick;
     }
@@ -74,13 +72,14 @@ public class PlayerRequestAirSupport : MonoBehaviour
     {
         if (_playerTurn.IsMyTurn)
         {
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, RequestAirSupport, RequestAirSupportRPC);
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, ()=> RequestAirSupport(_bomberPosition(),_bomberRotation(), _rightSpwnPos.x), RequestAirSupportRPC);
         }
     }
 
-    public void RequestAirSupport()
+    public void RequestAirSupport(Vector3 position, Quaternion rotation, float distanceX)
     {
-        _airSupport.CallOnRequestAirSupport();
+        _airSupport.Call(out Bomber bomber, position, rotation, distanceX);
+        _bomber = bomber;
         _isAirSupportRequested = true;
     }
 
@@ -89,15 +88,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
         if (_photonPlayerRequestAirSupportRPC == null)
             _photonPlayerRequestAirSupportRPC = _tankController.BasePlayer.GetComponent<PhotonPlayerRequestAirSupportRPC>();
 
-        _photonPlayerRequestAirSupportRPC?.CallAirSupportRPC();
-    }
-
-    private void OnRequestAirSupport(Bomber bomber, Action<AirSupport.InstantiateProperties> ActivateBomber)
-    {       
-        ActivateBomber?.Invoke(new AirSupport.InstantiateProperties(_bomberPosition(), _bomberRotation()));
-
-        _bomber = bomber;
-        _bomber.distanceX = _rightSpwnPos.x;
+        _photonPlayerRequestAirSupportRPC?.CallAirSupportRPC(_bomberPosition(), _bomberRotation(), _rightSpwnPos.x);
     }
 
     private void OnShootButtonClick(bool isTrue)

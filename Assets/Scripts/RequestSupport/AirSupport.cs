@@ -5,24 +5,8 @@ public class AirSupport : MonoBehaviour, ITurnController
 {
     [SerializeField]
     private Bomber _bomber;
-    public Bomber Bomber => _bomber;
-
     public TurnController TurnController { get; set; }
     public CameraMovement CameraMovement { get; set; }
-
-    public struct InstantiateProperties
-    {
-        public Vector3 _position;
-        public Quaternion _rotation;
-
-        public InstantiateProperties(Vector3 position, Quaternion rotation)
-        {
-            _position = position;
-            _rotation = rotation;
-        }
-    }
-
-    public event Action<Bomber, Action<InstantiateProperties>> OnRequestAirSupport;
 
 
 
@@ -32,15 +16,12 @@ public class AirSupport : MonoBehaviour, ITurnController
         CameraMovement = FindObjectOfType<CameraMovement>();
     }
 
-    public void CallOnRequestAirSupport()
+    public void Call(out Bomber bomber, Vector3 position, Quaternion rotation, float distanceX)
     {
-        OnRequestAirSupport?.Invoke(Bomber, ActivateBomber);
-    }
-
-    public void ActivateBomber(InstantiateProperties properties)
-    {
-        _bomber.transform.position = properties._position;
-        _bomber.transform.rotation = properties._rotation;
+        _bomber.transform.position = position;
+        _bomber.transform.rotation = rotation;
+        _bomber.distanceX = distanceX;
+        bomber = _bomber;
         TurnController.SetNextTurn(TurnState.Other);
         CameraMovement.SetCameraTarget(_bomber.transform, 10, 5);
         _bomber.gameObject.SetActive(true);
