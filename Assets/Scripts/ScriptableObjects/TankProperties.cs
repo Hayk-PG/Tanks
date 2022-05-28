@@ -37,6 +37,15 @@ public class TankProperties : ScriptableObject
     [Header("Health")]
     public int _armor;
 
+    [Header("Tank info")]
+    public string _tankName;
+    public int _starsCount;
+    public int _getItNowPrice;
+    public int _initialBuildHours;
+    public int _initialBuildMinutes;
+    public int _initialBuildSeconds;
+    public int _availableInLevel;
+
 
     public virtual void GetValuesFromTankPrefab()
     {
@@ -57,6 +66,14 @@ public class TankProperties : ScriptableObject
         _maxSpeed = Get<BaseShootController>.From(_tank.gameObject)._shoot._maxSpeed;
 
         _armor = Get<HealthController>.From(_tank.gameObject).Armor;
+
+        _tankName = Get<TankInfo>.From(_tank.gameObject).TankName;
+        _starsCount = Get<TankInfo>.From(_tank.gameObject).StarsCount;
+        _getItNowPrice = Get<TankInfo>.From(_tank.gameObject).GetItNowPrice;
+        _initialBuildHours = Get<TankInfo>.From(_tank.gameObject).InitialBuildHours;
+        _initialBuildMinutes = Get<TankInfo>.From(_tank.gameObject).InitialBuildMinutes;
+        _initialBuildSeconds = Get<TankInfo>.From(_tank.gameObject).InitialBuildSeconds;
+        _availableInLevel = Get<TankInfo>.From(_tank.gameObject).AvailableInLevel;
 
 #if UNITY_EDITOR
         EditorUtility.SetDirty(this);
@@ -92,6 +109,17 @@ public class TankProperties : ScriptableObject
             if (Get<HealthController>.From(_aiTank.gameObject) != null)
             {
                 Get<HealthController>.From(_aiTank.gameObject).Armor = _armor;
+            }
+
+            if (Get<TankController>.From(_aiTank.gameObject) != null)
+            {
+                Get<TankInfo>.From(_aiTank.gameObject).TankName = _tankName;
+                Get<TankInfo>.From(_aiTank.gameObject).StarsCount = _starsCount;
+                Get<TankInfo>.From(_aiTank.gameObject).GetItNowPrice = _getItNowPrice;
+                Get<TankInfo>.From(_aiTank.gameObject).InitialBuildHours = _initialBuildHours;
+                Get<TankInfo>.From(_aiTank.gameObject).InitialBuildMinutes = _initialBuildMinutes;
+                Get<TankInfo>.From(_aiTank.gameObject).InitialBuildSeconds = _initialBuildSeconds;
+                Get<TankInfo>.From(_aiTank.gameObject).AvailableInLevel = _availableInLevel;
             }
         }
     }

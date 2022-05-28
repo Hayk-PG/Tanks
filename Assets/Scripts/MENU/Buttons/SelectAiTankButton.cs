@@ -33,5 +33,15 @@ public class SelectAiTankButton : BaseSelectTankButton
     protected override void SetData()
     {
         _data.SelectedAITankIndex = _data.AvailableAITanks[_index]._tankIndex;
-    } 
+    }
+
+    protected override void DisplayTankInfo()
+    {
+        
+    }
+
+    protected override void InitializeTankStats()
+    {
+        
+    }
 }

@@ -6,6 +6,9 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
 {
     [SerializeField] protected Image _iconTank;
     [SerializeField] protected Sprite[] _buttonSprites;
+    [SerializeField] protected Text _textTankName;
+    [SerializeField] protected Text _textPlayerLevel;
+    [SerializeField] protected Stars _stars;
     protected Transform _parent;   
     protected Data _data;
     protected int _index;
@@ -25,7 +28,7 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
     protected virtual void Start()
     {
         SetIcon();
-        //InitializeTankStats();
+        InitializeTankStats();
     }
 
     protected virtual void Update()
@@ -33,33 +36,12 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
         Button?.onClick.RemoveAllListeners();
         Button.onClick.AddListener(OnClickTankButton);
     }
-
+   
     protected virtual void SetIcon()
     {
         if (IsIndexCorrect()) _iconTank.sprite = _data.AvailableTanks[_index]._iconTank;
     }
-
-    protected virtual void InitializeTankStats()
-    {
-        if (IsIndexCorrect())
-        {
-            Transform statsContainer = transform.Find("Stats");
-            Slider[] _statsSliders = statsContainer.GetComponentsInChildren<Slider>();
-
-            for (int i = 0; i < _statsSliders.Length; i++)
-            {
-                if (i == 0)
-                    _statsSliders[i].value = _data.AvailableTanks[_index]._normalSpeed; 
-
-                if (i == 1)
-                    _statsSliders[i].value = _data.AvailableTanks[_index]._maxForce;
-
-                if (i == 2)
-                    _statsSliders[i].value = _data.AvailableTanks[_index]._armor;
-            }
-        }
-    }
-
+   
     public void ButtonSprite(bool isSelected)
     {
         if (isSelected)
@@ -87,6 +69,7 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
             Button.OnPointerClick(ped);
             Button.OnSubmit(ped);
             transform.SetAsFirstSibling();
+            DisplayTankInfo();
         }
     }
 
@@ -96,10 +79,13 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
         {
             DeselectAllButtonsAndSelectThis();
             SetData();
+            DisplayTankInfo();
         }
     }
 
     protected abstract bool IsIndexCorrect();
     protected abstract bool CanAutoClick();
     protected abstract void SetData();
+    protected abstract void InitializeTankStats();
+    protected abstract void DisplayTankInfo();
 }
