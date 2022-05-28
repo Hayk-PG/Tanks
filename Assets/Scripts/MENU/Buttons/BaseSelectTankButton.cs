@@ -25,7 +25,7 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
     protected virtual void Start()
     {
         SetIcon();
-        InitializeTankStats();
+        //InitializeTankStats();
     }
 
     protected virtual void Update()
@@ -86,6 +86,7 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
             PointerEventData ped = new PointerEventData(EventSystem.current);
             Button.OnPointerClick(ped);
             Button.OnSubmit(ped);
+            transform.SetAsFirstSibling();
         }
     }
 
