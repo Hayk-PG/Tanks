@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
@@ -38,11 +37,13 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
     protected virtual void OnEnable()
     {
         _object._OnConnectedToMaster += OnPhotonConnectedToMaster;
+        MyPhoton.OnNickNameSet += SaveAccount;
     }
 
     protected virtual void OnDisable()
     {
         _object._OnConnectedToMaster += OnPhotonConnectedToMaster;
+        MyPhoton.OnNickNameSet -= SaveAccount;
     }
 
     protected virtual void Update()
@@ -70,8 +71,12 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
 
     public virtual void OnClickConfirmButton()
     {
-        MyPhoton.SetNickName(Id);
-        SaveAccount();
+        OnEnter();
+    }
+
+    protected virtual void OnEnter()
+    {
+        MyPlayfab.Manager.Register(new MyPlayfab.RegistrationData(Id, Password, Email));
     }
 
     protected virtual void SaveAccount()

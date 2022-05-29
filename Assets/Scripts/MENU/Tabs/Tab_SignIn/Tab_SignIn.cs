@@ -4,11 +4,17 @@ using UnityEngine.UI;
 public class Tab_SignIn : Tab_SignUp
 {
     [SerializeField] private Toggle _toggleAutioSignIn;
+    [SerializeField] private Toggle _toggleShowPassword; 
 
     public bool IsAutoSignInChecked
     {
         get => _toggleAutioSignIn.isOn;
         set => _toggleAutioSignIn.isOn = value;
+    }
+    public bool IsPasswordVisible
+    {
+        get => _toggleShowPassword.isOn;
+        set => _toggleShowPassword.isOn = value;
     }
 
 
@@ -25,11 +31,13 @@ public class Tab_SignIn : Tab_SignUp
 
     public override void OnClickConfirmButton()
     {
-        if(Id == _data.Id && Password == _data.Password)
-        {
-            OnAutoSignChecked();
-            base.OnClickConfirmButton();
-        }  
+        OnAutoSignChecked();
+        base.OnClickConfirmButton();
+    }
+
+    protected override void OnEnter()
+    {
+        MyPlayfab.Manager.Login(new MyPlayfab.RegistrationData(Id, Password, null));
     }
 
     private void OnAutoSignChecked()
@@ -38,5 +46,18 @@ public class Tab_SignIn : Tab_SignUp
             _data.SetData(new Data.NewData { AutoSignIn = 1 });
         else
             _data.DeleteData(Keys.AutoSignIn);
+    }
+
+    protected override void SaveAccount()
+    {
+        if (IsAutoSignInChecked) base.SaveAccount();
+    }
+
+    public void OnToggleShowPasswordValueChanged()
+    {
+        if (IsPasswordVisible) _inputFieldPassword.contentType = InputField.ContentType.Standard;
+        if (!IsPasswordVisible) _inputFieldPassword.contentType = InputField.ContentType.Password;
+
+        _inputFieldPassword.Select();
     }
 }
