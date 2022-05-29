@@ -18,7 +18,7 @@ public partial class MyPlayfab : MonoBehaviour
             _email = email;
         }
     }
-
+    
     public void Register(RegistrationData registrationData)
     {
         RegisterPlayFabUserRequest rpfur = new RegisterPlayFabUserRequest();
@@ -32,6 +32,7 @@ public partial class MyPlayfab : MonoBehaviour
             onSucces => 
             {
                 MyPhoton.SetNickName(registrationData._userName);
+                //OnCreateUserReadOnlyData?.Invoke(onSucces.PlayFabId, UpdateUserDataRequest);
             }, 
             onError => 
             {

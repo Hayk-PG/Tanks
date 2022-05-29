@@ -14,6 +14,7 @@ public partial class MyPlayfab : MonoBehaviour
             onSucces => 
             {
                 MyPhoton.SetNickName(registrationData._userName);
+                OnUpdateReadOnlyData?.Invoke(onSucces.PlayFabId, UpdateUserDataRequest);
             }, 
             onError => 
             {
