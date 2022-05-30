@@ -1,4 +1,7 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using PlayFab.ServerModels;
+
 public class SelectAiTankButton : BaseSelectTankButton
 {
     private Tab_SelectedAITanks _tab_SelectedAITanks;
@@ -8,6 +11,7 @@ public class SelectAiTankButton : BaseSelectTankButton
     {
         base.Awake();
         _tab_SelectedAITanks = Get<Tab_SelectedAITanks>.From(gameObject);
+        IsLocked = false;
     }
 
     private void OnEnable()
@@ -30,18 +34,23 @@ public class SelectAiTankButton : BaseSelectTankButton
         return _index == _data.SelectedAITankIndex;
     }
 
-    protected override void SetData()
+    public override void OnClickTankButton()
     {
-        _data.SelectedAITankIndex = _data.AvailableAITanks[_index]._tankIndex;
+        if(IsIndexCorrect())
+        {
+            DeselectAllButtonsAndSelectThis();
+            ClickedIndicator();
+            _baseTankButtonData.Save(this);
+            _baseTankButtonInfo.TankOwnedScreen(this);
+        }
     }
 
-    protected override void DisplayTankInfo()
+    protected override void DeselectAllButtonsAndSelectThis()
     {
-        
-    }
-
-    protected override void InitializeTankStats()
-    {
-        
+        GlobalFunctions.Loop<BaseSelectTankButton>.Foreach(SelectTankButtons, tankButton => 
+        {
+            if (tankButton == this) ButtonSprite(true, false);
+            if (tankButton != this) tankButton.ButtonSprite(false, false);
+        });
     }
 }

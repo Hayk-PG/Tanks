@@ -7,10 +7,12 @@ using System.Collections.Generic;
 public partial class MyPlayfab : MonoBehaviour
 {
     public Action<string, Action<string, Dictionary<string, string>>> OnUpdateReadOnlyData { get; set; }
+    public Action<string, Action<string, Action<Dictionary<string, UserDataRecord>>>> OnGetReadOnlyData { get; set; }
 
 
     public void GetUserReadOnlyData(string playfabId, Action<Dictionary<string, UserDataRecord>> readOnlyData)
     {
+        print(playfabId);
         GetUserDataRequest gudr = new GetUserDataRequest();
         gudr.PlayFabId = playfabId;
 
