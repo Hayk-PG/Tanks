@@ -12,6 +12,13 @@ public class TankButtonInfo : BaseTankButtonInfo
                 Converter.HhMMSS(bstb._data.AvailableTanks[bstb._index]._initialBuildHours, bstb._data.AvailableTanks[bstb._index]._initialBuildMinutes, bstb._data.AvailableTanks[bstb._index]._initialBuildSeconds));
     }
 
+    protected override TanksInfo.RequiredItemsInfo RequiredItemsInfo(BaseSelectTankButton bstb)
+    {
+        return new TanksInfo.RequiredItemsInfo(
+            bstb._data.AvailableTanks[bstb._index]._requiredItems
+            );
+    }
+
     public override void TankNotOwnedScreen(BaseSelectTankButton bstb)
     {
         bstb._tanksInfo.TankNotOwnedScreen(Info(bstb));
@@ -20,5 +27,10 @@ public class TankButtonInfo : BaseTankButtonInfo
     public override void TankOwnedScreen(BaseSelectTankButton bstb)
     {
         bstb._tanksInfo.TankOwnedScreen(Info(bstb));
+    }
+
+    public override void RequiredItemsScreen(BaseSelectTankButton bstb)
+    {
+        bstb._tanksInfo.DisplatRequiredItems(RequiredItemsInfo(bstb));
     }
 }

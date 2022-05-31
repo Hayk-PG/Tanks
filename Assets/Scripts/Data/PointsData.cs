@@ -2,6 +2,7 @@
 
 public partial class Data
 {
+    [Header("Level")]
     [SerializeField] ScriptableObject_BadgesSprites _scriptableBadgeSprites;
     public int Points => PlayerPrefs.GetInt(Keys.Points, 0);
     public int Level => PlayerPrefs.GetInt(Keys.Level, 0);

@@ -76,6 +76,7 @@ public abstract class BaseSelectTankButton : MonoBehaviour, ISelectTankButton<Ba
     protected virtual void OnLocked()
     {
         _baseTankButtonInfo.TankNotOwnedScreen(this);
+        _baseTankButtonInfo.RequiredItemsScreen(this);
     }
 
     protected virtual void OnUnlocked()

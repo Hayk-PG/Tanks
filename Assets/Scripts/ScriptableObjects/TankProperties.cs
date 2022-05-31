@@ -44,6 +44,7 @@ public class TankProperties : ScriptableObject
     public int _initialBuildHours;
     public int _initialBuildMinutes;
     public int _initialBuildSeconds;
+    public TankInfo.Items[] _requiredItems;
     public int _availableInLevel;
 
 
@@ -73,6 +74,7 @@ public class TankProperties : ScriptableObject
         _initialBuildHours = Get<TankInfo>.From(_tank.gameObject).InitialBuildHours;
         _initialBuildMinutes = Get<TankInfo>.From(_tank.gameObject).InitialBuildMinutes;
         _initialBuildSeconds = Get<TankInfo>.From(_tank.gameObject).InitialBuildSeconds;
+        _requiredItems = Get<TankInfo>.From(_tank.gameObject).RequiredItems;
         _availableInLevel = Get<TankInfo>.From(_tank.gameObject).AvailableInLevel;
 
 #if UNITY_EDITOR
@@ -119,6 +121,7 @@ public class TankProperties : ScriptableObject
                 Get<TankInfo>.From(_aiTank.gameObject).InitialBuildHours = _initialBuildHours;
                 Get<TankInfo>.From(_aiTank.gameObject).InitialBuildMinutes = _initialBuildMinutes;
                 Get<TankInfo>.From(_aiTank.gameObject).InitialBuildSeconds = _initialBuildSeconds;
+                Get<TankInfo>.From(_aiTank.gameObject).RequiredItems = _requiredItems;
                 Get<TankInfo>.From(_aiTank.gameObject).AvailableInLevel = _availableInLevel;
             }
         }

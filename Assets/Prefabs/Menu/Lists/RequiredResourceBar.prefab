@@ -277,6 +277,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3463531629732774348}
+  - component: {fileID: 6465853121479445874}
   m_Layer: 5
   m_Name: RequiredResourceBar
   m_TagString: Untagged
@@ -306,6 +307,21 @@ RectTransform:
   m_AnchoredPosition: {x: 257.4187, y: 154.33037}
   m_SizeDelta: {x: 492.4723, y: 49.456085}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6465853121479445874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3463531629732774349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de0bb36ed9cbbe458e57807834dc940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _icon: {fileID: 3463531629183233147}
+  _textInfo: {fileID: 1930155000805800440}
+  _toggleChecked: {fileID: 3463531629262022214}
 --- !u!1 &3463531630744213629
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,7 +392,7 @@ MonoBehaviour:
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 2
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0

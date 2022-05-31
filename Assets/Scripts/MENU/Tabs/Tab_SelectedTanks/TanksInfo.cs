@@ -10,6 +10,10 @@ public class TanksInfo : MonoBehaviour
         [SerializeField] internal Text _textTankRangeValue;
         [SerializeField] internal Text _textTankArmorValue;
     }
+    [Serializable] [SerializeField] private struct RequiredItems
+    {
+        [SerializeField] internal RequiredItemsBar[] _requiredItemsBar;
+    }
     [Serializable] [SerializeField] private struct Buttons
     {
         [SerializeField] internal Button _buttonGetItNow;
@@ -26,6 +30,7 @@ public class TanksInfo : MonoBehaviour
     }
 
     [SerializeField] private TankStats _tankStats;
+    [SerializeField] private RequiredItems _requiredItems;
     [SerializeField] private Buttons _buttons;
     [SerializeField] private CanvasGroups _canvasGroups;
 
@@ -47,7 +52,15 @@ public class TanksInfo : MonoBehaviour
         }
     }
 
+    public struct RequiredItemsInfo
+    {
+        public TankInfo.Items[] _items;
 
+        public RequiredItemsInfo(TankInfo.Items[] items)
+        {
+            _items = items;
+        }
+    }
 
     private void Stats(Info info)
     {
@@ -60,6 +73,22 @@ public class TanksInfo : MonoBehaviour
     {
         _buttons._textPrice.text = info._getItNowPrice.ToString();
         _buttons._textBuildTime.text = info._buildTime;
+    }
+
+    public void DisplatRequiredItems(RequiredItemsInfo requiredItemsInfo)
+    {
+        GlobalFunctions.Loop<RequiredItemsBar>.Foreach(_requiredItems._requiredItemsBar, item => { item.gameObject.SetActive(false); });
+
+        if (requiredItemsInfo._items.Length > 0)
+        {
+            for (int i = 0; i < requiredItemsInfo._items.Length; i++)
+            {
+                _requiredItems._requiredItemsBar[i].gameObject.SetActive(true);
+                _requiredItems._requiredItemsBar[i].Icon = requiredItemsInfo._items[i]._item.Icon;
+                _requiredItems._requiredItemsBar[i].Info = requiredItemsInfo._items[i]._number.ToString();
+                _requiredItems._requiredItemsBar[i].IsChecked = Data.Manager.ItemCountByItemType(requiredItemsInfo._items[i]._item.Type) >= requiredItemsInfo._items[i]._number;
+            }
+        }
     }
 
     public void TankNotOwnedScreen(Info info)

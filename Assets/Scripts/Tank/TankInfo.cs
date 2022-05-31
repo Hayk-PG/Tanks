@@ -1,14 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class TankInfo : MonoBehaviour
 {
+    [Serializable] public struct Items
+    {
+        public Item _item;
+        public int _number;
+    }
+
+    [Header("Name")]
     [SerializeField] private string _tankName;
+    [Header("Stars")]
     [SerializeField] private int _starsCount;
+    [Header("Price")]
     [SerializeField] private int _getItNowPrice;
+    [Header("Build")]
     [SerializeField] private int _initialBuildHours;
     [SerializeField] private int _initialBuildMinutes;
     [SerializeField] private int _initialBuildSeconds;
-    [SerializeField] private int _availableInLevel;
+    [SerializeField] private Items[] _requiredItems;
+    [Header("Needed Level")]
+    [SerializeField] private int _availableInLevel;  
 
     public string TankName
     {
@@ -39,6 +52,11 @@ public class TankInfo : MonoBehaviour
     {
         get => _initialBuildSeconds;
         set => _initialBuildSeconds = value;
+    }
+    public Items[] RequiredItems
+    {
+        get => _requiredItems;
+        set => _requiredItems = value;
     }
     public int AvailableInLevel
     {

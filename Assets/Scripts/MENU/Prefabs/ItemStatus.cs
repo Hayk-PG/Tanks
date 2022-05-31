@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ResourceStatus : MonoBehaviour
+public class ItemStatus : MonoBehaviour
 {
     [SerializeField] private Text _textValue;
     public int Value
