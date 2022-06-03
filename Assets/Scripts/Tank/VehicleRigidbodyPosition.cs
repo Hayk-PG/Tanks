@@ -3,9 +3,10 @@
 public class VehicleRigidbodyPosition : MonoBehaviour
 {
     private BaseTankMovement _baseTankMovement;
+    private LevelGenerator _levelGenerator;
 
-    private float _xPositionMinLimit = -5.1f;
-    private float _xPositionMaxLimit = 10.6f;
+    private float _xPositionMinLimit;
+    private float _xPositionMaxLimit;
 
     private delegate bool Checker(Rigidbody rigidBody);
     private Checker _isLesserThanMinLimit;
@@ -16,6 +17,11 @@ public class VehicleRigidbodyPosition : MonoBehaviour
     private void Awake()
     {
         _baseTankMovement = Get<BaseTankMovement>.From(gameObject);
+        _levelGenerator = FindObjectOfType<LevelGenerator>();
+
+        _xPositionMinLimit = _levelGenerator.MapHorizontalStartPoint;
+        _xPositionMaxLimit = _levelGenerator.MapHorizontalEndPoint;
+        print(_xPositionMinLimit + "/" + _xPositionMaxLimit);
 
         _isLesserThanMinLimit = delegate (Rigidbody rb) { return rb.position.x <= _xPositionMinLimit; };
         _isGreaterThanMaxLimit = delegate (Rigidbody rb) { return rb.position.x >= _xPositionMaxLimit; };

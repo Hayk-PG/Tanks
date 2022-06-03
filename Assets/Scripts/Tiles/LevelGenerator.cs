@@ -1,19 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    [Serializable]
-    private struct LevelMap
-    {
-        [SerializeField]
-        internal Texture2D _map;
-        internal Color _pixelColor;
-    }
-
-    [SerializeField]
-    private LevelMap _levelMap;
-
     /// <summary>
     /// 0: 36FF00 T
     /// 1: 38D90D TL
@@ -26,11 +14,24 @@ public class LevelGenerator : MonoBehaviour
     /// 8: 081F02 RS
     /// 9: B9714E M
     /// </summary>
-    [SerializeField]
-    private ColorToPrefab[] _colorMapping;
+    [SerializeField] private ColorToPrefab[] _colorMapping;
+    [SerializeField] private ColorToPrefab[] _tanksSpawnPoints;
+    [SerializeField] private Maps _maps;
+    
     private TilesData _tilesData;
     private ChangeTiles _changeTiles;
     private Vector3 _position;
+    private Color _pixelColor;  
+    
+    public int CurrentMapIndex { get; set; }
+    public float MapHorizontalStartPoint { get; private set; }
+    public float MapHorizontalEndPoint { get; private set; }
+
+    private Texture2D MapTexture => _maps.All[CurrentMapIndex].Texture;
+    private float MapTextureWidth => MapTexture.width;
+    private float MapTextureHeight => MapTexture.height;
+    private float QuarterOfMapTextureWidth => MapTextureWidth / 4;
+    private float QuarterOfMapTextureHeight => MapTextureHeight / 4;
 
 
 
@@ -42,15 +43,17 @@ public class LevelGenerator : MonoBehaviour
 
     private void Start()
     {
-        GenerateLevel();
+        //CurrentMapIndex = 1;
+        LoopMapTexturePixels();      
     }
 
-    private void GenerateLevel()
+    private void LoopMapTexturePixels()
     {
-        for (int x = 0; x < _levelMap._map.width; x++)
+        for (int x = 0; x < MapTextureWidth; x++)
         {
-            for (int y = 0; y < _levelMap._map.height; y++)
+            for (int y = 0; y < MapTextureHeight; y++)
             {
+                GetPixelColor(x, y);
                 GenerateTile(x, y);
             }
         }
@@ -60,25 +63,60 @@ public class LevelGenerator : MonoBehaviour
 
     private void GenerateTile(int x, int y)
     {
-        _levelMap._pixelColor = _levelMap._map.GetPixel(x, y);
+        bool isPixelTransparent = _pixelColor.a == 0;
 
-        if (_levelMap._pixelColor.a == 0)
+        if (!isPixelTransparent)
         {
-            return;
+            GetPixelCoordinates(x, y, out float _x, out float _y);
+            GetMapStartEndPoints(x, _x);
+            SetTankSpawnPositions(x, y);
+            InstantiateTiles();          
         }
+    }
 
-        float _x = ((float)x / 2) - 5;
-        float _y = ((float)y / 2) - 5;
+    private void GetPixelColor(int x, int y)
+    {
+        _pixelColor = MapTexture.GetPixel(x, y);
+    }
 
+    private void GetPixelCoordinates(int x, int y, out float _x, out float _y)
+    {
+        _x = ((float)x / 2) - QuarterOfMapTextureWidth;
+        _y = ((float)y / 2) - QuarterOfMapTextureHeight;
         _position = new Vector3(_x, _y, 0);
+    }
 
-        foreach (var colorTile in _colorMapping)
+    private void InstantiateTiles()
+    {
+        GlobalFunctions.Loop<ColorToPrefab>.Foreach(_colorMapping, colorTile =>
         {
-            if (colorTile._color == _levelMap._pixelColor)
+            if (colorTile._color == _pixelColor)
             {
                 GameObject tile = Instantiate(colorTile._prefab, _position, Quaternion.identity, transform);
                 _tilesData.TilesDict.Add(_position, tile);
             }
-        }
+        });
+    }
+
+    private void GetMapStartEndPoints(int x, float _x)
+    {
+        bool isFirstPixel = x == 0;
+        bool isLastPixel = x == MapTextureWidth - 1;
+
+        if (isFirstPixel) MapHorizontalStartPoint = _x;
+        if (isLastPixel) MapHorizontalEndPoint = _x;
+    }
+
+    private void SetTankSpawnPositions(int x, int y)
+    {
+        Vector2 spawnPoint1 = new Vector2(x - QuarterOfMapTextureWidth, QuarterOfMapTextureHeight);
+        Vector2 spawnPoint2 = new Vector2(Mathf.Abs(_tanksSpawnPoints[0]._prefab.transform.position.x), _tanksSpawnPoints[0]._prefab.transform.position.y);
+
+        if (_pixelColor == _tanksSpawnPoints[0]._color)
+            _tanksSpawnPoints[0]._prefab.transform.position = spawnPoint1;
+
+        if (_pixelColor == _tanksSpawnPoints[1]._color)
+            _tanksSpawnPoints[1]._prefab.transform.position = spawnPoint2;
+
     }
 }
