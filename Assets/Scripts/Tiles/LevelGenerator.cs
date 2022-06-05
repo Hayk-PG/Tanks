@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+
 public class LevelGenerator : MonoBehaviour
 {
     /// <summary>
@@ -17,13 +18,18 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private ColorToPrefab[] _colorMapping;
     [SerializeField] private ColorToPrefab[] _tanksSpawnPoints;
     [SerializeField] private Maps _maps;
-    
+    [SerializeField] private int _currentMapIndex;
+
     private TilesData _tilesData;
     private ChangeTiles _changeTiles;
     private Vector3 _position;
     private Color _pixelColor;  
     
-    public int CurrentMapIndex { get; set; }
+    public int CurrentMapIndex
+    {
+        get => _currentMapIndex;
+        set => _currentMapIndex = value;
+    }
     public float MapHorizontalStartPoint { get; private set; }
     public float MapHorizontalEndPoint { get; private set; }
 
@@ -43,40 +49,34 @@ public class LevelGenerator : MonoBehaviour
 
     private void Start()
     {
-        //CurrentMapIndex = 1;
-        LoopMapTexturePixels();      
+        LoopMapTexturePixels(true);      
     }
 
-    private void LoopMapTexturePixels()
+    public void LoopMapTexturePixels(bool updateTiles)
     {
         for (int x = 0; x < MapTextureWidth; x++)
         {
             for (int y = 0; y < MapTextureHeight; y++)
             {
-                GetPixelColor(x, y);
-                GenerateTile(x, y);
+                GetPixelColor(x, y, out bool isPixelTransparent);
+
+                if (!isPixelTransparent)
+                {
+                    GetPixelCoordinates(x, y, out float _x, out float _y);
+                    GetMapStartEndPoints(x, _x);
+                    SetTankSpawnPositions(x, y);
+                    InstantiateTiles();
+                }
             }
         }
 
-        _changeTiles.UpdateTiles();
+        if (updateTiles) _changeTiles.UpdateTiles();
     }
 
-    private void GenerateTile(int x, int y)
-    {
-        bool isPixelTransparent = _pixelColor.a == 0;
-
-        if (!isPixelTransparent)
-        {
-            GetPixelCoordinates(x, y, out float _x, out float _y);
-            GetMapStartEndPoints(x, _x);
-            SetTankSpawnPositions(x, y);
-            InstantiateTiles();          
-        }
-    }
-
-    private void GetPixelColor(int x, int y)
+    private void GetPixelColor(int x, int y, out bool isPixelTransparent)
     {
         _pixelColor = MapTexture.GetPixel(x, y);
+        isPixelTransparent = _pixelColor.a == 0;
     }
 
     private void GetPixelCoordinates(int x, int y, out float _x, out float _y)
@@ -117,6 +117,5 @@ public class LevelGenerator : MonoBehaviour
 
         if (_pixelColor == _tanksSpawnPoints[1]._color)
             _tanksSpawnPoints[1]._prefab.transform.position = spawnPoint2;
-
     }
 }
