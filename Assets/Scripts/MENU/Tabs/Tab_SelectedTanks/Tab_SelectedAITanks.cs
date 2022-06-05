@@ -1,6 +1,10 @@
 ﻿
+using System;
+
 public class Tab_SelectedAITanks : Tab_Base<Tab_SelectedTanks>
 {
+    public Action OnAITankSelected { get; set; }
+
     private void OnEnable()
     {
         _object.OnSingleGameTankSelected += OpenTab;
@@ -18,6 +22,6 @@ public class Tab_SelectedAITanks : Tab_Base<Tab_SelectedTanks>
 
     public void OnClickSelectButton()
     {
-        MyScene.Manager.LoadScene(MyScene.SceneName.Game);
+        OnAITankSelected?.Invoke();
     }
 }

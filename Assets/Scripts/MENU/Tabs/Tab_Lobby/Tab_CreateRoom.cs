@@ -28,6 +28,7 @@ public class Tab_CreateRoom : MonoBehaviour
         get => _toggleSetPassword.isOn;
         set => _toggleSetPassword.isOn = value;
     }
+    public Action<string, string, bool> OnOpenTab_SelectMap { get; set; }
 
 
     private void Awake()
@@ -47,8 +48,8 @@ public class Tab_CreateRoom : MonoBehaviour
     }
 
     public void OnClickCreate()
-    {
-        MyPhoton.CreateRoom(Name, Password, IsPasswordSet);
+    {      
+        OnOpenTab_SelectMap?.Invoke(Name, Password, IsPasswordSet);
     }
 
     public void OnToggleValueChanged()

@@ -49,7 +49,14 @@ public class LevelGenerator : MonoBehaviour
 
     private void Start()
     {
+        GetMapIndex();
         LoopMapTexturePixels(true);      
+    }
+
+    private void GetMapIndex()
+    {
+        if (MyPhotonNetwork.IsOfflineMode)
+            CurrentMapIndex = Data.Manager.MapIndex;
     }
 
     public void LoopMapTexturePixels(bool updateTiles)
