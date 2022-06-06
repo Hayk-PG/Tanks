@@ -6,25 +6,21 @@ public class RoomButton : MonoBehaviour
     [SerializeField] private Text _text_roomNameText;
     [SerializeField] private Text _text_additionalInfoText;
     [SerializeField] private Text _text_playersCountText;
-
-    [SerializeField] private Image _image_roomIcon;
-
-
+    [SerializeField] private Image _imageMap;
+    [SerializeField] private Maps _maps;
     public struct UI
     {
         public string _roomName;
         public string _additionalInfo;
         public string _playersCount;
+        public int _mapIndex;
 
-        public Sprite _roomIcon;
-
-        public UI(string roomName, string additionalInfo, string playersCount, Sprite roomIcon)
+        public UI(string roomName, string additionalInfo, string playersCount, int mapIndex)
         {
             _roomName = roomName;
             _additionalInfo = additionalInfo;
             _playersCount = playersCount;
-
-            _roomIcon = roomIcon;
+            _mapIndex = mapIndex;
         }
     }
 
@@ -35,8 +31,7 @@ public class RoomButton : MonoBehaviour
         _text_roomNameText.text = ui._roomName;
         _text_additionalInfoText.text = ui._additionalInfo;
         _text_playersCountText.text = ui._playersCount;
-
-        if(ui._roomIcon != null) _image_roomIcon.sprite = ui._roomIcon;
+        _imageMap.sprite = _maps.All[ui._mapIndex].MapImage;
     }
 
     public void OnClickToJoin()

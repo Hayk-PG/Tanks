@@ -41,7 +41,7 @@ public class PlayerInRoomOnClickReadyButton : MonoBehaviour
         if (_playerInRoom.PlayerActorNumber == localPlayer.ActorNumber)
         {           
             _playerInRoom.IsPlayerReady = !_playerInRoom.IsPlayerReady;
-            PlayerCustomProperties.Update(localPlayer, Keys.IsPlayerReady, _playerInRoom.IsPlayerReady);            
+            CustomProperties.Player(localPlayer, Keys.IsPlayerReady, _playerInRoom.IsPlayerReady);            
         }
     }
 }

@@ -57,6 +57,8 @@ public class LevelGenerator : MonoBehaviour
     {
         if (MyPhotonNetwork.IsOfflineMode)
             CurrentMapIndex = Data.Manager.MapIndex;
+        else
+            CurrentMapIndex = MyPhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(Keys.MapIndex) ? (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.MapIndex] : 0;
     }
 
     public void LoopMapTexturePixels(bool updateTiles)

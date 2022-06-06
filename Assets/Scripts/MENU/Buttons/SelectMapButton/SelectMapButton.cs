@@ -52,15 +52,23 @@ public class SelectMapButton : MonoBehaviour
     private void OnTabSelectedTabOpen()
     {
         print("aaa");
-        InitializeMapSizeText();
+        Initialize();
         MapAvailability(!IsMapSet);
         GetMapIndex();
         AutoSelect(IsMapSet && _mapIndex == 0);
     }
 
-    private void InitializeMapSizeText()
+    private void Initialize()
     {
-        if (IsMapSet) _textMapSize.text = _map.MapType == Map.Type.Small ? "Small" : _map.MapType == Map.Type.Medium ? "Medium" : "Large";
+        if (IsMapSet)
+        {
+            _textMapSize.text = _map.MapType == Map.Type.Small ? "Small" : _map.MapType == Map.Type.Medium ? "Medium" : "Large";
+            _imageMap.sprite = _map.MapImage;
+        }
+        else
+        {
+            _textMapSize.text = "";
+        }
     }
 
     public void OnClickMapButton()
@@ -94,14 +102,7 @@ public class SelectMapButton : MonoBehaviour
 
     private void SetMapIndex()
     {
-        if (MyPhotonNetwork.IsOfflineMode)
-        {
-            Data.Manager.MapIndex = _mapIndex;
-        }
-        else
-        {
-
-        }
+        Data.Manager.MapIndex = _mapIndex;
     }
 
     public bool IsLocked()

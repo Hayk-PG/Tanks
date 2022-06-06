@@ -12,6 +12,6 @@
 
     private void DataTransition()
     {
-        PlayerCustomProperties.Update(MyPhotonNetwork.LocalPlayer, Keys.Level, Data.Manager.Level);
+        CustomProperties.Player(MyPhotonNetwork.LocalPlayer, Keys.Level, Data.Manager.Level);
     }
 }

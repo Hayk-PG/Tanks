@@ -1,8 +1,8 @@
 ﻿using Photon.Realtime;
 
-public class PlayerCustomProperties 
+public class CustomProperties 
 {    
-    public static void Update(Player player, object key, object value)
+    public static void Player(Player player, object key, object value)
     {
         if (player.CustomProperties.ContainsKey(key))
             player.CustomProperties[key] = value;

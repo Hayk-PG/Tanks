@@ -7,7 +7,9 @@ public class Map : ScriptableObject
 
     [SerializeField] private Type _mapType;
     [SerializeField] private Texture2D _mapTexture;
+    [SerializeField] private Sprite _mapImage;
 
     public Type MapType => _mapType;
     public Texture2D Texture => _mapTexture;
+    public Sprite MapImage => _mapImage;
 }
