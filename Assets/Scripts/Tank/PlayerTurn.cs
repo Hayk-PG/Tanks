@@ -34,7 +34,7 @@ public class PlayerTurn : MonoBehaviour
     {
         if (arg1 == MyTurn)
         {
-            arg2.SetCameraTarget(transform, 5, 2);
+            arg2.SetCameraTarget(transform, 5, 1.5f);
             IsMyTurn = true;
         }
         else

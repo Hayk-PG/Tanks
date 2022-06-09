@@ -4,6 +4,7 @@ public class CameraMovement : MonoBehaviour
 {
     private Camera _mainCamera;
     private CameraTouchMovement _cameraTouchMovement;
+    private LevelGenerator _levelGenerator;
 
     [Header("Second Camera")]
     [SerializeField]
@@ -29,33 +30,37 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private float _currentSize, _defaultCameraSize;
     private float _givenCameraSize;
+    private float _minPosX, _maxPosX, _newPosX;
 
     private delegate bool Checker();
     private delegate void CameraFunctions();
 
     private Checker _isTargetNull;
-    private Checker _isCameraPositionMatchesToTheTargetPosition;
     private Checker _isCameraSizeSet;
+    private Checker _canZoom;
+
+    private float CameraWidth => _mainCamera.orthographicSize * _mainCamera.aspect;
 
 
     private void Awake()
     {
         _mainCamera = GetComponent<Camera>();
         _cameraTouchMovement = GetComponent<CameraTouchMovement>();
+        _levelGenerator = FindObjectOfType<LevelGenerator>();
     }
 
     private void Start()
     {
         _isTargetNull = delegate { return _target == null; };
-        _isCameraPositionMatchesToTheTargetPosition = delegate { return transform.localPosition == _direction; };
         _isCameraSizeSet = delegate { return _mainCamera.orthographicSize == _currentSize; };
+        _canZoom = delegate { return CameraWidth < Vector2.Distance(new Vector2(_levelGenerator.MapHorizontalStartPoint, 0), new Vector2(_levelGenerator.MapHorizontalEndPoint, 0)) / 2; };
     }
-  
+
     private void FixedUpdate()
     {
         Conditions<bool>.Compare(_isTargetNull(), KeepCurrentPosition, SetTheMovement);
-        Conditions<bool>.Compare(_isCameraPositionMatchesToTheTargetPosition(), null, FollowTheTarget);
-        Conditions<bool>.Compare(_isCameraSizeSet(), null, SetTheCamerasSize);
+        FollowTheTarget();
+        SetTheCamerasSize();       
     }
 
     private void KeepCurrentPosition()
@@ -69,7 +74,7 @@ public class CameraMovement : MonoBehaviour
         Conditions<bool>.Compare(_cameraTouchMovement.IsCameraMoving, UpdateStabilizer, Stabilizer);
 
         if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + _updatedStabilizer, _followLerp * Time.fixedDeltaTime);
-        if (_currentSize != _givenCameraSize) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _givenCameraSize, _followLerp * Time.fixedDeltaTime);
+        if (_currentSize != _givenCameraSize && _canZoom()) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _givenCameraSize, _followLerp * Time.deltaTime);
     }
 
     private void UpdateStabilizer()
@@ -84,7 +89,7 @@ public class CameraMovement : MonoBehaviour
 
     private void FollowTheTarget()
     {
-        transform.localPosition = _direction;
+        transform.localPosition = ClampPosition(_direction);
     }
 
     private void SetTheCamerasSize()
@@ -100,5 +105,13 @@ public class CameraMovement : MonoBehaviour
         _target = target;
         _followLerp = lerp;
         _givenCameraSize = cameraSize;
+    }
+
+    private Vector3 ClampPosition(Vector3 position)
+    {
+        _minPosX = _levelGenerator.MapHorizontalStartPoint + CameraWidth;
+        _maxPosX = _levelGenerator.MapHorizontalEndPoint - CameraWidth;
+        _newPosX = Mathf.Clamp(position.x, _minPosX, _maxPosX);
+        return new Vector3(_newPosX, position.y, position.z);
     }
 }

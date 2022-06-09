@@ -51,7 +51,6 @@ public class SelectMapButton : MonoBehaviour
 
     private void OnTabSelectedTabOpen()
     {
-        print("aaa");
         Initialize();
         MapAvailability(!IsMapSet);
         GetMapIndex();
