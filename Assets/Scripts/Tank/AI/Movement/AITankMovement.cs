@@ -2,23 +2,24 @@
 using UnityEngine;
 
 public class AITankMovement : BaseTankMovement
-{      
+{
+    private AIActionPlanner _aiActionPlanner;
+    private VehicleRigidbodyPosition _vehicleRigidbodyPosition;
+    private Vector3 _destination;
+    private float _stuckTime;
+
     private bool IsDestinationReachedForwards => Direction > 0 && transform.position.x <= _destination.x;
     private bool IsDestinationReachedBackwards => Direction < 0 && transform.position.x > _destination.x;
 
-    private Vector3 _destination;
-
-    private AIActionPlanner _aiActionPlanner;
-
-    public event Action Shoot;
-
-    private float _stuckTime;
+    public Action Shoot { get; set; }
 
 
     protected override void Awake()
     {
         base.Awake();
-        _aiActionPlanner = GetComponent<AIActionPlanner>();
+        _aiActionPlanner = Get<AIActionPlanner>.From(gameObject);
+        _vehicleRigidbodyPosition = Get<VehicleRigidbodyPosition>.From(gameObject);
+
         RigidbodyCenterOfMass();
     }
 
@@ -96,7 +97,7 @@ public class AITankMovement : BaseTankMovement
         _OnDestinationReached = delegate { ResetDirection(); Shoot?.Invoke(); };
 
         _isDestinationReached = delegate { return IsDestinationReachedForwards || IsDestinationReachedBackwards; };
-        _isVehicleStuck = delegate { return _rigidBody.velocity.x >= -0.3 && _rigidBody.velocity.x <= 0.3f; };
+        _isVehicleStuck = delegate { return _rigidBody.velocity.x >= -0.3 && _rigidBody.velocity.x <= 0.3f || _vehicleRigidbodyPosition.IsPositionOutsideOfMinBoundaries(_rigidBody); };
         _isStuckTimeEnded = delegate { return _stuckTime >= 3; };
     }
 
