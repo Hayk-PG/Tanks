@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ScoreController : MonoBehaviour, IScore
 {
-    [SerializeField]
-    private int _score;
-
     public PlayerTurn PlayerTurn { get; set; }
     public IDamage IDamage { get; set; }
-
     private AmmoTabCustomization _ammoTabCustomization;
+    private GetScoreFromTerOccInd _getScoreFromTerOccInd;
+
+    [SerializeField]
+    private int _score;
 
     public int Score
     {
@@ -27,8 +27,8 @@ public class ScoreController : MonoBehaviour, IScore
     {       
         IDamage = Get<IDamage>.From(gameObject);
         PlayerTurn = Get<PlayerTurn>.From(gameObject);
-
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>(); 
+        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
+        _getScoreFromTerOccInd = GetComponent<GetScoreFromTerOccInd>();
 
         Score = 0;
     }
@@ -36,11 +36,13 @@ public class ScoreController : MonoBehaviour, IScore
     private void OnEnable()
     {
         _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
+        if (_getScoreFromTerOccInd != null) _getScoreFromTerOccInd.OnGetScoreFromTerOccInd += OnGetScoreFromTerOccInd;
     }
 
     private void OnDisable()
     {
         _ammoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
+        if (_getScoreFromTerOccInd != null) _getScoreFromTerOccInd.OnGetScoreFromTerOccInd -= OnGetScoreFromTerOccInd;
     }
 
     private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
@@ -51,7 +53,6 @@ public class ScoreController : MonoBehaviour, IScore
             OnDisplayTempPoints?.Invoke(-ammoTypeButton._properties.UnlockPoints, 0);
         }
     }
-
 
     public void GetScore(int score, IDamage iDamage)
     {
@@ -68,5 +69,10 @@ public class ScoreController : MonoBehaviour, IScore
     public void HitEnemyAndGetScore(int score, IDamage enemyDamage)
     {
         if (enemyDamage != IDamage) OnHitEnemy?.Invoke(score);
+    }
+
+    private void OnGetScoreFromTerOccInd()
+    {
+        UpdateScore(100);
     }
 }

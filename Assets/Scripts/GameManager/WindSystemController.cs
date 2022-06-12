@@ -81,6 +81,5 @@ public class WindSystemController : MonoBehaviourPun
     private void ShareWindForceValue(int currentWindForce)
     {
         OnWindForce?.Invoke(currentWindForce);
-        print("Wind is " + currentWindForce);
     }
 }
