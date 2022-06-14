@@ -1,24 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
+using UnityEngine;
 
-public class SupportsTabCustomization : BaseAmmoTabCustomization<SupportsTypeButton, SupportParameters>
+public class SupportsTabCustomization : BaseAmmoTabCustomization<SupportsTypeButton>
 {
-    private const string Bomber = "Bomber";
+    [Header("Bombers")]
+    [SerializeField] private BomberProperties[] _bombers;
 
-    public event Action OnCallBomber;
+    public Action OnCallBomber { get; set; }
+
+
 
     private void Start()
     {
-        for (int i = 0; i < _parameters.Length; i++)
+        InstantiateBombers();
+    }
+
+    private void InstantiateBombers()
+    {
+        foreach (var bomber in _bombers)
         {
             SupportsTypeButton button = Instantiate(_buttonPrefab, _container.transform);
-            button._properties.Index = i;
-            button._properties.UnlockPoints = _parameters[i]._unlockPoints;
-            button._properties.Title = i == 0 ? Bomber : "";
-            button._properties.IconSprite = _parameters[i]._icon;
-            button._ammoStars.OnSetStars(_parameters[i]._ammoTypeStars);
-            button.OnClickSupportTypeButton += OnClickSupportTypeButton;
+            AssignProperties(button, bomber._title, bomber._ammoIndex, bomber._value, bomber._unlockPoints, bomber._icon, bomber._ammoTypeStars);
             _instantiatedButtons.Add(button);
+            button.OnClickSupportTypeButton += OnClickSupportTypeButton;
         }
     }
 
@@ -34,19 +38,13 @@ public class SupportsTabCustomization : BaseAmmoTabCustomization<SupportsTypeBut
 
     private void OnClickSupportTypeButton(SupportsTypeButton supportTypeButton)
     {
-        if (supportTypeButton._properties.Title == Bomber) OnCallBomber?.Invoke();
+        if (supportTypeButton._properties.Title == "Bomber") OnCallBomber?.Invoke();
 
         OnAmmoTypeController?.Invoke();
     }
 
-    public override void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount)
+    protected override void DisplayPointsToUnlock(int index, int playerPoints, int value)
     {
-        if (_instantiatedButtons != null)
-        {
-            for (int i = 0; i < _instantiatedButtons.Count; i++)
-            {
-                _instantiatedButtons[i].DisplayPointsToUnlock(playerPoints, bulletsCount[i]);
-            }
-        }
+        _instantiatedButtons[index].DisplayPointsToUnlock(playerPoints, 0);
     }
 }

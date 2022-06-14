@@ -49,20 +49,21 @@ public class ScoreController : MonoBehaviour, IScore
     {
         if (!ammoTypeButton._properties.IsUnlocked)
         {
-            Score -= ammoTypeButton._properties.UnlockPoints;
-            OnDisplayTempPoints?.Invoke(-ammoTypeButton._properties.UnlockPoints, 0);
+            UpdateScore(-ammoTypeButton._properties.UnlockPoints, 0);
+            //Score -= ammoTypeButton._properties.UnlockPoints;
+            //OnDisplayTempPoints?.Invoke(-ammoTypeButton._properties.UnlockPoints, 0);
         }
     }
 
     public void GetScore(int score, IDamage iDamage)
     {
-        Conditions<bool>.Compare(iDamage != IDamage || iDamage == null, () => UpdateScore(score), null);
+        Conditions<bool>.Compare(iDamage != IDamage || iDamage == null, () => UpdateScore(score, 0.5f), null);
     }
 
-    private void UpdateScore(int score)
+    private void UpdateScore(int score, float waitForSeconds)
     {
         Score += score;
-        OnDisplayTempPoints?.Invoke(score, 0.5f);
+        OnDisplayTempPoints?.Invoke(score, waitForSeconds);
         OnPlayerGetsPoints?.Invoke(Score);
     }
 
@@ -73,6 +74,6 @@ public class ScoreController : MonoBehaviour, IScore
 
     private void OnGetScoreFromTerOccInd()
     {
-        UpdateScore(100);
+        UpdateScore(100, 0.5f);
     }
 }

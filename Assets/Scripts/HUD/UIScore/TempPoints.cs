@@ -51,7 +51,8 @@ public class TempPoints : MonoBehaviour
     private IEnumerator Coroutine(int score, float waitForSeconds)
     {
         _rectTransform.position = _hudScore.TempPointsStartPoint.position;
-        _pointsText.text = "+" + score;
+        string operat = score > 0 ? "+" : "";
+        _pointsText.text = operat + score;
         _canvasGroup.alpha = 1;
         _animator.Play(_tempPointsAnim);
 

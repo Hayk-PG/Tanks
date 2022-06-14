@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
-public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, AmmoParameters>
+public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 {
     public Action<WeaponProperties, int> OnUpdateDisplayedWeapon { get; set; }
-
     public AmmoTypeButton DefaultAmmoTypeButton { get; set; }
 
 
@@ -18,13 +16,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
     public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, int loopIndex)
     {
         AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);
-
-        button._properties.Index = weaponProperty._ammoIndex;
-        button._properties.Value = weaponProperty._value;
-        button._properties.UnlockPoints = weaponProperty._unlockPoints;
-        button._properties.IconSprite = weaponProperty._icon;
-        button._ammoStars.OnSetStars(weaponProperty._ammoTypeStars);
-
+        AssignProperties(button, weaponProperty._title, weaponProperty._ammoIndex, weaponProperty._value, weaponProperty._unlockPoints, weaponProperty._icon, weaponProperty._ammoTypeStars);
         OnSendWeaponPointsToUnlock?.Invoke(weaponProperty._unlockPoints);
         Conditions<bool>.Compare(loopIndex == 0, () => SetDefaultAmmo(button), null);
         CacheAmmoTypeButtons(button);
@@ -83,15 +75,8 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton, Amm
         ammoTypeButton._properties.IsSelected = true;
     }
 
-    public override void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount)
+    protected override void DisplayPointsToUnlock(int index, int playerPoints, int value)
     {
-
-        if (_instantiatedButtons != null)
-        {
-            for (int i = 0; i < _instantiatedButtons.Count; i++)
-            {
-                _instantiatedButtons[i].DisplayPointsToUnlock(playerPoints, bulletsCount[i]);
-            }
-        }
+        _instantiatedButtons[index].DisplayPointsToUnlock(playerPoints, value);
     }
 }

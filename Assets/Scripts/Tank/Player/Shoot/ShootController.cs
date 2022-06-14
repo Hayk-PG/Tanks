@@ -145,15 +145,20 @@ public class ShootController : BaseShootController
         OnApplyingForce?.Invoke(false);
     }
 
+    private void InstantiateBullet(float force)
+    {
+        Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._prefab, _shootPoint.position, _canonPivotPoint.rotation);
+        Bullet.OwnerScore = _iScore;
+        Bullet.RigidBody.velocity = Bullet.transform.forward * force;
+        _gameManagerBulletSerializer.BulletController = Bullet;
+    }
+
     public void ShootBullet(float force)
     {
         if(_playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0)
         {
-            Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._bulletPrefab, _shootPoint.position, _canonPivotPoint.rotation);
-            Bullet.OwnerScore = _iScore;
-            Bullet.RigidBody.velocity = Bullet.transform.forward * force;
-            _gameManagerBulletSerializer.BulletController = Bullet;
-            _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
+            InstantiateBullet(force);
+            AddForce(force);
         }
     }
 
@@ -173,5 +178,10 @@ public class ShootController : BaseShootController
             _photonPlayerShootRPC = _tankController.BasePlayer.GetComponent<PhotonPlayerShootRPC>();
 
         _photonPlayerShootRPC?.CallShootRPC(force);
-    }  
+    } 
+    
+    private void AddForce(float force)
+    {
+        _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
+    }
 }

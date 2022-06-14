@@ -2,7 +2,7 @@
 
 public class SupportsTypeButton : AmmoTypeButton
 {
-    public event Action<SupportsTypeButton> OnClickSupportTypeButton;
+    public Action<SupportsTypeButton> OnClickSupportTypeButton { get; set; }
 
     public override void OnClickButton()
     {

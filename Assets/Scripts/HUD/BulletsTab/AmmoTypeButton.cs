@@ -54,7 +54,7 @@ public class AmmoTypeButton : MonoBehaviour
     }
     public Properties _properties;
 
-    public event Action<AmmoTypeButton> OnClickAmmoTypeButton;
+    public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }
 
 
 
