@@ -17,4 +17,10 @@ public class TileProps : MonoBehaviour
             _isSandBagsActive = false;
         }
     }
+
+    public void OnSandbags(bool isActive, bool? isPlayer1)
+    {
+        Sandbags.gameObject.SetActive(isActive);
+        if (isPlayer1 != null) Sandbags.SandbagsDirection(isPlayer1.Value);
+    }
 }

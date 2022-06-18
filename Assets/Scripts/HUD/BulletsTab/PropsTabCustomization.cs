@@ -6,7 +6,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
     [Header("Props")]
     [SerializeField] private PropsProperties[] _props;
 
-    public Action OnInstantiateSandbox { get; set; }
+    public Action OnInstantiateSandbags { get; set; }
 
 
 
@@ -37,7 +37,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
     private void OnClickPropsTypeButton(PropsTypeButton button)
     {
         if (button._properties.Title == "Sandbags")
-            OnInstantiateSandbox?.Invoke();
+            OnInstantiateSandbags?.Invoke();
 
         OnAmmoTypeController?.Invoke();
     }
