@@ -5,6 +5,22 @@ public class TankMovement : BaseTankMovement
     private TankController _tankController;
     private Fuel _fuel;
     private bool _isEnoughFuel = true;
+    private bool _isSandbagsTriggered;
+    public float SpeedInSandbags
+    {
+        get
+        {
+            if (_isSandbagsTriggered)
+            {
+                if (_playerTurn.MyTurn == TurnState.Player1 && Direction > 0 || _playerTurn.MyTurn == TurnState.Player2 && Direction < 0)
+                    return 0;
+                else
+                    return 1;
+            }
+            else
+                return 1;
+        } 
+    }
 
 
     protected override void Awake()
@@ -53,7 +69,7 @@ public class TankMovement : BaseTankMovement
 
     private void MotorTorque()
     {
-        _wheelColliderController.MotorTorque(Direction * Speed * Time.fixedDeltaTime);
+        _wheelColliderController.MotorTorque(Direction * Speed * SpeedInSandbags * Time.fixedDeltaTime);
         _wheelColliderController.RotateWheels();
 
         OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
@@ -114,5 +130,10 @@ public class TankMovement : BaseTankMovement
     private void OnFuelValue(bool isEnoughFuel)
     {
         _isEnoughFuel = isEnoughFuel;
+    }
+
+    public void OnEnteredSandbagsTrigger(bool isEntered)
+    {
+        _isSandbagsTriggered = isEntered;
     }
 }

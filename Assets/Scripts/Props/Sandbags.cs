@@ -1,20 +1,43 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Sandbags : MonoBehaviour
 {
+    public Action<bool> OnSandbags { get; set; }
+    private SandbagsReceiver _sandBagsReceiver;
+
+
     private void OnTriggerEnter(Collider other)
     {
-        print(other.name);
+        SendEvent(other, true);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        print(other.name);
+        SendEvent(other, false);
     }
 
-    private void OnTriggerStay(Collider other)
+    private bool IsTank(Collider other)
     {
-        
+        return Get<SandbagsReceiver>.From(other.gameObject);
+    }
+
+    private void CommunicateWithSandbagsReceiver(Collider other)
+    {
+        if (_sandBagsReceiver == null)
+        {
+            _sandBagsReceiver = Get<SandbagsReceiver>.From(other.gameObject);
+            _sandBagsReceiver?.SubscirbeToSandbagsEvents(this);
+        }
+    }
+
+    private void SendEvent(Collider other, bool isEntered)
+    {
+        if (IsTank(other))
+        {
+            CommunicateWithSandbagsReceiver(other);
+            OnSandbags?.Invoke(isEntered);
+        }
     }
 
     public void SandbagsDirection(bool isPlayer1)
