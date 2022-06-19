@@ -83,12 +83,19 @@ public class TankSciptableComponents : ScriptableComponents
 
     private void AddWheelColliderController()
     {
+        ComponentUtility.CopyComponent(_wheelColliderController);
         ComponentUtility.CopyComponent(_wheelCollider);
-        Type wheelColliderType = Get<object>.Type(_wheelCollider);
-        WheelColliderController wheelColliderController = Get<WheelColliderController>.FromChild(_target);
-        Transform[] wheels = wheelColliderController.gameObject.GetComponentsInChildren<Transform>();
 
-        GlobalFunctions.Loop<Transform>.Foreach(wheels, wheel => 
+        Transform wheelCollidersTransform = _target.transform.Find("WheelColliders");
+        Transform[] wheels = wheelCollidersTransform.gameObject.GetComponentsInChildren<Transform>();
+        Type wheelColliderType = Get<object>.Type(_wheelCollider);
+
+        if (wheelCollidersTransform.GetComponent<WheelColliderController>() == null)
+            ComponentUtility.PasteComponentAsNew(wheelCollidersTransform.gameObject);
+        else
+            ComponentUtility.PasteComponentValues(wheelCollidersTransform.GetComponent<WheelColliderController>());         
+
+        GlobalFunctions.Loop<Transform>.Foreach(wheels, wheel =>
         {
             if (wheel.GetComponent(wheelColliderType) == null) ComponentUtility.PasteComponentAsNew(wheel.gameObject);
             if (wheel.GetComponent(wheelColliderType) != null) ComponentUtility.PasteComponentValues(wheel.GetComponent(wheelColliderType));
