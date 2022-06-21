@@ -11,7 +11,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     }
 
 
-    public void CallOnCollisionRPC(Collision collision, IScore iScore)
+    public void CallOnCollisionRPC(Collision collision, IScore iScore, int destructDamage)
     {
         if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
@@ -19,17 +19,17 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
             string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(score => score.GetComponent<IScore>() == iScore).name;
             Vector3 collisionPosition = collision.collider.transform.position;
 
-            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, collisionName, ownerName, collisionPosition);
+            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, collisionName, ownerName, collisionPosition, destructDamage);
         }
     }
 
     [PunRPC]
-    private void OnCollisionRPC(string collisionName, string ownerName, Vector3 collisionPosition)
+    private void OnCollisionRPC(string collisionName, string ownerName, Vector3 collisionPosition, int destructDamage)
     {
         GlobalFunctions.Loop<Collider>.Foreach(FindObjectsOfType<Collider>(), collision => 
         {
             if (collision.name == collisionName && collision.transform.position == collisionPosition)
-                Get<IDestruct>.From(collision.gameObject)?.Destruct();
+                Get<IDestruct>.From(collision.gameObject)?.Destruct(destructDamage);
         });
 
         IScore iScore = GameObject.Find(ownerName)?.GetComponent<IScore>();

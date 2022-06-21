@@ -55,7 +55,9 @@ public class ShootController : BaseShootController
         get => _shoot._isApplyingForce;
         set => _shoot._isApplyingForce = value;
     }
- 
+    private bool _isSandbagsTriggered;
+
+
     public Action<bool> OnCanonRotation;
     internal Action<bool> OnApplyingForce;
     internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
@@ -182,6 +184,12 @@ public class ShootController : BaseShootController
     
     private void AddForce(float force)
     {
-        _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
+        if(!_isSandbagsTriggered)
+            _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
+    }
+
+    public void OnEnteredSandbagsTrigger(bool isEntered)
+    {
+        _isSandbagsTriggered = isEntered;
     }
 }

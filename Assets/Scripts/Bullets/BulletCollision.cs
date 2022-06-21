@@ -2,6 +2,7 @@
 
 public class BulletCollision : GetBulletController
 {
+    [SerializeField] private int _destructDamage;
     private int _collisionCount;
 
     private void OnEnable()
@@ -20,11 +21,11 @@ public class BulletCollision : GetBulletController
     private void OnCollisionInOfflineMode(Collision collision, IScore ownerScore)
     {
         ownerScore.GetScore(10, null);
-        Get<IDestruct>.From(collision.gameObject)?.Destruct();
+        Get<IDestruct>.From(collision.gameObject)?.Destruct(_destructDamage);
     }
 
     private void OnCollisionInOnlineMode(Collision collision, IScore ownerScore)
     {
-        _gameManagerBulletSerializer.CallOnCollisionRPC(collision, ownerScore);
+        _gameManagerBulletSerializer.CallOnCollisionRPC(collision, ownerScore, _destructDamage);
     }
 }

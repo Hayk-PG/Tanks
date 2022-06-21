@@ -33,12 +33,15 @@ public class BaseChangeTiles : MonoBehaviour
 
     private void OnTileUpdates(Vector3 pos, GameObject tile)
     {
-        Destroy(TilesGenerator.TilesDict[pos]);
-        TilesGenerator.TilesDict.Remove(pos);
-        GameObject newTile = Instantiate(tile, pos, Quaternion.identity);
-        newTile.name = tile.name;
-        TilesGenerator.TilesDict.Add(pos, newTile);
-        newTile.transform.SetParent(transform);
+        if (!TilesGenerator.TilesDict[pos].GetComponent<Tile>().hasSandbagsOnIt)
+        {
+            Destroy(TilesGenerator.TilesDict[pos]);
+            TilesGenerator.TilesDict.Remove(pos);
+            GameObject newTile = Instantiate(tile, pos, Quaternion.identity);
+            newTile.name = tile.name;
+            TilesGenerator.TilesDict.Add(pos, newTile);
+            newTile.transform.SetParent(transform);
+        }
     }
 
     protected void SetTile(Vector3 pos, GameObject tile)

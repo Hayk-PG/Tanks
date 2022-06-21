@@ -3,24 +3,21 @@
 public class TileProps : MonoBehaviour
 {
     [SerializeField] private Sandbags _sandBags;
-    [SerializeField] private bool _isSandBagsActive;
+    private Tile _tile;
 
     public Sandbags Sandbags => _sandBags;
 
 
-    private void Update()
+    private void OnEnable()
     {
-        if (_isSandBagsActive)
-        {
-            Sandbags.gameObject.SetActive(true);
-            Sandbags.SandbagsDirection(true);
-            _isSandBagsActive = false;
-        }
+        _tile = Get<Tile>.From(gameObject);
     }
 
     public void OnSandbags(bool isActive, bool? isPlayer1)
     {
         Sandbags.gameObject.SetActive(isActive);
+        _tile.hasSandbagsOnIt = true;
+
         if (isPlayer1 != null) Sandbags.SandbagsDirection(isPlayer1.Value);
     }
 }

@@ -2,5 +2,6 @@
 
 public interface IDestruct 
 {
-    void Destruct();
+    float Health { get; set; }
+    void Destruct(int damage);
 }

@@ -5,6 +5,7 @@ public class Tile : MonoBehaviour, IDestruct
     private Collider _collider;
     private ChangeTiles _changeTiles;
     private GroundSlam _groundSlam;
+    private Sandbags _sandbags;
 
     [SerializeField]
     private GameObject _explosion;
@@ -12,6 +13,10 @@ public class Tile : MonoBehaviour, IDestruct
     private bool _isSuspended;
     private Vector3 _desiredPosition;
     private Vector3 _tileSize;
+    public bool hasSandbagsOnIt;
+
+    public float Health { get; set; } = 50;
+
 
 
     private void Awake()
@@ -19,7 +24,7 @@ public class Tile : MonoBehaviour, IDestruct
         _collider = GetComponent<Collider>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
         _groundSlam = FindObjectOfType<GroundSlam>();
-
+        
         _tileSize = _collider.bounds.size;
     }
 
@@ -59,12 +64,32 @@ public class Tile : MonoBehaviour, IDestruct
         _changeTiles.UpdateTiles();
     }
 
-    public void Destruct()
+    public void Destruct(int damage)
+    {
+        if (!hasSandbagsOnIt)
+        {
+            Destruction();
+        }
+        else
+        {
+            Health -= damage;
+
+            if (Health <= 0)
+            {
+                hasSandbagsOnIt = false;
+                _sandbags = Get<Sandbags>.FromChild(gameObject);
+                _sandbags.OnSandbags?.Invoke(false);
+                Destruction();
+            }
+        }
+    }
+
+    private void Destruction()
     {
         _collider.isTrigger = true;
         _explosion.SetActive(true);
-        _explosion.transform.parent = null;       
-        _changeTiles.UpdateTiles();
+        _explosion.transform.parent = null;
+        _changeTiles.UpdateTiles();       
         Destroy(gameObject);
     }
 
