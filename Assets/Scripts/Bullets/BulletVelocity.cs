@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class BulletVelocity : GetBulletController, IBulletTrail
 {
@@ -24,6 +25,12 @@ public class BulletVelocity : GetBulletController, IBulletTrail
     {
         BulletLookRotation(velocityData);
         ApplyWindForceToTheMovement(velocityData);
+
+        if(velocityData._rigidBody.velocity.y <= 0)
+        {
+            float y = velocityData._rigidBody.velocity.y + velocityData._rigidBody.velocity.y * 10 * Time.fixedDeltaTime;
+            velocityData._rigidBody.velocity = new Vector3(velocityData._rigidBody.velocity.x, y, velocityData._rigidBody.velocity.z);
+        }
     }
 
     protected virtual void BulletLookRotation(BulletController.VelocityData velocityData)

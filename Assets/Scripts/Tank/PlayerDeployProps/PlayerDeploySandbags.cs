@@ -31,9 +31,11 @@ public partial class PlayerDeployProps : MonoBehaviour
 
     private void OnInstantiateSandbags()
     {
-        bool isPlayer1 = _playerTurn.MyTurn == TurnState.Player1;
-        Vector3 transformPosition = transform.position;
-
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => Sandbags(true, transformPosition), () => SandbagsRPC(isPlayer1, transformPosition));
+        if (_playerTurn.IsMyTurn)
+        {
+            bool isPlayer1 = _playerTurn.MyTurn == TurnState.Player1;
+            Vector3 transformPosition = transform.position;
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => Sandbags(true, transformPosition), () => SandbagsRPC(isPlayer1, transformPosition));
+        }
     }
 }
