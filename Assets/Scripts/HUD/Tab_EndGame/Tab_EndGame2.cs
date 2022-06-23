@@ -6,31 +6,21 @@ public partial class Tab_EndGame
 {
     [Serializable] private struct UI
     {
-        [SerializeField] internal Color[] colorTitleGlow;
-
-        [SerializeField] internal Image _imageTitleGlow;
-
-        [SerializeField] internal Text _textTitle;
         [SerializeField] internal Text _textXP;
         [SerializeField] internal Text _textPointsPlus;
         [SerializeField] internal Text _textLevel;
-
         [SerializeField] internal Slider _sliderXP;
-
+        [SerializeField] internal CanvasGroup[] _canvasGroupGameResults;
         [SerializeField] internal Animator _textPointsPlusAnim;
     }
     [SerializeField] UI _ui;
 
-    private void SetImageTitleGlowColor(Color colorTitleGlow)
-    {
-        _ui._imageTitleGlow.color = colorTitleGlow;
-    }
 
-    private void SetTitleText(string textTitle)
+    private void DisplayGameResult(GameResult gameResult)
     {
-        _ui._textTitle.text = textTitle;
+        GlobalFunctions.CanvasGroupActivity(_ui._canvasGroupGameResults[(int)gameResult], true);
     }
-
+   
     private void SetLevelText(int level)
     {
         _ui._textLevel.text = level.ToString();

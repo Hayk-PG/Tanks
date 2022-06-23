@@ -2,6 +2,8 @@
 
 public partial class Tab_EndGame : MonoBehaviour
 {
+    private enum GameResult { Win, Lose}
+    private GameResult _gameResult;
     private CanvasGroup _canvasGroup;
     private BaseEndGame _baseEndGame;
     private delegate bool Checker(TankController tank);
@@ -42,20 +44,17 @@ public partial class Tab_EndGame : MonoBehaviour
 
         if (_successed(successedTank))
         {
-            print("successedTank");
-            Display(_ui.colorTitleGlow[0], "Victory", new Values(Data.Manager.Level, 50, 150, 300, (int)(_ui._sliderXP.value), successedTanksScore.Score));          
+            Display(GameResult.Win, new Values(Data.Manager.Level, 50, 150, 300, (int)(_ui._sliderXP.value), successedTanksScore.Score));          
         }
         else if(_defeated(defeatedTank))
         {
-            print("defeatedTank");
-            Display(_ui.colorTitleGlow[1], "Defeat", new Values(Data.Manager.Level, 50, 150, 0, (int)(_ui._sliderXP.value), defeatedTanksScore.Score));
+            Display(GameResult.Lose, new Values(Data.Manager.Level, 50, 150, 0, (int)(_ui._sliderXP.value), defeatedTanksScore.Score));
         }
     }
 
-    private void Display(Color colorTitleGlow, string textTitle, Values values)
+    private void Display(GameResult gameResult, Values values)
     {
-        SetImageTitleGlowColor(colorTitleGlow);
-        SetTitleText(textTitle);
+        DisplayGameResult(gameResult);
         StartCoroutine(DisplayController(_isCoroutineRunning, values));
     }
 }
