@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public partial class Tab_EndGame
@@ -32,6 +33,9 @@ public partial class Tab_EndGame
     }
     private float _currentVelocity;
     private bool _isCoroutineRunning = true;
+
+    public Action OnGameResultsFinished { get; set; }
+
 
     private IEnumerator DisplayController(bool _isCoroutineRunning, Values values)
     {
@@ -100,6 +104,7 @@ public partial class Tab_EndGame
             }
 
             yield return new WaitUntil(() => _ui._sliderXP.value >= values._step3);
+            OnGameResultsFinished?.Invoke();
             _isCoroutineRunning = false;
         }
     }
