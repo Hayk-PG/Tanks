@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _explosion: {fileID: 1206751934773301074}
+  hasSandbagsOnIt: 0
 --- !u!114 &8312160977630150010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,7 +77,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sandBags: {fileID: 5050055930814889979}
-  _isSandBagsActive: 0
 --- !u!1 &7692029471052992718
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,6 +168,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Trees
+      objectReference: {fileID: 0}
+    - target: {fileID: 2659175165371617865, guid: bbd7bfcc56475d249805230309cd72c8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7100272202121508211, guid: bbd7bfcc56475d249805230309cd72c8,
         type: 3}

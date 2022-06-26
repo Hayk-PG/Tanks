@@ -4,6 +4,7 @@ using UnityEngine;
 public class BulletVelocity : GetBulletController, IBulletTrail
 {
     public Action<bool> OnTrailActivity { get; set; }
+    protected float _gravity;
 
 
     protected virtual void Start()
@@ -25,11 +26,15 @@ public class BulletVelocity : GetBulletController, IBulletTrail
     {
         BulletLookRotation(velocityData);
         ApplyWindForceToTheMovement(velocityData);
+        IncreaseGravitation(velocityData, 1.5f);
+    }
 
-        if(velocityData._rigidBody.velocity.y <= 0)
+    protected virtual void IncreaseGravitation(BulletController.VelocityData velocityData, float force)
+    {
+        if (velocityData._rigidBody.velocity.y <= 0)
         {
-            float y = velocityData._rigidBody.velocity.y + velocityData._rigidBody.velocity.y * 10 * Time.fixedDeltaTime;
-            velocityData._rigidBody.velocity = new Vector3(velocityData._rigidBody.velocity.x, y, velocityData._rigidBody.velocity.z);
+            _gravity = velocityData._rigidBody.velocity.y + velocityData._rigidBody.velocity.y * force * Time.fixedDeltaTime;
+            velocityData._rigidBody.velocity = new Vector3(velocityData._rigidBody.velocity.x, _gravity, velocityData._rigidBody.velocity.z);
         }
     }
 

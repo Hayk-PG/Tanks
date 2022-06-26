@@ -8,7 +8,7 @@ public class Tab_EndgameTimer : MonoBehaviour
     [SerializeField] private Text _textTimer;
     private CanvasGroup _canvasGroup;
     private Tab_EndGame _tabEndGame;
-    private int _s = 10;
+    private int _s = 30;
 
     public Action OnTimerEnd { get; set; }
 

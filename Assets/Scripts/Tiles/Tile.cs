@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour, IDestruct
     private Vector3 _tileSize;
     public bool hasSandbagsOnIt;
 
-    public float Health { get; set; } = 50;
+    public float Health { get; set; } = 100;
 
 
 
