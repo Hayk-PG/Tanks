@@ -6,6 +6,7 @@ public class Chat : MonoBehaviour
 {
     [SerializeField] private InputField _inputField;
     [SerializeField] private Text _textPrefab;
+    [SerializeField] private ChatRematchMessage _rematchPrefab;
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Transform _list;
     [SerializeField] private Color[] _colors;
@@ -30,6 +31,13 @@ public class Chat : MonoBehaviour
         Text text = Instantiate(_textPrefab, _list);
         text.color = _colors[playerIndex];
         text.text = senderName + "| " + chatText;       
+        OnTextInstantiated?.Invoke(_canvasGroup.interactable);
+    }
+
+    public void InstantiateRematchMessage(string name)
+    {
+        ChatRematchMessage rematch = Instantiate(_rematchPrefab, _list);
+        rematch.Name = name;
         OnTextInstantiated?.Invoke(_canvasGroup.interactable);
     }
 }

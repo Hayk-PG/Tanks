@@ -566,9 +566,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3724027149731447501}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &4813225747307258504
 MonoBehaviour:
@@ -584,6 +584,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputField: {fileID: 7162820732563301748}
   _textPrefab: {fileID: 3452679851277132079, guid: 5f4d43fc2bfbae1478580ba6af13d7ba,
+    type: 3}
+  _rematchPrefab: {fileID: 9041261227385832623, guid: aca0842d5754ac6428f45204af96153f,
     type: 3}
   _canvasGroup: {fileID: 5482391829682281196}
   _list: {fileID: 3730286807725878440}
@@ -712,7 +714,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 10
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1

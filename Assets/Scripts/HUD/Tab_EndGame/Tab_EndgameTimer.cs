@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +8,9 @@ public class Tab_EndgameTimer : MonoBehaviour
     [SerializeField] private Text _textTimer;
     private CanvasGroup _canvasGroup;
     private Tab_EndGame _tabEndGame;
-    private int _s = 30;
+    private int _s = 10;
 
-
+    public Action OnTimerEnd { get; set; }
 
     private void Awake()
     {
@@ -37,7 +38,13 @@ public class Tab_EndgameTimer : MonoBehaviour
     {
         while(_s > 0)
         {
-            _s--;
+            if (_s > 0) _s--;
+            if (_s <= 0)
+            {
+                GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
+                OnTimerEnd?.Invoke();
+            }
+
             _textTimer.text = _s.ToString("D2");
             yield return new WaitForSeconds(1);
         }
