@@ -2,10 +2,14 @@
 
 public class PlayerShootTrajectory : BaseTrajectory
 {
-    [SerializeField] GameObject pointsPrefab;
-    [SerializeField] int numberOfPoints;
+    [SerializeField] private GameObject pointsPrefab;
+    [SerializeField] private int numberOfPoints;
 
-    GameObject[] points;
+    private GameObject[] points;
+    private SpriteRenderer[] _tracePointsSpriteRenderer;
+    private GameObject _tracePointsParent;
+    private Color _tracePointsColor = new Color(1, 1, 1, 0.3f);
+    private Color _tracePointsResetColor = new Color(1, 1, 1, 0.0f);
 
 
     void Awake()
@@ -23,6 +27,44 @@ public class PlayerShootTrajectory : BaseTrajectory
             points[index] = Instantiate(pointsPrefab, transform.position, Quaternion.identity, transform);
 
             GraduallyResizingPoints(index);
+        }
+
+        InstantiateTrace();
+    }
+
+    private void InstantiateTrace()
+    {
+        _tracePointsParent = new GameObject("Trace");
+        _tracePointsParent.transform.parent = transform;
+        _tracePointsParent.transform.localPosition = Vector3.zero;
+        _tracePointsParent.transform.localScale = new Vector3(1, 1, 1);
+        _tracePointsSpriteRenderer = new SpriteRenderer[points.Length];
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            _tracePointsSpriteRenderer[i] = Instantiate(pointsPrefab.GetComponent<SpriteRenderer>(), points[i].transform.position, Quaternion.identity, _tracePointsParent.transform);
+            _tracePointsSpriteRenderer[i].transform.localScale = points[i].transform.localScale;
+            _tracePointsSpriteRenderer[i].color = _tracePointsColor;
+        }
+    }
+
+    public override void UpdateTrajectoryTrace(bool isResetted)
+    {
+        if (!isResetted)
+        {
+            for (int i = 0; i < _tracePointsSpriteRenderer.Length; i++)
+            {
+                _tracePointsSpriteRenderer[i].transform.position = points[i].transform.position;
+                _tracePointsSpriteRenderer[i].transform.localScale = points[i].transform.localScale;
+                _tracePointsSpriteRenderer[i].color = _tracePointsColor;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < _tracePointsSpriteRenderer.Length; i++)
+            {
+                _tracePointsSpriteRenderer[i].color = _tracePointsResetColor;
+            }
         }
     }
 

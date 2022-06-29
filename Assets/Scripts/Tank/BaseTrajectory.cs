@@ -11,4 +11,9 @@ public class BaseTrajectory : MonoBehaviour
     {
         return Vector3.zero;
     }
+
+    public virtual void UpdateTrajectoryTrace(bool isResetted)
+    {
+
+    }
 }

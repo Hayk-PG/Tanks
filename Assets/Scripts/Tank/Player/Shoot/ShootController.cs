@@ -19,6 +19,7 @@ public class ShootController : BaseShootController
         }
     }
     private TankController _tankController;
+    private TankMovement _tankMovement;
     private PhotonPlayerShootRPC _photonPlayerShootRPC;
     private Rigidbody _rigidBody;
     private PlayerTurn _playerTurn;
@@ -50,13 +51,13 @@ public class ShootController : BaseShootController
         get => _canonPivotPoint.eulerAngles;
         set => _canonPivotPoint.eulerAngles = value;
     }
+    private bool _isTrajectoryTracePointsResetted;
     public bool IsApplyingForce
     {
         get => _shoot._isApplyingForce;
         set => _shoot._isApplyingForce = value;
     }
     private bool _isSandbagsTriggered;
-
 
     public Action<bool> OnCanonRotation;
     internal Action<bool> OnApplyingForce;
@@ -67,6 +68,7 @@ public class ShootController : BaseShootController
     {
         base.Awake();
         _tankController = Get<TankController>.From(gameObject);
+        _tankMovement = Get<TankMovement>.From(gameObject);
         _rigidBody = GetComponent<Rigidbody>();
         _playerTurn = GetComponent<PlayerTurn>();
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
@@ -98,6 +100,25 @@ public class ShootController : BaseShootController
         }
     }
 
+    private void FixedUpdate()
+    {
+        ResetTrajectoryTracePoints();
+    }
+
+    private void ResetTrajectoryTracePoints()
+    {
+        if (!_isTrajectoryTracePointsResetted)
+        {
+            if (_tankController.BasePlayer != null && _playerTurn.IsMyTurn)
+            {
+                if (_tankMovement.Direction != 0 || Direction != 0)
+                {
+                    UpdateTrajectoryTracePoints(true);
+                }
+            }
+        }
+    }
+
     private void OnVerticalJoystick(float value)
     {
         Direction = -value;
@@ -126,7 +147,14 @@ public class ShootController : BaseShootController
         {
             Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => ShootBullet(CurrentForce), () => ShootBulletRPC(CurrentForce));
             AmmoUpdate();
+            UpdateTrajectoryTracePoints(false);
         }
+    }
+
+    private void UpdateTrajectoryTracePoints(bool isResetted)
+    {
+        _isTrajectoryTracePointsResetted = isResetted;
+        _trajectory.UpdateTrajectoryTrace(isResetted);
     }
 
     private void ApplyForce()
