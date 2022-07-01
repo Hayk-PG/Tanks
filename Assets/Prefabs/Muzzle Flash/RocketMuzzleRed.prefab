@@ -19333,6 +19333,7 @@ GameObject:
   - component: {fileID: 3148402600436799548}
   - component: {fileID: 2126075999464794345}
   - component: {fileID: 6200523312454495702}
+  - component: {fileID: 5302098601447053926}
   m_Layer: 0
   m_Name: RocketMuzzleRed
   m_TagString: Untagged
@@ -24180,7 +24181,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 1b7f3977b3c78374c95417fcbd3d2b48, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -24265,3 +24266,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5302098601447053926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2986774794284522754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12035b575689ae740afe6bd7fe065adf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _minPitch: 0.75
+  _maxPitch: 1.25
+  _minVolume: 0.75
+  _maxVolume: 1
