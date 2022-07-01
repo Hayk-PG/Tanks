@@ -60,7 +60,6 @@ public class ShootController : BaseShootController
     private bool _isSandbagsTriggered;
 
     public Action<bool> OnCanonRotation;
-    internal Action<bool> OnApplyingForce;
     internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
    
 
