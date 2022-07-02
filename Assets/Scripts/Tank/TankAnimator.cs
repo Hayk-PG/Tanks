@@ -12,9 +12,9 @@ public class TankAnimator : MonoBehaviour
 
     private void Awake()
     {
-        _baseShootController = Get<BaseShootController>.From(gameObject);
-        _baseTankMovement = Get<BaseTankMovement>.From(gameObject);
-        _bodyAnimator = Get<Animator>.From(transform.Find("Body").gameObject);
+        //_baseShootController = Get<BaseShootController>.From(gameObject);
+        //_baseTankMovement = Get<BaseTankMovement>.From(gameObject);
+        //_bodyAnimator = Get<Animator>.From(transform.Find("Body").gameObject);
     }
 
     private void OnEnable()
