@@ -11,6 +11,8 @@ public class TankSciptableComponents : ScriptableComponents
     private Rigidbody _rigidbody;
     private WheelColliderController _wheelColliderController;
     private WheelCollider _wheelCollider;
+    private Animator _bodyAnimator;
+
 
     public override void OnClickGetComponents()
     {
@@ -20,6 +22,7 @@ public class TankSciptableComponents : ScriptableComponents
         _rigidbody = Get<Rigidbody>.From(_componentsHolder);
         _wheelColliderController = Get<WheelColliderController>.FromChild(_componentsHolder);
         _wheelCollider = Get<WheelCollider>.FromChild(_wheelColliderController.gameObject);
+        _bodyAnimator = Get<Animator>.From(_componentsHolder.transform.Find("Body").gameObject);
 
         EditorUtility.SetDirty(this);
     }
@@ -33,6 +36,7 @@ public class TankSciptableComponents : ScriptableComponents
             AddMeshCollider();
             AddRootScripts();
             AddWheelColliderController();
+            AddAnimator();
         }
     }
 
@@ -100,6 +104,20 @@ public class TankSciptableComponents : ScriptableComponents
             if (wheel.GetComponent(wheelColliderType) == null) ComponentUtility.PasteComponentAsNew(wheel.gameObject);
             if (wheel.GetComponent(wheelColliderType) != null) ComponentUtility.PasteComponentValues(wheel.GetComponent(wheelColliderType));
         });
+    }
+
+    private void AddAnimator()
+    {
+        if (_bodyAnimator != null)
+        {
+            ComponentUtility.CopyComponent(_bodyAnimator);
+            GameObject body = _target.transform.Find("Body").gameObject;
+
+            if (Get<Animator>.From(body) != null)
+                ComponentUtility.PasteComponentValues(Get<Animator>.From(body));
+            else
+                ComponentUtility.PasteComponentAsNew(body);
+        }            
     }
 }
 #endif
