@@ -2,15 +2,15 @@
 
 public partial class PlayerDeployProps : MonoBehaviour
 {
-    private TankController _tankController;
-    private PlayerTurn _playerTurn;
-    private PropsTabCustomization _propsTabCustomization;
+    protected TankController _tankController;
+    protected PlayerTurn _playerTurn;
+    protected PropsTabCustomization _propsTabCustomization;
     private TilesData _tilesData;
-    private PhotonPlayerDeployPropsRPC _photonPlayerDeployRPC;
+    protected PhotonPlayerDeployPropsRPC _photonPlayerDeployRPC;
 
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
@@ -18,18 +18,18 @@ public partial class PlayerDeployProps : MonoBehaviour
         _tilesData = FindObjectOfType<TilesData>();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         _tankController.OnInitialize += OnInitialize;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
         _propsTabCustomization.OnInstantiateSandbags -= OnInstantiateSandbags;
     }
 
-    private void OnInitialize()
+    protected virtual void OnInitialize()
     {
         _propsTabCustomization.OnInstantiateSandbags += OnInstantiateSandbags;
     }

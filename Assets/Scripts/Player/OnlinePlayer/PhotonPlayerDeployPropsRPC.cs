@@ -13,4 +13,15 @@ public class PhotonPlayerDeployPropsRPC : PhotonPlayerBaseRPC
     {
         _photonPlayerTankController?._playerDeployProps.Sandbags(isPlayer1, transformPosition);
     }
+
+    public void CalShieldsActivityRPC(int playerIndex)
+    {
+        _photonPlayerController.PhotonView.RPC("ShieldsActivityRPC", RpcTarget.AllViaServer, playerIndex);
+    }
+
+    [PunRPC]
+    private void ShieldsActivityRPC(int playerIndex)
+    {
+        _photonPlayerTankController?._playerShields.ActivateShields(playerIndex);
+    }
 }

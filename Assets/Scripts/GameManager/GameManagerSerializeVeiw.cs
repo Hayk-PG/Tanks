@@ -7,6 +7,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
     private WindSystemController _windSystemController;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
     private TurnTimer _turnTimer;
+    private GlobalActivityTimer _globalActivtyTimer;
 
     private void Awake()
     {
@@ -14,6 +15,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
         _windSystemController = Get<WindSystemController>.From(gameObject);
         _gameManagerBulletSerializer = Get<GameManagerBulletSerializer>.From(gameObject);
         _turnTimer = Get<TurnTimer>.From(gameObject);
+        _globalActivtyTimer = Get<GlobalActivityTimer>.From(gameObject);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -37,6 +39,9 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             stream.SendNext(_turnTimer.IconPlayer1Alpha);
             stream.SendNext(_turnTimer.IconPlayer2Alpha);
             stream.SendNext(_turnTimer.IsTurnChanged);
+
+            stream.SendNext(_globalActivtyTimer.PlayersActiveShieldsTimer[0]);
+            stream.SendNext(_globalActivtyTimer.PlayersActiveShieldsTimer[1]);
         }
         else
         {
@@ -60,6 +65,9 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             _turnTimer.IconPlayer1Alpha = (float)stream.ReceiveNext();
             _turnTimer.IconPlayer2Alpha = (float)stream.ReceiveNext();
             _turnTimer.IsTurnChanged = (bool)stream.ReceiveNext();
+
+            _globalActivtyTimer.PlayersActiveShieldsTimer[0] = (int)stream.ReceiveNext();
+            _globalActivtyTimer.PlayersActiveShieldsTimer[1] = (int)stream.ReceiveNext();
         }
     }    
 }

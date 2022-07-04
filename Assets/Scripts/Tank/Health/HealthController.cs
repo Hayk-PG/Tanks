@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamage
 {
+    private VehiclePool _vehiclePool;
+    private PlayerShields _playerShields;
+
     [SerializeField] private int _currentHealth;
     [SerializeField][Range(0, 100)] private int _armor;
     private int _minHealth = 0;
@@ -17,8 +20,7 @@ public class HealthController : MonoBehaviour, IDamage
         get => _armor;
         set => _armor = value;
     }
-
-    private VehiclePool _vehiclePool; 
+  
     public Action<int> OnTakeDamage { get; set; }
     public Action<int> OnUpdateHealthBar { get; set; }
 
@@ -26,15 +28,19 @@ public class HealthController : MonoBehaviour, IDamage
     {
         Health = _maxHealth;
         _vehiclePool = Get<VehiclePool>.FromChild(gameObject);
+        _playerShields = Get<PlayerShields>.From(gameObject);
     }
 
     public void Damage(int damage)
     {
-        Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
-        _vehiclePool.Pool(0, null);
+        if (_playerShields == null || !_playerShields.IsShieldActive)
+        {
+            Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
+            _vehiclePool.Pool(0, null);
 
-        OnUpdateHealthBar?.Invoke(Health);       
-        OnTakeDamage?.Invoke(DamageValue(DamageValue(damage)));
+            OnUpdateHealthBar?.Invoke(Health);
+            OnTakeDamage?.Invoke(DamageValue(DamageValue(damage)));
+        }
     }
 
     public int DamageValue(int damage)
