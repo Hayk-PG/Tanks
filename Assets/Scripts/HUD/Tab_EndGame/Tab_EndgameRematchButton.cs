@@ -19,6 +19,11 @@ public class Tab_EndgameRematchButton : MonoBehaviour
         get => Get<Text>.FromChild(_button.gameObject).color;
         set => Get<Text>.FromChild(_button.gameObject).color = value;
     }
+    private string ButtonText
+    {
+        get => Get<Text>.FromChild(_button.gameObject).text;
+        set => Get<Text>.FromChild(_button.gameObject).text = value;
+    }
     
     public Action OnRematch { get; set; }
 
@@ -54,8 +59,9 @@ public class Tab_EndgameRematchButton : MonoBehaviour
         });
     }
 
-    private void OnTimerEnd()
+    private void OnTimerEnd(string buttonText)
     {
+        ButtonText = buttonText;
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
     }
 }

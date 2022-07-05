@@ -8,14 +8,19 @@ public class Tab_EndgameTimer : MonoBehaviour
     [SerializeField] private Text _textTimer;
     private CanvasGroup _canvasGroup;
     private Tab_EndGame _tabEndGame;
-    private int _s = 30;
+    private int _seconds;
 
-    public Action OnTimerEnd { get; set; }
+    public Action<string> OnTimerEnd { get; set; }
 
     private void Awake()
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
         _tabEndGame = FindObjectOfType<Tab_EndGame>();
+    }
+
+    private void Start()
+    {
+        _seconds = MyPhotonNetwork.IsOfflineMode ? 5 : 30;
     }
 
     private void OnEnable()
@@ -36,16 +41,16 @@ public class Tab_EndgameTimer : MonoBehaviour
 
     private IEnumerator TimerCoroutine()
     {
-        while(_s > 0)
+        while(_seconds > 0)
         {
-            if (_s > 0) _s--;
-            if (_s <= 0)
+            if (_seconds > 0) _seconds--;
+            if (_seconds <= 0)
             {
                 GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
-                OnTimerEnd?.Invoke();
+                OnTimerEnd?.Invoke(MyPhotonNetwork.IsOfflineMode ? "Restart": "Rematch");
             }
 
-            _textTimer.text = _s.ToString("D2");
+            _textTimer.text = _seconds.ToString("D2");
             yield return new WaitForSeconds(1);
         }
     }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8013050927313243324}
   - component: {fileID: 8797092429362682868}
   - component: {fileID: 7973983126815807279}
+  - component: {fileID: 6339640248844814162}
   m_Layer: 0
   m_Name: OfflinePlayer
   m_TagString: Untagged
@@ -59,8 +60,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87804fa31b48fbb4ead1e061b7b1afc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tanks:
-  - {fileID: 839832236763414790, guid: 6a16bc98153c6a0428d2ed63e4fcf647, type: 3}
 --- !u!114 &8013050927313243324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,6 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e6948f501d5be4f9640c4d16cbc3e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tankController: {fileID: 0}
 --- !u!114 &8797092429362682868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,5 +95,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25c329b846c8333498d3a797c5ed7927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6339640248844814162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f2c3016d502fef4d97470ed59fc6d1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
