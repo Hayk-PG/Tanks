@@ -4,7 +4,6 @@ using UnityEngine;
 public class AITankMovement : BaseTankMovement
 {
     private AIActionPlanner _aiActionPlanner;
-    private VehicleRigidbodyPosition _vehicleRigidbodyPosition;
     private Vector3 _destination;
     private float _stuckTime;
 
@@ -18,7 +17,6 @@ public class AITankMovement : BaseTankMovement
     {
         base.Awake();
         _aiActionPlanner = Get<AIActionPlanner>.From(gameObject);
-        _vehicleRigidbodyPosition = Get<VehicleRigidbodyPosition>.From(gameObject);
 
         RigidbodyCenterOfMass();
     }
@@ -28,14 +26,20 @@ public class AITankMovement : BaseTankMovement
         OnLocalDelegatesSubscription();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         _aiActionPlanner.OnActionPlanner += OnGetDestination;
+        _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
    
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         _aiActionPlanner.OnActionPlanner -= OnGetDestination;
+        _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
 
     private void FixedUpdate()
@@ -158,5 +162,14 @@ public class AITankMovement : BaseTankMovement
     private bool IsVehicleStopped(float value) 
     {
         return value == 0;
+    }
+
+    protected override void OnAllowingPlayerToMoveOnlyFromLeftToRight(bool? mustMoveFromLeftToRightOnly)
+    {
+        if (mustMoveFromLeftToRightOnly.HasValue && mustMoveFromLeftToRightOnly.Value && Direction > 0 && _playerTurn.IsMyTurn)
+        {
+            Direction = 0;
+            Shoot?.Invoke();
+        }
     }
 }

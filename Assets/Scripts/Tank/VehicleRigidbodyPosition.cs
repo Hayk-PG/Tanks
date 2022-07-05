@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class VehicleRigidbodyPosition : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class VehicleRigidbodyPosition : MonoBehaviour
         get => _xPositionMaxLimit;
         private set => _xPositionMaxLimit = value;
     }
+
+    public Action<bool?> OnAllowingPlayerToMoveOnlyFromLeftToRight { get; set; }
 
 
     private void Awake()
@@ -102,15 +105,21 @@ public class VehicleRigidbodyPosition : MonoBehaviour
     private void XPositionLesser(Rigidbody rigidBody)
     {
         rigidBody.position = new Vector3(_xPositionMinLimit, rigidBody.position.y, 0);
+        rigidBody.velocity = new Vector3(0, rigidBody.velocity.y, 0);
+        OnAllowingPlayerToMoveOnlyFromLeftToRight?.Invoke(true);
     }
 
     private void XPositionGreater(Rigidbody rigidBody)
     {
         rigidBody.position = new Vector3(_xPositionMaxLimit, rigidBody.position.y, 0);
+        rigidBody.velocity = new Vector3(0, rigidBody.velocity.y, 0);
+        OnAllowingPlayerToMoveOnlyFromLeftToRight?.Invoke(false);
     }
 
     private void AtAllowedPosition(Rigidbody rigidBody)
     {
         rigidBody.position = new Vector3(rigidBody.position.x, rigidBody.position.y, 0);
+        rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y, 0);
+        OnAllowingPlayerToMoveOnlyFromLeftToRight?.Invoke(null);
     }
 }

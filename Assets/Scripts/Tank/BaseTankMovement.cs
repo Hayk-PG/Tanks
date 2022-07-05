@@ -17,6 +17,7 @@ public class BaseTankMovement : MonoBehaviour
     protected HealthController _healthController;
     protected WheelColliderController _wheelColliderController;   
     protected Raycasts _rayCasts;
+    protected VehicleRigidbodyPosition _vehicleRigidbodyPosition;
         
     protected bool _isOnRightSlope, _isOnLeftSlope;
     protected string[] _slopesNames;
@@ -30,6 +31,7 @@ public class BaseTankMovement : MonoBehaviour
     }
     public virtual float Direction { get; set; }     
     protected float InitialRotationYAxis { get; set; }
+    protected float _speedBlocker;
 
     internal Action<float> OnVehicleMove { get; set; }
     public Action<Rigidbody> OnRigidbodyPosition { get; set; }
@@ -43,8 +45,19 @@ public class BaseTankMovement : MonoBehaviour
         _healthController = Get<HealthController>.From(gameObject);
         _wheelColliderController = Get<WheelColliderController>.FromChild(gameObject);
         _rayCasts = Get<Raycasts>.FromChild(gameObject);
-        
+        _vehicleRigidbodyPosition = Get<VehicleRigidbodyPosition>.From(gameObject);
+
         Initialize();
+    }
+
+    protected virtual void OnEnable()
+    {
+        _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
+    }
+
+    protected virtual void OnDisable()
+    {
+        _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
 
     void Initialize()
@@ -57,5 +70,10 @@ public class BaseTankMovement : MonoBehaviour
 
         _vectorRight = InitialRotationYAxis > 0 ? Vector3.right : Vector3.left;
         _vectorLeft = InitialRotationYAxis > 0 ? Vector3.left : Vector3.right;
+    }
+
+    protected virtual void OnAllowingPlayerToMoveOnlyFromLeftToRight(bool? mustMoveFromLeftToRightOnly)
+    {
+
     }
 }

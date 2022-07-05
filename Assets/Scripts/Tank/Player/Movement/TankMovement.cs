@@ -30,14 +30,18 @@ public class TankMovement : BaseTankMovement
         _tankController = Get<TankController>.From(gameObject);
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         _tankController.OnHorizontalJoystick += OnHorizontalJoystick;
         if (_fuel != null) _fuel.OnFuelValue -= OnFuelValue;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         _tankController.OnHorizontalJoystick -= OnHorizontalJoystick;
     }
 
@@ -69,7 +73,7 @@ public class TankMovement : BaseTankMovement
 
     private void MotorTorque()
     {
-        _wheelColliderController.MotorTorque(Direction * Speed * SpeedInSandbags * Time.fixedDeltaTime);
+        _wheelColliderController.MotorTorque(Direction * Speed * SpeedInSandbags * _speedBlocker * Time.fixedDeltaTime);
         _wheelColliderController.RotateWheels();
 
         OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
@@ -135,5 +139,27 @@ public class TankMovement : BaseTankMovement
     public void OnEnteredSandbagsTrigger(bool isEntered)
     {
         _isSandbagsTriggered = isEntered;
+    }
+
+    protected override void OnAllowingPlayerToMoveOnlyFromLeftToRight(bool? mustMoveFromLeftToRightOnly)
+    {
+        if (mustMoveFromLeftToRightOnly.HasValue && mustMoveFromLeftToRightOnly.Value == true && _playerTurn.MyTurn == TurnState.Player2)
+        {
+            if (Direction > 0)
+                _speedBlocker = 0;
+            else
+                _speedBlocker = 1;
+        }
+
+        if (mustMoveFromLeftToRightOnly.HasValue && mustMoveFromLeftToRightOnly.Value == false && _playerTurn.MyTurn == TurnState.Player1)
+        {
+            if (Direction > 0)
+                _speedBlocker = 0;
+            else
+                _speedBlocker = 1;
+        }
+
+        if (!mustMoveFromLeftToRightOnly.HasValue)
+            _speedBlocker = 1;
     }
 }

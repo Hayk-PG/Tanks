@@ -45,6 +45,9 @@ public class HealthController : MonoBehaviour, IDamage
 
     public int DamageValue(int damage)
     {
-        return damage / 100 * (100 - Armor);
+        float d = damage;
+        float d1 = d / 100;
+        float a = 100 - Armor;
+        return Mathf.FloorToInt(d1 * a);        
     }
 }
