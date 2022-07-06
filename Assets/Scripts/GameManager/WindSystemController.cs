@@ -36,7 +36,16 @@ public class WindSystemController : MonoBehaviourPun
     }
 
     public void StartWindCoroutine()
-    {       
+    {
+        if (MyPhotonNetwork.IsOfflineMode && Data.Manager.IsWindOn || !MyPhotonNetwork.IsOfflineMode && (bool)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.MapWind])
+        {
+            EnableWind();
+        }
+    }
+
+    public void EnableWind()
+    {
+        print("Wind is on");
         StopWindCoroutine();
         _windCoroutine = WindCoroutine(!_gameManager.IsGameEnded);
         StartCoroutine(_windCoroutine);

@@ -55,7 +55,7 @@ public class TankMovement : BaseTankMovement
 
     private void FixedUpdate()
     {
-        Move();
+        Move();      
     }
 
     public void Move()
@@ -102,7 +102,10 @@ public class TankMovement : BaseTankMovement
 
     private void RigidbodyEulerAngles()
     {
-        _rigidBody.transform.eulerAngles = new Vector3(_rigidBody.transform.eulerAngles.x, InitialRotationYAxis, 0);
+        RotationXAxis = Converter.AngleConverter(_rigidBody.transform.eulerAngles.x) >= 65 || Converter.AngleConverter(_rigidBody.transform.eulerAngles.x) <= -65 ?
+                        0 : _rigidBody.transform.eulerAngles.x;
+
+        _rigidBody.transform.eulerAngles = new Vector3(RotationXAxis, InitialRotationYAxis, 0);
     }
 
     private void RigidbodyCenterOfMass()

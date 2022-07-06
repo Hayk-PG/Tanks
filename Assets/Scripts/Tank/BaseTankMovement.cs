@@ -29,8 +29,9 @@ public class BaseTankMovement : MonoBehaviour
         get => _currentSpeed;
         set => _currentSpeed = value / 100 * _healthController.Health;
     }
-    public virtual float Direction { get; set; }     
-    protected float InitialRotationYAxis { get; set; }
+    public virtual float Direction { get; set; }
+    protected float RotationXAxis { get; set; }
+    protected float InitialRotationYAxis { get; set; }   
     protected float _speedBlocker;
 
     internal Action<float> OnVehicleMove { get; set; }
