@@ -16,6 +16,7 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
     internal Rigidbody _tankRigidbody;
     internal ShootController _shootController;
     internal PlayerTurn _playerTurn;
+    internal PlayerHUD _playerHud;
     internal HealthController _healthController;
     internal HealthBar _healthBar;
     internal PlayerAmmoType _playerAmmoType;
@@ -37,6 +38,7 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
         _tankRigidbody = OwnTank?.GetComponent<Rigidbody>();
         _shootController = OwnTank?.GetComponent<ShootController>();
         _playerTurn = OwnTank?.GetComponent<PlayerTurn>();
+        _playerHud = OwnTank?.GetComponentInChildren<PlayerHUD>();
         _healthController = OwnTank?.GetComponent<HealthController>();
         _healthBar = OwnTank?.GetComponentInChildren<HealthBar>();
         _playerAmmoType = OwnTank?.GetComponent<PlayerAmmoType>();
