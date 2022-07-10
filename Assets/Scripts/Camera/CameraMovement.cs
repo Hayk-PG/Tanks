@@ -39,6 +39,12 @@ public class CameraMovement : MonoBehaviour
     private Checker _isCameraSizeSet;
     private Checker _canZoom;
 
+    [Header("UpdatedStabilizer")]
+    [SerializeField] private float _updatedStabilizerSmoothTime;
+    [SerializeField] private float _updatedStabilizerMaxSpeed;
+    private Vector3 _updatedStabilizerCurrentVelocity;
+    
+
     private float CameraWidth => _mainCamera.orthographicSize * _mainCamera.aspect;
 
 
@@ -73,18 +79,23 @@ public class CameraMovement : MonoBehaviour
     {
         Conditions<bool>.Compare(_cameraTouchMovement.IsCameraMoving, UpdateStabilizer, Stabilizer);
 
-        if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + _updatedStabilizer, _followLerp * Time.fixedDeltaTime);
+        if (_direction != _target.position) _direction = Vector3.Lerp(transform.localPosition, _target.position + new Vector3(_updatedStabilizer.x, _updatedStabilizer.y - 1, _updatedStabilizer.z), _followLerp * Time.fixedDeltaTime);
         if (_currentSize != _givenCameraSize && _canZoom()) _currentSize = Mathf.Lerp(_mainCamera.orthographicSize, _givenCameraSize, _followLerp * Time.deltaTime);
     }
 
     private void UpdateStabilizer()
     {
-        _updatedStabilizer += _cameraTouchMovement.TouchPosition;
+        if (_target != null)
+        {
+            Vector3 newPosition = _cameraTouchMovement.TouchPosition - _target.position;
+            newPosition.z = 0;
+            _updatedStabilizer = newPosition;
+        }
     }
 
     private void Stabilizer()
     {
-        _updatedStabilizer = _stabilizer;
+        _updatedStabilizer = new Vector3(_stabilizer.x, _stabilizer.y + 1, _stabilizer.z);
     }
 
     private void FollowTheTarget()

@@ -3,6 +3,7 @@
 public class EnemyPlayerIconController : MonoBehaviour
 {
     private TankController _tankController;
+    private PlayerTurn _playerTurn;
     private GameManager _gameManager;
     private EnemyPlayerIcon _enemyPlayerIcon;
 
@@ -10,6 +11,7 @@ public class EnemyPlayerIconController : MonoBehaviour
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
+        _playerTurn = Get<PlayerTurn>.From(gameObject);
         _gameManager = FindObjectOfType<GameManager>();
         _enemyPlayerIcon = FindObjectOfType<EnemyPlayerIcon>();
     }
@@ -28,8 +30,9 @@ public class EnemyPlayerIconController : MonoBehaviour
     {
         if(_tankController.BasePlayer != null)
         {
-            Transform enemyPlayer = name == Names.Tank_FirstPlayer ? GameObject.Find(Names.Tank_SecondPlayer)?.transform :
-                                    name == Names.Tank_SecondPlayer ? GameObject.Find(Names.Tank_FirstPlayer)?.transform : null;
+            Transform enemyPlayer = _playerTurn.MyTurn == TurnState.Player1 ?
+            GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(player => player.MyTurn == TurnState.Player2).transform :
+            GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(player => player.MyTurn == TurnState.Player1).transform;
 
             _enemyPlayerIcon?.SetInitialCoordinates(enemyPlayer);
         }

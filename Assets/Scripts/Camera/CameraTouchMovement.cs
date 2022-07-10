@@ -1,40 +1,38 @@
 ﻿using UnityEngine;
-using System.Linq;
 using UnityEngine.EventSystems;
 
 public class CameraTouchMovement : MonoBehaviour
 {
+    private Camera _mainCamera;
+
     private delegate bool Checker();
     private delegate float Value();
 
     private Checker _touchPhaseMoved;
-    private Checker __touchInputReleased;
+    private Checker _touchInputReleased;
 
-    private Value _mouseX, _mouseY;
+    private int _fingerId;
 
     public Vector3 TouchPosition { get; set; }
     public bool IsCameraMoving { get; set; }
-
     private float _cameraMovementResetTimer;
 
 
 
     private void Awake()
     {
-        _mouseX = delegate { return Input.GetAxis("Mouse X") * 3 * Time.deltaTime; };
-        _mouseY = delegate { return Input.GetAxis("Mouse Y") * 3 * Time.deltaTime; };
+        _mainCamera = Get<Camera>.From(gameObject);
 
         _touchPhaseMoved = delegate 
         {
-            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+            if (Input.GetMouseButton(0))
                 return !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
             else
                 return false;
         };
-
-        __touchInputReleased = delegate
+        _touchInputReleased = delegate
         {
-            return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended;
+            return !Input.GetMouseButton(0);
         };
     }
 
@@ -43,15 +41,38 @@ public class CameraTouchMovement : MonoBehaviour
         TouchMovement();
     }
 
+    private bool IsPointerOnUI()
+    {
+        foreach (var touch in Input.touches)
+        {
+            _fingerId = touch.fingerId;
+        }
+
+        return EventSystem.current.IsPointerOverGameObject(_fingerId);
+    }
+
+    private Vector3 MousePosition()
+    {
+        return CameraPoint.WorldPoint(_mainCamera, Input.mousePosition);
+    }
+
     private void TouchMovement()
     {
-        Conditions<bool>.Compare(_touchPhaseMoved(), OnMouseMovement, OnStopMouseMovement);
+        Conditions<bool>.Compare(Input.GetMouseButton(0), OnMouseMovement, OnStopMouseMovement);
     }
 
     private void OnMouseMovement()
     {
-        IsCameraMoving = true;
-        TouchPosition = new Vector3(Mathf.Clamp(_mouseX(), -1, 1), Mathf.Clamp(_mouseY(), -1, 1), 0); 
+        if (PlatformChecker.IsEditor || !PlatformChecker.IsEditor && !IsPointerOnUI())
+        {
+            IsCameraMoving = true;
+            TouchPosition = MousePosition();
+        }
+
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            print("IsPointerOnUI");
+        }
     }
 
     private void OnStopMouseMovement()
@@ -60,14 +81,12 @@ public class CameraTouchMovement : MonoBehaviour
         {
             Stop();
         }
-
-        TouchPosition = Vector3.zero;
     }
 
     private void Stop()
     {
-        Conditions<bool>.Compare(__touchInputReleased(), ()=> _cameraMovementResetTimer = 0, () => _cameraMovementResetTimer += Time.deltaTime);
-        Conditions<float>.Compare(_cameraMovementResetTimer, 1, null, ResetTouchMovementTimer, null);
+        Conditions<bool>.Compare(!_touchInputReleased(), ()=> _cameraMovementResetTimer = 0, () => _cameraMovementResetTimer += Time.deltaTime);
+        Conditions<float>.Compare(_cameraMovementResetTimer, 3, null, ResetTouchMovementTimer, null);
     }
 
     private void ResetTouchMovementTimer()
