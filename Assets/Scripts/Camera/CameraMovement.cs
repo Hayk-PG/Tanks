@@ -89,7 +89,7 @@ public class CameraMovement : MonoBehaviour
         {
             Vector3 newPosition = _cameraTouchMovement.TouchPosition - _target.position;
             newPosition.z = 0;
-            _updatedStabilizer = newPosition;
+            _updatedStabilizer = Vector3.Lerp(_updatedStabilizer, newPosition, 5 * Time.fixedDeltaTime);
         }
     }
 
