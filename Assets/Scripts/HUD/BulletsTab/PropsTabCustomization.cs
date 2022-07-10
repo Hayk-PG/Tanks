@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
@@ -8,6 +9,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
 
     public Action OnInstantiateSandbags { get; set; }
     public Action OnActivateShields { get; set; }
+    public Action OnArtillery { get; set; }
 
 
 
@@ -43,11 +45,25 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
         if (button._properties.Title == "Shields")
             OnActivateShields?.Invoke();
 
+        if (button._properties.Title == "Artillery")
+            OnArtillery?.Invoke();
+
         OnAmmoTypeController?.Invoke();
     }
 
     protected override void DisplayPointsToUnlock(int index, int playerPoints, int value)
     {
         _instantiatedButtons[index].DisplayPointsToUnlock(playerPoints, 0);
+    }
+
+    public override void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount)
+    {
+        if (_instantiatedButtons != null)
+        {
+            for (int i = 0; i < _instantiatedButtons.Count; i++)
+            {
+                DisplayPointsToUnlock(i, playerPoints, 0);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class CameraTouchMovement : MonoBehaviour
 {
     private Camera _mainCamera;
+    private BaseRemoteControlTarget[] _baseRemoteControlTargets;
 
     private delegate bool Checker();
     private delegate float Value();
@@ -15,6 +16,7 @@ public class CameraTouchMovement : MonoBehaviour
 
     public Vector3 TouchPosition { get; set; }
     public bool IsCameraMoving { get; set; }
+    private bool CanMoveCamera { get; set; }
     private float _cameraMovementResetTimer;
 
 
@@ -22,6 +24,7 @@ public class CameraTouchMovement : MonoBehaviour
     private void Awake()
     {
         _mainCamera = Get<Camera>.From(gameObject);
+        _baseRemoteControlTargets = FindObjectsOfType<BaseRemoteControlTarget>();
 
         _touchPhaseMoved = delegate 
         {
@@ -34,6 +37,16 @@ public class CameraTouchMovement : MonoBehaviour
         {
             return !Input.GetMouseButton(0);
         };
+    }
+
+    private void OnEnable()
+    {
+        GlobalFunctions.Loop<BaseRemoteControlTarget>.Foreach(_baseRemoteControlTargets, rcar => { rcar.OnRemoteControlTargetActivity += OnRemoteControlTargetActivity; });
+    }
+
+    private void OnDisable()
+    {
+        GlobalFunctions.Loop<BaseRemoteControlTarget>.Foreach(_baseRemoteControlTargets, rcar => { rcar.OnRemoteControlTargetActivity -= OnRemoteControlTargetActivity; });
     }
 
     private void Update()
@@ -58,12 +71,18 @@ public class CameraTouchMovement : MonoBehaviour
 
     private void TouchMovement()
     {
-        Conditions<bool>.Compare(Input.GetMouseButton(0), OnMouseMovement, OnStopMouseMovement);
+        Conditions<bool>.Compare(Input.GetMouseButton(0) && CanMoveCamera, OnMouseMovement, OnStopMouseMovement);
     }
 
     private void OnMouseMovement()
     {
-        if (PlatformChecker.IsEditor || !PlatformChecker.IsEditor && !IsPointerOnUI())
+        if (!PlatformChecker.IsEditor && !IsPointerOnUI())
+        {
+            IsCameraMoving = true;
+            TouchPosition = MousePosition();
+        }
+
+        if (PlatformChecker.IsEditor && !EventSystem.current.IsPointerOverGameObject())
         {
             IsCameraMoving = true;
             TouchPosition = MousePosition();
@@ -93,5 +112,10 @@ public class CameraTouchMovement : MonoBehaviour
     {
         IsCameraMoving = false;
         _cameraMovementResetTimer = 0;
+    }
+
+    private void OnRemoteControlTargetActivity(bool isActive)
+    {
+        CanMoveCamera = !isActive;
     }
 }

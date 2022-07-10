@@ -5,7 +5,7 @@ public class PlayerArtillery : MonoBehaviour
 {
     private TankController _tankController;
     private IScore _iScore;
-    private Tab_RemoteControl _tabRemoteControl;
+    private RemoteControlArtilleryTarget _remoteControlArtilleryTargets;
     [SerializeField] private ArtilleryBulletController _artilleryPrefab;
 
 
@@ -13,7 +13,7 @@ public class PlayerArtillery : MonoBehaviour
     {
         _tankController = Get<TankController>.From(gameObject);
         _iScore = Get<IScore>.From(gameObject);
-        _tabRemoteControl = FindObjectOfType<Tab_RemoteControl>();
+        _remoteControlArtilleryTargets = FindObjectOfType<RemoteControlArtilleryTarget>();
     }
 
     private void OnEnable()
@@ -24,12 +24,12 @@ public class PlayerArtillery : MonoBehaviour
     private void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
-        _tabRemoteControl.OnGiveCoordinates -= OnGiveCoordinates;
+        _remoteControlArtilleryTargets.OnSet -= OnGiveCoordinates;
     }
 
     private void OnInitialize()
     {
-        _tabRemoteControl.OnGiveCoordinates += OnGiveCoordinates;
+        _remoteControlArtilleryTargets.OnSet += OnGiveCoordinates;
     }
 
     private void OnGiveCoordinates(Vector3 coordinate)
