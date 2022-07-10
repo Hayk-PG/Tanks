@@ -50,17 +50,17 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
         Invoke("ActivateWindForce", 0.5f);
     }
    
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         TurnController.OnTurnChanged += OnTurnChanged;
     }
-    
-    private void OnDisable()
+
+    protected virtual void OnDisable()
     {
         TurnController.OnTurnChanged -= OnTurnChanged;
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         ExplodeOnLimit();
         BulletVelocity();

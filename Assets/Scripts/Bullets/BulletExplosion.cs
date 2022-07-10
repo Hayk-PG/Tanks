@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class BulletExplosion : GetBulletController, IBulletExplosion
 {
-    private CameraShake _cameraShake;
+    protected CameraShake _cameraShake;
 
     public Action<IScore> OnBulletExplosion { get; set; }
     public Action OnBulletExplosionWithoutHitting { get; set; }
@@ -18,13 +18,13 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
         _cameraShake = FindObjectOfType<CameraShake>();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (_iBulletCollision != null) _iBulletCollision.OnExplodeOnCollision = OnExplodeOnCollision;
         if (_iBulletLimit != null) _iBulletLimit.OnExplodeOnLimit = OnExplodeOnLimit;
     }
 
-    private void OnExplodeOnCollision(IScore ownerScore)
+    protected virtual void OnExplodeOnCollision(IScore ownerScore)
     {
         OnBulletExplosion?.Invoke(ownerScore);
         OnCameraShake?.Invoke();
@@ -42,7 +42,7 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
         _cameraShake.BigShake();
     }
 
-    private void OnExplodeOnLimit(bool isTrue)
+    protected virtual void OnExplodeOnLimit(bool isTrue)
     {
         if (isTrue)
         {
@@ -51,9 +51,16 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
         }
     }
 
-    private void DestroyBullet()
+    protected virtual void SetTurnToTransition()
     {
         _iTurnController.TurnController.SetNextTurn(TurnState.Transition);
+    }
+
+    protected virtual void DestroyBullet()
+    {
+        SetTurnToTransition();
         Destroy(gameObject);
     }
+
+
 }
