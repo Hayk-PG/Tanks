@@ -4,12 +4,15 @@ using UnityEngine;
 public class BaseRemoteControlTarget : MonoBehaviour
 {
     [SerializeField] protected RectTransform _canvasRectransform;
+    [SerializeField] protected CanvasGroup _mainTabCanvasGroup;
+
     protected RectTransform _rectTransform;
     protected Animator _animator;
     protected CanvasGroup _canvasGroup;
     protected Ray _ray;
     protected RaycastHit _raycastHit;
     protected Camera _mainCamera;
+    protected TurnController _turnController;
     protected bool _isPlayingAnimation;
 
     public Action<bool> OnRemoteControlTargetActivity { get; set; }
@@ -22,7 +25,18 @@ public class BaseRemoteControlTarget : MonoBehaviour
         _rectTransform = Get<RectTransform>.From(gameObject);
         _animator = Get<Animator>.From(gameObject);
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _mainCamera = Camera.main;      
+        _mainCamera = Camera.main;
+        _turnController = FindObjectOfType<TurnController>();
+    }
+
+    private void OnEnable()
+    {
+        _turnController.OnTurnChanged += OnTurnChanged;
+    }
+
+    private void OnDisable()
+    {
+        _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
     protected virtual void Update()
@@ -45,11 +59,18 @@ public class BaseRemoteControlTarget : MonoBehaviour
     public virtual void RemoteControlTargetActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+        GlobalFunctions.CanvasGroupActivity(_mainTabCanvasGroup, !isActive);
         OnRemoteControlTargetActivity?.Invoke(isActive);
     }
 
     public void OnAnimationEnd()
     {
         OnSet?.Invoke(_raycastHit.point);
+        RemoteControlTargetActivity(false);
+    }
+
+    private void OnTurnChanged(TurnState turnState, CameraMovement cameraMovement)
+    {
+        RemoteControlTargetActivity(false);
     }
 }

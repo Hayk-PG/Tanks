@@ -199,6 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canvasRectransform: {fileID: 0}
+  _mainTabCanvasGroup: {fileID: 0}
 --- !u!1 &1959679760336552842
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +289,6 @@ GameObject:
   - component: {fileID: 9075475616012094973}
   - component: {fileID: 9075475616012094974}
   - component: {fileID: 9075475616012094975}
-  - component: {fileID: 773592761451254416}
   m_Layer: 5
   m_Name: Tab_RemoteControl
   m_TagString: Untagged
@@ -364,16 +364,3 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &773592761451254416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9075475616012094961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 848e91a29f5ec0749abd7c46145f4a93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _remoteControlArtilleryTarget: {fileID: 4351602415748398744}

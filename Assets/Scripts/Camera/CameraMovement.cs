@@ -39,11 +39,6 @@ public class CameraMovement : MonoBehaviour
     private Checker _isCameraSizeSet;
     private Checker _canZoom;
 
-    [Header("UpdatedStabilizer")]
-    [SerializeField] private float _updatedStabilizerSmoothTime;
-    [SerializeField] private float _updatedStabilizerMaxSpeed;
-    private Vector3 _updatedStabilizerCurrentVelocity;
-    
 
     private float CameraWidth => _mainCamera.orthographicSize * _mainCamera.aspect;
 

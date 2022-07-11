@@ -45,7 +45,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
         if (button._properties.Title == "Shields")
             OnActivateShields?.Invoke();
 
-        if (button._properties.Title == "Artillery")
+        if (button._properties.Title == "60mm Mortar Support")
             OnArtillery?.Invoke();
 
         OnAmmoTypeController?.Invoke();
