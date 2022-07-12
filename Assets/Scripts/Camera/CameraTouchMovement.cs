@@ -5,14 +5,16 @@ public class CameraTouchMovement : MonoBehaviour
 {
     private Camera _mainCamera;
     private BaseRemoteControlTarget[] _baseRemoteControlTargets;
-
+    private FixedJoystick _horizontalJoystick;
+    private FixedJoystick _verticalJoystick;
+    
+    public Vector3 TouchPosition { get; set; }
+    public bool IsCameraMoving { get; set; }
     private bool _canCameraMove = true;
+    private bool _isFixedJoysitckMoving;  
     private float _cameraMovementResetTimer;
     private int _fingerId;
 
-    public Vector3 TouchPosition { get; set; }
-    public bool IsCameraMoving { get; set; }
-    
 
 
 
@@ -20,6 +22,8 @@ public class CameraTouchMovement : MonoBehaviour
     {
         _mainCamera = Get<Camera>.From(gameObject);
         _baseRemoteControlTargets = FindObjectsOfType<BaseRemoteControlTarget>();
+        _horizontalJoystick = GameObject.Find("HorizontalJoystick").GetComponent<FixedJoystick>();
+        _verticalJoystick = GameObject.Find("VerticalJoystick").GetComponent<FixedJoystick>();
     }
 
     private void OnEnable()
@@ -34,6 +38,7 @@ public class CameraTouchMovement : MonoBehaviour
 
     private void Update()
     {
+        GetMovingFixedJoysitcksCount();
         TouchMovement();
     }
 
@@ -53,6 +58,13 @@ public class CameraTouchMovement : MonoBehaviour
             return EventSystem.current.IsPointerOverGameObject();
         }
     }
+    private void GetMovingFixedJoysitcksCount()
+    {
+        if (_horizontalJoystick.Horizontal != 0 || _verticalJoystick.Vertical != 0)
+            _isFixedJoysitckMoving = true;
+        else if (_horizontalJoystick.Horizontal == 0 && _verticalJoystick.Vertical == 0)
+            _isFixedJoysitckMoving = false;
+    }
 
     private Vector3 MousePosition()
     {
@@ -61,7 +73,7 @@ public class CameraTouchMovement : MonoBehaviour
 
     private void TouchMovement()
     {
-        Conditions<bool>.Compare(Input.GetMouseButton(0) && _canCameraMove && !IsPointerOnUI(), OnMouseMovement, OnStopMouseMovement);
+        Conditions<bool>.Compare(Input.GetMouseButton(0) && _canCameraMove && !IsPointerOnUI() && !_isFixedJoysitckMoving, OnMouseMovement, OnStopMouseMovement);
     }
 
     private void OnMouseMovement()
