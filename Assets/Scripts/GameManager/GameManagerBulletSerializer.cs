@@ -11,31 +11,31 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     }
 
 
-    public void CallOnCollisionRPC(Collision collision, IScore iScore, int destructDamage)
+    public void CallOnCollisionRPC(Collider collider, IScore iScore, int destructDamage)
     {
         if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
-            string collisionName = collision.collider.name;
+            string colliderName = collider.name;
             string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(score => score.GetComponent<IScore>() == iScore).name;
-            Vector3 collisionPosition = collision.collider.transform.position;
+            Vector3 colliderPosition = collider.transform.position;
 
-            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, collisionName, ownerName, collisionPosition, destructDamage);
+            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, colliderName, ownerName, colliderPosition, destructDamage);
         }
     }
 
     [PunRPC]
-    private void OnCollisionRPC(string collisionName, string ownerName, Vector3 collisionPosition, int destructDamage)
+    private void OnCollisionRPC(string colliderName, string ownerName, Vector3 colliderPosition, int destructDamage)
     {
-        GlobalFunctions.Loop<Collider>.Foreach(FindObjectsOfType<Collider>(), collision => 
+        GlobalFunctions.Loop<Collider>.Foreach(FindObjectsOfType<Collider>(), collider => 
         {
-            if (collision.name == collisionName && collision.transform.position == collisionPosition)
-                Get<IDestruct>.From(collision.gameObject)?.Destruct(destructDamage);
+            if (collider.name == colliderName && collider.transform.position == colliderPosition)
+                Get<IDestruct>.From(collider.gameObject)?.Destruct(destructDamage);
         });
 
         IScore iScore = GameObject.Find(ownerName)?.GetComponent<IScore>();
         iScore?.GetScore(10, null);
 
-        print("(BulletCollision) " + collisionName + "/" + ownerName + "/" + collisionPosition);
+        print("(BulletCollider) " + colliderName + "/" + ownerName + "/" + colliderPosition);
     }
 
     public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int scoreValue, int hitEnemyAndGetScoreValue)

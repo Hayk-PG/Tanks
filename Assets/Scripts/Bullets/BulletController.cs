@@ -6,7 +6,7 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     public Rigidbody RigidBody { get; protected set; }
     public IScore OwnerScore { get; set; }
 
-    public Action<Collision, IScore> OnCollision { get; set; }
+    public Action<Collider, IScore> OnCollision { get; set; }
     public Action<IScore> OnExplodeOnCollision { get; set; }
     public Action<bool> OnExplodeOnLimit { get; set; }
     public Action<VelocityData> OnBulletVelocity { get; set; }
@@ -68,7 +68,7 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        OnCollision?.Invoke(collision, OwnerScore);
+        OnCollision?.Invoke(collision.collider, OwnerScore);
         OnExplodeOnCollision?.Invoke(OwnerScore);
     }
 
@@ -84,9 +84,9 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
                                  _isWindActivated));
     } 
 
-    private void ActivateWindForce() => _isWindActivated = true;
+    protected virtual void ActivateWindForce() => _isWindActivated = true;
 
-    private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
+    protected void OnTurnChanged(TurnState arg1, CameraMovement arg2)
     {
         if(arg1 == TurnState.Other)
         {
