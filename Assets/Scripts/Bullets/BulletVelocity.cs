@@ -6,6 +6,15 @@ public class BulletVelocity : GetBulletController, IBulletTrail
     public Action<bool> OnTrailActivity { get; set; }
     protected float _gravity;
 
+    protected virtual Vector3 ExtraMovementValue
+    {
+        get
+        {
+            return Vector3.zero;
+        }
+    }
+
+
 
     protected virtual void Start()
     {
@@ -46,6 +55,8 @@ public class BulletVelocity : GetBulletController, IBulletTrail
     protected virtual void ApplyWindForceToTheMovement(BulletController.VelocityData velocityData)
     {
         if (velocityData._isWindActivated)
-            velocityData._rigidBody.velocity += velocityData._windVelocity;
+            velocityData._rigidBody.velocity += velocityData._windVelocity + ExtraMovementValue;
+        else
+            velocityData._rigidBody.velocity += ExtraMovementValue;
     }
 }
