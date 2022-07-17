@@ -1,19 +1,14 @@
 ﻿using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-
-public enum ButtonType { Weapon, Support, Props }
-
-public class AmmoTypeButton : MonoBehaviour
+public class NewAmmoTypeButton : MonoBehaviour
 {
-    public AmmoStars _ammoStars;
+    [SerializeField] private AmmoStars _ammoStarts;
 
-    [Serializable]
-    public struct Properties
+    [Serializable] public new struct Properties
     {
-        public ButtonType _buttonType;
         [SerializeField] private Button _button;
         [SerializeField] private CanvasGroup _canvasGroupWeaponsTab;
         [SerializeField] private CanvasGroup _canvasGroupSupportTab;
@@ -26,28 +21,16 @@ public class AmmoTypeButton : MonoBehaviour
         [SerializeField] private TMP_Text _textValue;
         [SerializeField] private TMP_Text _textRequiredScoreAmmount;
         [SerializeField] private TMP_Text _textSupportType;
+        [SerializeField] private TMP_Text[] _textStatsNames;
         [SerializeField] private TMP_Text[] _textStatsValues;
-        [SerializeField] private TMP_Text[] _textStatsNames;       
-
+        
         public Button Button
         {
             get => _button;
         }
-        public CanvasGroup CanvasGroupWeaponsTab
-        {
-            get => _canvasGroupWeaponsTab;
-        }
-        public CanvasGroup CanvasGroupSupportTab
-        {
-            get => _canvasGroupSupportTab;
-        }
         public CanvasGroup CanvasGroupTabScoresToUnlock
         {
             get => _canvasGroupTabScoresToUnlock;
-        }
-        public CanvasGroup CanvasGroupTimer
-        {
-            get => _canvasGroupTimer;
         }
         public Sprite Icon
         {
@@ -79,26 +62,6 @@ public class AmmoTypeButton : MonoBehaviour
             set => _textRequiredScoreAmmount.text = value.ToString();
         }
         public int CurrentScoreAmmount { get; set; }
-        public int DamageValue
-        {
-            get => int.Parse(_textStatsValues[0].text);
-            set => _textStatsValues[0].text = value.ToString();
-        }
-        public string MassValue
-        {
-            get => _textStatsValues[1].text;
-            set => _textStatsValues[1].text = value;
-        }
-        public string WeaponType
-        {
-            get => _textStatsValues[2].text;
-            set => _textStatsValues[2].text = value;
-        }
-        public string SupportOrPropsType
-        {
-            get => _textSupportType.text;
-            set => _textSupportType.text = value;
-        }
         public bool IsUnlocked { get; set; }
         public bool IsSelected
         {
@@ -116,26 +79,26 @@ public class AmmoTypeButton : MonoBehaviour
                 else
                     _imageSupportTabCheckBox.gameObject.SetActive(value);
             }
-        }       
-    }
-
-    public Properties _properties;
-
-    public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }   
-    public Action<AmmoTypeButton> OnClickSupportTypeButton { get; set; }
-    public Action<AmmoTypeButton> OnClickPropsTypeButton { get; set; }
-
-
-
-    public virtual void OnClickButton()
-    {
-        if (!_properties.IsSelected)
-        {
-            if (_properties._buttonType == ButtonType.Weapon) OnClickAmmoTypeButton?.Invoke(this);
-            if (_properties._buttonType == ButtonType.Support) OnClickSupportTypeButton?.Invoke(this);
-            if (_properties._buttonType == ButtonType.Props) OnClickPropsTypeButton?.Invoke(this);
         }
+        public TMP_Text[] StatsNames
+        {
+            get => _textStatsNames;
+        }
+        public TMP_Text[] StatsValues
+        {
+            get => _textStatsValues;
+        }      
     }
+
+    public new Properties _properties;
+    public Action<NewAmmoTypeButton> OnClickNewAmmoTypeButton { get; set; }
+
+
+
+    //public override void OnClickButton()
+    //{
+    //    if (!_properties.IsSelected) OnClickNewAmmoTypeButton?.Invoke(this);
+    //}
 
     public void DisplayScoresToUnlock(int playerScore, int bulletsCount)
     {

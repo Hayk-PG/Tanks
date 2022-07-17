@@ -2,18 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAndAmmoDataFromPlayer where T : AmmoTypeButton
 {
+    [SerializeField] protected T _buttonPrefab;
+    [SerializeField] protected Sprite _clicked, _released;
+
     public CanvasGroup _container;
     protected AmmoTypeController _ammoTypeController;
-    [SerializeField] protected T _buttonPrefab;
     protected List<T> _instantiatedButtons = new List<T>();
-    [SerializeField]
-    protected Sprite _clicked, _released;
+    
     public Action<T> OnPlayerWeaponChanged { get; set; }
     public Action OnAmmoTypeController { get; set; }
     public Action<Action<int, List<int>>> OnGetPointsAndAmmoDataFromPlayer { get; set; }
     public Action<int> OnSendWeaponPointsToUnlock { get; set; }
+
+    public struct Properties
+    {
+        public ButtonType _buttonType;      
+        public int? _index;
+        public int? _value;
+        public int? _requiredScoreAmmount;
+        public int? _damageValue;
+        public string _massWalue;
+        public string _weaponType;
+        public string _supportType;       
+        public Sprite _icon;
+
+        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? damageValue, string massValue, string weaponType, string supportType, Sprite icon)
+        {
+            _buttonType = buttonType;
+            _index = index;
+            _value = value;
+            _requiredScoreAmmount = requiredScoreAmmount;
+            _damageValue = damageValue;
+            _massWalue = massValue;
+            _weaponType = weaponType;
+            _supportType = supportType;
+            _icon = icon;
+        }
+    }
 
     
     protected virtual void Awake()
@@ -31,13 +59,19 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnInformAboutTabActivityToTabsCustomization;
     }
 
-    protected virtual void AssignProperties(AmmoTypeButton button, string title, int index, int value, int unlockPoints, Sprite icon, AmmoTypeStars stars)
+    protected virtual void AssignProperties(AmmoTypeButton button, Properties properties, AmmoTypeStars stars)
     {
-        button._properties.Title = title;
-        button._properties.Index = index;
-        button._properties.Value = value;
-        button._properties.UnlockPoints = unlockPoints;
-        button._properties.IconSprite = icon;
+        button._properties._buttonType = properties._buttonType;
+
+        if (properties._index != null) button._properties.Index = (int)properties._index;
+        if (properties._value != null) button._properties.Value = (int)properties._value;
+        if (properties._requiredScoreAmmount != null) button._properties.RequiredScoreAmmount = (int)properties._requiredScoreAmmount;
+        if (properties._damageValue != null) button._properties.DamageValue = (int)properties._damageValue;
+        if (properties._massWalue != null) button._properties.MassValue = properties._massWalue;
+        if (properties._weaponType != null) button._properties.WeaponType = properties._weaponType;
+        if (properties._supportType != null) button._properties.SupportOrPropsType = properties._supportType;
+        if (properties._icon != null) button._properties.Icon = properties._icon;
+
         button._ammoStars.OnSetStars(stars);
     }
 

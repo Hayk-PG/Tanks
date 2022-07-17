@@ -49,7 +49,7 @@ public class ScoreController : MonoBehaviour, IScore
     {
         if (!ammoTypeButton._properties.IsUnlocked)
         {
-            UpdateScore(-ammoTypeButton._properties.UnlockPoints, 0);
+            UpdateScore(-ammoTypeButton._properties.RequiredScoreAmmount, 0);
         }
     }
 

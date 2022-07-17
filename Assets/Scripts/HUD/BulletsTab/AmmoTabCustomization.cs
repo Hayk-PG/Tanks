@@ -16,8 +16,22 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, int loopIndex)
     {
         AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);
-        AssignProperties(button, weaponProperty._title, weaponProperty._ammoIndex, weaponProperty._value, weaponProperty._unlockPoints, weaponProperty._icon, weaponProperty._ammoTypeStars);
-        OnSendWeaponPointsToUnlock?.Invoke(weaponProperty._unlockPoints);
+        GlobalFunctions.CanvasGroupActivity(button._properties.CanvasGroupWeaponsTab, true);
+
+        AssignProperties(button, new BaseAmmoTabCustomization<AmmoTypeButton>.Properties
+        {
+            _buttonType = weaponProperty._buttonType,
+            _index = weaponProperty._index,
+            _value = weaponProperty._value,
+            _requiredScoreAmmount = weaponProperty._requiredScoreAmmount,
+            _damageValue = weaponProperty._damageValue,
+            _massWalue = weaponProperty._weaponMass,
+            _weaponType = weaponProperty._weaponType,
+            _supportType = weaponProperty._supportType,
+            _icon = weaponProperty._icon
+        }, weaponProperty._ammoTypeStars);
+
+        OnSendWeaponPointsToUnlock?.Invoke(weaponProperty._requiredScoreAmmount);
         Conditions<bool>.Compare(loopIndex == 0, () => SetDefaultAmmo(button), null);
         CacheAmmoTypeButtons(button);
     }
@@ -67,16 +81,15 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         GlobalFunctions.Loop<AmmoTypeButton>.Foreach(_instantiatedButtons,
             OnAmmoTypeButtons =>
             {
-                OnAmmoTypeButtons._properties.ButtonSprite = _released;
                 OnAmmoTypeButtons._properties.IsSelected = false;
             });
 
-        ammoTypeButton._properties.ButtonSprite = _clicked;
+        ammoTypeButton._properties.IsSelected = _clicked;
         ammoTypeButton._properties.IsSelected = true;
     }
 
     protected override void DisplayPointsToUnlock(int index, int playerPoints, int value)
     {
-        _instantiatedButtons[index].DisplayPointsToUnlock(playerPoints, value);
+        _instantiatedButtons[index].DisplayScoresToUnlock(playerPoints, value);
     }
 }

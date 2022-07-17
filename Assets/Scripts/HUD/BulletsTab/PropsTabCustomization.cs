@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
+public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 {
     [Header("Props")]
     [SerializeField] private PropsProperties[] _props;
@@ -20,7 +20,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
 
     protected override void OnDisable()
     {
-        GlobalFunctions.Loop<PropsTypeButton>.Foreach(_instantiatedButtons, button => 
+        GlobalFunctions.Loop<AmmoTypeButton>.Foreach(_instantiatedButtons, button => 
         {
             button.OnClickPropsTypeButton -= OnClickPropsTypeButton;
         });
@@ -30,22 +30,36 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
     {
         foreach (var prop in _props)
         {
-            PropsTypeButton button = Instantiate(_buttonPrefab, _container.transform);
-            AssignProperties(button, prop._title, prop._ammoIndex, prop._value, prop._unlockPoints, prop._icon, prop._ammoTypeStars);
+            AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);
+            GlobalFunctions.CanvasGroupActivity(button._properties.CanvasGroupSupportTab, true);
+
+            AssignProperties(button, new BaseAmmoTabCustomization<AmmoTypeButton>.Properties
+            {
+                _buttonType = prop._buttonType,
+                _index = prop._index,
+                _value = prop._value,
+                _requiredScoreAmmount = prop._requiredScoreAmmount,
+                _damageValue = prop._damageValue,
+                _massWalue = prop._weaponMass,
+                _weaponType = prop._weaponType,
+                _supportType = prop._supportType,
+                _icon = prop._icon
+            }, prop._ammoTypeStars);
+
             _instantiatedButtons.Add(button);
             button.OnClickPropsTypeButton += OnClickPropsTypeButton;
         }
     }
 
-    private void OnClickPropsTypeButton(PropsTypeButton button)
+    private void OnClickPropsTypeButton(AmmoTypeButton button)
     {
-        if (button._properties.Title == "Sandbags")
+        if (button._properties.SupportOrPropsType == "Sandbags")
             OnInstantiateSandbags?.Invoke();
 
-        if (button._properties.Title == "Shields")
+        if (button._properties.SupportOrPropsType == "Shields")
             OnActivateShields?.Invoke();
 
-        if (button._properties.Title == "60mm Mortar Support")
+        if (button._properties.SupportOrPropsType == "60mm Mortar Support")
             OnArtillery?.Invoke();
 
         OnAmmoTypeController?.Invoke();
@@ -53,7 +67,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<PropsTypeButton>
 
     protected override void DisplayPointsToUnlock(int index, int playerPoints, int value)
     {
-        _instantiatedButtons[index].DisplayPointsToUnlock(playerPoints, 0);
+        _instantiatedButtons[index].DisplayScoresToUnlock(playerPoints, 0);
     }
 
     public override void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount)

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class SupportsTabCustomization : BaseAmmoTabCustomization<SupportsTypeButton>
+public class SupportsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 {
     [Header("Bombers")]
     [SerializeField] private BomberProperties[] _bombers;
@@ -19,8 +19,22 @@ public class SupportsTabCustomization : BaseAmmoTabCustomization<SupportsTypeBut
     {
         foreach (var bomber in _bombers)
         {
-            SupportsTypeButton button = Instantiate(_buttonPrefab, _container.transform);
-            AssignProperties(button, bomber._title, bomber._ammoIndex, bomber._value, bomber._unlockPoints, bomber._icon, bomber._ammoTypeStars);
+            AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);
+            GlobalFunctions.CanvasGroupActivity(button._properties.CanvasGroupSupportTab, true);
+
+            AssignProperties(button, new BaseAmmoTabCustomization<AmmoTypeButton>.Properties
+            {
+                _buttonType = bomber._buttonType,
+                _index = bomber._index,
+                _value = bomber._value,
+                _requiredScoreAmmount = bomber._requiredScoreAmmount,
+                _damageValue = bomber._damageValue,
+                _massWalue = bomber._weaponMass,
+                _weaponType = bomber._weaponType,
+                _supportType = bomber._supportType,
+                _icon = bomber._icon
+            }, bomber._ammoTypeStars);
+
             _instantiatedButtons.Add(button);
             button.OnClickSupportTypeButton += OnClickSupportTypeButton;
         }
@@ -30,21 +44,21 @@ public class SupportsTabCustomization : BaseAmmoTabCustomization<SupportsTypeBut
     {
         base.OnDisable();
 
-        GlobalFunctions.Loop<SupportsTypeButton>.Foreach(_instantiatedButtons, OnLoop => 
+        GlobalFunctions.Loop<AmmoTypeButton>.Foreach(_instantiatedButtons, OnLoop => 
         {
             OnLoop.OnClickSupportTypeButton -= OnClickSupportTypeButton;
         });
     }
 
-    private void OnClickSupportTypeButton(SupportsTypeButton supportTypeButton)
+    private void OnClickSupportTypeButton(AmmoTypeButton supportTypeButton)
     {
-        if (supportTypeButton._properties.Title == "Bomber") OnCallBomber?.Invoke();
+        if (supportTypeButton._properties.SupportOrPropsType == "Air Support") OnCallBomber?.Invoke();
 
         OnAmmoTypeController?.Invoke();
     }
 
     protected override void DisplayPointsToUnlock(int index, int playerPoints, int value)
     {
-        _instantiatedButtons[index].DisplayPointsToUnlock(playerPoints, 0);
+        _instantiatedButtons[index].DisplayScoresToUnlock(playerPoints, 0);
     }
 }
