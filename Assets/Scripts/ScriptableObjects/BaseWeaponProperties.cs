@@ -15,6 +15,8 @@ public class BaseWeaponProperties<T> : ScriptableObject
     public int _index;
     public int _value;
     public int _damageValue;
+    public int _minutes;
+    public int _seconds;
     public string _weaponMass;
     public string _weaponType;
 

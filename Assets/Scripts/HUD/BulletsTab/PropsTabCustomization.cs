@@ -40,6 +40,8 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
                 _value = prop._value,
                 _requiredScoreAmmount = prop._requiredScoreAmmount,
                 _damageValue = prop._damageValue,
+                _minutes = prop._minutes,
+                _seconds = prop._seconds,
                 _massWalue = prop._weaponMass,
                 _weaponType = prop._weaponType,
                 _supportType = prop._supportType,
@@ -51,17 +53,20 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         }
     }
 
-    private void OnClickPropsTypeButton(AmmoTypeButton button)
+    private void OnClickPropsTypeButton(AmmoTypeButton propsTypeButton)
     {
-        if (button._properties.SupportOrPropsType == "Sandbags")
+        if (propsTypeButton._properties.SupportOrPropsType == "Sandbags")
             OnInstantiateSandbags?.Invoke();
 
-        if (button._properties.SupportOrPropsType == "Shields")
+        if (propsTypeButton._properties.SupportOrPropsType == "Shields")
+        {
             OnActivateShields?.Invoke();
-
-        if (button._properties.SupportOrPropsType == "60mm Mortar Support")
+        }
+            
+        if (propsTypeButton._properties.SupportOrPropsType == "60mm Mortar Support")
             OnArtillery?.Invoke();
 
+        propsTypeButton.StartTimerCoroutine();
         OnAmmoTypeController?.Invoke();
     }
 

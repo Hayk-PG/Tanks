@@ -29,6 +29,8 @@ public class SupportsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
                 _value = bomber._value,
                 _requiredScoreAmmount = bomber._requiredScoreAmmount,
                 _damageValue = bomber._damageValue,
+                _minutes = bomber._minutes,
+                _seconds = bomber._seconds,
                 _massWalue = bomber._weaponMass,
                 _weaponType = bomber._weaponType,
                 _supportType = bomber._supportType,
@@ -54,6 +56,7 @@ public class SupportsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     {
         if (supportTypeButton._properties.SupportOrPropsType == "Air Support") OnCallBomber?.Invoke();
 
+        supportTypeButton.StartTimerCoroutine();
         OnAmmoTypeController?.Invoke();
     }
 

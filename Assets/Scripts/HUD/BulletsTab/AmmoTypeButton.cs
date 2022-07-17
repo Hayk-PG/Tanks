@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,7 @@ public class AmmoTypeButton : MonoBehaviour
         [SerializeField] private Image _imageWalkieTalkieIcon;
         [SerializeField] private Image _imageWeaponsTabCheckBox;
         [SerializeField] private Image _imageSupportTabCheckBox;
+        [SerializeField] private TMP_Text _textTimer;
         [SerializeField] private TMP_Text _textValue;
         [SerializeField] private TMP_Text _textRequiredScoreAmmount;
         [SerializeField] private TMP_Text _textSupportType;
@@ -84,6 +86,8 @@ public class AmmoTypeButton : MonoBehaviour
             get => int.Parse(_textStatsValues[0].text);
             set => _textStatsValues[0].text = value.ToString();
         }
+        public int Minutes { get; set; }
+        public int Seconds { get; set; }
         public string MassValue
         {
             get => _textStatsValues[1].text;
@@ -98,6 +102,11 @@ public class AmmoTypeButton : MonoBehaviour
         {
             get => _textSupportType.text;
             set => _textSupportType.text = value;
+        }
+        public string Timer
+        {
+            get => _textTimer.text;
+            set => _textTimer.text = value;
         }
         public bool IsUnlocked { get; set; }
         public bool IsSelected
@@ -120,6 +129,10 @@ public class AmmoTypeButton : MonoBehaviour
     }
 
     public Properties _properties;
+
+    private int _minutes;
+    private int _seconds;
+    private bool _isTimerFinished;
 
     public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }   
     public Action<AmmoTypeButton> OnClickSupportTypeButton { get; set; }
@@ -148,12 +161,48 @@ public class AmmoTypeButton : MonoBehaviour
         {
             _properties.IsUnlocked = false;
 
-            if (_properties.CurrentScoreAmmount < _properties.RequiredScoreAmmount)
+            if (_properties.CurrentScoreAmmount < _properties.RequiredScoreAmmount || _properties.CanvasGroupTimer.interactable)
                 _properties.Button.interactable = false;
-            else
+            else if (_properties.CurrentScoreAmmount >= _properties.RequiredScoreAmmount && !_properties.CanvasGroupTimer.interactable)
                 _properties.Button.interactable = true;
         }
 
         GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTabScoresToUnlock, !_properties.IsUnlocked);
+    }
+
+    public void StartTimerCoroutine()
+    {
+        StartCoroutine(TimerCoroutine());
+    }
+
+    private IEnumerator TimerCoroutine()
+    {
+        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTimer, true);
+        _minutes = _properties.Minutes;
+        _seconds = _properties.Seconds;
+        _isTimerFinished = false;
+
+        while (!_isTimerFinished)
+        {
+            _seconds--;
+
+            if (_seconds <= 0)
+                Conditions<int>.Compare(_minutes, 0, OnReset, OnDecrease, OnReset);
+
+            _properties.Timer = _minutes.ToString("D2") + ":" + _seconds.ToString("D2");
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    private void OnDecrease()
+    {
+        _seconds = 60;
+        _minutes--;
+    }
+
+    private void OnReset()
+    {
+        _isTimerFinished = true;
+        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTimer, false);
     }
 }

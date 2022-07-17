@@ -24,18 +24,22 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         public int? _value;
         public int? _requiredScoreAmmount;
         public int? _damageValue;
+        public int? _minutes;
+        public int? _seconds;
         public string _massWalue;
         public string _weaponType;
         public string _supportType;       
         public Sprite _icon;
 
-        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? damageValue, string massValue, string weaponType, string supportType, Sprite icon)
+        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? damageValue, int? minutes, int? seconds, string massValue, string weaponType, string supportType, Sprite icon)
         {
             _buttonType = buttonType;
             _index = index;
             _value = value;
             _requiredScoreAmmount = requiredScoreAmmount;
             _damageValue = damageValue;
+            _minutes = minutes;
+            _seconds = seconds;
             _massWalue = massValue;
             _weaponType = weaponType;
             _supportType = supportType;
@@ -67,6 +71,8 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         if (properties._value != null) button._properties.Value = (int)properties._value;
         if (properties._requiredScoreAmmount != null) button._properties.RequiredScoreAmmount = (int)properties._requiredScoreAmmount;
         if (properties._damageValue != null) button._properties.DamageValue = (int)properties._damageValue;
+        if (properties._minutes != null) button._properties.Minutes = (int)properties._minutes;
+        if (properties._seconds != null) button._properties.Seconds = (int)properties._seconds;
         if (properties._massWalue != null) button._properties.MassValue = properties._massWalue;
         if (properties._weaponType != null) button._properties.WeaponType = properties._weaponType;
         if (properties._supportType != null) button._properties.SupportOrPropsType = properties._supportType;
@@ -92,4 +98,9 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
     }
 
     protected abstract void DisplayPointsToUnlock(int index, int playerPoints, int value);
+
+    protected virtual void SupportAndPropsTimer(T typeButton)
+    {
+        typeButton.StartTimerCoroutine();
+    }
 }
