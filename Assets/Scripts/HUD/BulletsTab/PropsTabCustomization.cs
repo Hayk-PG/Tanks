@@ -8,6 +8,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     [SerializeField] private PropsProperties[] _props;
 
     public Action OnInstantiateSandbags { get; set; }
+    public Action OnInstantiateMetalCube { get; set; }
     public Action OnActivateShields { get; set; }
     public Action OnArtillery { get; set; }
 
@@ -57,6 +58,9 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     {
         if (propsTypeButton._properties.SupportOrPropsType == Names.Sandbags)
             OnInstantiateSandbags?.Invoke();
+
+        if (propsTypeButton._properties.SupportOrPropsType == Names.MetalCube)
+            OnInstantiateMetalCube?.Invoke();
 
         if (propsTypeButton._properties.SupportOrPropsType == Names.Shield)
         {

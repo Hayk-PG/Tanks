@@ -33,7 +33,7 @@ public class BaseChangeTiles : MonoBehaviour
 
     private void OnTileUpdates(Vector3 pos, GameObject tile)
     {
-        if (!TilesGenerator.TilesDict[pos].GetComponent<Tile>().HasSandbagsOnIt)
+        if (!TilesGenerator.TilesDict[pos].GetComponent<Tile>().IsProtected)
         {
             Destroy(TilesGenerator.TilesDict[pos]);
             TilesGenerator.TilesDict.Remove(pos);

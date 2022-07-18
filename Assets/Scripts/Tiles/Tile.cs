@@ -14,7 +14,7 @@ public class Tile : MonoBehaviour, IDestruct
     private Vector3 _desiredPosition;
     private Vector3 _tileSize;
 
-    public bool HasSandbagsOnIt { get; set; }
+    public bool IsProtected { get; set; }
     public float Health { get; set; } = 100;
 
 
@@ -66,7 +66,7 @@ public class Tile : MonoBehaviour, IDestruct
 
     public void Destruct(int damage)
     {
-        if (!HasSandbagsOnIt)
+        if (!IsProtected)
         {
             Destruction();
         }
@@ -76,9 +76,9 @@ public class Tile : MonoBehaviour, IDestruct
 
             if (Health <= 0)
             {
-                HasSandbagsOnIt = false;
+                IsProtected = false;
                 _sandbags = Get<Sandbags>.FromChild(gameObject);
-                _sandbags.OnSandbags?.Invoke(false);
+                _sandbags?.OnSandbags?.Invoke(false);
                 Destruction();
             }
         }

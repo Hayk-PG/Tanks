@@ -1,40 +1,40 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class PlayerArtillery : MonoBehaviour
+public class PlayerArtillery : PlayerDeployProps
 {
     [SerializeField] private ArtilleryBulletController _artilleryPrefab;
 
-    private TankController _tankController;
     private IScore _iScore;
-    private PlayerTurn _playerTurn;
-    private PropsTabCustomization _propsTabCustomization;
     private RemoteControlArtilleryTarget _remoteControlArtilleryTargets;
     private GameManager _gameManager;
-    private CameraMovement _cameraMovement;
-    
+    private CameraMovement _cameraMovement;  
     private Transform _enemyTransform;
 
 
-
-    private void Awake()
+    protected override void Awake()
     {
-        _tankController = Get<TankController>.From(gameObject);
+        base.Awake();
+
         _iScore = Get<IScore>.From(gameObject);
-        _playerTurn = Get<PlayerTurn>.From(gameObject);
-        _propsTabCustomization = FindObjectOfType<PropsTabCustomization>();
         _remoteControlArtilleryTargets = FindObjectOfType<RemoteControlArtilleryTarget>();
         _gameManager = FindObjectOfType<GameManager>();
         _cameraMovement = FindObjectOfType<CameraMovement>();
     }
 
-    private void OnEnable()
+    protected override void Start()
     {
-        _tankController.OnInitialize += OnInitialize;
+        InitializeRelatedPropsButton(Names.LightMortarSupport);
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
         _gameManager.OnGameStarted += OnGameStarted;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
         _gameManager.OnGameStarted -= OnGameStarted;
@@ -42,7 +42,7 @@ public class PlayerArtillery : MonoBehaviour
         _remoteControlArtilleryTargets.OnSet -= OnGiveCoordinates;
     }
 
-    private void OnInitialize()
+    protected override void OnInitialize()
     {
         _propsTabCustomization.OnArtillery += OnArtillery;
         _remoteControlArtilleryTargets.OnSet += OnGiveCoordinates;
@@ -59,6 +59,7 @@ public class PlayerArtillery : MonoBehaviour
         {
             _cameraMovement.SetCameraTarget(_enemyTransform, 5, 1.5f);
             _remoteControlArtilleryTargets.RemoteControlTargetActivity(true);
+            _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
         }         
     }
 

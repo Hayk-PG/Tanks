@@ -11,7 +11,7 @@ public class PhotonPlayerDeployPropsRPC : PhotonPlayerBaseRPC
     [PunRPC]
     private void SandBagsRPC(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
     {
-        _photonPlayerTankController?._playerDeployProps.Sandbags(isPlayer1, transformPosition, tilePosition);
+        _photonPlayerTankController?._playerDeployProps.TileProps(isPlayer1, transformPosition, tilePosition);
     }
 
     public void CalShieldsActivityRPC(int playerIndex)

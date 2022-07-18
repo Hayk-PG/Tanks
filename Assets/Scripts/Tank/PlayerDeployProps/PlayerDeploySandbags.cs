@@ -2,18 +2,13 @@
 
 public partial class PlayerDeployProps : MonoBehaviour
 {
-    private bool IsTileFound(float tilePosX, bool isPlayer1, Vector3 transformPosition)
-    {
-        return isPlayer1 ? tilePosX >= transformPosition.x + 0.5f && tilePosX <= transformPosition.x + 1.5f :
-                           tilePosX <= transformPosition.x - 0.5f && tilePosX >= transformPosition.x - 1.5f;
-    }
-    public void Sandbags(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
+    public virtual void TileProps(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
     {
         TileProps tileProps = Get<TileProps>.From(_tilesData.TilesDict[tilePosition]);
-        tileProps?.OnSandbags(true, isPlayer1);
+        ActivateTileProps(tileProps, isPlayer1);
     }
 
-    private void SandbagsRPC(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
+    public virtual void TilePropsRPC(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
     {
         if (_photonPlayerDeployRPC == null)
             _photonPlayerDeployRPC = Get<PhotonPlayerDeployPropsRPC>.From(_tankController.BasePlayer.gameObject);
@@ -21,22 +16,29 @@ public partial class PlayerDeployProps : MonoBehaviour
         _photonPlayerDeployRPC?.CallSandBagsRPC(isPlayer1, transformPosition, tilePosition);
     }
 
-    private void OnInstantiateSandbags()
+    protected virtual void Result(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
+    {
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => TileProps(true, transformPosition, tilePosition), () => TilePropsRPC(isPlayer1, transformPosition, tilePosition));
+    }
+
+    protected virtual void OnInstantiate()
     {
         if (_playerTurn.IsMyTurn)
         {
-            bool isPlayer1 = _playerTurn.MyTurn == TurnState.Player1;
-            Vector3 transformPosition = transform.position;
+            InstantiateHelper(out bool isPlayer1, out Vector3 transformPosition);
 
             foreach (var tile in _tilesData.TilesDict)
             {
-                if (IsTileFound(tile.Key.x, isPlayer1, transformPosition) && tile.Value.GetComponent<TileProps>() != null)
+                if (tile.Value != null)
                 {
-                    if (!tile.Value.GetComponent<Tile>().HasSandbagsOnIt)
+                    if (IsTileFound(tile.Key.x, isPlayer1, transformPosition) && tile.Value.GetComponent<TileProps>() != null)
                     {
-                        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => Sandbags(true, transformPosition, tile.Key), () => SandbagsRPC(isPlayer1, transformPosition, tile.Key));
-                        _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
-                        break;
+                        if (!tile.Value.GetComponent<Tile>().IsProtected)
+                        {
+                            Result(isPlayer1, transformPosition, tile.Key);
+                            _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
+                            break;
+                        }
                     }
                 }
             }

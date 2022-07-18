@@ -15,6 +15,11 @@ public class PlayerShields : PlayerDeployProps
         _globalActivityTimer = FindObjectOfType<GlobalActivityTimer>();
     }
 
+    protected override void Start()
+    {
+        InitializeRelatedPropsButton(Names.Shield);
+    }
+
     protected override void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
