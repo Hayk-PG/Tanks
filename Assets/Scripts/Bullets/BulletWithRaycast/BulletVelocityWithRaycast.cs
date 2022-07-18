@@ -6,7 +6,7 @@ public class BulletVelocityWithRaycast : BulletVelocity
     {
         get
         {
-            return new Vector3(-2.5f * Time.fixedDeltaTime, 2 * Time.fixedDeltaTime, 0);
+            return new Vector3(0, 2 * Time.fixedDeltaTime, 0);
         }
     }
 }

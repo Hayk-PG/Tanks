@@ -34,8 +34,6 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
         IScore iScore = GameObject.Find(ownerName)?.GetComponent<IScore>();
         iScore?.GetScore(10, null);
-
-        print("(BulletCollider) " + colliderName + "/" + ownerName + "/" + colliderPosition);
     }
 
     public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int scoreValue, int hitEnemyAndGetScoreValue)

@@ -7,6 +7,7 @@ public partial class PlayerDeployProps : MonoBehaviour
     protected PropsTabCustomization _propsTabCustomization;
     private TilesData _tilesData;
     protected PhotonPlayerDeployPropsRPC _photonPlayerDeployRPC;
+    protected AmmoTypeButton _relatedPropsTypeButton;
 
 
 
@@ -16,6 +17,7 @@ public partial class PlayerDeployProps : MonoBehaviour
         _playerTurn = Get<PlayerTurn>.From(gameObject);
         _propsTabCustomization = FindObjectOfType<PropsTabCustomization>();
         _tilesData = FindObjectOfType<TilesData>();
+        _relatedPropsTypeButton = GlobalFunctions.ObjectsOfType<AmmoTypeButton>.Find(button => button._properties.SupportOrPropsType == Names.Shield);
     }
 
     protected virtual void OnEnable()

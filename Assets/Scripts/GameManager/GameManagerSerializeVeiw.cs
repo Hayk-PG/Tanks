@@ -40,8 +40,8 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             stream.SendNext(_turnTimer.IconPlayer2Alpha);
             stream.SendNext(_turnTimer.IsTurnChanged);
 
-            stream.SendNext(_globalActivtyTimer.PlayersActiveShieldsTimer[0]);
-            stream.SendNext(_globalActivtyTimer.PlayersActiveShieldsTimer[1]);
+            stream.SendNext(_globalActivtyTimer._playersActiveShieldsTimer[0]);
+            stream.SendNext(_globalActivtyTimer._playersActiveShieldsTimer[1]);
         }
         else
         {
@@ -66,8 +66,8 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             _turnTimer.IconPlayer2Alpha = (float)stream.ReceiveNext();
             _turnTimer.IsTurnChanged = (bool)stream.ReceiveNext();
 
-            _globalActivtyTimer.PlayersActiveShieldsTimer[0] = (int)stream.ReceiveNext();
-            _globalActivtyTimer.PlayersActiveShieldsTimer[1] = (int)stream.ReceiveNext();
+            _globalActivtyTimer._playersActiveShieldsTimer[0] = (int)stream.ReceiveNext();
+            _globalActivtyTimer._playersActiveShieldsTimer[1] = (int)stream.ReceiveNext();
         }
     }    
 }

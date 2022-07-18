@@ -4,14 +4,15 @@ public class PlayerShields : PlayerDeployProps
 {
     private Shields _shields;
     private GlobalActivityTimer _globalActivityTimer;
+    private int _endTime = 60;
     public bool IsShieldActive { get; set; }
-
+  
 
     protected override void Awake()
     {
         base.Awake();
         _shields = Get<Shields>.FromChild(gameObject);
-        _globalActivityTimer = Get<GlobalActivityTimer>.From(gameObject);
+        _globalActivityTimer = FindObjectOfType<GlobalActivityTimer>();
     }
 
     protected override void OnDisable()
@@ -42,9 +43,15 @@ public class PlayerShields : PlayerDeployProps
         }
     }
 
-    private void RunTimerViaMasterClient(int index) => _globalActivityTimer.PlayersActiveShieldsTimer[index] = 10;
+    private void RunTimerViaMasterClient(int index)
+    {
+        _globalActivityTimer._playersActiveShieldsTimer[index] = _endTime;
+    }
 
-    private void RunTimerDirectly() => _shields.RunTimerCoroutine();
+    private void RunTimerDirectly()
+    {
+        _shields.RunTimerCoroutine(_endTime);
+    }
 
     private void ShieldActivityRPC(int index, bool isActive)
     {
@@ -60,6 +67,7 @@ public class PlayerShields : PlayerDeployProps
         {
             int index = _playerTurn.MyTurn == TurnState.Player1 ? 0 : 1;
             Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, ()=> ActivateShields(0), ()=> ShieldActivityRPC(index, true));
+            _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
         }
     }
 }

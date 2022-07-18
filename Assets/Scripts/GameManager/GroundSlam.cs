@@ -49,7 +49,5 @@ public class GroundSlam : MonoBehaviourPun
 
         if (_tankController != null && _tankController.BasePlayer != null && _tankController.BasePlayer.photonView.IsMine)
             GetScore(previousTurnIndex);
-
-        print("GroundSlam" + "/" + previousTurnIndex);
     }
 }

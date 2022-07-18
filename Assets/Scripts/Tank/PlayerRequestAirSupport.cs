@@ -9,6 +9,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
     private SupportsTabCustomization _supportsTabCustomization;
     private PlayerTurn _playerTurn;
     private ShootButton _shootButton;
+    private AmmoTypeButton _relatedSupportTabButton;
 
     private Bomber _bomber;
     public IScore _iScore;
@@ -30,6 +31,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
         _airSupport = FindObjectOfType<AirSupport>();
         _supportsTabCustomization = FindObjectOfType<SupportsTabCustomization>();
         _shootButton = FindObjectOfType<ShootButton>();
+        _relatedSupportTabButton = GlobalFunctions.ObjectsOfType<AmmoTypeButton>.Find(button => button._properties.SupportOrPropsType == Names.AirSupport);
     }
 
     private void OnEnable()
@@ -68,14 +70,6 @@ public class PlayerRequestAirSupport : MonoBehaviour
         };
     }
 
-    private void CallBomber()
-    {
-        if (_playerTurn.IsMyTurn)
-        {
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, ()=> RequestAirSupport(_bomberPosition(),_bomberRotation(), _rightSpwnPos.x), RequestAirSupportRPC);
-        }
-    }
-
     public void RequestAirSupport(Vector3 position, Quaternion rotation, float distanceX)
     {
         _airSupport.Call(out Bomber bomber, position, rotation, distanceX);
@@ -89,6 +83,15 @@ public class PlayerRequestAirSupport : MonoBehaviour
             _photonPlayerRequestAirSupportRPC = _tankController.BasePlayer.GetComponent<PhotonPlayerRequestAirSupportRPC>();
 
         _photonPlayerRequestAirSupportRPC?.CallAirSupportRPC(_bomberPosition(), _bomberRotation(), _rightSpwnPos.x);
+    }
+
+    private void CallBomber()
+    {
+        if (_playerTurn.IsMyTurn)
+        {
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => RequestAirSupport(_bomberPosition(), _bomberRotation(), _rightSpwnPos.x), RequestAirSupportRPC);
+            _supportsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedSupportTabButton);
+        }
     }
 
     private void OnShootButtonClick(bool isTrue)

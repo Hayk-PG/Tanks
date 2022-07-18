@@ -54,9 +54,9 @@ public class SupportsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
     private void OnClickSupportTypeButton(AmmoTypeButton supportTypeButton)
     {
-        if (supportTypeButton._properties.SupportOrPropsType == "Air Support") OnCallBomber?.Invoke();
+        if (supportTypeButton._properties.SupportOrPropsType == Names.AirSupport)
+            OnCallBomber?.Invoke();
 
-        supportTypeButton.StartTimerCoroutine();
         OnAmmoTypeController?.Invoke();
     }
 

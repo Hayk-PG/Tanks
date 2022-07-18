@@ -77,6 +77,5 @@ public class TurnController : MonoBehaviourPun
     private void OnTurnChangedRPC(int currentTurnState)
     {
         OnTurnChanged?.Invoke((TurnState)currentTurnState, _cameraMovement);
-        print("OnTurnChanged" + "/" + currentTurnState);
     }
 }

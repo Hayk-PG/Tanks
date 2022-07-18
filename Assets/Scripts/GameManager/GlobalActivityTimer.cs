@@ -5,12 +5,13 @@ public class GlobalActivityTimer : MonoBehaviourPun
 {
     private MyPlugins _myPlugins;
     private PlayerShields[] _playerShields;
-    public int[] PlayersActiveShieldsTimer { get; set; } = new int[2];
+    public int[] _playersActiveShieldsTimer;
     
 
     private void Awake()
     {
-        _myPlugins = FindObjectOfType<MyPlugins>();        
+        _myPlugins = FindObjectOfType<MyPlugins>();
+        _playersActiveShieldsTimer = new int[2];
     }
 
     private void OnEnable()
@@ -33,22 +34,22 @@ public class GlobalActivityTimer : MonoBehaviourPun
 
     private void ShieldsActivity()
     {
-        for (int i = 0; i < PlayersActiveShieldsTimer[i]; i++)
+        for (int i = 0; i < _playersActiveShieldsTimer.Length; i++)
         {
-            if (PlayersActiveShieldsTimer[i] > 0)
-                PlayersActiveShieldsTimer[i]--;
+            if (_playersActiveShieldsTimer[i] > 0)
+                _playersActiveShieldsTimer[i]--;
         }
 
-        if (PlayersActiveShieldsTimer[0] == 0)
+        if (_playersActiveShieldsTimer[0] == 0)
         {
             photonView.RPC("ShieldsActivityRPC", RpcTarget.AllViaServer, TurnState.Player1);
-            PlayersActiveShieldsTimer[0] = -1;
+            _playersActiveShieldsTimer[0] = -1;
         }
 
-        if (PlayersActiveShieldsTimer[1] == 0)
+        if (_playersActiveShieldsTimer[1] == 0)
         {
             photonView.RPC("ShieldsActivityRPC", RpcTarget.AllViaServer, TurnState.Player2);
-            PlayersActiveShieldsTimer[0] = -1;
+            _playersActiveShieldsTimer[1] = -1;
         }
     }
 

@@ -55,18 +55,17 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
     private void OnClickPropsTypeButton(AmmoTypeButton propsTypeButton)
     {
-        if (propsTypeButton._properties.SupportOrPropsType == "Sandbags")
+        if (propsTypeButton._properties.SupportOrPropsType == Names.Sandbags)
             OnInstantiateSandbags?.Invoke();
 
-        if (propsTypeButton._properties.SupportOrPropsType == "Shields")
+        if (propsTypeButton._properties.SupportOrPropsType == Names.Shield)
         {
             OnActivateShields?.Invoke();
         }
             
-        if (propsTypeButton._properties.SupportOrPropsType == "60mm Mortar Support")
+        if (propsTypeButton._properties.SupportOrPropsType == Names.LightMortarSupport)
             OnArtillery?.Invoke();
 
-        propsTypeButton.StartTimerCoroutine();
         OnAmmoTypeController?.Invoke();
     }
 

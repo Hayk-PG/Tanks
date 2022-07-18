@@ -50,6 +50,7 @@ public class PlayerHUD : MonoBehaviour
         }
 
         _photonPlayerEnableHUDRPC?.CallHUDRPC(true);
+        ShootValuesCanvasGroupActivity();
     }
 
     private void ShootValuesCanvasGroupActivity()

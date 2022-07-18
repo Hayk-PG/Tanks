@@ -19,9 +19,9 @@ public class Shields : MonoBehaviour
         _shields[index].SetActive(isActive);
     }
 
-    public void RunTimerCoroutine()
+    public void RunTimerCoroutine(int endTime)
     {
-        Conditions<bool>.Compare(_coroutine != null, delegate { StopCor(); StartCor(); }, StartCor);
+        Conditions<bool>.Compare(_coroutine != null, delegate { StopCor(); StartCor(endTime); }, ()=> StartCor(endTime));
     }
 
     private void StopCor()
@@ -30,16 +30,16 @@ public class Shields : MonoBehaviour
         _coroutine = null;
     }
 
-    private void StartCor()
+    private void StartCor(int endTime)
     {
-        _coroutine = TimerCoroutine(true);
+        _coroutine = TimerCoroutine(true, endTime);
         StartCoroutine(_coroutine);
     }
 
-    private IEnumerator TimerCoroutine(bool isActive)
+    private IEnumerator TimerCoroutine(bool isActive, int endTime)
     {
         bool _isActive = isActive;
-        _s = 10;
+        _s = endTime;
 
         while (_isActive)
         {

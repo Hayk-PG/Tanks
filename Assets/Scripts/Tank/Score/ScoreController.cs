@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Linq;
 using UnityEngine;
 
 public class ScoreController : MonoBehaviour, IScore
 {
     public PlayerTurn PlayerTurn { get; set; }
     public IDamage IDamage { get; set; }
+    private TankController _tankController;
     private AmmoTabCustomization _ammoTabCustomization;
+    private PropsTabCustomization _propsTabCustomization;
+    private SupportsTabCustomization _supportTabCustomization;
     private GetScoreFromTerOccInd _getScoreFromTerOccInd;
 
     [SerializeField]
@@ -27,7 +29,10 @@ public class ScoreController : MonoBehaviour, IScore
     {       
         IDamage = Get<IDamage>.From(gameObject);
         PlayerTurn = Get<PlayerTurn>.From(gameObject);
+        _tankController = Get<TankController>.From(gameObject);
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
+        _propsTabCustomization = FindObjectOfType<PropsTabCustomization>();
+        _supportTabCustomization = FindObjectOfType<SupportsTabCustomization>();
         _getScoreFromTerOccInd = GetComponent<GetScoreFromTerOccInd>();
 
         Score = 0;
@@ -35,14 +40,28 @@ public class ScoreController : MonoBehaviour, IScore
 
     private void OnEnable()
     {
-        _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
-        if (_getScoreFromTerOccInd != null) _getScoreFromTerOccInd.OnGetScoreFromTerOccInd += OnGetScoreFromTerOccInd;
+        _tankController.OnInitialize += OnInitialize;
     }
 
     private void OnDisable()
     {
+        _tankController.OnInitialize -= OnInitialize;
         _ammoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
-        if (_getScoreFromTerOccInd != null) _getScoreFromTerOccInd.OnGetScoreFromTerOccInd -= OnGetScoreFromTerOccInd;
+        _propsTabCustomization.OnSupportOrPropsChanged -= OnSupportOrPropsChanged;
+        _supportTabCustomization.OnSupportOrPropsChanged -= OnSupportOrPropsChanged;
+
+        if (_getScoreFromTerOccInd != null)
+            _getScoreFromTerOccInd.OnGetScoreFromTerOccInd -= OnGetScoreFromTerOccInd;
+    }
+
+    private void OnInitialize()
+    {
+        _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
+        _propsTabCustomization.OnSupportOrPropsChanged += OnSupportOrPropsChanged;
+        _supportTabCustomization.OnSupportOrPropsChanged += OnSupportOrPropsChanged;
+
+        if (_getScoreFromTerOccInd != null)
+            _getScoreFromTerOccInd.OnGetScoreFromTerOccInd += OnGetScoreFromTerOccInd;
     }
 
     private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
@@ -51,6 +70,12 @@ public class ScoreController : MonoBehaviour, IScore
         {
             UpdateScore(-ammoTypeButton._properties.RequiredScoreAmmount, 0);
         }
+    }
+
+    private void OnSupportOrPropsChanged(AmmoTypeButton supportOrPropsTypeButton)
+    {
+        UpdateScore(-supportOrPropsTypeButton._properties.RequiredScoreAmmount, 0);
+        supportOrPropsTypeButton.StartTimerCoroutine();
     }
 
     public void GetScore(int score, IDamage iDamage)

@@ -7,7 +7,6 @@ public class StartOnlineGame : BaseStartGame
     {
         _gameManager.OnGameStarted?.Invoke();
         _gameManager.IsGameStarted = true;
-        print("Online game has started");
     }
 
     protected override void StartGame()

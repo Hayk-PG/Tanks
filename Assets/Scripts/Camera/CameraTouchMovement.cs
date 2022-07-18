@@ -28,18 +28,18 @@ public class CameraTouchMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        GlobalFunctions.Loop<BaseRemoteControlTarget>.Foreach(_baseRemoteControlTargets, rcar => { rcar.OnRemoteControlTargetActivity += OnRemoteControlTargetActivity; });
+        //GlobalFunctions.Loop<BaseRemoteControlTarget>.Foreach(_baseRemoteControlTargets, rcar => { rcar.OnRemoteControlTargetActivity += OnRemoteControlTargetActivity; });
     }
 
     private void OnDisable()
     {
-        GlobalFunctions.Loop<BaseRemoteControlTarget>.Foreach(_baseRemoteControlTargets, rcar => { rcar.OnRemoteControlTargetActivity -= OnRemoteControlTargetActivity; });
+        //GlobalFunctions.Loop<BaseRemoteControlTarget>.Foreach(_baseRemoteControlTargets, rcar => { rcar.OnRemoteControlTargetActivity -= OnRemoteControlTargetActivity; });
     }
 
     private void Update()
     {
-        GetMovingFixedJoysitcksCount();
-        TouchMovement();
+        //GetMovingFixedJoysitcksCount();
+        //TouchMovement();
     }
 
     private bool IsPointerOnUI()
