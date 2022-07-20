@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamage
 {
+    private TankController _tankController;
     private VehiclePool _vehiclePool;
     private PlayerShields _playerShields;
 
@@ -21,12 +22,13 @@ public class HealthController : MonoBehaviour, IDamage
         set => _armor = value;
     }
   
-    public Action<int> OnTakeDamage { get; set; }
+    public Action<BasePlayer, int> OnTakeDamage { get; set; }
     public Action<int> OnUpdateHealthBar { get; set; }
 
     private void Awake()
     {
         Health = _maxHealth;
+        _tankController = Get<TankController>.From(gameObject);
         _vehiclePool = Get<VehiclePool>.FromChild(gameObject);
         _playerShields = Get<PlayerShields>.From(gameObject);
     }
@@ -39,7 +41,7 @@ public class HealthController : MonoBehaviour, IDamage
             _vehiclePool.Pool(0, null);
 
             OnUpdateHealthBar?.Invoke(Health);
-            OnTakeDamage?.Invoke(DamageValue(DamageValue(damage)));
+            OnTakeDamage?.Invoke(_tankController.BasePlayer ,DamageValue(DamageValue(damage)));
         }
     }
 

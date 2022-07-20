@@ -9,6 +9,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
     public Action OnInstantiateSandbags { get; set; }
     public Action OnInstantiateMetalCube { get; set; }
+    public Action OnChangeToMetalGround { get; set; }
     public Action OnActivateShields { get; set; }
     public Action OnArtillery { get; set; }
 
@@ -61,6 +62,9 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
         if (propsTypeButton._properties.SupportOrPropsType == Names.MetalCube)
             OnInstantiateMetalCube?.Invoke();
+
+        if (propsTypeButton._properties.SupportOrPropsType == Names.MetalGround)
+            OnChangeToMetalGround?.Invoke();
 
         if (propsTypeButton._properties.SupportOrPropsType == Names.Shield)
         {

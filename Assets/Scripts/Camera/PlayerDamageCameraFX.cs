@@ -35,8 +35,9 @@ public class PlayerDamageCameraFX : BaseCameraFX
         if (_localHp != null) _localHp.OnTakeDamage += PlayerDamageFX;
     }
 
-    public void PlayerDamageFX(int damage)
+    public void PlayerDamageFX(BasePlayer basePlayer,int damage)
     {
-        _animator.Play(_damageFX);
+        if (basePlayer != null)
+            _animator.Play(_damageFX);
     }
 }

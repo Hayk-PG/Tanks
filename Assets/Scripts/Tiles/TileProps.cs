@@ -1,16 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+
 
 public class TileProps : MonoBehaviour
 {
-    public enum PropsType { Sandbags, MetalCube}
+    public enum PropsType { Sandbags, MetalCube, MetalGround}
     public PropsType _propsType;
+
+    private Tile _tile;
 
     [SerializeField] private Sandbags _sandBags;
     [SerializeField] private MetalCube _metalCube;
-    private Tile _tile;
-
+    [SerializeField] private MetalTile _metalGround;
+    
     public Sandbags Sandbags => _sandBags;
     public MetalCube MetalCube => _metalCube;
+    public MetalTile MetalGround => _metalGround;
 
 
     private void OnEnable()
@@ -35,6 +40,11 @@ public class TileProps : MonoBehaviour
 
             case PropsType.MetalCube:
                 MetalCube.gameObject.SetActive(isActive);
+                break;
+
+            case PropsType.MetalGround:
+                transform.GetChild(0).gameObject.SetActive(!isActive);
+                MetalGround.gameObject.SetActive(isActive);
                 break;
         }
 

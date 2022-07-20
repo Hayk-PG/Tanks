@@ -31,9 +31,10 @@ public class ScreenText : MonoBehaviour
         if (_scoreController != null) _scoreController.OnHitEnemy += OnGetPoints;
     }
 
-    private void OnTakeDamage(int damage)
+    private void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
-        if (_playerDamageScreenText != null) _playerDamageScreenText.Display(-damage);
+        if (basePlayer != null && _playerDamageScreenText != null)
+            _playerDamageScreenText.Display(-damage);
     }
 
     private void OnGetPoints(int points)
