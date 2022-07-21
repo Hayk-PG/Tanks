@@ -6,6 +6,7 @@ using UnityEngine;
 public class ChangeTiles : BaseChangeTiles
 {
     private float second;
+    private IEnumerator _coroutine;
 
     public event Action<TilesData> OnTilesUpdated;
 
@@ -13,13 +14,32 @@ public class ChangeTiles : BaseChangeTiles
     protected override void Awake()
     {
         base.Awake();
+        _coroutine = UpdateTilesCoroutine(second);
     }
 
     public void UpdateTiles()
     {
         second = 0;
 
-        StartCoroutine(UpdateTilesCoroutine(second));
+        StopCoroutine();
+        StartCoroutine();
+
+        //StartCoroutine(UpdateTilesCoroutine(second));
+    }
+
+    private void StartCoroutine()
+    {
+        _coroutine = UpdateTilesCoroutine(second);
+        StartCoroutine(_coroutine);
+    }
+
+    private void StopCoroutine()
+    {
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
     }
 
     private IEnumerator UpdateTilesCoroutine(float time)
@@ -91,7 +111,7 @@ public class ChangeTiles : BaseChangeTiles
                 }
             }
 
-            yield return null;
+            yield return new WaitForSeconds(0.02f);
         }
 
         OnTilesUpdated?.Invoke(TilesGenerator);

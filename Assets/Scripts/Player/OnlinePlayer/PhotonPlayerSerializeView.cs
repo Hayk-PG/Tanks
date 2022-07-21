@@ -1,10 +1,15 @@
 ﻿using Photon.Pun;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
 {
     private PhotonPlayerTankController _photonPlayerTankController;
+   
+    private Vector3 _currentVelocity;
+    private Vector3 _currentPosition;
+    private Vector3 _targetPosition;
+    private float _lag;
+
 
 
     private void Awake()
@@ -66,8 +71,10 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
                 _photonPlayerTankController._tankRigidbody.velocity = (Vector3)stream.ReceiveNext();
                 _photonPlayerTankController._tankRigidbody.rotation = (Quaternion)stream.ReceiveNext();
 
-                float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
-                _photonPlayerTankController._tankRigidbody.position += (_photonPlayerTankController._tankRigidbody.velocity * lag);
+                _lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime) * Time.deltaTime);
+                _currentPosition = _photonPlayerTankController._tankRigidbody.position;
+                _targetPosition = _photonPlayerTankController._tankRigidbody.position + _photonPlayerTankController._tankRigidbody.velocity * _lag;
+                _photonPlayerTankController._tankRigidbody.position = Vector3.SmoothDamp(_currentPosition, _targetPosition, ref _currentVelocity, 1);               
             }
 
             if (_photonPlayerTankController._shootController != null)
