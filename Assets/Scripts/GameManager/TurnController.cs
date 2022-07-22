@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using Photon.Pun;
-using System.Collections;
-using UnityEngine;
+
 
 public enum TurnState { None, Transition, Player1, Player2, Other}
 
@@ -12,15 +10,13 @@ public class TurnController : MonoBehaviourPun
     public TurnState _previousTurnState;
 
     private GameManager _gameManager;
-    private CameraMovement _cameraMovement;
 
-    public Action<TurnState,CameraMovement> OnTurnChanged { get; set; }
+    public Action<TurnState> OnTurnChanged { get; set; }
   
 
     private void Awake()
     {
         _gameManager = Get<GameManager>.From(gameObject);
-        _cameraMovement = FindObjectOfType<CameraMovement>();
     }
 
     private void OnEnable()
@@ -52,7 +48,7 @@ public class TurnController : MonoBehaviourPun
             SetPreviousTurnState();
             SetCurrentTurnState(turnState);
             Invoke("NextTurnFromTransition", 2);
-            OnTurnChanged?.Invoke(_turnState, _cameraMovement);
+            OnTurnChanged?.Invoke(_turnState);
         }
     }
 
@@ -76,6 +72,6 @@ public class TurnController : MonoBehaviourPun
     [PunRPC]
     private void OnTurnChangedRPC(int currentTurnState)
     {
-        OnTurnChanged?.Invoke((TurnState)currentTurnState, _cameraMovement);
+        OnTurnChanged?.Invoke((TurnState)currentTurnState);
     }
 }

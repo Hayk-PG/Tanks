@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class AIShootController : BaseShootController
@@ -71,5 +70,6 @@ public class AIShootController : BaseShootController
         bullet.OwnerScore = _iScore;
         bullet.RigidBody.velocity = _target;
         _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
+        mainCameraController.SetTarget(_playerTurn, bullet.transform);
     }
 }

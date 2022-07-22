@@ -12,7 +12,6 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     public Action<VelocityData> OnBulletVelocity { get; set; }
 
     public TurnController TurnController { get; set; }
-    public CameraMovement CameraMovement { get; set; }
 
     protected WindSystemController _windSystemController;
     protected bool _isWindActivated;
@@ -52,12 +51,12 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
    
     protected virtual void OnEnable()
     {
-        TurnController.OnTurnChanged += OnTurnChanged;
+        
     }
 
     protected virtual void OnDisable()
     {
-        TurnController.OnTurnChanged -= OnTurnChanged;
+        
     }
 
     protected virtual void FixedUpdate()
@@ -85,14 +84,6 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     } 
 
     protected virtual void ActivateWindForce() => _isWindActivated = true;
-
-    protected void OnTurnChanged(TurnState arg1, CameraMovement arg2)
-    {
-        if(arg1 == TurnState.Other)
-        {
-            arg2.SetCameraTarget(transform, 10, 4);
-        }
-    }
 }
 
     

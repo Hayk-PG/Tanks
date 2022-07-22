@@ -56,7 +56,7 @@ public class TurnTimer : MonoBehaviourPun
         _myPlugins.OnPluginService += OnPluginService;
     }
 
-    private void OnTurnChanged(TurnState currentState, CameraMovement cameraMovement)
+    private void OnTurnChanged(TurnState currentState)
     {
         Timer = 0;
         UnsubscribeFromPluginService();

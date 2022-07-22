@@ -69,7 +69,7 @@ public class BaseRemoteControlTarget : MonoBehaviour
         RemoteControlTargetActivity(false);
     }
 
-    private void OnTurnChanged(TurnState turnState, CameraMovement cameraMovement)
+    private void OnTurnChanged(TurnState turnState)
     {
         RemoteControlTargetActivity(false);
     }

@@ -65,7 +65,7 @@ public class AIActionPlanner : MonoBehaviour
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
    
-    private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
+    private void OnTurnChanged(TurnState arg1)
     {
         if(arg1 == _playerTurn.MyTurn)
         {

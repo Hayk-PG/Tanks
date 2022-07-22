@@ -6,6 +6,8 @@ public class BaseShootController: MonoBehaviour
     protected Transform _canonPivotPoint;
     protected Transform _shootPoint;
     protected BaseTrajectory _trajectory;
+    protected PlayerTurn _playerTurn;
+    protected MainCameraController mainCameraController;
 
     [Serializable] public struct Canon
     {
@@ -42,6 +44,8 @@ public class BaseShootController: MonoBehaviour
         FindCanonPivotPoint();
         _shootPoint = Get<BaseTrajectory>.FromChild(_canonPivotPoint.gameObject).transform;
         _trajectory = Get<BaseTrajectory>.From(_shootPoint.gameObject);
+        _playerTurn = Get<PlayerTurn>.From(gameObject);
+        mainCameraController = FindObjectOfType<MainCameraController>();
     }
 
     protected virtual void FindCanonPivotPoint()

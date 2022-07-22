@@ -7,8 +7,7 @@ public class PlayerArtillery : PlayerDeployProps
 
     private IScore _iScore;
     private RemoteControlArtilleryTarget _remoteControlArtilleryTargets;
-    private GameManager _gameManager;
-    private CameraMovement _cameraMovement;  
+    private GameManager _gameManager; 
     private Transform _enemyTransform;
 
 
@@ -19,7 +18,6 @@ public class PlayerArtillery : PlayerDeployProps
         _iScore = Get<IScore>.From(gameObject);
         _remoteControlArtilleryTargets = FindObjectOfType<RemoteControlArtilleryTarget>();
         _gameManager = FindObjectOfType<GameManager>();
-        _cameraMovement = FindObjectOfType<CameraMovement>();
     }
 
     protected override void Start()
@@ -57,7 +55,6 @@ public class PlayerArtillery : PlayerDeployProps
     {
         if (_playerTurn.IsMyTurn && _enemyTransform != null)
         {
-            _cameraMovement.SetCameraTarget(_enemyTransform, 5, 1.5f);
             _remoteControlArtilleryTargets.RemoteControlTargetActivity(true);
             _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
         }         

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerTurn : MonoBehaviour
 {
@@ -30,11 +29,10 @@ public class PlayerTurn : MonoBehaviour
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
-    private void OnTurnChanged(TurnState arg1, CameraMovement arg2)
+    private void OnTurnChanged(TurnState arg1)
     {
         if (arg1 == MyTurn)
         {
-            arg2.SetCameraTarget(transform, 5, 1.5f);
             IsMyTurn = true;
         }
         else

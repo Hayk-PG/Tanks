@@ -21,12 +21,11 @@ public class ShootController : BaseShootController
     private TankController _tankController;
     private TankMovement _tankMovement;
     private PhotonPlayerShootRPC _photonPlayerShootRPC;
-    private Rigidbody _rigidBody;
-    private PlayerTurn _playerTurn;
+    private Rigidbody _rigidBody;   
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
     private IScore _iScore;
     private PlayerAmmoType _playerAmmoType;
- 
+    
     [HideInInspector] [SerializeField] private BulletController _instantiatedBullet;
     [HideInInspector] [SerializeField] private int _activeAmmoIndex;
 
@@ -68,11 +67,10 @@ public class ShootController : BaseShootController
         base.Awake();
         _tankController = Get<TankController>.From(gameObject);
         _tankMovement = Get<TankMovement>.From(gameObject);
-        _rigidBody = GetComponent<Rigidbody>();
-        _playerTurn = GetComponent<PlayerTurn>();
+        _rigidBody = GetComponent<Rigidbody>();       
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
         _iScore = Get<IScore>.From(gameObject);
-        _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
+        _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);        
     }
 
     private void OnEnable()
@@ -180,6 +178,7 @@ public class ShootController : BaseShootController
         Bullet.OwnerScore = _iScore;
         Bullet.RigidBody.velocity = Bullet.transform.forward * force;
         _gameManagerBulletSerializer.BulletController = Bullet;
+        mainCameraController.SetTarget(_playerTurn, Bullet.transform);
     }
 
     public void ShootBullet(float force)
