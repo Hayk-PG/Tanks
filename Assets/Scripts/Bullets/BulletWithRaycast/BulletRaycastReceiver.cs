@@ -24,7 +24,7 @@ public class BulletRaycastReceiver : MonoBehaviour
 
     private void OnFrontRaycastHit(RaycastHit hit)
     {
-        _bulletControllerWithRaycast.OnCollision?.Invoke(hit.collider, _bulletControllerWithRaycast.OwnerScore);
-        _bulletControllerWithRaycast.OnExplodeOnCollision?.Invoke(_bulletControllerWithRaycast.OwnerScore);
+        _bulletControllerWithRaycast.OnCollision?.Invoke(hit.collider, _bulletControllerWithRaycast.OwnerScore, _bulletControllerWithRaycast.Distance);
+        _bulletControllerWithRaycast.OnExplodeOnCollision?.Invoke(_bulletControllerWithRaycast.OwnerScore, _bulletControllerWithRaycast.Distance);
     }
 }

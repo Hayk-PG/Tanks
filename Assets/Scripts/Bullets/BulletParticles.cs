@@ -38,9 +38,10 @@ public class BulletParticles : MonoBehaviour
         if(_trail != null) _trail.SetActive(isActive);
     }
 
-    protected virtual void OnExplosion(IScore ownerScore)
+    protected virtual void OnExplosion(IScore ownerScore, float distance)
     {
         _explosion.OwnerScore = ownerScore;
+        _explosion.Distance = distance;
         _explosion.gameObject.SetActive(true);
         _explosion.transform.parent = null;
     }

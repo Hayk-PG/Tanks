@@ -66,8 +66,6 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
             iDamage?.Damage((int)data[2]);
             iScore?.GetScore((int)data[3], iDamage);
             iScore?.HitEnemyAndGetScore((int)data[4], iDamage);
-
-            print("(Explosion) " + (string)data[0] + "/" + (int)data[2] + "/" + (string)data[1] + "/" + (int)data[3] + "/" + (int)data[4]);
         }
     }
 }

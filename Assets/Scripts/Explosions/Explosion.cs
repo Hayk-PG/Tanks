@@ -4,17 +4,15 @@ using UnityEngine;
 public class Explosion : MonoBehaviour
 {
     public IScore OwnerScore { get; set; }
+    public float Distance { get; set; }
 
-    [SerializeField]
-    private float _radius;
-    private Collider[] _colliders;
-  
+    [SerializeField] private float _radius;
+    [SerializeField] private float _maxDamageValue;
     private int _currentDamageValue;
-    [SerializeField]
-    private float _maxDamageValue;
     private float _percentage;
+    private float _distanceFactorPercentage;
     private float _magnitude;
-
+    private Collider[] _colliders;
     private List<IDamage> _iDamages;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
@@ -50,14 +48,14 @@ public class Explosion : MonoBehaviour
         _iDamages.Add(iDamage);
 
         _percentage = 100 - Mathf.InverseLerp(0, _radius, _magnitude) * 100;
-        _currentDamageValue = Mathf.RoundToInt(_maxDamageValue / 100 * _percentage);
-
+        _distanceFactorPercentage = 100 - Distance;
+        _currentDamageValue = Mathf.RoundToInt((_maxDamageValue / 100 * _percentage) / 100 * _distanceFactorPercentage);
         Conditions<bool>.Compare(_currentDamageValue * 10 > 0, ()=> DamageAndScore(iDamage), null);
     }
 
     private void DamageAndScore(IDamage iDamage)
     {
-        int scoreValue = _currentDamageValue * 100;
+        int scoreValue = (_currentDamageValue * 100) + Mathf.FloorToInt(Distance * 10);
         int hitEnemyAndGetScoreValue = _currentDamageValue * 10;
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
         () => DamageAndScoreInOfflineMode(iDamage, _currentDamageValue, scoreValue, hitEnemyAndGetScoreValue),

@@ -5,7 +5,7 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
 {
     protected CameraShake _cameraShake;
 
-    public Action<IScore> OnBulletExplosion { get; set; }
+    public Action<IScore, float> OnBulletExplosion { get; set; }
     public Action OnBulletExplosionWithoutHitting { get; set; }
 
     public UnityEvent OnCameraShake;
@@ -24,9 +24,9 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
         if (_iBulletLimit != null) _iBulletLimit.OnExplodeOnLimit = OnExplodeOnLimit;
     }
 
-    protected virtual void OnExplodeOnCollision(IScore ownerScore)
+    protected virtual void OnExplodeOnCollision(IScore ownerScore, float distance)
     {
-        OnBulletExplosion?.Invoke(ownerScore);
+        OnBulletExplosion?.Invoke(ownerScore, distance);
         OnCameraShake?.Invoke();
 
         DestroyBullet();
@@ -61,6 +61,4 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
         SetTurnToTransition();
         Destroy(gameObject);
     }
-
-
 }

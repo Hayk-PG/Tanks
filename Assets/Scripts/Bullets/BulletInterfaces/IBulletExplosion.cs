@@ -2,6 +2,6 @@
 
 public interface IBulletExplosion 
 {
-    Action<IScore> OnBulletExplosion { get; set; }
+    Action<IScore, float> OnBulletExplosion { get; set; }
     Action OnBulletExplosionWithoutHitting { get; set; }
 }

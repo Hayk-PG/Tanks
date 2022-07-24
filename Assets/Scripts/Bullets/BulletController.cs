@@ -6,8 +6,14 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     public Rigidbody RigidBody { get; protected set; }
     public IScore OwnerScore { get; set; }
 
-    public Action<Collider, IScore> OnCollision { get; set; }
-    public Action<IScore> OnExplodeOnCollision { get; set; }
+    public Vector3 StartPosition { get; set; }
+    public float Distance
+    {
+        get => Vector3.Distance(StartPosition, transform.position);
+    }
+
+    public Action<Collider, IScore, float> OnCollision { get; set; }
+    public Action<IScore, float> OnExplodeOnCollision { get; set; }
     public Action<bool> OnExplodeOnLimit { get; set; }
     public Action<VelocityData> OnBulletVelocity { get; set; }
 
@@ -40,6 +46,8 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
         RigidBody = GetComponent<Rigidbody>();
         TurnController = FindObjectOfType<TurnController>();
         _windSystemController = FindObjectOfType<WindSystemController>();
+
+        StartPosition = transform.position;
     }
 
     protected virtual void Start()
@@ -67,10 +75,10 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        OnCollision?.Invoke(collision.collider, OwnerScore);
-        OnExplodeOnCollision?.Invoke(OwnerScore);
+        OnCollision?.Invoke(collision.collider, OwnerScore, Distance);
+        OnExplodeOnCollision?.Invoke(OwnerScore, Distance);
     }
-
+ 
     protected virtual void ExplodeOnLimit()
     {
         OnExplodeOnLimit?.Invoke(RigidBody.position.y < -5);

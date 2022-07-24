@@ -10,12 +10,14 @@ public class BulletCollision : GetBulletController
         _iBulletCollision.OnCollision = OnCollision;
     }
 
-    private void OnCollision(Collider collider, IScore ownerScore)
+    private void OnCollision(Collider collider, IScore ownerScore, float distance)
     {
         _collisionCount++;
 
         if (_collisionCount <= 1)
+        {
             Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => OnCollisionInOfflineMode(collider, ownerScore), () => OnCollisionInOnlineMode(collider, ownerScore));
+        }           
     }
 
     private void OnCollisionInOfflineMode(Collider collider, IScore ownerScore)
