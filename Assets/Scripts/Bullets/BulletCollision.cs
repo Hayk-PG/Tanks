@@ -21,7 +21,7 @@ public class BulletCollision : GetBulletController
     private void OnCollisionInOfflineMode(Collider collider, IScore ownerScore)
     {
         ownerScore.GetScore(10, null);
-        Get<IDestruct>.From(collider.gameObject)?.Destruct(_destructDamage);
+        Get<IDestruct>.From(collider.gameObject)?.Destruct(_destructDamage, 0);
     }
 
     private void OnCollisionInOnlineMode(Collider collider, IScore ownerScore)

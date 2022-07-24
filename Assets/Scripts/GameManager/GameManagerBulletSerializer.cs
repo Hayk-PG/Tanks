@@ -29,7 +29,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
         GlobalFunctions.Loop<Collider>.Foreach(FindObjectsOfType<Collider>(), collider => 
         {
             if (collider.name == colliderName && collider.transform.position == colliderPosition)
-                Get<IDestruct>.From(collider.gameObject)?.Destruct(destructDamage);
+                Get<IDestruct>.From(collider.gameObject)?.Destruct(destructDamage, 0);
         });
 
         IScore iScore = GameObject.Find(ownerName)?.GetComponent<IScore>();

@@ -6,6 +6,7 @@ public class Tile : MonoBehaviour, IDestruct
     private ChangeTiles _changeTiles;
     private GroundSlam _groundSlam;
     private Sandbags _sandbags;
+    private TileParticles _tileParticles;
 
     [SerializeField]
     private GameObject _explosion;
@@ -24,7 +25,7 @@ public class Tile : MonoBehaviour, IDestruct
         _collider = GetComponent<Collider>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
         _groundSlam = FindObjectOfType<GroundSlam>();
-        
+        _tileParticles = Get<TileParticles>.From(gameObject);
         _tileSize = _collider.bounds.size;
     }
 
@@ -64,11 +65,11 @@ public class Tile : MonoBehaviour, IDestruct
         _changeTiles.UpdateTiles();
     }
 
-    public void Destruct(int damage)
+    public void Destruct(int damage, int tileParticleIndex)
     {
         if (!IsProtected)
         {
-            Destruction();
+            Destruction(tileParticleIndex);
         }
         else
         {
@@ -79,17 +80,18 @@ public class Tile : MonoBehaviour, IDestruct
                 IsProtected = false;
                 _sandbags = Get<Sandbags>.FromChild(gameObject);
                 _sandbags?.OnSandbags?.Invoke(false);
-                Destruction();
+                Destruction(tileParticleIndex);
             }
         }
     }
 
-    private void Destruction()
+    private void Destruction(int tileParticleIndex)
     {
         _collider.isTrigger = true;
         _explosion.SetActive(true);
         _explosion.transform.parent = null;
-        _changeTiles.UpdateTiles();       
+        _changeTiles.UpdateTiles();
+        _tileParticles.TileParticlesActivity(tileParticleIndex, true);
         Destroy(gameObject);
     }
 
