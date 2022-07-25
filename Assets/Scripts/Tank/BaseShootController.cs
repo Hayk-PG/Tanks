@@ -19,16 +19,13 @@ public class BaseShootController: MonoBehaviour
         public float _rotationSpeed;
         public Vector3 _rotationStabilizer;
     }
-
     [Serializable] public struct Shoot
     {
         internal float _currentForce;
-
-        [Header("Shoot force")]
-        [Range(0, 3)] public float _minForce;
-        [Range(0, 50)] public float _maxForce;
-        public float _smoothTime;
-        public float _maxSpeed;
+        internal float _maxForce;
+        internal float _minForce;
+        internal float _smoothTime;
+        internal float _maxSpeed;
         internal float _currentVelocity;
         internal bool _isApplyingForce;
     }

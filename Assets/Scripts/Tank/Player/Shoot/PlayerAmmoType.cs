@@ -71,6 +71,7 @@ public class PlayerAmmoType : MonoBehaviour
 
         GetMoreBullets(ammoTypeButton);
         UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
+        SetBulletSpecs(ammoTypeButton);
     }
 
     private void GetMoreBullets(AmmoTypeButton ammoTypeButton)
@@ -82,6 +83,14 @@ public class PlayerAmmoType : MonoBehaviour
     public void UpdateDisplayedWeapon(int index)
     {
         _ammoTabCustomization.OnUpdateDisplayedWeapon?.Invoke(_weapons[index], _weaponsBulletsCount[index]); 
+    }
+
+    public void SetBulletSpecs(AmmoTypeButton ammoTypeButton)
+    {
+        _shootController._shoot._minForce = 3;
+        _shootController._shoot._smoothTime = 1;
+        _shootController._shoot._maxForce = ammoTypeButton._properties.BulletMaxForce;
+        _shootController._shoot._maxSpeed = ammoTypeButton._properties.BulletForceMaxSpeed;
     }
 
     public void SwitchToDefaultWeapon(int index)

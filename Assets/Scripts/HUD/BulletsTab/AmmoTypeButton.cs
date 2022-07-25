@@ -88,6 +88,8 @@ public class AmmoTypeButton : MonoBehaviour
         }
         public int Minutes { get; set; }
         public int Seconds { get; set; }
+        public float BulletMaxForce { get; set; }
+        public float BulletForceMaxSpeed { get; set; }
         public string MassValue
         {
             get => _textStatsValues[1].text;

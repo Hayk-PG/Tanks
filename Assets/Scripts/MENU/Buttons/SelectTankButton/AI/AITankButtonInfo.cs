@@ -5,9 +5,7 @@ public class AITankButtonInfo : BaseTankButtonInfo
     {
         return new TanksInfo.Info(
                 (int)bstb._data.AvailableAITanks[bstb._index]._normalSpeed,
-                (int)bstb._data.AvailableAITanks[bstb._index]._maxForce,
                 bstb._data.AvailableAITanks[bstb._index]._armor,
-
                 bstb._data.AvailableTanks[bstb._index]._getItNowPrice,
                 Converter.HhMMSS(bstb._data.AvailableTanks[bstb._index]._initialBuildHours, bstb._data.AvailableTanks[bstb._index]._initialBuildMinutes, bstb._data.AvailableTanks[bstb._index]._initialBuildSeconds));
     }

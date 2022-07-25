@@ -37,15 +37,13 @@ public class TanksInfo : MonoBehaviour
     public struct Info
     {
         public int _tankSpeedValue;
-        public int _tankRangeValue;
         public int _tankArmorValue;
         public int _getItNowPrice;
         public string _buildTime;
 
-        public Info(int tankSpeedValue, int tankRangeValue, int tankArmorValue, int getItNowPrice, string buildTime)
+        public Info(int tankSpeedValue, int tankArmorValue, int getItNowPrice, string buildTime)
         {
             _tankSpeedValue = tankSpeedValue;
-            _tankRangeValue = tankRangeValue;
             _tankArmorValue = tankArmorValue;
             _getItNowPrice = getItNowPrice;
             _buildTime = buildTime;
@@ -65,7 +63,6 @@ public class TanksInfo : MonoBehaviour
     private void Stats(Info info)
     {
         _tankStats._textTankSpeedValue.text = info._tankSpeedValue.ToString();
-        _tankStats._textTankRangeValue.text = info._tankRangeValue.ToString();
         _tankStats._textTankArmorValue.text = info._tankArmorValue.ToString();
     }
 

@@ -28,12 +28,6 @@ public class TankProperties : ScriptableObject
     public float _rotationSpeed;
     public Vector3 _rotationStabilizer;
 
-    [Header("Shoot force")]
-    public float _minForce;
-    public float _maxForce;
-    public float _smoothTime;
-    public float _maxSpeed;
-
     [Header("Health")]
     public int _armor;
 
@@ -60,11 +54,6 @@ public class TankProperties : ScriptableObject
         _maxEulerAngleX = Get<BaseShootController>.From(_tank.gameObject)._canon._maxEulerAngleX;
         _rotationSpeed = Get<BaseShootController>.From(_tank.gameObject)._canon._rotationSpeed;
         _rotationStabilizer = Get<BaseShootController>.From(_tank.gameObject)._canon._rotationStabilizer;
-
-        _minForce = Get<BaseShootController>.From(_tank.gameObject)._shoot._minForce;
-        _maxForce = Get<BaseShootController>.From(_tank.gameObject)._shoot._maxForce;
-        _smoothTime = Get<BaseShootController>.From(_tank.gameObject)._shoot._smoothTime;
-        _maxSpeed = Get<BaseShootController>.From(_tank.gameObject)._shoot._maxSpeed;
 
         _armor = Get<HealthController>.From(_tank.gameObject).Armor;
 
@@ -101,11 +90,6 @@ public class TankProperties : ScriptableObject
             {
                 Get<BaseShootController>.From(_aiTank.gameObject)._canon._minEulerAngleX = _minEulerAngleX;
                 Get<BaseShootController>.From(_aiTank.gameObject)._canon._maxEulerAngleX = _maxEulerAngleX;
-
-                Get<BaseShootController>.From(_aiTank.gameObject)._shoot._minForce = _minForce;
-                Get<BaseShootController>.From(_aiTank.gameObject)._shoot._maxForce = _maxForce;
-                Get<BaseShootController>.From(_aiTank.gameObject)._shoot._smoothTime = _smoothTime;
-                Get<BaseShootController>.From(_aiTank.gameObject)._shoot._maxSpeed = _maxSpeed;
             }
 
             if (Get<HealthController>.From(_aiTank.gameObject) != null)

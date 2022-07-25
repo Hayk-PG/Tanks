@@ -27,12 +27,14 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         public int? _damageValue;
         public int? _minutes;
         public int? _seconds;
+        public float? _bulletMaxForce;
+        public float? _bulletForceMaxSpeed;
         public string _massWalue;
         public string _weaponType;
         public string _supportType;       
         public Sprite _icon;
 
-        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? damageValue, int? minutes, int? seconds, string massValue, string weaponType, string supportType, Sprite icon)
+        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? damageValue, int? minutes, int? seconds, float? bulletMaxForce, float? bulletForceMaxSpeed, string massValue, string weaponType, string supportType, Sprite icon)
         {
             _buttonType = buttonType;
             _index = index;
@@ -41,6 +43,8 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
             _damageValue = damageValue;
             _minutes = minutes;
             _seconds = seconds;
+            _bulletMaxForce = bulletMaxForce;
+            _bulletForceMaxSpeed = bulletForceMaxSpeed;
             _massWalue = massValue;
             _weaponType = weaponType;
             _supportType = supportType;
@@ -74,6 +78,8 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         if (properties._damageValue != null) button._properties.DamageValue = (int)properties._damageValue;
         if (properties._minutes != null) button._properties.Minutes = (int)properties._minutes;
         if (properties._seconds != null) button._properties.Seconds = (int)properties._seconds;
+        if (properties._bulletMaxForce != null) button._properties.BulletMaxForce = (float)properties._bulletMaxForce;
+        if (properties._bulletForceMaxSpeed != null) button._properties.BulletForceMaxSpeed = (float)properties._bulletForceMaxSpeed;
         if (properties._massWalue != null) button._properties.MassValue = properties._massWalue;
         if (properties._weaponType != null) button._properties.WeaponType = properties._weaponType;
         if (properties._supportType != null) button._properties.SupportOrPropsType = properties._supportType;
