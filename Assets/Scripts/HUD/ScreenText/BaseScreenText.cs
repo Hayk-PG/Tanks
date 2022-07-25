@@ -17,8 +17,9 @@ public class BaseScreenText : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    public virtual void Display()
+    public virtual void Display(string text)
     {
+        _text.text = text;
         _animator.SetTrigger(Names.Play);
         OnSoundFX?.Invoke();
     }

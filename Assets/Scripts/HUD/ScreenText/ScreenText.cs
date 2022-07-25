@@ -8,6 +8,7 @@ public class ScreenText : MonoBehaviour
     private HealthController _playerHealthController;
     private ScoreController _scoreController;
 
+    private string _onGetPointsText;
 
 
     private void Awake()
@@ -37,8 +38,9 @@ public class ScreenText : MonoBehaviour
             _playerDamageScreenText.Display(-damage);
     }
 
-    private void OnGetPoints(int points)
+    private void OnGetPoints(int[] scoreValues)
     {
-        _enemyHitScreenText.Display();
+        _onGetPointsText = "+" + scoreValues[0] + " (Hit)" + "\n" + "+" + scoreValues[1] + " (Bonus)";
+        _enemyHitScreenText.Display(_onGetPointsText);
     }
 }

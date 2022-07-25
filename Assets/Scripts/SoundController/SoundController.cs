@@ -2,17 +2,17 @@
 
 public class SoundController : MonoBehaviour
 {
-    private static SoundController _inst;
-    private AudioSource _musicSRC;
+    protected static SoundController _inst;
+    protected AudioSource _musicSRC;
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
         Instance();
         _musicSRC = Get<AudioSource>.From(transform.Find("MusicSRC").gameObject);
     }
 
-    private void Instance()
+    protected void Instance()
     {
         if (_inst != null)
         {

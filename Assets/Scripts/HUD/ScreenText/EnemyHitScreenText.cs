@@ -1,8 +1,8 @@
 ﻿
 public class EnemyHitScreenText : BaseScreenText
 {
-    public override void Display()
+    public override void Display(string text)
     {
-        base.Display();
+        base.Display(text);
     }
 }

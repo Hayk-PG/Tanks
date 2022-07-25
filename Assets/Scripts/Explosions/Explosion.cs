@@ -55,22 +55,22 @@ public class Explosion : MonoBehaviour
 
     private void DamageAndScore(IDamage iDamage)
     {
-        int scoreValue = (_currentDamageValue * 100) + Mathf.FloorToInt(Distance * 10);
-        int hitEnemyAndGetScoreValue = _currentDamageValue * 10;
+        int hitScore = (_currentDamageValue * 100);
+        int distanceBonus = Mathf.FloorToInt(Distance * 10);
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
-        () => DamageAndScoreInOfflineMode(iDamage, _currentDamageValue, scoreValue, hitEnemyAndGetScoreValue),
-        () => DamageAndScoreInOlineMode(iDamage, _currentDamageValue, scoreValue, hitEnemyAndGetScoreValue));
+        () => DamageAndScoreInOfflineMode(iDamage, _currentDamageValue, new int[2] { hitScore, distanceBonus }),
+        () => DamageAndScoreInOlineMode(iDamage, new int[2] { hitScore, distanceBonus }));
     }
 
-    private void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int scoreValue, int hitEnemyAndGetScoreValue)
+    private void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int[] scoreValues)
     {
         iDamage.Damage(damageValue);
-        OwnerScore?.GetScore(scoreValue, iDamage);
-        OwnerScore?.HitEnemyAndGetScore(hitEnemyAndGetScoreValue, iDamage);
+        OwnerScore?.GetScore(scoreValues[0] + scoreValues[1], iDamage);
+        OwnerScore?.HitEnemyAndGetScore(scoreValues, iDamage);
     }
 
-    private void DamageAndScoreInOlineMode(IDamage iDamage, int damageValue, int scoreValue, int hitEnemyAndGetScoreValue)
+    private void DamageAndScoreInOlineMode(IDamage iDamage, int[] scoreValues)
     {
-        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scoreValue, hitEnemyAndGetScoreValue);
+        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scoreValues);
     }
 }

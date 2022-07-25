@@ -21,7 +21,7 @@ public class ScoreController : MonoBehaviour, IScore
     }
     public Action<int, float> OnDisplayTempPoints { get; set; }
     public Action<int> OnPlayerGetsPoints { get; set; }
-    public Action<int> OnHitEnemy { get; set; }
+    public Action<int[]> OnHitEnemy { get; set; }
 
 
 
@@ -90,9 +90,12 @@ public class ScoreController : MonoBehaviour, IScore
         OnPlayerGetsPoints?.Invoke(Score);
     }
 
-    public void HitEnemyAndGetScore(int score, IDamage enemyDamage)
+    public void HitEnemyAndGetScore(int[] scores, IDamage enemyDamage)
     {
-        if (enemyDamage != IDamage) OnHitEnemy?.Invoke(score);
+        if (enemyDamage != IDamage)
+        {
+            OnHitEnemy?.Invoke(scores);
+        }
     }
 
     private void OnGetScoreFromTerOccInd()

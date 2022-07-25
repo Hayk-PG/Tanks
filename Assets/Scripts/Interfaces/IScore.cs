@@ -10,8 +10,8 @@ public interface IScore
 
     Action<int, float> OnDisplayTempPoints { get; set; }
     Action<int> OnPlayerGetsPoints { get; set; }
-    Action<int> OnHitEnemy { get; set; }
+    Action<int[]> OnHitEnemy { get; set; }
 
     void GetScore(int score, IDamage iDamage);
-    void HitEnemyAndGetScore(int score, IDamage enemyDamage);
+    void HitEnemyAndGetScore(int[] scores, IDamage enemyDamage);
 }

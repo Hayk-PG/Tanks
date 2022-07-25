@@ -36,7 +36,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
         iScore?.GetScore(10, null);
     }
 
-    public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int scoreValue, int hitEnemyAndGetScoreValue)
+    public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int[] scoreValues)
     {
         if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
@@ -47,8 +47,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
                 iDamageOwnerName,
                 ownerName,
                 damageValue,
-                scoreValue,
-                hitEnemyAndGetScoreValue
+                scoreValues
             };
 
             photonView.RPC("DamageAndScoreRPC", RpcTarget.AllViaServer, data);
@@ -61,11 +60,11 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
         if(data != null)
         {
             IDamage iDamage = GameObject.Find((string)data[0])?.GetComponent<IDamage>();
-            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>();
-
+            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>();            
             iDamage?.Damage((int)data[2]);
-            iScore?.GetScore((int)data[3], iDamage);
-            iScore?.HitEnemyAndGetScore((int)data[4], iDamage);
+            int[] scoreValues = (int[])data[3];
+            iScore?.GetScore(scoreValues[0] + scoreValues[1], iDamage);
+            iScore?.HitEnemyAndGetScore(scoreValues, iDamage);
         }
     }
 }
