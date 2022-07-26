@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System;
 
 public class PlayerHUDShootValues : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class PlayerHUDShootValues : MonoBehaviour
 
     [SerializeField]
     private TMP_Text _angleText, _forceText;
+
+    public Action<string, string> OnPlayerHudShootValues { get; set; }
 
 
     private void Awake()
@@ -28,5 +31,7 @@ public class PlayerHUDShootValues : MonoBehaviour
     {
         if (_angleText != null) _angleText.text = Mathf.Round(Mathf.InverseLerp(hudValues._minAngle, hudValues._maxAngle, hudValues._currentAngle) * 100) + "°";
         if (_forceText != null) _forceText.text = Mathf.Round(Mathf.InverseLerp(hudValues._minForce, hudValues._maxForce, hudValues._currentForce) * 100).ToString();
+
+        OnPlayerHudShootValues?.Invoke(_forceText.text, _angleText.text);
     }
 }
