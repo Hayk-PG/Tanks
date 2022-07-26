@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public partial class Tab_EndGame : MonoBehaviour
 {
@@ -55,6 +56,6 @@ public partial class Tab_EndGame : MonoBehaviour
     private void Display(GameResult gameResult, Values values)
     {
         DisplayGameResult(gameResult);
-        StartCoroutine(DisplayController(_isCoroutineRunning, values));
+        StartCoroutine(DisplayController(_isCoroutineRunning, values, gameResult));
     }
 }

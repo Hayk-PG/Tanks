@@ -9,6 +9,7 @@ public class MainCameraController : MonoBehaviour
     private Transform _player1, _player2;
     private Vector3 _currentVelocity;
     private float _currentVelocityfloat;
+    private float _ortographicSize;
     [SerializeField] private float _smoothTime, _maxTime;
     
     private bool PlayersInitialized
@@ -62,7 +63,8 @@ public class MainCameraController : MonoBehaviour
         {
             Vector3 targetPosition = new Vector3(Center.x, Center.y + 2, transform.position.z);
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
-            _camera.orthographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight, ref _currentVelocityfloat, _smoothTime, _maxTime);
+            _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight, ref _currentVelocityfloat, _smoothTime, _maxTime);
+            _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 1.5f, 5);
             _hudCamera.orthographicSize = _camera.orthographicSize;
         }
     }
@@ -101,6 +103,11 @@ public class MainCameraController : MonoBehaviour
                 Target1 = _player1;
                 Target2 = target;
             }
+        }
+        else
+        {
+            Target1 = _player1;
+            Target2 = target;
         }
     }
 }

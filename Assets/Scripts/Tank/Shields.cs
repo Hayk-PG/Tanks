@@ -3,13 +3,15 @@ using UnityEngine;
 
 public class Shields : MonoBehaviour
 {
-    private GameObject[] _shields = new GameObject[2];
+    private PlayerShields _playerShields;
+    private GameObject[] _shields = new GameObject[2];   
     private IEnumerator _coroutine;
     private int _s;
 
 
     private void Awake()
     {
+        _playerShields = Get<PlayerShields>.From(gameObject);
         _shields[0] = transform.GetChild(0).gameObject;
         _shields[1] = transform.GetChild(1).gameObject;
     }
@@ -48,7 +50,8 @@ public class Shields : MonoBehaviour
             {
                 _s = 0;
                 _isActive = false;
-                GlobalFunctions.Loop<GameObject>.Foreach(_shields, shield => { shield.SetActive(_isActive); });  
+                GlobalFunctions.Loop<GameObject>.Foreach(_shields, shield => { shield.SetActive(_isActive); });
+                _playerShields.IsShieldActive = _isActive;
             }
 
             yield return new WaitForSeconds(1);

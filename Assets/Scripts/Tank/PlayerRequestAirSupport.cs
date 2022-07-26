@@ -10,6 +10,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
     private PlayerTurn _playerTurn;
     private ShootButton _shootButton;
     private AmmoTypeButton _relatedSupportTabButton;
+    private MainCameraController _mainCameraController;
 
     private Bomber _bomber;
     public IScore _iScore;
@@ -32,6 +33,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
         _supportsTabCustomization = FindObjectOfType<SupportsTabCustomization>();
         _shootButton = FindObjectOfType<ShootButton>();
         _relatedSupportTabButton = GlobalFunctions.ObjectsOfType<AmmoTypeButton>.Find(button => button._properties.SupportOrPropsType == Names.AirSupport);
+        _mainCameraController = FindObjectOfType<MainCameraController>();
     }
 
     private void OnEnable()
@@ -75,6 +77,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
         _airSupport.Call(out Bomber bomber, position, rotation, distanceX);
         _bomber = bomber;
         _isAirSupportRequested = true;
+        _mainCameraController.SetTarget(_playerTurn, _bomber.transform);
     }
 
     private void RequestAirSupportRPC()

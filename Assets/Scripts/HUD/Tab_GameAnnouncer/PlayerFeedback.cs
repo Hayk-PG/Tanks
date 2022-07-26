@@ -40,7 +40,7 @@ public class PlayerFeedback : BaseAnnouncer
     {
         TextAnnouncement(0, "Good Hit!", true);
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-        SoundController.PlaySound(0, 2, out float clipLength);
+        SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Good_Hit, out float clipLength);
         yield return new WaitForSeconds(clipLength);
         TextAnnouncement(0, "", false);
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);

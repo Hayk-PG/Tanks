@@ -37,7 +37,7 @@ public partial class Tab_EndGame
     public Action OnGameResultsFinished { get; set; }
 
 
-    private IEnumerator DisplayController(bool _isCoroutineRunning, Values values)
+    private IEnumerator DisplayController(bool _isCoroutineRunning, Values values, GameResult gameResult)
     {
         SetLevelText(Data.Manager.Level);
         SetSliderXPMinAndMaxValues(Data.Manager.PointsSliderMinAndMaxValues[Data.Manager.Level, 0], Data.Manager.PointsSliderMinAndMaxValues[Data.Manager.Level, 1]);
@@ -45,6 +45,12 @@ public partial class Tab_EndGame
 
         yield return new WaitForSeconds(1);
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
+
+        int clipIndex = gameResult == GameResult.Win ? Indexes.Combat_Announcer_Male_Effect_You_Win_1 : Indexes.Combat_Announcer_Male_Effect_You_Lose;
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
+        SoundController.PlaySound(0, clipIndex, out float clipLength);
+        yield return new WaitForSeconds(clipLength);
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
 
         while (_isCoroutineRunning)
         {

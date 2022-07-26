@@ -21,11 +21,11 @@ public class GameplayAnnouncer : BaseAnnouncer
     {
         TextAnnouncement(0, "Ready?", true);
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-        SoundController.PlaySound(0, 0, out float clipLength);
+        SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Ready, out float clipLength);
         yield return new WaitForSeconds(clipLength);
         TextAnnouncement(0, "", false);
         TextAnnouncement(0, "Go!", true);
-        SoundController.PlaySound(0, 1, out float nextClipLength);
+        SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Go, out float nextClipLength);
         yield return new WaitForSeconds(nextClipLength);
         TextAnnouncement(0, "", false);
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
