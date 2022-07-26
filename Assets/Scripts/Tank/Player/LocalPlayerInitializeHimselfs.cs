@@ -8,7 +8,7 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
     private TankMovement _tankMovement;
 
     private AmmoTabButtonNotification _ammoTabButtonNotification;
-    private ScreenText _screenText;
+    private PlayerFeedback _playerFeedback;
     private TempPoints _tempPoints;
     private Fuel _fuel;
 
@@ -21,7 +21,7 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
         _tankMovement = Get<TankMovement>.From(gameObject);
 
         _ammoTabButtonNotification = FindObjectOfType<AmmoTabButtonNotification>();
-        _screenText = FindObjectOfType<ScreenText>();
+        _playerFeedback = FindObjectOfType<PlayerFeedback>();
         _tempPoints = FindObjectOfType<TempPoints>();
         _fuel = FindObjectOfType<Fuel>(); 
     }
@@ -39,7 +39,7 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
     private void OnInitializeHimself()
     {
         _ammoTabButtonNotification.CallPlayerEvents(_scoreController);
-        _screenText.CallPlayerEvents(_healthController, _scoreController);
+        _playerFeedback.CallPlayerEvents(_healthController, _scoreController);
         _tempPoints.CallPlayerEvents(_scoreController);
         _fuel.CallPlayerEvents(_tankMovement);
     }
