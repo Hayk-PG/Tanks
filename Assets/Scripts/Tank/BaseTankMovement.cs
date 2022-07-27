@@ -35,6 +35,7 @@ public class BaseTankMovement : MonoBehaviour
     protected float _speedBlocker;
 
     internal Action<float> OnVehicleMove { get; set; }
+    public Action<float> OnDirectionValue { get; set; }
     public Action<Rigidbody> OnRigidbodyPosition { get; set; }
     public Action<float, bool> OnFuel { get; set; }
 

@@ -78,6 +78,7 @@ public class ShootController : BaseShootController
         _tankController.OnVerticalJoystick += OnVerticalJoystick;
         _tankController.OnShootButtonPointer += OnShootButtonPointer;
         _tankController.OnShootButtonClick += OnShootButtonClick;
+        _tankMovement.OnDirectionValue += OnMovementDirectionValue;
     }
 
     private void OnDisable()
@@ -85,6 +86,7 @@ public class ShootController : BaseShootController
         _tankController.OnVerticalJoystick -= OnVerticalJoystick;
         _tankController.OnShootButtonPointer -= OnShootButtonPointer;
         _tankController.OnShootButtonClick -= OnShootButtonClick;
+        _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
     }
 
     private void Update()
@@ -100,6 +102,12 @@ public class ShootController : BaseShootController
     private void FixedUpdate()
     {
         ResetTrajectoryTracePoints();
+    }
+
+    private void OnMovementDirectionValue(float direction)
+    {
+        if (_tankController.BasePlayer != null)
+            _shootPoint.gameObject.SetActive(direction == 0);
     }
 
     private void ResetTrajectoryTracePoints()

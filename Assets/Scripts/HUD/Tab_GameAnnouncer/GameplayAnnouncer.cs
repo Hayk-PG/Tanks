@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class GameplayAnnouncer : BaseAnnouncer
@@ -25,6 +26,7 @@ public class GameplayAnnouncer : BaseAnnouncer
         yield return new WaitForSeconds(clipLength);
         TextAnnouncement(0, "", false);
         TextAnnouncement(0, "Go!", true);
+        OnGameStartAnnouncement?.Invoke();
         SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Go, out float nextClipLength);
         yield return new WaitForSeconds(nextClipLength);
         TextAnnouncement(0, "", false);

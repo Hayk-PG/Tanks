@@ -77,6 +77,7 @@ public class TankMovement : BaseTankMovement
         _wheelColliderController.RotateWheels();
 
         OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
+        OnDirectionValue?.Invoke(Direction);
         OnFuel?.Invoke(_wheelColliderController.WheelRPM(), _playerTurn.IsMyTurn);
         OnRigidbodyPosition?.Invoke(_rigidBody);       
     }
