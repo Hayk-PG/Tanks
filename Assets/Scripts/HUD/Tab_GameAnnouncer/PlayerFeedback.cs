@@ -2,22 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerFeedback : BaseAnnouncer
 {
     private HealthController _playerHealthController;
     private ScoreController _scoreController;
+    private PlayerTurn _playerTurn;
+
+    private int _playerHitsIndex;
+    private int _playerTurnIndex;
 
 
     protected override void OnDisable()
     {
+        base.OnDisable();
+
         if (_playerHealthController != null) _playerHealthController.OnTakeDamage -= OnTakeDamage;
         if (_scoreController != null) _scoreController.OnHitEnemy -= OnGetPoints;
     }
 
-    public void CallPlayerEvents(HealthController playerHealth, ScoreController scoreController)
+    public void CallPlayerEvents(HealthController playerHealth, ScoreController scoreController, PlayerTurn playerTurn)
     {
         _playerHealthController = playerHealth;
         _scoreController = scoreController;
+        _playerTurn = playerTurn;
 
         if (_playerHealthController != null) _playerHealthController.OnTakeDamage += OnTakeDamage;
         if (_scoreController != null) _scoreController.OnHitEnemy += OnGetPoints;
@@ -33,16 +41,74 @@ public class PlayerFeedback : BaseAnnouncer
 
     private void OnGetPoints(int[] scoreValues)
     {
-        StartCoroutine(OnGetPointsCoroutine());
+        StartCoroutine(OnGetPointsCoroutine(scoreValues));
     }
 
-    private IEnumerator OnGetPointsCoroutine()
+    private IEnumerator OnGetPointsCoroutine(int[] scoreValues)
     {
-        TextAnnouncement(0, "Good Hit!", true);
-        SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-        SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Good_Hit, out float clipLength);
-        yield return new WaitForSeconds(clipLength);
-        TextAnnouncement(0, "", false);
-        SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
+        _playerHitsIndex = _playerTurnIndex + 1;
+
+        if(_playerHitsIndex < 3)
+        {
+            int total = 0;
+            int index = 0;
+
+            GlobalFunctions.Loop<int>.Foreach(scoreValues, value => { total += value; });
+
+            for (int i = 0; i < _soundController.SoundsList[1]._clips.Length; i++)
+            {
+                if(_soundController.SoundsList[1]._clips[i]._score >= total)
+                {
+                    index = i;                   
+                    break;
+                }
+            }
+
+            yield return null;
+
+            TextAnnouncement(0, _soundController.SoundsList[1]._clips[index]._clipName, true);
+            SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
+            SoundController.PlaySound(1, index, out float clipLength);
+            yield return new WaitForSeconds(clipLength);
+            TextAnnouncement(0, "", false);
+            SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
+        }
+
+        else
+        {
+            int index = 0;
+
+            for (int i = 0; i < _soundController.SoundsList[2]._clips.Length; i++)
+            {
+                if (_soundController.SoundsList[2]._clips[i]._score >= _playerHitsIndex)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            yield return null;
+
+            TextAnnouncement(0, _soundController.SoundsList[2]._clips[index]._clipName, true);
+            SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
+            SoundController.PlaySound(2, index, out float clipLength);
+            yield return new WaitForSeconds(clipLength);
+            TextAnnouncement(0, "", false);
+            SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
+        }      
+    }
+
+    protected override void OnTurnChanged(TurnState turnState)
+    {
+        if(turnState == _playerTurn.MyTurn)
+        {
+            _playerTurnIndex++;
+
+            if (_playerTurnIndex > _playerHitsIndex)
+            {
+                _playerTurnIndex = 0;
+                _playerHitsIndex = 0;
+            }
+        }
     }
 }

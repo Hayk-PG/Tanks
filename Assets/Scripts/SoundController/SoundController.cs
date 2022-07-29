@@ -1,9 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
+[Serializable] public struct Clips
+{
+    public AudioClip _clip;
+    public string _clipName;
+    public int _score;
+}
+
 [Serializable] public struct SoundsList
 {
-    public AudioClip[] _clips;
+    [Space] [Header("Clips")]
+    public Clips[] _clips;
 }
 
 public class SoundController : MonoBehaviour
@@ -15,6 +23,10 @@ public class SoundController : MonoBehaviour
     public enum MusicVolume { Down, Up}
 
     [SerializeField] private SoundsList[] _soundsList;
+    public SoundsList[] SoundsList
+    {
+        get => _soundsList;
+    }
 
 
     private void Awake()
@@ -54,8 +66,8 @@ public class SoundController : MonoBehaviour
 
         if (soundsListIndex < _inst._soundsList.Length && clipIndex < _inst._soundsList[soundsListIndex]._clips.Length)
         {
-            _inst._soundSRC.PlayOneShot(_inst._soundsList[soundsListIndex]._clips[clipIndex]);
-            clipLength = _inst._soundsList[soundsListIndex]._clips[clipIndex].length;
+            _inst._soundSRC.PlayOneShot(_inst._soundsList[soundsListIndex]._clips[clipIndex]._clip);
+            clipLength = _inst._soundsList[soundsListIndex]._clips[clipIndex]._clip.length;
         }            
     }
 
