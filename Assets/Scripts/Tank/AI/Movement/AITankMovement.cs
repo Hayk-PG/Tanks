@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AITankMovement : BaseTankMovement
 {
-    private AIActionPlanner _aiActionPlanner;
+    private AiMovementPlanner _aiMovementPlanner;
     private Vector3 _destination;
     private float _stuckTime;
 
@@ -16,7 +16,7 @@ public class AITankMovement : BaseTankMovement
     protected override void Awake()
     {
         base.Awake();
-        _aiActionPlanner = Get<AIActionPlanner>.From(gameObject);
+        _aiMovementPlanner = Get<AiMovementPlanner>.From(gameObject);
 
         RigidbodyCenterOfMass();
     }
@@ -30,7 +30,7 @@ public class AITankMovement : BaseTankMovement
     {
         base.OnEnable();
 
-        _aiActionPlanner.OnActionPlanner += OnGetDestination;
+        _aiMovementPlanner.OnAIMovementPlanner += OnGetDestination;
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
    
@@ -38,7 +38,7 @@ public class AITankMovement : BaseTankMovement
     {
         base.OnDisable();
 
-        _aiActionPlanner.OnActionPlanner -= OnGetDestination;
+        _aiMovementPlanner.OnAIMovementPlanner -= OnGetDestination;
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
 

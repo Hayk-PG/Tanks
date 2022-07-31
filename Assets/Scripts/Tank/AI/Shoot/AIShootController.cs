@@ -12,6 +12,7 @@ public class AIShootController : BaseShootController
     private Quaternion _rot;
     private Quaternion _desiredRotation;
 
+    [SerializeField] private float _trajectoryTime;
     [SerializeField] private BulletController[] _bulletsPrefab;
     [SerializeField] private int _activeBulletIndex;
     private bool CanRotateCanon
@@ -31,16 +32,23 @@ public class AIShootController : BaseShootController
         _rigidBody = GetComponent<Rigidbody>();
         _aiTankMovement = GetComponent<AITankMovement>();
         _iScore = Get<IScore>.From(gameObject);
+
+        _trajectoryTime = 1;
     }
 
     private void OnEnable()
     {
-        _aiTankMovement.Shoot += ShootBullet;   
+        _aiTankMovement.Shoot += ShootBullet;
+        if (_aiCanonRaycast != null)
+            _aiCanonRaycast.OnAICanonRaycast += OnAICanonRaycast;
     }
 
     private void OnDisable()
     {
         _aiTankMovement.Shoot -= ShootBullet;
+
+        if (_aiCanonRaycast != null)
+            _aiCanonRaycast.OnAICanonRaycast -= OnAICanonRaycast;
     }
 
     private void Update()
@@ -48,13 +56,20 @@ public class AIShootController : BaseShootController
         RotateCanon();
     }
 
-    public void RotateCanon()
+    private void OnAICanonRaycast(float distance, bool isRaycastHit)
     {
         if (CanRotateCanon)
         {
-            _target = _trajectory.PredictedTrajectory(_player.position, transform.position, 1);           
+            if (distance > 3 && _trajectoryTime < 2 || distance <= 3 && distance > 0 && _trajectoryTime < 1.5f && isRaycastHit)
+                _trajectoryTime = Mathf.Lerp(_trajectoryTime, 2, 1 * Time.deltaTime);
+            if (!isRaycastHit && distance < 3)
+                _trajectoryTime = Mathf.Lerp(_trajectoryTime, 1, 1 * Time.deltaTime);
         }
+    }
 
+    public void RotateCanon()
+    {
+        _target = _trajectory.PredictedTrajectory(new Vector3(_player.position.x - 1, _player.position.y, _player.position.z), transform.position, _trajectoryTime);
         _lookRot = Quaternion.LookRotation(Vector3.forward, _target);
         _rot = _lookRot * Quaternion.Euler(_canon._rotationStabilizer.x, _canon._rotationStabilizer.y, _canon._rotationStabilizer.z);
         _desiredRotation = Quaternion.Slerp(_desiredRotation, _rot, _canon._rotationSpeed);
@@ -77,5 +92,6 @@ public class AIShootController : BaseShootController
         bullet.RigidBody.velocity = _target;
         _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
         mainCameraController.SetTarget(_playerTurn, bullet.transform);
+        _trajectoryTime = 1;
     }
 }

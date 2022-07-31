@@ -6,6 +6,7 @@ public class BaseShootController: MonoBehaviour
     protected Transform _canonPivotPoint;
     protected Transform _shootPoint;
     protected BaseTrajectory _trajectory;
+    protected AICanonRaycast _aiCanonRaycast;
     protected PlayerTurn _playerTurn;
     protected MainCameraController mainCameraController;
 
@@ -41,6 +42,7 @@ public class BaseShootController: MonoBehaviour
         FindCanonPivotPoint();
         _shootPoint = Get<BaseTrajectory>.FromChild(_canonPivotPoint.gameObject).transform;
         _trajectory = Get<BaseTrajectory>.From(_shootPoint.gameObject);
+        _aiCanonRaycast = Get<AICanonRaycast>.From(_trajectory.gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
         mainCameraController = FindObjectOfType<MainCameraController>();
     }

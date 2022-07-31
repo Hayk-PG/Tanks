@@ -1,17 +1,16 @@
 ﻿using Photon.Pun;
-using UnityEngine;
 
 public class PhotonPlayerRequestAirSupportRPC : PhotonPlayerBaseRPC
 {
-    public void CallAirSupportRPC(Vector3 position, Quaternion rotation, float distanceX)
+    public void CallAirSupportRPC()
     {
-        _photonPlayerController.PhotonView.RPC("AirSupportRPC", RpcTarget.AllViaServer, position, rotation, distanceX);
+        _photonPlayerController.PhotonView.RPC("AirSupportRPC", RpcTarget.AllViaServer);
     }
 
     [PunRPC]
-    private void AirSupportRPC(Vector3 position, Quaternion rotation, float distanceX)
+    private void AirSupportRPC()
     {
-        _photonPlayerTankController?._playerRequestAirSupport.RequestAirSupport(position, rotation, distanceX);
+        _photonPlayerTankController?._playerRequestAirSupport.RequestAirSupport();
     }
 
     public void CallDropBombRPC()

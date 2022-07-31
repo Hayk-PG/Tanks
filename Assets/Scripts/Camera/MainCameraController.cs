@@ -6,12 +6,14 @@ public class MainCameraController : MonoBehaviour
     private Camera _hudCamera;
     private GameManager _gameManager;
     private TurnController _turnController;
+    private LevelGenerator _levelGenerator;
     private Transform _player1, _player2;
     private Vector3 _currentVelocity;
     private float _currentVelocityfloat;
     private float _ortographicSize;
     [SerializeField] private float _smoothTime, _maxTime;
-    
+    private float _minPosX, _maxPosX, _newPosX;
+
     private bool PlayersInitialized
     {
         get => Target1 != null && Target2 != null;
@@ -34,7 +36,7 @@ public class MainCameraController : MonoBehaviour
     }
     private Transform Target1 { get; set; }
     private Transform Target2 { get; set; }
-
+    private float CameraWidth => _camera.orthographicSize * _camera.aspect;
 
 
     private void Awake()
@@ -43,6 +45,7 @@ public class MainCameraController : MonoBehaviour
         _hudCamera = Get<Camera>.From(transform.Find("HUDCamera").gameObject);
         _gameManager = FindObjectOfType<GameManager>();
         _turnController = FindObjectOfType<TurnController>();
+        _levelGenerator = FindObjectOfType<LevelGenerator>();
     }
 
     private void OnEnable()
@@ -62,11 +65,20 @@ public class MainCameraController : MonoBehaviour
         if (PlayersInitialized)
         {
             Vector3 targetPosition = new Vector3(Center.x, Center.y + 2, transform.position.z);
-            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
+            Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
+            transform.position = ClampPosition(smoothPosition);
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight, ref _currentVelocityfloat, _smoothTime, _maxTime);
             _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 1.5f, 5);
             _hudCamera.orthographicSize = _camera.orthographicSize;
         }
+    }
+
+    private Vector3 ClampPosition(Vector3 position)
+    {
+        _minPosX = _levelGenerator.MapHorizontalStartPoint + CameraWidth - 3;
+        _maxPosX = _levelGenerator.MapHorizontalEndPoint - CameraWidth + 3;
+        _newPosX = Mathf.Clamp(position.x, _minPosX, _maxPosX);
+        return new Vector3(_newPosX, position.y, position.z);
     }
 
     private void OnGameStarted()
@@ -83,7 +95,7 @@ public class MainCameraController : MonoBehaviour
             ResetTargets();
     }
 
-    private void ResetTargets()
+    public void ResetTargets()
     {
         Target1 = _player1;
         Target2 = _player2;

@@ -29,6 +29,5 @@ public class TankTrigger : MonoBehaviour
         _iDestruct = other.GetComponent<IDestruct>();
         _iDestruct.Destruct(100, 1000);
         _time = 0;
-        print("aaa");
     }
 }

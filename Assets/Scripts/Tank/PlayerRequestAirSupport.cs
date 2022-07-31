@@ -10,18 +10,10 @@ public class PlayerRequestAirSupport : MonoBehaviour
     private PlayerTurn _playerTurn;
     private ShootButton _shootButton;
     private AmmoTypeButton _relatedSupportTabButton;
-    private MainCameraController _mainCameraController;
-
     private Bomber _bomber;
     public IScore _iScore;
 
     private bool _isAirSupportRequested;
-    private delegate Vector3 Vector();
-    private delegate Quaternion Rotation();
-    private Vector _bomberPosition;
-    private Rotation _bomberRotation;
-    private Vector3 _rightSpwnPos = new Vector3(15, 3, 0);
-    private Vector3 _leftSpwnPos = new Vector3(-15, 3, 0);
 
 
     private void Awake()
@@ -33,7 +25,6 @@ public class PlayerRequestAirSupport : MonoBehaviour
         _supportsTabCustomization = FindObjectOfType<SupportsTabCustomization>();
         _shootButton = FindObjectOfType<ShootButton>();
         _relatedSupportTabButton = GlobalFunctions.ObjectsOfType<AmmoTypeButton>.Find(button => button._properties.SupportOrPropsType == Names.AirSupport);
-        _mainCameraController = FindObjectOfType<MainCameraController>();
     }
 
     private void OnEnable()
@@ -50,7 +41,6 @@ public class PlayerRequestAirSupport : MonoBehaviour
 
     private void OnInitialize()
     {
-        BomberCoordinates();
         SubscribeToEvents();
     }
 
@@ -60,24 +50,11 @@ public class PlayerRequestAirSupport : MonoBehaviour
         _shootButton.OnClick += OnShootButtonClick;
     }
 
-    private void BomberCoordinates()
+    public void RequestAirSupport()
     {
-        _bomberPosition = delegate
-        {
-            return _playerTurn.MyTurn == TurnState.Player1 ? _rightSpwnPos : _leftSpwnPos;
-        };
-        _bomberRotation = delegate
-        {
-            return _playerTurn.MyTurn == TurnState.Player1 ? Quaternion.Euler(-90, -90, 0) : Quaternion.Euler(-90, 90, 0);
-        };
-    }
-
-    public void RequestAirSupport(Vector3 position, Quaternion rotation, float distanceX)
-    {
-        _airSupport.Call(out Bomber bomber, position, rotation, distanceX);
+        _airSupport.Call(out Bomber bomber, _playerTurn);
         _bomber = bomber;
         _isAirSupportRequested = true;
-        _mainCameraController.SetTarget(_playerTurn, _bomber.transform);
     }
 
     private void RequestAirSupportRPC()
@@ -85,14 +62,14 @@ public class PlayerRequestAirSupport : MonoBehaviour
         if (_photonPlayerRequestAirSupportRPC == null)
             _photonPlayerRequestAirSupportRPC = _tankController.BasePlayer.GetComponent<PhotonPlayerRequestAirSupportRPC>();
 
-        _photonPlayerRequestAirSupportRPC?.CallAirSupportRPC(_bomberPosition(), _bomberRotation(), _rightSpwnPos.x);
+        _photonPlayerRequestAirSupportRPC?.CallAirSupportRPC();
     }
 
     private void CallBomber()
     {
         if (_playerTurn.IsMyTurn)
         {
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => RequestAirSupport(_bomberPosition(), _bomberRotation(), _rightSpwnPos.x), RequestAirSupportRPC);
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => RequestAirSupport(), RequestAirSupportRPC);
             _supportsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedSupportTabButton);
         }
     }
