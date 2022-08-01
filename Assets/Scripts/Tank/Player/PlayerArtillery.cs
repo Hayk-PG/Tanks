@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerArtillery : PlayerDeployProps
 {
-    [SerializeField] private ArtilleryBulletController _artilleryPrefab;
-
     private IScore _iScore;
     private RemoteControlArtilleryTarget _remoteControlArtilleryTargets;
+    private ArtillerySupport _artillerySupport;
     private GameManager _gameManager; 
-    private Transform _enemyTransform;
 
 
     protected override void Awake()
@@ -17,6 +14,7 @@ public class PlayerArtillery : PlayerDeployProps
 
         _iScore = Get<IScore>.From(gameObject);
         _remoteControlArtilleryTargets = FindObjectOfType<RemoteControlArtilleryTarget>();
+        _artillerySupport = FindObjectOfType<ArtillerySupport>();
         _gameManager = FindObjectOfType<GameManager>();
     }
 
@@ -48,12 +46,12 @@ public class PlayerArtillery : PlayerDeployProps
 
     private void OnGameStarted()
     {
-        _enemyTransform = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerTurn => playerTurn != _playerTurn).transform;
+        
     }
 
     private void OnArtillery()
     {
-        if (_playerTurn.IsMyTurn && _enemyTransform != null)
+        if (_playerTurn.IsMyTurn)
         {
             _remoteControlArtilleryTargets.RemoteControlTargetActivity(true);
             _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
@@ -62,18 +60,6 @@ public class PlayerArtillery : PlayerDeployProps
 
     private void OnGiveCoordinates(Vector3 coordinate)
     {
-        StartCoroutine(InstantiateArtilleryShells(coordinate));
-    }
-
-    private IEnumerator InstantiateArtilleryShells(Vector3 coordinate)
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            float randomX = i <= 3 ? Random.Range(-2, 2) : 0;
-            ArtilleryBulletController artillery = Instantiate(_artilleryPrefab, new Vector3(coordinate.x + randomX, coordinate.y + 10, coordinate.z), Quaternion.identity);
-            artillery.OwnerScore = _iScore;
-            artillery.IsLastShellOfBarrage = i < 4 ? false : true;
-            yield return new WaitForSeconds(0.5f);
-        }
+        _artillerySupport.Call(coordinate, _iScore);
     }
 }

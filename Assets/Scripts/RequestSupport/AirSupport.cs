@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class AirSupport : MonoBehaviour, ITurnController
 {
@@ -50,8 +51,24 @@ public class AirSupport : MonoBehaviour, ITurnController
         _bomber.MinX = StartPointX;
         _bomber.MaxX = EndPointX;
         bomber = _bomber;
-        TurnController.SetNextTurn(TurnState.Other);       
+        TurnController.SetNextTurn(TurnState.Other);
+        StartCoroutine(ActivateBomber(playerTurn));
+    }
+
+    private IEnumerator ActivateBomber(PlayerTurn playerTurn)
+    {
+        StartCoroutine(PlayAirSirenSound());
+        yield return new WaitForSeconds(1);
+
         _bomber.gameObject.SetActive(true);
-        _mainCameraController.SetTarget(playerTurn, _bomber.transform);
+        _mainCameraController.SetTarget(playerTurn, _bomber.transform, _bomber.transform.position.y - 2);
+    }
+
+    private IEnumerator PlayAirSirenSound()
+    {
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
+        SoundController.PlaySound(3, 0, out float clipLength);
+        yield return new WaitForSeconds(clipLength);
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
     }
 }

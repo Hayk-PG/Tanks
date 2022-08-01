@@ -186,7 +186,7 @@ public class ShootController : BaseShootController
         Bullet.OwnerScore = _iScore;
         Bullet.RigidBody.velocity = Bullet.transform.forward * force;
         _gameManagerBulletSerializer.BulletController = Bullet;
-        mainCameraController.SetTarget(_playerTurn, Bullet.transform);
+        mainCameraController.SetTarget(_playerTurn, Bullet.transform, null);
     }
 
     public void ShootBullet(float force)

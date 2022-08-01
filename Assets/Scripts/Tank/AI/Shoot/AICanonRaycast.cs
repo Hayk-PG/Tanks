@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AICanonRaycast : MonoBehaviour
@@ -19,8 +17,6 @@ public class AICanonRaycast : MonoBehaviour
 
     private void Update()
     {
-        Debug.DrawRay(transform.position, transform.forward * _maxDistance, Color.red);
-
         if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, _maxDistance) && _player != null)
         {
             _distance = hit.transform.position.x + -_player.position.x;

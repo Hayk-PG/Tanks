@@ -13,6 +13,7 @@ public class MainCameraController : MonoBehaviour
     private float _ortographicSize;
     [SerializeField] private float _smoothTime, _maxTime;
     private float _minPosX, _maxPosX, _newPosX;
+    private float _yOffset = 2;
 
     private bool PlayersInitialized
     {
@@ -64,7 +65,7 @@ public class MainCameraController : MonoBehaviour
     {
         if (PlayersInitialized)
         {
-            Vector3 targetPosition = new Vector3(Center.x, Center.y + 2, transform.position.z);
+            Vector3 targetPosition = new Vector3(Center.x, Center.y + _yOffset, transform.position.z);
             Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
             transform.position = ClampPosition(smoothPosition);
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight, ref _currentVelocityfloat, _smoothTime, _maxTime);
@@ -89,6 +90,11 @@ public class MainCameraController : MonoBehaviour
         ResetTargets();
     }
 
+    private void OffsetY(float value)
+    {
+        _yOffset = value;
+    }
+
     private void OnTurnChanged(TurnState turnState)
     {
         if (turnState == TurnState.Transition)
@@ -99,9 +105,11 @@ public class MainCameraController : MonoBehaviour
     {
         Target1 = _player1;
         Target2 = _player2;
+
+        OffsetY(2);
     }
 
-    public void SetTarget(PlayerTurn playerTurn, Transform target)
+    public void SetTarget(PlayerTurn playerTurn, Transform target, float? yOffset)
     {
         if (Vector3.Distance(Target1.position, Target2.position) >= 5)
         {
@@ -121,6 +129,9 @@ public class MainCameraController : MonoBehaviour
             Target1 = _player1;
             Target2 = target;
         }
+
+        if (yOffset != null)
+            OffsetY(yOffset.Value);
     }
 }
 

@@ -3,18 +3,16 @@ using UnityEngine;
 
 public class AIActionPlanner : MonoBehaviour
 {
-    private enum AINextAction { Move, CallBomber}
+    private enum AINextAction { Move, CallBomber, CallArtillery}
     [SerializeField] private AINextAction _aINextAction;
 
-    protected TurnController _turnController;
-    protected ChangeTiles _changeTiles;
-    protected TilesData _tilesGenerator;
-    protected PlayerTurn _playerTurn;
-    protected Raycasts _rayCasts;
-    protected AiMovementPlanner _aiMovementPlanner;
-    protected AIRequestBomber _aIRequestBomber;
+    private TurnController _turnController;
+    private PlayerTurn _playerTurn;
+    private AiMovementPlanner _aiMovementPlanner;
+    private AIRequestBomber _aIRequestBomber;
+    private AIRequestArtillery _aiRequestArtillery;
 
-    protected class InitializedValues
+    private class InitializedValues
     {
         internal int _stepsLength;
         internal int _direction;
@@ -27,7 +25,7 @@ public class AIActionPlanner : MonoBehaviour
             _destination = destination;
         }
     }
-    protected class UpdatedValues
+    private class UpdatedValues
     {
         internal Vector3 _currentTilePos;
         internal Vector3 _nextTilePos;
@@ -44,32 +42,30 @@ public class AIActionPlanner : MonoBehaviour
         }
     }
 
-    protected InitializedValues _initializedValues;
-    protected UpdatedValues _updatedValues;
+    private InitializedValues _initializedValues;
+    private UpdatedValues _updatedValues;
 
 
-    protected virtual void Awake()
+    private void Awake()
     {
-        _rayCasts = Get<Raycasts>.FromChild(gameObject);
         _turnController = FindObjectOfType<TurnController>();
-        _changeTiles = FindObjectOfType<ChangeTiles>();
-        _tilesGenerator = FindObjectOfType<TilesData>();
         _playerTurn = GetComponent<PlayerTurn>();
         _aiMovementPlanner = Get<AiMovementPlanner>.From(gameObject);
         _aIRequestBomber = Get<AIRequestBomber>.From(gameObject);
+        _aiRequestArtillery = Get<AIRequestArtillery>.From(gameObject);
     }
 
-    protected virtual void OnEnable()
+    private void OnEnable()
     {
         _turnController.OnTurnChanged += OnTurnChanged;    
     }
 
-    protected virtual void OnDisable()
+    private void OnDisable()
     {
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
-    protected virtual void OnTurnChanged(TurnState turnState)
+    private void OnTurnChanged(TurnState turnState)
     {
         if(turnState == _playerTurn.MyTurn)
         {
@@ -80,8 +76,11 @@ public class AIActionPlanner : MonoBehaviour
             {
                 case AINextAction.Move: _aiMovementPlanner.MovementPlanner();break;
                 case AINextAction.CallBomber:
-                    _aIRequestBomber.CallBomber(out bool canCallBomber);
-                    if(!canCallBomber) _aiMovementPlanner.MovementPlanner(); break;
+                    _aIRequestBomber.Use(out bool canCallArSupport);
+                    if(!canCallArSupport) _aiMovementPlanner.MovementPlanner(); break;
+                case AINextAction.CallArtillery:
+                    _aiRequestArtillery.Use(out bool canCallArtillery);
+                    if (!canCallArtillery) _aiMovementPlanner.MovementPlanner(); break;
             } 
         }
     }   

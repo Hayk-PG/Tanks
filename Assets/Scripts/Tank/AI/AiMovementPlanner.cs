@@ -1,19 +1,56 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class AiMovementPlanner : AIActionPlanner
+public class AiMovementPlanner : MonoBehaviour
 {
+    private ChangeTiles _changeTiles;
+    private TilesData _tilesGenerator;
+    private Raycasts _rayCasts;
+
+    private class InitializedValues
+    {
+        internal int _stepsLength;
+        internal int _direction;
+        internal Vector3 _destination;
+
+        internal InitializedValues(int stepsLength, int direction, Vector3 destination)
+        {
+            _stepsLength = stepsLength;
+            _direction = direction;
+            _destination = destination;
+        }
+    }
+    private class UpdatedValues
+    {
+        internal Vector3 _currentTilePos;
+        internal Vector3 _nextTilePos;
+        internal Vector3 _aboveNextTilePos;
+        internal float _desiredDirection;
+        internal float _y;
+
+        internal UpdatedValues(Vector3 currentTilePos, float desiredDirection, float y)
+        {
+            _currentTilePos = currentTilePos;
+            _aboveNextTilePos = new Vector3(0, 0.5f, 0);
+            _desiredDirection = desiredDirection;
+            _y = y;
+        }
+    }
+
+    private InitializedValues _initializedValues;
+    private UpdatedValues _updatedValues;
+
+
     public System.Action<Vector3, int> OnAIMovementPlanner { get; set; }
 
-    protected override void OnEnable()
+
+    private void Awake()
     {
-        
+        _rayCasts = Get<Raycasts>.FromChild(gameObject);
+        _changeTiles = FindObjectOfType<ChangeTiles>();
+        _tilesGenerator = FindObjectOfType<TilesData>();
     }
 
-    protected override void OnDisable()
-    {
-        
-    }
 
     private void IncreaseY(float i)
     {
