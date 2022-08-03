@@ -34,6 +34,11 @@ public class WheelsColliderCenter : MonoBehaviour
         _tankMovement.OnDirectionValue -= OnDirectionValue;
     }
 
+    private void FixedUpdate()
+    {
+        ModifyWheelsCenter(_currentCenter);
+    }
+
     private void OnDirectionValue(float direction)
     {
         _isTankMoving = direction >= 1 || direction <= -1;
@@ -53,9 +58,24 @@ public class WheelsColliderCenter : MonoBehaviour
     {
         GlobalFunctions.Loop<WheelCollider>.Foreach(_wheelColliders, wheel =>
         {
-            wheel.center = Vector3.LerpUnclamped(wheel.center, target, 150 * Time.deltaTime);
-            _currentCenter = wheel.center;
+            wheel.center = _currentCenter;
         });
+    }
+
+    private void Decrease()
+    {
+        _currentCenter.y -= 1 * Time.deltaTime;
+
+        if (_currentCenter.y <= 0)
+            _currentCenter.y = _low.y;
+    }
+
+    private void Increase()
+    {
+        _currentCenter.y += 1 * Time.deltaTime;
+
+        if (_currentCenter.y >= _default.y)
+            _currentCenter.y = _default.y;
     }
 
     private IEnumerator Coroutine()
@@ -65,7 +85,7 @@ public class WheelsColliderCenter : MonoBehaviour
 
         while (_currentCenter.y > _low.y)
         {
-            ModifyWheelsCenter(_low);
+            Decrease();
             yield return null;
         }
 
@@ -74,7 +94,7 @@ public class WheelsColliderCenter : MonoBehaviour
 
         while (_currentCenter.y < _default.y)
         {
-            ModifyWheelsCenter(_default);
+            Increase();
             yield return null;
         }
 

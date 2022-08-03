@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -44,17 +43,26 @@ public class PlayerFeedback : BaseAnnouncer
         StartCoroutine(OnGetPointsCoroutine(scoreValues));
     }
 
+    private void GetComboScore(int total, int index)
+    {
+        float a = _soundController.SoundsList[2]._clips[index]._score;
+        float b = a * 0.1f;
+        float c = (total * b);
+
+        _scoreController.GetScore(Mathf.RoundToInt(c), null);
+    }
+
     private IEnumerator OnGetPointsCoroutine(int[] scoreValues)
     {
         _playerHitsIndex = _playerTurnIndex + 1;
 
-        if(_playerHitsIndex < 3)
+        int total = 0;
+        int index = 0;
+
+        GlobalFunctions.Loop<int>.Foreach(scoreValues, value => { total += value; });
+
+        if (_playerHitsIndex < 3)
         {
-            int total = 0;
-            int index = 0;
-
-            GlobalFunctions.Loop<int>.Foreach(scoreValues, value => { total += value; });
-
             for (int i = 0; i < _soundController.SoundsList[1]._clips.Length; i++)
             {
                 if(_soundController.SoundsList[1]._clips[i]._score >= total)
@@ -76,8 +84,6 @@ public class PlayerFeedback : BaseAnnouncer
 
         else
         {
-            int index = 0;
-
             for (int i = 0; i < _soundController.SoundsList[2]._clips.Length; i++)
             {
                 if (_soundController.SoundsList[2]._clips[i]._score >= _playerHitsIndex)
@@ -89,6 +95,7 @@ public class PlayerFeedback : BaseAnnouncer
 
             yield return null;
 
+            GetComboScore(total, index);
             TextAnnouncement(0, _soundController.SoundsList[2]._clips[index]._clipName, true);
             SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
             SoundController.PlaySound(2, index, out float clipLength);

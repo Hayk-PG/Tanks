@@ -2,7 +2,7 @@
 
 public class UpperTab : MonoBehaviour
 {
-    private CanvasGroup _canvasGroup;
+    [SerializeField] private CanvasGroup _canvasGroupSettingsButton;
     private AmmoTypeController _ammoTypeController;
     private AmmoTabCustomization _ammoTabCustomization;
     private RectTransform _rectTransform;
@@ -11,8 +11,6 @@ public class UpperTab : MonoBehaviour
 
     private void Awake()
     {
-        _canvasGroup = GetComponent<CanvasGroup>();
-
         _ammoTypeController = FindObjectOfType<AmmoTypeController>();
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
 
@@ -46,5 +44,7 @@ public class UpperTab : MonoBehaviour
             _rectTransform.offsetMin = Vector2.zero;
             _rectTransform.offsetMax = Vector2.zero;
         }
+
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupSettingsButton, !isOpen);
     }
 }
