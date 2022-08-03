@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class BulletExplosion : GetBulletController, IBulletExplosion
@@ -7,6 +8,7 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
 
     public Action<IScore, float> OnBulletExplosion { get; set; }
     public Action OnBulletExplosionWithoutHitting { get; set; }
+    public Action<IScore, float, Vector3?> OnFlareBulletExplosion { get; set; }
 
     public UnityEvent OnCameraShake;
 

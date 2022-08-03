@@ -20,6 +20,7 @@ public class AmmoTypeButton : MonoBehaviour
         [SerializeField] private CanvasGroup _canvasGroupSupportTab;
         [SerializeField] private CanvasGroup _canvasGroupTabScoresToUnlock;
         [SerializeField] private CanvasGroup _canvasGroupTimer;
+        [SerializeField] private CanvasGroup _canvasGroupAmmount;
         [SerializeField] private Image _imageWoodBoxIcon;
         [SerializeField] private Image _imageWalkieTalkieIcon;
         [SerializeField] private Image _imageWeaponsTabCheckBox;
@@ -50,6 +51,10 @@ public class AmmoTypeButton : MonoBehaviour
         public CanvasGroup CanvasGroupTimer
         {
             get => _canvasGroupTimer;
+        }
+        public CanvasGroup CanvasGroupAmmount
+        {
+            get => _canvasGroupAmmount;
         }
         public Sprite Icon
         {
@@ -179,7 +184,7 @@ public class AmmoTypeButton : MonoBehaviour
 
     private IEnumerator TimerCoroutine()
     {
-        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTimer, true);
+        OnTimerActivity(true);
         _minutes = _properties.Minutes;
         _seconds = _properties.Seconds;
         _isTimerFinished = false;
@@ -196,6 +201,12 @@ public class AmmoTypeButton : MonoBehaviour
         }
     }
 
+    private void OnTimerActivity(bool isActive)
+    {
+        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTimer, isActive);
+        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupAmmount, !isActive);
+    }
+
     private void OnDecrease()
     {
         _seconds = 60;
@@ -205,6 +216,6 @@ public class AmmoTypeButton : MonoBehaviour
     private void OnReset()
     {
         _isTimerFinished = true;
-        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTimer, false);
+        OnTimerActivity(false);
     }
 }

@@ -33,6 +33,13 @@ public class BulletParticles : MonoBehaviour
         if (_iBulletExplosion != null) _iBulletExplosion.OnBulletExplosionWithoutHitting += OnBulletExplosionWithoutHitting;
     }
 
+    protected virtual void OnDisable()
+    {
+        if (_iBulletTrail != null) _iBulletTrail.OnTrailActivity -= OnTrailActivity;
+        if (_iBulletExplosion != null) _iBulletExplosion.OnBulletExplosion -= OnExplosion;
+        if (_iBulletExplosion != null) _iBulletExplosion.OnBulletExplosionWithoutHitting -= OnBulletExplosionWithoutHitting;
+    }
+
     protected virtual void OnTrailActivity(bool isActive)
     {
         if(_trail != null) _trail.SetActive(isActive);

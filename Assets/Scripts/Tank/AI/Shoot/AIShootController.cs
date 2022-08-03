@@ -91,7 +91,7 @@ public class AIShootController : BaseShootController
         bullet.OwnerScore = _iScore;
         bullet.RigidBody.velocity = _target;
         _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
-        mainCameraController.SetTarget(_playerTurn, bullet.transform, null);
+        mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
         _trajectoryTime = 1;
     }
 }

@@ -70,7 +70,8 @@ public class AIActionPlanner : MonoBehaviour
         if(turnState == _playerTurn.MyTurn)
         {
             int randomAction = UnityEngine.Random.Range(0, Enum.GetValues(typeof(AINextAction)).Length);
-            _aINextAction = (AINextAction)randomAction;
+            //_aINextAction = (AINextAction)randomAction;
+            _aINextAction = AINextAction.Move;
 
             switch (_aINextAction)
             {

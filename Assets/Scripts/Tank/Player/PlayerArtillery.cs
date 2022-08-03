@@ -5,7 +5,6 @@ public class PlayerArtillery : PlayerDeployProps
     private IScore _iScore;
     private RemoteControlArtilleryTarget _remoteControlArtilleryTargets;
     private ArtillerySupport _artillerySupport;
-    private GameManager _gameManager; 
 
 
     protected override void Awake()
@@ -15,7 +14,6 @@ public class PlayerArtillery : PlayerDeployProps
         _iScore = Get<IScore>.From(gameObject);
         _remoteControlArtilleryTargets = FindObjectOfType<RemoteControlArtilleryTarget>();
         _artillerySupport = FindObjectOfType<ArtillerySupport>();
-        _gameManager = FindObjectOfType<GameManager>();
     }
 
     protected override void Start()
@@ -26,14 +24,11 @@ public class PlayerArtillery : PlayerDeployProps
     protected override void OnEnable()
     {
         base.OnEnable();
-
-        _gameManager.OnGameStarted += OnGameStarted;
     }
 
     protected override void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
-        _gameManager.OnGameStarted -= OnGameStarted;
         _propsTabCustomization.OnArtillery -= OnArtillery;
         _remoteControlArtilleryTargets.OnSet -= OnGiveCoordinates;
     }
@@ -42,11 +37,6 @@ public class PlayerArtillery : PlayerDeployProps
     {
         _propsTabCustomization.OnArtillery += OnArtillery;
         _remoteControlArtilleryTargets.OnSet += OnGiveCoordinates;
-    }
-
-    private void OnGameStarted()
-    {
-        
     }
 
     private void OnArtillery()
@@ -60,6 +50,6 @@ public class PlayerArtillery : PlayerDeployProps
 
     private void OnGiveCoordinates(Vector3 coordinate)
     {
-        _artillerySupport.Call(coordinate, _iScore);
+        //_artillerySupport.Call(coordinate, _iScore);
     }
 }

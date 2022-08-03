@@ -22,7 +22,7 @@ public class HUDMainTabsActivity : MonoBehaviour
         _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { CanvasGroupsActivity(false); };
     }
 
-    private void CanvasGroupsActivity(bool isActive)
+    public void CanvasGroupsActivity(bool isActive)
     {
         GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasgroup =>
         {

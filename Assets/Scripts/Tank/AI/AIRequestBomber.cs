@@ -28,7 +28,7 @@
     {
         if (_isBomberCalled && _bomber != null && !_hasBombDropped && IsTimeToDropBomb)
         {
-            _bomber.DropBomb(_iScore);
+            //_bomber.DropBomb(_iScore);
             _hasBombDropped = true;
             _isBomberCalled = false;
         }
@@ -36,8 +36,8 @@
 
     protected override void OnUse()
     {
-        _airSupport.Call(out Bomber bomber, _playerTurn);
-        _bomber = bomber;
+        //_airSupport.Call(out Bomber bomber, _playerTurn);
+        //_bomber = bomber;
 
         _isBomberCalled = true;
         _hasBombDropped = false;

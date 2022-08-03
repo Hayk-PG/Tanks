@@ -14,7 +14,8 @@ public class BaseRemoteControlTarget : MonoBehaviour
     protected Camera _mainCamera;
     protected TurnController _turnController;
     protected GameplayAnnouncer _gameplayAnnouncer;
-    protected bool _hasGameStartBeenAnnounced;
+    protected MainCameraController _mainCameraController;
+    protected bool _hasGameStartBeenAnnounced;   
     protected bool _isPlayingAnimation;
 
     public Action<bool> OnRemoteControlTargetActivity { get; set; }
@@ -30,6 +31,7 @@ public class BaseRemoteControlTarget : MonoBehaviour
         _mainCamera = Camera.main;
         _turnController = FindObjectOfType<TurnController>();
         _gameplayAnnouncer = FindObjectOfType<GameplayAnnouncer>();
+        _mainCameraController = FindObjectOfType<MainCameraController>();
     }
 
     private void OnEnable()
@@ -63,6 +65,9 @@ public class BaseRemoteControlTarget : MonoBehaviour
 
     public virtual void RemoteControlTargetActivity(bool isActive)
     {
+        if (isActive)
+            _mainCameraController.CameraOffset(null, null, null, 1);
+
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
         GlobalFunctions.CanvasGroupActivity(_mainTabCanvasGroup, !isActive && _hasGameStartBeenAnnounced);
         OnRemoteControlTargetActivity?.Invoke(isActive);

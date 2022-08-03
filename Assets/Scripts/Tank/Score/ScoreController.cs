@@ -67,9 +67,10 @@ public class ScoreController : MonoBehaviour, IScore
     private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
     {
         if (!ammoTypeButton._properties.IsUnlocked)
-        {
-            UpdateScore(-ammoTypeButton._properties.RequiredScoreAmmount, 0);
-        }
+            UpdateScore(-ammoTypeButton._properties.RequiredScoreAmmount, 0);    
+
+        if (ammoTypeButton._properties.Minutes > 0 || ammoTypeButton._properties.Seconds > 0)
+            ammoTypeButton.StartTimerCoroutine();
     }
 
     private void OnSupportOrPropsChanged(AmmoTypeButton supportOrPropsTypeButton)

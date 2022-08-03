@@ -44,15 +44,18 @@ public class AirSupport : MonoBehaviour, ITurnController
             Quaternion.Euler(-90, 90, 0) : Quaternion.Euler(-90, -90, 0);
     }
 
-    public void Call(out Bomber bomber, PlayerTurn playerTurn)
+    public void Call(out Bomber bomber, PlayerTurn ownerTurn, IScore ownerScore, Vector3 dropPoint)
     {
-        _bomber.transform.position = StartPosition(playerTurn);
-        _bomber.transform.rotation = StartRotation(playerTurn);
+        _bomber.transform.position = StartPosition(ownerTurn);
+        _bomber.transform.rotation = StartRotation(ownerTurn);
         _bomber.MinX = StartPointX;
         _bomber.MaxX = EndPointX;
+        _bomber.OwnerScore = ownerScore;
+        _bomber.OwnerTurn = ownerTurn;
+        _bomber.DropPoint = dropPoint;
         bomber = _bomber;
         TurnController.SetNextTurn(TurnState.Other);
-        StartCoroutine(ActivateBomber(playerTurn));
+        StartCoroutine(ActivateBomber(ownerTurn));
     }
 
     private IEnumerator ActivateBomber(PlayerTurn playerTurn)
@@ -61,7 +64,7 @@ public class AirSupport : MonoBehaviour, ITurnController
         yield return new WaitForSeconds(1);
 
         _bomber.gameObject.SetActive(true);
-        _mainCameraController.SetTarget(playerTurn, _bomber.transform, _bomber.transform.position.y - 2);
+        _mainCameraController.CameraOffset(playerTurn, _bomber.transform, _bomber.transform.position.y - 2, 2);
     }
 
     private IEnumerator PlayAirSirenSound()

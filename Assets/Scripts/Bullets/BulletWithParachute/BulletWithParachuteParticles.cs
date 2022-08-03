@@ -23,6 +23,14 @@ public class BulletWithParachuteParticles : BulletParticles
             _bulletWithParachuteVelocity.OnParachuteOpen += OnParachuteOpen;
     }
 
+    protected override void OnDisable()
+    {
+        base.OnEnable();
+
+        if (_bulletWithParachuteVelocity != null && _parachuteOpenExplosion != null)
+            _bulletWithParachuteVelocity.OnParachuteOpen -= OnParachuteOpen;
+    }
+
     private void OnParachuteOpen()
     {
         _parachuteOpenExplosion.SetActive(true);

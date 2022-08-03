@@ -24,6 +24,8 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
             _index = weaponProperty._index,
             _value = weaponProperty._value,
             _requiredScoreAmmount = weaponProperty._requiredScoreAmmount,
+            _minutes = weaponProperty._minutes,
+            _seconds = weaponProperty._seconds,
             _damageValue = weaponProperty._damageValue,
             _bulletMaxForce = weaponProperty._bulletMaxForce,
             _bulletForceMaxSpeed = weaponProperty._bulletForceMaxSpeed,

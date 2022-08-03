@@ -8,10 +8,11 @@ public class PlayerRequestAirSupport : MonoBehaviour
     private AirSupport _airSupport;
     private SupportsTabCustomization _supportsTabCustomization;
     private PlayerTurn _playerTurn;
-    private ShootButton _shootButton;
+    private DropBombButton _dropBombButton;
     private AmmoTypeButton _relatedSupportTabButton;
     private Bomber _bomber;
     public IScore _iScore;
+    private Tab_BomberControl _tabBomberControl;
 
     private bool _isAirSupportRequested;
 
@@ -23,7 +24,8 @@ public class PlayerRequestAirSupport : MonoBehaviour
         _iScore = Get<IScore>.From(gameObject);
         _airSupport = FindObjectOfType<AirSupport>();
         _supportsTabCustomization = FindObjectOfType<SupportsTabCustomization>();
-        _shootButton = FindObjectOfType<ShootButton>();
+        _dropBombButton = FindObjectOfType<DropBombButton>();
+        _tabBomberControl = FindObjectOfType<Tab_BomberControl>();
         _relatedSupportTabButton = GlobalFunctions.ObjectsOfType<AmmoTypeButton>.Find(button => button._properties.SupportOrPropsType == Names.AirSupport);
     }
 
@@ -36,7 +38,7 @@ public class PlayerRequestAirSupport : MonoBehaviour
     {
         _tankController.OnInitialize -= OnInitialize;
         _supportsTabCustomization.OnCallBomber -= CallBomber;
-        _shootButton.OnClick -= OnShootButtonClick;
+        _dropBombButton.OnClick -= OnDropBombButtonClicked;
     }
 
     private void OnInitialize()
@@ -47,13 +49,13 @@ public class PlayerRequestAirSupport : MonoBehaviour
     private void SubscribeToEvents()
     {
         _supportsTabCustomization.OnCallBomber += CallBomber;
-        _shootButton.OnClick += OnShootButtonClick;
+        _dropBombButton.OnClick += OnDropBombButtonClicked;
     }
 
     public void RequestAirSupport()
     {
-        _airSupport.Call(out Bomber bomber, _playerTurn);
-        _bomber = bomber;
+        //_airSupport.Call(out Bomber bomber, _playerTurn);
+        //_bomber = bomber;
         _isAirSupportRequested = true;
     }
 
@@ -71,12 +73,13 @@ public class PlayerRequestAirSupport : MonoBehaviour
         {
             Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => RequestAirSupport(), RequestAirSupportRPC);
             _supportsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedSupportTabButton);
+            _tabBomberControl.TabBomberControlActivity(true);
         }
     }
 
-    private void OnShootButtonClick(bool isTrue)
+    private void OnDropBombButtonClicked()
     {
-        if (isTrue && _isAirSupportRequested)
+        if (_isAirSupportRequested)
         {
             Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, DropBomb, DropBombRPC);
         }
@@ -84,8 +87,8 @@ public class PlayerRequestAirSupport : MonoBehaviour
 
     public void DropBomb()
     {
-        _isAirSupportRequested = false;
-        _bomber?.DropBomb(_iScore);
+        //_isAirSupportRequested = false;
+       // _bomber?.DropBomb(_iScore);
     }
 
     private void DropBombRPC()

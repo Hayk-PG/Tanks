@@ -16,6 +16,6 @@
 
     protected override void OnUse()
     {
-        _artillerySupport.Call(_player.position, _iScore);
+        //_artillerySupport.Call(_player.position, _iScore);
     }
 }

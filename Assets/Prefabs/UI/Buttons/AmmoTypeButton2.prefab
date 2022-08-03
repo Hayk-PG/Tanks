@@ -416,7 +416,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 445113576828524538}
-  - {fileID: 8842062477791660977}
   - {fileID: 8428707445902587839}
   - {fileID: 2231660553422707439}
   m_Father: {fileID: 3391551842136858870}
@@ -736,7 +735,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4117523537116227211}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.100748844, y: 0.34259373}
   m_AnchorMax: {x: 0.8783347, y: 0.5062169}
@@ -1195,6 +1194,7 @@ RectTransform:
   m_Children:
   - {fileID: 3768204711984050032}
   - {fileID: 4117523537116227211}
+  - {fileID: 8842062477791660977}
   - {fileID: 2730155362183836803}
   - {fileID: 1365309947202043911}
   m_Father: {fileID: 1378290680093857607}
@@ -1647,7 +1647,7 @@ RectTransform:
   - {fileID: 2871721170121806917}
   - {fileID: 2871721168808297935}
   m_Father: {fileID: 3391551842136858870}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.4333474, y: 0.06936119}
   m_AnchorMax: {x: 0.87833494, y: 0.178318}
@@ -1976,7 +1976,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4117523537116227211}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.10074895, y: 0.19731797}
   m_AnchorMax: {x: 0.8783347, y: 0.34259373}
@@ -2049,8 +2049,8 @@ RectTransform:
   m_Children:
   - {fileID: 7589182863081542095}
   - {fileID: 8192736343748992408}
-  m_Father: {fileID: 4117523537116227211}
-  m_RootOrder: 1
+  m_Father: {fileID: 3391551842136858870}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5243283, y: 0.70586324}
   m_AnchorMax: {x: 0.80433273, y: 0.94600976}
@@ -2080,6 +2080,7 @@ GameObject:
   - component: {fileID: 3347154388165125367}
   - component: {fileID: 5671321484161700437}
   - component: {fileID: 3738097366706878056}
+  - component: {fileID: 8915159827737888848}
   m_Layer: 5
   m_Name: Text_Ammount
   m_TagString: Untagged
@@ -2225,6 +2226,18 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &8915159827737888848
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6251096357481192584}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6404549783064329297
 GameObject:
   m_ObjectHideFlags: 0
@@ -2261,7 +2274,7 @@ RectTransform:
   - {fileID: 2434834196041507316}
   - {fileID: 7347219265657384989}
   m_Father: {fileID: 3391551842136858870}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5000006}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2576,6 +2589,7 @@ MonoBehaviour:
     _canvasGroupSupportTab: {fileID: 7167541438826671027}
     _canvasGroupTabScoresToUnlock: {fileID: 7371097569400874556}
     _canvasGroupTimer: {fileID: 2443963216668213031}
+    _canvasGroupAmmount: {fileID: 8915159827737888848}
     _imageWoodBoxIcon: {fileID: 3467260435796050655}
     _imageWalkieTalkieIcon: {fileID: 1127339434163221943}
     _imageWeaponsTabCheckBox: {fileID: 7034898695231624688}

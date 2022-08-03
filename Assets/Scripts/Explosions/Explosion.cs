@@ -6,44 +6,44 @@ public class Explosion : MonoBehaviour
     public IScore OwnerScore { get; set; }
     public float Distance { get; set; }
 
-    [SerializeField] private float _radius;
-    [SerializeField] private float _maxDamageValue;
-    private int _currentDamageValue;
-    private float _percentage;
-    private float _distanceFactorPercentage;
-    private float _magnitude;
-    private Collider[] _colliders;
-    private List<IDamage> _iDamages;
-    private GameManagerBulletSerializer _gameManagerBulletSerializer;
+    [SerializeField] protected float _radius;
+    [SerializeField] protected float _maxDamageValue;
+    protected int _currentDamageValue;
+    protected float _percentage;
+    protected float _distanceFactorPercentage;
+    protected float _magnitude;
+    protected Collider[] _colliders;
+    protected List<IDamage> _iDamages;
+    protected GameManagerBulletSerializer _gameManagerBulletSerializer;
 
-    
-    private void Awake()
+
+    protected virtual void Awake()
     {
         _iDamages = new List<IDamage>();
         _colliders = Physics.OverlapSphere(transform.position, _radius);
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         for (int i = 0; i < _colliders.Length; i++)
         {
             _magnitude = (transform.position - _colliders[i].transform.position).magnitude;
             GetIDamage(Get<IDamage>.From(_colliders[i].gameObject));           
         }
-    }  
+    }
 
-    private void GetIDamage(IDamage iDamage)
+    protected virtual void GetIDamage(IDamage iDamage)
     {
         Conditions<IDamage>.CheckNull(iDamage, null, () => CheckDuplicates(iDamage));
     }
 
-    private void CheckDuplicates(IDamage iDamage)
+    protected virtual void CheckDuplicates(IDamage iDamage)
     {
         Conditions<bool>.Compare(!_iDamages.Contains(iDamage), _iDamages.Contains(iDamage), () => Damage(iDamage), null, null, null);
     }
 
-    private void Damage(IDamage iDamage)
+    protected virtual void Damage(IDamage iDamage)
     {
         _iDamages.Add(iDamage);
 
@@ -53,7 +53,7 @@ public class Explosion : MonoBehaviour
         Conditions<bool>.Compare(_currentDamageValue * 10 > 0, ()=> DamageAndScore(iDamage), null);
     }
 
-    private void DamageAndScore(IDamage iDamage)
+    protected virtual void DamageAndScore(IDamage iDamage)
     {
         int hitScore = (_currentDamageValue * 100);
         int distanceBonus = Mathf.FloorToInt(Distance * 10);
@@ -62,14 +62,14 @@ public class Explosion : MonoBehaviour
         () => DamageAndScoreInOlineMode(iDamage, new int[2] { hitScore, distanceBonus }));
     }
 
-    private void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int[] scoreValues)
+    protected virtual void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int[] scoreValues)
     {
         iDamage.Damage(damageValue);
         OwnerScore?.GetScore(scoreValues[0] + scoreValues[1], iDamage);
         OwnerScore?.HitEnemyAndGetScore(scoreValues, iDamage);
     }
 
-    private void DamageAndScoreInOlineMode(IDamage iDamage, int[] scoreValues)
+    protected virtual void DamageAndScoreInOlineMode(IDamage iDamage, int[] scoreValues)
     {
         _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scoreValues);
     }

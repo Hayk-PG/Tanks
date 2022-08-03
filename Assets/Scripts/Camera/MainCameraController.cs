@@ -14,6 +14,7 @@ public class MainCameraController : MonoBehaviour
     [SerializeField] private float _smoothTime, _maxTime;
     private float _minPosX, _maxPosX, _newPosX;
     private float _yOffset = 2;
+    private float _desiredHeightOffset = 0;
 
     private bool PlayersInitialized
     {
@@ -68,7 +69,7 @@ public class MainCameraController : MonoBehaviour
             Vector3 targetPosition = new Vector3(Center.x, Center.y + _yOffset, transform.position.z);
             Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
             transform.position = ClampPosition(smoothPosition);
-            _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight, ref _currentVelocityfloat, _smoothTime, _maxTime);
+            _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
             _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 1.5f, 5);
             _hudCamera.orthographicSize = _camera.orthographicSize;
         }
@@ -95,43 +96,54 @@ public class MainCameraController : MonoBehaviour
         _yOffset = value;
     }
 
+    private void DesiredHeightOffset(float value)
+    {
+        _desiredHeightOffset = value;
+    }
+
+    private void SetTargets(Transform target1, Transform target2)
+    {
+        Target1 = target1;
+        Target2 = target2;
+    }
+
+    public void ResetTargets()
+    {
+        SetTargets(_player1, _player2);
+        OffsetY(2);
+        DesiredHeightOffset(0);
+    }
+
     private void OnTurnChanged(TurnState turnState)
     {
         if (turnState == TurnState.Transition)
             ResetTargets();
     }
 
-    public void ResetTargets()
+    public void CameraOffset(PlayerTurn playerTurn, Transform target, float? yOffset, float? desiredHeightOffset)
     {
-        Target1 = _player1;
-        Target2 = _player2;
+        //bool isDistanceAcceptable = Vector3.Distance(Target1 != null ? Target1.position: _player1.position, Target1 != null ? Target2.position : _player2.position) >= 5;
+        bool isPlayerOnesTurn = playerTurn?.MyTurn == TurnState.Player1;
 
-        OffsetY(2);
-    }
-
-    public void SetTarget(PlayerTurn playerTurn, Transform target, float? yOffset)
-    {
-        if (Vector3.Distance(Target1.position, Target2.position) >= 5)
+        if (playerTurn != null)
         {
-            if (playerTurn.MyTurn == TurnState.Player1)
+            if (isPlayerOnesTurn)
             {
-                Target1 = target;
-                Target2 = _player2;
+                SetTargets(target, _player2);
+                OffsetY(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target2.position.y, 0.5f));
             }
-            else
+            if (!isPlayerOnesTurn)
             {
-                Target1 = _player1;
-                Target2 = target;
+                SetTargets(_player1, target);
+                OffsetY(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target1.position.y, 0.5f));
             }
+            //if (!isDistanceAcceptable)
+            //    SetTargets(_player1, target);
         }
         else
-        {
-            Target1 = _player1;
-            Target2 = target;
-        }
+            SetTargets(_player1, _player2);
 
-        if (yOffset != null)
-            OffsetY(yOffset.Value);
+        DesiredHeightOffset(desiredHeightOffset.HasValue ? desiredHeightOffset.Value : 0);
     }
 }
 
