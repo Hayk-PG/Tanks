@@ -39,7 +39,8 @@ public class AIShootController : BaseShootController
     private void OnEnable()
     {
         _aiTankMovement.Shoot += ShootBullet;
-        if (_aiCanonRaycast != null)
+
+        if (_aiCanonRaycast != null && Data.Manager.SingleGameDifficultyLevel != SingleGameDifficultyLevel.Easy)
             _aiCanonRaycast.OnAICanonRaycast += OnAICanonRaycast;
     }
 
