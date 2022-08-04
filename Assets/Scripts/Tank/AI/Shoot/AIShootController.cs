@@ -12,9 +12,17 @@ public class AIShootController : BaseShootController
     private Quaternion _rot;
     private Quaternion _desiredRotation;
 
-    [SerializeField] private float _trajectoryTime;
     [SerializeField] private BulletController[] _bulletsPrefab;
     [SerializeField] private int _activeBulletIndex;
+
+    private delegate float TempValue();
+    private TempValue TrajectoryTimeOffset { get; set; }
+    private TempValue TrajectoryTimeReset
+    {
+        get => delegate { return Mathf.Lerp(TrajectoryTime, 1, 1 * Time.deltaTime); };
+    }
+    private float TrajectoryTime { get; set; } = 1;
+    private float TargetOffsetX { get; set; } = 0;
     private bool CanRotateCanon
     {
         get
@@ -32,24 +40,22 @@ public class AIShootController : BaseShootController
         _rigidBody = GetComponent<Rigidbody>();
         _aiTankMovement = GetComponent<AITankMovement>();
         _iScore = Get<IScore>.From(gameObject);
+    }
 
-        _trajectoryTime = 1;
+    private void Start()
+    {
+        AIShootBehaviour(Data.Manager.SingleGameDifficultyLevel);
     }
 
     private void OnEnable()
     {
         _aiTankMovement.Shoot += ShootBullet;
-
-        if (_aiCanonRaycast != null && Data.Manager.SingleGameDifficultyLevel != SingleGameDifficultyLevel.Easy)
-            _aiCanonRaycast.OnAICanonRaycast += OnAICanonRaycast;
     }
 
     private void OnDisable()
     {
         _aiTankMovement.Shoot -= ShootBullet;
-
-        if (_aiCanonRaycast != null)
-            _aiCanonRaycast.OnAICanonRaycast -= OnAICanonRaycast;
+        _aiCanonRaycast.OnAICanonRaycast -= OnAICanonRaycast;
     }
 
     private void Update()
@@ -57,20 +63,45 @@ public class AIShootController : BaseShootController
         RotateCanon();
     }
 
+    private void SubscribeToAICanonRaycast()
+    {
+        if (_aiCanonRaycast != null)
+            _aiCanonRaycast.OnAICanonRaycast += OnAICanonRaycast; 
+    }
+
+    private void AIShootBehaviour(SingleGameDifficultyLevel singleGameDifficultyLevel)
+    {
+        switch (singleGameDifficultyLevel)
+        {
+            case SingleGameDifficultyLevel.Easy: return;
+            case SingleGameDifficultyLevel.Normal:
+                SubscribeToAICanonRaycast();
+                TargetOffsetX = 0.5f;
+                TrajectoryTimeOffset = delegate { return Mathf.Lerp(TrajectoryTime, 1.5f, 1 * Time.deltaTime); };
+                break;
+
+            case SingleGameDifficultyLevel.Hard:
+                SubscribeToAICanonRaycast();
+                TargetOffsetX = 1;
+                TrajectoryTimeOffset = delegate { return Mathf.Lerp(TrajectoryTime, 2, 1 * Time.deltaTime); };
+                break;
+        }
+    }
+
     private void OnAICanonRaycast(float distance, bool isRaycastHit)
     {
         if (CanRotateCanon)
         {
-            if (distance > 3 && _trajectoryTime < 2 || distance <= 3 && distance > 0 && _trajectoryTime < 1.5f && isRaycastHit)
-                _trajectoryTime = Mathf.Lerp(_trajectoryTime, 2, 1 * Time.deltaTime);
+            if (distance > 3 && TrajectoryTime < 2 || distance <= 3 && distance > 0 && TrajectoryTime < 1.5f && isRaycastHit)
+                TrajectoryTime = TrajectoryTimeOffset();
             if (!isRaycastHit && distance < 3)
-                _trajectoryTime = Mathf.Lerp(_trajectoryTime, 1, 1 * Time.deltaTime);
+                TrajectoryTime = TrajectoryTimeReset();
         }
     }
 
     public void RotateCanon()
     {
-        _target = _trajectory.PredictedTrajectory(new Vector3(_player.position.x - 1, _player.position.y, _player.position.z), transform.position, _trajectoryTime);
+        _target = _trajectory.PredictedTrajectory(new Vector3(_player.position.x - TargetOffsetX, _player.position.y, _player.position.z), transform.position, TrajectoryTime);
         _lookRot = Quaternion.LookRotation(Vector3.forward, _target);
         _rot = _lookRot * Quaternion.Euler(_canon._rotationStabilizer.x, _canon._rotationStabilizer.y, _canon._rotationStabilizer.z);
         _desiredRotation = Quaternion.Slerp(_desiredRotation, _rot, _canon._rotationSpeed);
@@ -93,6 +124,6 @@ public class AIShootController : BaseShootController
         bullet.RigidBody.velocity = _target;
         _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
         mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
-        _trajectoryTime = 1;
+        TrajectoryTime = 1;
     }
 }

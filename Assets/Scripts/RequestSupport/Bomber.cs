@@ -8,7 +8,6 @@ public class Bomber : MonoBehaviour
     private BombController _bomb;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
     private MainCameraController _mainCameraController;
-    private Tab_BomberControl tabBomberControl;
 
     public IScore OwnerScore { get; set; }
     public PlayerTurn OwnerTurn { get; set; }
@@ -26,7 +25,6 @@ public class Bomber : MonoBehaviour
     {
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
         _mainCameraController = FindObjectOfType<MainCameraController>();
-        tabBomberControl = FindObjectOfType<Tab_BomberControl>();
     }
 
     private void Update()
@@ -61,6 +59,5 @@ public class Bomber : MonoBehaviour
         gameObject.SetActive(false);
         IsBombDropped = false;
         _mainCameraController.ResetTargets();
-        tabBomberControl.TabBomberControlActivity(false);
     }
 }
