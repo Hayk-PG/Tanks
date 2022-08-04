@@ -25,12 +25,14 @@ public class AmmoTypeButton : MonoBehaviour
         [SerializeField] private Image _imageWalkieTalkieIcon;
         [SerializeField] private Image _imageWeaponsTabCheckBox;
         [SerializeField] private Image _imageSupportTabCheckBox;
+        [SerializeField] private Image _imageButton;
         [SerializeField] private TMP_Text _textTimer;
         [SerializeField] private TMP_Text _textValue;
         [SerializeField] private TMP_Text _textRequiredScoreAmmount;
         [SerializeField] private TMP_Text _textSupportType;
         [SerializeField] private TMP_Text[] _textStatsValues;
-        [SerializeField] private TMP_Text[] _textStatsNames;       
+        [SerializeField] private TMP_Text[] _textStatsNames;
+        [SerializeField] private Sprite[] _sprites;
 
         public Button Button
         {
@@ -128,11 +130,26 @@ public class AmmoTypeButton : MonoBehaviour
             set
             {
                 if (_canvasGroupWeaponsTab.interactable)
+                {
                     _imageWeaponsTabCheckBox.gameObject.SetActive(value);
+                    MainSprite = MainSpriteVariations[0];
+                }
                 else
+                {
                     _imageSupportTabCheckBox.gameObject.SetActive(value);
+                    MainSprite = MainSpriteVariations[0];
+                }
             }
-        }       
+        }  
+        public Sprite MainSprite
+        {
+            get => _imageButton.sprite;
+            set => _imageButton.sprite = value;
+        }
+        public Sprite[] MainSpriteVariations
+        {
+            get => _sprites;
+        }
     }
 
     public Properties _properties;
@@ -163,15 +180,24 @@ public class AmmoTypeButton : MonoBehaviour
         _properties.CurrentValue = bulletsCount;
 
         if (_properties.CurrentValue > 0)
+        {
             _properties.IsUnlocked = true;
+            _properties.MainSprite = _properties.MainSpriteVariations[_properties.IsSelected ? 0: 1];
+        }
         else
         {
             _properties.IsUnlocked = false;
+            _properties.MainSprite = _properties.MainSpriteVariations[2];
 
             if (_properties.CurrentScoreAmmount < _properties.RequiredScoreAmmount || _properties.CanvasGroupTimer.interactable)
+            {
                 _properties.Button.interactable = false;
+            }
             else if (_properties.CurrentScoreAmmount >= _properties.RequiredScoreAmmount && !_properties.CanvasGroupTimer.interactable)
+            {
                 _properties.Button.interactable = true;
+                _properties.MainSprite = _properties.MainSpriteVariations[1];
+            }
         }
 
         GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTabScoresToUnlock, !_properties.IsUnlocked);
