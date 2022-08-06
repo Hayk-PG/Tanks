@@ -70,7 +70,7 @@ public class MainCameraController : MonoBehaviour
             Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
             transform.position = ClampPosition(smoothPosition);
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
-            _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 1.5f, 5);
+            _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 5);
             _hudCamera.orthographicSize = _camera.orthographicSize;
         }
     }
