@@ -2,11 +2,17 @@
 
 public class WoodBox : MonoBehaviour
 {
-    private enum Content { AddScore, AddHealth}
+    private enum Content { AddScore, AddHealth, AddWeapon}
+    private Tab_WoodboxContent _tabWoodboxContent;
     [SerializeField] private Content _content;
     private int _contentIndex;
 
 
+
+    private void Awake()
+    {
+        _tabWoodboxContent = FindObjectOfType<Tab_WoodboxContent>();
+    }
 
     public void OnContent(int contentIndex, TankController tankController)
     {
@@ -17,26 +23,46 @@ public class WoodBox : MonoBehaviour
         {
             case Content.AddScore: AddPlayerScore(tankController); break;
             case Content.AddHealth: AddPlayerHealth(tankController); break;
+            case Content.AddWeapon: AddWeapon(tankController); break;
         }
     }
 
     private void AddPlayerScore(TankController tankController)
     {
         ScoreController scoreController = Get<ScoreController>.From(tankController.gameObject);
-        scoreController.GetScore(500, null);
+
+        if(scoreController != null)
+        {
+            scoreController.GetScoreFromWoodBox(out bool isDone, out string text);
+
+            if (isDone)
+                _tabWoodboxContent.OnContent(Tab_WoodboxContent.Content.Score, text);
+        }
     }
 
     private void AddPlayerHealth(TankController tankController)
     {
         HealthController healthController = Get<HealthController>.From(tankController.gameObject);
 
-        if(healthController.Health + 20 <= 100)
+        if(healthController != null)
         {
-            healthController.Health += 20;
+            healthController.GetHealthFromWoodBox(out bool isDone, out string text);
+
+            if (isDone)
+                _tabWoodboxContent.OnContent(Tab_WoodboxContent.Content.Health, text);
         }
-        else
+    }
+
+    private void AddWeapon(TankController tankController)
+    {
+        PlayerAmmoType playerAmmoType = Get<PlayerAmmoType>.From(tankController.gameObject);
+
+        if(playerAmmoType != null)
         {
-            healthController.Health = 100;
+            playerAmmoType.GetMoreBulletsFromWoodBox(out bool isDone, out string text);
+
+            if (isDone)
+                _tabWoodboxContent.OnContent(Tab_WoodboxContent.Content.Bullet, text);
         }
     }
 }

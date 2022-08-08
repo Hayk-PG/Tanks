@@ -17,7 +17,7 @@ public class BaseWeaponProperties<T> : ScriptableObject
     public int _damageValue;
     public int _minutes;
     public int _seconds;
-    public string _weaponMass;
+    public string _radius;
     public string _weaponType;
 
     [Header("Bullet specs")]

@@ -30,7 +30,7 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void OnEnable()
     {
-        _tankController.OnInitialize += OnInitialize;       
+        _tankController.OnInitialize += OnInitialize;
     }
    
     private void OnDisable()
@@ -97,5 +97,21 @@ public class PlayerAmmoType : MonoBehaviour
     {
         if (_weaponsBulletsCount[index] <= 0)
             _ammoTabCustomization.SetDefaultAmmo(null);
+    }
+
+    public void GetMoreBulletsFromWoodBox(out bool isDone, out string text)
+    {
+        isDone = false;
+        text = "";
+
+        if (_tankController.BasePlayer != null)
+        {
+            int active = _shootController.ActiveAmmoIndex;
+            int bulletsCount = _weapons[active]._value / 4 > 0 ? _weapons[active]._value / 4 : 1;
+            _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += bulletsCount;
+            UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
+            isDone = true;
+            text = "+" + bulletsCount;
+        }
     }
 }

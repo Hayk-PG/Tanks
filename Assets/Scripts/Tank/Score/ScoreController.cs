@@ -103,4 +103,17 @@ public class ScoreController : MonoBehaviour, IScore
     {
         UpdateScore(100, 0.5f);
     }
+
+    public void GetScoreFromWoodBox(out bool isDone, out string text)
+    {
+        isDone = false;
+        text = "";
+
+        if (_tankController.BasePlayer != null)
+        {
+            GetScore(500, null);
+            isDone = true;
+            text = "+" + 500;
+        }
+    }
 }

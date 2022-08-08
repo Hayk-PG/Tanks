@@ -52,4 +52,21 @@ public class HealthController : MonoBehaviour, IDamage
         float a = 100 - Armor;
         return Mathf.FloorToInt(d1 * a);        
     }
+
+    public void GetHealthFromWoodBox(out bool isDone, out string text)
+    {
+        isDone = false;
+        text = "";
+
+        if (_tankController.BasePlayer != null)
+        {
+            if (Health + 20 <= 100)
+                Health += 20;
+            else
+                Health = 100;
+
+            isDone = true;
+            text = "+" + 20;
+        }
+    }
 }

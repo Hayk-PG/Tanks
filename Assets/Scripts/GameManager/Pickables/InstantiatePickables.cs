@@ -6,12 +6,31 @@ public class InstantiatePickables : MonoBehaviour
     [SerializeField] private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
     private GameManager _gameManager;
     private LevelGenerator _levelGenerator;
+    private Transform _player1, _player2;
     private float _leftSideX, _rightSideX;
     private Vector3 RandomSpawnPosition
     {
         get
         {
-            return new Vector3(Random.Range(_leftSideX, _rightSideX), 5, 0);
+            return new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
+        }
+    }
+    private bool IsThereOtherActiveParachute
+    {
+        get => FindObjectOfType<ParachuteWithWoodBoxController>();
+    }
+    private float RandomTime
+    {
+        get
+        {
+            return Random.Range(30, 120);
+        }
+    }
+    private int RandomContent
+    {
+        get
+        {
+            return Random.Range(0, 3);
         }
     }
 
@@ -34,8 +53,8 @@ public class InstantiatePickables : MonoBehaviour
 
     private void OnGameStarted()
     {
-        _leftSideX = _levelGenerator.MapHorizontalStartPoint;
-        _rightSideX = _levelGenerator.MapHorizontalEndPoint;
+        _player1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player1).transform;
+        _player2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player2).transform;
 
         StartCoroutine(InstantiateCoroutine());
     }
@@ -44,12 +63,13 @@ public class InstantiatePickables : MonoBehaviour
     {
         while (true)
         {
-            if(FindObjectOfType<ParachuteWithWoodBoxController>() == null)
+            yield return new WaitForSeconds(RandomTime);
+
+            if (_player1 != null && _player2 != null && !IsThereOtherActiveParachute)
             {
                 ParachuteWithWoodBoxController parachute = Instantiate(_parachuteWithWoodBoxController, RandomSpawnPosition, Quaternion.identity);
+                parachute.RandomContent = RandomContent;
             }
-
-            yield return new WaitForSeconds(5);
         }
     }
 }

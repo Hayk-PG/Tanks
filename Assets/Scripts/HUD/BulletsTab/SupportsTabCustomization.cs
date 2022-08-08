@@ -31,7 +31,7 @@ public class SupportsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
                 _damageValue = bomber._damageValue,
                 _minutes = bomber._minutes,
                 _seconds = bomber._seconds,
-                _massWalue = bomber._weaponMass,
+                _massWalue = bomber._radius,
                 _weaponType = bomber._weaponType,
                 _supportType = bomber._supportType,
                 _icon = bomber._icon
