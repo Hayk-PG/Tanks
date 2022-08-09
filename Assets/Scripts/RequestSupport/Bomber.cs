@@ -29,18 +29,20 @@ public class Bomber : MonoBehaviour
 
     private void Update()
     {
-        Conditions<bool>.Compare(isOutOfBoundaries, Deactivate, null);
-    }
+        Movement();
 
-    private void FixedUpdate()
-    {
-        transform.Translate(-transform.forward * 2 * Time.fixedDeltaTime);
-        _propeller.Rotate(Vector3.right, -1000 * Time.deltaTime);
-
-        if(transform.position.x >= DropPoint.x - 0.1f && transform.position.x <= DropPoint.x + 0.1f)
+        if (transform.position.x >= DropPoint.x - 0.1f && transform.position.x <= DropPoint.x + 0.1f)
         {
             DropBomb();
         }
+
+        Conditions<bool>.Compare(isOutOfBoundaries, Deactivate, null);
+    }
+
+    private void Movement()
+    {
+        transform.Translate(-transform.forward * 2 * Time.deltaTime);
+        _propeller.Rotate(Vector3.right, -1000 * Time.deltaTime);
     }
 
     public void DropBomb()

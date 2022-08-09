@@ -576,8 +576,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5390724ed8d0984081d861a5d2f162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _angleText: {fileID: 633621000680109176}
-  _forceText: {fileID: 6496410898840877451}
+  _angleText: {fileID: 0}
+  _forceText: {fileID: 0}
 --- !u!114 &1798583075481188235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1862,6 +1862,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9094952552417290394}
   - component: {fileID: 8440074051105002794}
+  - component: {fileID: -5187410251356033098}
   - component: {fileID: 8138542867938869302}
   - component: {fileID: -7806454118755180982}
   - component: {fileID: 281792605367779520}
@@ -1927,6 +1928,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-5187410251356033098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3582644145402521907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2179aa618d903744b92079e50222c106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8138542867938869302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2001,11 +2014,6 @@ MonoBehaviour:
     _maxEulerAngleX: 22.609
     _rotationSpeed: 40
     _rotationStabilizer: {x: 0, y: 0, z: 0}
-  _shoot:
-    _minForce: 3
-    _maxForce: 16
-    _smoothTime: 1
-    _maxSpeed: 5
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
 --- !u!114 &1468086063702850499

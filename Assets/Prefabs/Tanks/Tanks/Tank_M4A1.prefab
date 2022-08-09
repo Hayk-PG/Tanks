@@ -214,6 +214,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7700844846307227538}
   - component: {fileID: 6596627201666426429}
+  - component: {fileID: 4682407752345118988}
   - component: {fileID: 4883146980411123200}
   - component: {fileID: 1242776563909610654}
   - component: {fileID: 8488313477618421873}
@@ -279,6 +280,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4682407752345118988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316009366707082438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2179aa618d903744b92079e50222c106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4883146980411123200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,11 +366,6 @@ MonoBehaviour:
     _maxEulerAngleX: 13.098
     _rotationSpeed: 30
     _rotationStabilizer: {x: 0, y: 0, z: 0}
-  _shoot:
-    _minForce: 3
-    _maxForce: 10
-    _smoothTime: 1
-    _maxSpeed: 4
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
 --- !u!114 &4267281296621780758
