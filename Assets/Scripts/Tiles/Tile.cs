@@ -25,7 +25,7 @@ public class Tile : MonoBehaviour, IDestruct
         _collider = GetComponent<Collider>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
         _groundSlam = FindObjectOfType<GroundSlam>();
-        _tileParticles = Get<TileParticles>.From(gameObject);
+        _tileParticles = Get<TileParticles>.FromChild(gameObject);
         _tileSize = _collider.bounds.size;
     }
 
@@ -91,7 +91,7 @@ public class Tile : MonoBehaviour, IDestruct
         _explosion.SetActive(true);
         _explosion.transform.parent = null;
         _changeTiles.UpdateTiles();
-        _tileParticles.TileParticlesActivity(tileParticleIndex, true);
+        if(_tileParticles != null) _tileParticles.TileParticlesActivity(tileParticleIndex, true);
         Destroy(gameObject);
     }
 

@@ -23,7 +23,12 @@ public class BulletVelocity : GetBulletController, IBulletTrail
 
     protected virtual void OnEnable()
     {
-        if (_iBulletVelocity != null) _iBulletVelocity.OnBulletVelocity = OnBulletVelocity;
+        if (_iBulletVelocity != null) _iBulletVelocity.OnBulletVelocity += OnBulletVelocity;
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (_iBulletVelocity != null) _iBulletVelocity.OnBulletVelocity -= OnBulletVelocity;
     }
 
     protected virtual void ActivateTrail()

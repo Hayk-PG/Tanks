@@ -20,7 +20,7 @@ public class TankController : MonoBehaviour
     private PlayerShootButton _playerShootButton;
 
     internal Action<float> OnHorizontalJoystick { get; set; }
-    internal Action<float> OnVerticalJoystick { get; set; }
+    internal Action<Vector2> OnRightJoystick { get; set; }
     internal Action<bool> OnShootButtonPointer { get; set; }
     internal Action<bool> OnShootButtonClick { get; set; }
     internal Action OnInitialize { get; set; }
@@ -33,7 +33,7 @@ public class TankController : MonoBehaviour
             if (isTrue)
             {
                 _playerJoystick.OnHorizontalJoystick -= OnHorizontalJoystick;
-                _playerJoystick.OnVerticalJoystick -= OnVerticalJoystick;
+                _playerJoystick.OnRightJoystick -= OnRightJoystick;
             };
         };
         _subscribeToPlayerJoystick = delegate (bool isTrue)
@@ -41,7 +41,7 @@ public class TankController : MonoBehaviour
             if (isTrue)
             {
                 _playerJoystick.OnHorizontalJoystick += OnHorizontalJoystick;
-                _playerJoystick.OnVerticalJoystick += OnVerticalJoystick;
+                _playerJoystick.OnRightJoystick += OnRightJoystick;
             }
         };
         _subscribeToPlayerShootButton = delegate (bool isTrue)

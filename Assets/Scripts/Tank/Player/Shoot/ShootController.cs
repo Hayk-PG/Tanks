@@ -50,7 +50,6 @@ public class ShootController : BaseShootController
         get => _canonPivotPoint.eulerAngles;
         set => _canonPivotPoint.eulerAngles = value;
     }
-    private bool _isTrajectoryTracePointsResetted;
     public bool IsApplyingForce
     {
         get => _shoot._isApplyingForce;
@@ -58,7 +57,7 @@ public class ShootController : BaseShootController
     }
     private bool _isSandbagsTriggered;
 
-    public Action<bool> OnCanonRotation;
+    public Action<bool> OnCanonRotation { get; set; }
     internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
    
 
@@ -75,16 +74,14 @@ public class ShootController : BaseShootController
 
     private void OnEnable()
     {
-        _tankController.OnVerticalJoystick += OnVerticalJoystick;
-        _tankController.OnShootButtonPointer += OnShootButtonPointer;
+        _tankController.OnRightJoystick += OnRotateCanon;
         _tankController.OnShootButtonClick += OnShootButtonClick;
         _tankMovement.OnDirectionValue += OnMovementDirectionValue;
     }
 
     private void OnDisable()
     {
-        _tankController.OnVerticalJoystick -= OnVerticalJoystick;
-        _tankController.OnShootButtonPointer -= OnShootButtonPointer;
+        _tankController.OnRightJoystick -= OnRotateCanon;
         _tankController.OnShootButtonClick -= OnShootButtonClick;
         _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
     }
@@ -94,14 +91,8 @@ public class ShootController : BaseShootController
         if (_playerTurn.IsMyTurn)
         {
             RotateCanon();
-            ApplyForce();
             OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
         }
-    }
-
-    private void FixedUpdate()
-    {
-        ResetTrajectoryTracePoints();
     }
 
     private void OnMovementDirectionValue(float direction)
@@ -110,23 +101,11 @@ public class ShootController : BaseShootController
             _shootPoint.gameObject.SetActive(direction == 0);
     }
 
-    private void ResetTrajectoryTracePoints()
+    private void OnRotateCanon(Vector2 values)
     {
-        if (!_isTrajectoryTracePointsResetted)
-        {
-            if (_tankController.BasePlayer != null && _playerTurn.IsMyTurn)
-            {
-                if (_tankMovement.Direction != 0 || Direction != 0)
-                {
-                    UpdateTrajectoryTracePoints(true);
-                }
-            }
-        }
-    }
-
-    private void OnVerticalJoystick(float value)
-    {
-        Direction = -value;
+        Direction = -values.y;
+        CurrentForce = Mathf.Clamp(CurrentForce + values.x * 2 * Time.deltaTime, _shoot._minForce, _shoot._maxForce);
+        _trajectory.PredictedTrajectory(CurrentForce);
     }
 
     public void RotateCanon()
@@ -137,13 +116,6 @@ public class ShootController : BaseShootController
         if (Direction < 0 && Converter.AngleConverter(_canon._currentEulerAngleX) < _canon._minEulerAngleX) return;
 
         _canonPivotPoint.localEulerAngles = new Vector3(_canon._currentEulerAngleX += (_canon._rotationSpeed * Direction * Time.deltaTime), 0, 0) + _canon._rotationStabilizer;
-
-        OnCanonRotation?.Invoke(Direction != 0);
-    }
-    
-    private void OnShootButtonPointer(bool isTrue)
-    {
-        IsApplyingForce = isTrue;
     }
 
     private void OnShootButtonClick(bool isTrue)
@@ -152,32 +124,7 @@ public class ShootController : BaseShootController
         {
             Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => ShootBullet(CurrentForce), () => ShootBulletRPC(CurrentForce));
             AmmoUpdate();
-            UpdateTrajectoryTracePoints(false);
         }
-    }
-
-    private void UpdateTrajectoryTracePoints(bool isResetted)
-    {
-        _isTrajectoryTracePointsResetted = isResetted;
-        _trajectory.UpdateTrajectoryTrace(isResetted);
-    }
-
-    private void ApplyForce()
-    {
-        Conditions<bool>.Compare(IsApplyingForce, OnForceApplied, OnForceReleased);
-        _trajectory.PredictedTrajectory(CurrentForce);
-    }
-
-    private void OnForceApplied()
-    {
-        CurrentForce = Mathf.SmoothDamp(CurrentForce, _shoot._maxForce, ref _shoot._currentVelocity, _shoot._smoothTime * Time.deltaTime, _shoot._maxSpeed);
-        OnApplyingForce?.Invoke(true);
-    }
-
-    private void OnForceReleased()
-    {
-        if (CurrentForce != _shoot._minForce) CurrentForce = _shoot._minForce;
-        OnApplyingForce?.Invoke(false);
     }
 
     private void InstantiateBullet(float force)

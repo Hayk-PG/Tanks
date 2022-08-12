@@ -3,6 +3,7 @@
 public class BulletCollision : GetBulletController
 {
     [SerializeField] protected int _destructDamage;
+    [SerializeField] protected int _tileParticleIndex;
     protected int _collisionCount;
 
     protected virtual void OnEnable()
@@ -23,7 +24,7 @@ public class BulletCollision : GetBulletController
     protected virtual void OnCollisionInOfflineMode(Collider collider, IScore ownerScore)
     {
         ownerScore.GetScore(10, null);
-        Get<IDestruct>.From(collider.gameObject)?.Destruct(_destructDamage, 0);
+        Get<IDestruct>.From(collider.gameObject)?.Destruct(_destructDamage, _tileParticleIndex);
     }
 
     protected virtual void OnCollisionInOnlineMode(Collider collider, IScore ownerScore)

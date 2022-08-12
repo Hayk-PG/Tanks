@@ -24,7 +24,7 @@ public class BaseShootController: MonoBehaviour
     {
         internal float _currentForce;
         internal float _maxForce;
-        internal float _minForce;
+        internal float _minForce;       
         internal float _smoothTime;
         internal float _maxSpeed;
         internal float _currentVelocity;

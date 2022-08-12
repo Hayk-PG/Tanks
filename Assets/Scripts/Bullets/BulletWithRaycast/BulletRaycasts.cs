@@ -20,8 +20,10 @@ public class BulletRaycasts : MonoBehaviour
     private int _contactCount;
 
 
-    private void Update()
+    private void FixedUpdate()
     {
+        Debug.DrawRay(_front._raycastPoint.position, _front._raycastPoint.TransformDirection(Vector3.forward) * _front._rayLength, Color.red);
+
         if (_front.IsHit && _contactCount < 1)
         {
             _front.OnHit?.Invoke(_front._hit);
