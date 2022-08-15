@@ -74,14 +74,14 @@ public class ShootController : BaseShootController
 
     private void OnEnable()
     {
-        _tankController.OnRightJoystick += OnRotateCanon;
+        _tankController.OnControllers += OnControllers;
         _tankController.OnShootButtonClick += OnShootButtonClick;
         _tankMovement.OnDirectionValue += OnMovementDirectionValue;
     }
 
     private void OnDisable()
     {
-        _tankController.OnRightJoystick -= OnRotateCanon;
+        _tankController.OnControllers -= OnControllers;
         _tankController.OnShootButtonClick -= OnShootButtonClick;
         _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
     }
@@ -91,6 +91,7 @@ public class ShootController : BaseShootController
         if (_playerTurn.IsMyTurn)
         {
             RotateCanon();
+            ApplyForce();
             OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
         }
     }
@@ -101,11 +102,10 @@ public class ShootController : BaseShootController
             _shootPoint.gameObject.SetActive(direction == 0);
     }
 
-    private void OnRotateCanon(Vector2 values)
+    private void OnControllers(Vector2 values)
     {
         Direction = -values.y;
-        CurrentForce = Mathf.Clamp(CurrentForce + values.x * 2 * Time.deltaTime, _shoot._minForce, _shoot._maxForce);
-        _trajectory.PredictedTrajectory(CurrentForce);
+        CurrentForce = Mathf.Clamp(CurrentForce + values.x * 2 * Time.deltaTime, _shoot._minForce, _shoot._maxForce);       
     }
 
     public void RotateCanon()
@@ -116,6 +116,11 @@ public class ShootController : BaseShootController
         if (Direction < 0 && Converter.AngleConverter(_canon._currentEulerAngleX) < _canon._minEulerAngleX) return;
 
         _canonPivotPoint.localEulerAngles = new Vector3(_canon._currentEulerAngleX += (_canon._rotationSpeed * Direction * Time.deltaTime), 0, 0) + _canon._rotationStabilizer;
+    }
+
+    private void ApplyForce()
+    {
+        _trajectory.PredictedTrajectory(CurrentForce);
     }
 
     private void OnShootButtonClick(bool isTrue)

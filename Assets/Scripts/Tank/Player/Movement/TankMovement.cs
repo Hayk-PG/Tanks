@@ -34,7 +34,7 @@ public class TankMovement : BaseTankMovement
     {
         base.OnEnable();
 
-        _tankController.OnHorizontalJoystick += OnHorizontalJoystick;
+        _tankController.OnMovementDirection += OnHorizontalJoystick;
         if (_fuel != null) _fuel.OnFuelValue -= OnFuelValue;
     }
 
@@ -42,7 +42,7 @@ public class TankMovement : BaseTankMovement
     {
         base.OnDisable();
 
-        _tankController.OnHorizontalJoystick -= OnHorizontalJoystick;
+        _tankController.OnMovementDirection -= OnHorizontalJoystick;
     }
 
     private void OnHorizontalJoystick(float horizontal)

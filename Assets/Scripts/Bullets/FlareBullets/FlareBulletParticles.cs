@@ -25,6 +25,7 @@ public class FlareBulletParticles : BulletParticles
         PlayerTurn ownerTurn = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => Get<IScore>.From(turn.gameObject) == ownerScore);
         _explosion.gameObject.SetActive(true);
         _explosion.transform.parent = null;
+        _explosion.transform.eulerAngles = Vector3.zero;
         if (point != null) _explosion.transform.position = point.Value;
         OnFlareSignal?.Invoke(ownerScore, ownerTurn, _explosion.transform.position);
     }
