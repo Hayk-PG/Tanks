@@ -1,32 +1,18 @@
 ﻿using Photon.Pun;
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TurnTimer : MonoBehaviourPun
 {
+    [SerializeField] private Text _textTimer;
     private TurnController _turnController;
     private MyPlugins _myPlugins;
 
-    [SerializeField] private Text _textTimer;
-    [SerializeField] private CanvasGroup _iconPlayer1;
-    [SerializeField] private CanvasGroup _iconPlayer2;
-
-    public int Timer
-    {
-        get => int.Parse(_textTimer.text);
-        internal set => _textTimer.text = value.ToString();
-    }
-    public float IconPlayer1Alpha
-    {
-        get => _iconPlayer1.alpha;
-        internal set => _iconPlayer1.alpha = value;
-    }
-    public float IconPlayer2Alpha
-    {
-        get => _iconPlayer2.alpha;
-        internal set => _iconPlayer2.alpha = value;
-    }
+    public int Seconds { get; set; }
     public bool IsTurnChanged { get; internal set; }
+    public Action<TurnState, int> OnTurnTimer { get; set; }
 
 
     private void Awake()
@@ -58,7 +44,7 @@ public class TurnTimer : MonoBehaviourPun
 
     private void OnTurnChanged(TurnState currentState)
     {
-        Timer = 0;
+        Seconds = currentState == TurnState.Player1 || currentState == TurnState.Player2 ? 30 : 0;
         UnsubscribeFromPluginService();
 
         if (currentState == TurnState.Player1 || currentState == TurnState.Player2)
@@ -68,18 +54,33 @@ public class TurnTimer : MonoBehaviourPun
         }           
     }
 
+#if UNITY_EDITOR
+    private void Start()
+    {
+        StartCoroutine(RunTimerOnEditorMode());
+    }
+
+    private IEnumerator RunTimerOnEditorMode()
+    {
+        while (true)
+        {
+            RunTimer();
+            yield return new WaitForSeconds(1);
+        }
+    }
+#endif
+
     private void OnPluginService()
     {
         if (MyPhotonNetwork.IsOfflineMode || MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
-            PlayersTurnIcons(_turnController._turnState == TurnState.Player1 ? 1: 0, _turnController._turnState == TurnState.Player2 ? 1: 0);
-            Conditions<int>.Compare(Timer, 30, SetNextTurn, null, RunTimer);
+            RunTimer();
         }
     } 
 
-    private void RunTimer()
+    private void Timer()
     {
-        Timer++;
+        Seconds--;       
     }
 
     private void SetNextTurn()
@@ -97,10 +98,11 @@ public class TurnTimer : MonoBehaviourPun
 
         UnsubscribeFromPluginService();
     }
-    
-    private void PlayersTurnIcons(float iconPlayer1Alpha, float iconPlayer2Alpha)
-    {
-        if (IconPlayer1Alpha != iconPlayer1Alpha) IconPlayer1Alpha = iconPlayer1Alpha;
-        if (IconPlayer2Alpha != iconPlayer2Alpha) IconPlayer2Alpha = iconPlayer2Alpha;
+
+    private void RunTimer()
+    {        
+        Conditions<int>.Compare(Seconds, 0, SetNextTurn, Timer, null);
+        OnTurnTimer?.Invoke(_turnController._turnState, Seconds);
+        _textTimer.text = Seconds.ToString("D2");
     }
 }

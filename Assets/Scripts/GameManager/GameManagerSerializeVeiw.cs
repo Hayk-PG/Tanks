@@ -35,9 +35,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 stream.SendNext(_gameManagerBulletSerializer.BulletController.RigidBody.rotation);
             }
 
-            stream.SendNext(_turnTimer.Timer);
-            stream.SendNext(_turnTimer.IconPlayer1Alpha);
-            stream.SendNext(_turnTimer.IconPlayer2Alpha);
+            stream.SendNext(_turnTimer.Seconds);
             stream.SendNext(_turnTimer.IsTurnChanged);
 
             stream.SendNext(_globalActivtyTimer._playersActiveShieldsTimer[0]);
@@ -61,9 +59,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 _gameManagerBulletSerializer.BulletController.RigidBody.position += (_gameManagerBulletSerializer.BulletController.RigidBody.velocity * lag);
             }
 
-            _turnTimer.Timer = (int)stream.ReceiveNext();
-            _turnTimer.IconPlayer1Alpha = (float)stream.ReceiveNext();
-            _turnTimer.IconPlayer2Alpha = (float)stream.ReceiveNext();
+            _turnTimer.Seconds = (int)stream.ReceiveNext();
             _turnTimer.IsTurnChanged = (bool)stream.ReceiveNext();
 
             _globalActivtyTimer._playersActiveShieldsTimer[0] = (int)stream.ReceiveNext();
