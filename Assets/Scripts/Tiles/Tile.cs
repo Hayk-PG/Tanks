@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Tile : MonoBehaviour, IDestruct
 {
@@ -17,6 +18,8 @@ public class Tile : MonoBehaviour, IDestruct
 
     public bool IsProtected { get; set; }
     public float Health { get; set; } = 100;
+
+    public Action<float> OnTileHealth { get; set; }
 
 
 
@@ -74,6 +77,7 @@ public class Tile : MonoBehaviour, IDestruct
         else
         {
             Health -= damage;
+            OnTileHealth?.Invoke(Health);
 
             if (Health <= 0)
             {
