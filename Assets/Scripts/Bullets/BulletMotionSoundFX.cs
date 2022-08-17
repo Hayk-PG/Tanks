@@ -4,12 +4,24 @@ using UnityEngine;
 public class BulletMotionSoundFX : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSrc;
-    private float _volume = 1;
+    [SerializeField] private float _volume;     
+    private bool _isSoundPlayed;
+    private Rigidbody _rigidbody;
 
 
-    public void PlaySound()
+
+    private void Awake()
     {
-        StartCoroutine(SoundCoroutine());
+        _rigidbody = GetComponentInParent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (_rigidbody != null && _rigidbody.velocity.y < 0 && !_isSoundPlayed)
+        {
+            StartCoroutine(SoundCoroutine());
+            _isSoundPlayed = true;
+        }
     }
 
     private IEnumerator SoundCoroutine()

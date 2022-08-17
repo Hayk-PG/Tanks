@@ -4,7 +4,6 @@ public class SP1221Velocity : BulletVelocity
 {
     private Rigidbody _rigidbody;
     private BulletRaycasts _bulletRaycast;
-    private BulletMotionSoundFX _bulletMotionSoundFX;
 
     private Vector3 _initialVelocity;
     private Vector3 _hitPoint;
@@ -23,7 +22,6 @@ public class SP1221Velocity : BulletVelocity
         base.Awake();
         _rigidbody = Get<Rigidbody>.From(gameObject);
         _bulletRaycast = Get<BulletRaycasts>.FromChild(gameObject);      
-        _bulletMotionSoundFX = Get<BulletMotionSoundFX>.FromChild(gameObject);
     }
 
     protected override void OnEnable()
@@ -60,15 +58,10 @@ public class SP1221Velocity : BulletVelocity
         base.OnBulletVelocity(velocityData);
 
         if (velocityData._rigidBody.velocity.y < 0 && !_isFallingSoundfxPlayed)
-        {
-            PlayFallingSoundFX();
             _isFallingSoundfxPlayed = true;
-        }
 
         if (_isHitPointSet)
-        {
             _isFirstStagePassed = true;
-        }
 
         if (_isFirstStagePassed && !_isVelocityResetted)
         {
@@ -95,10 +88,5 @@ public class SP1221Velocity : BulletVelocity
         //{
         //    velocityData._rigidBody.position = Vector3.Lerp(velocityData._rigidBody.position, _hitPoint, 2 * Time.fixedDeltaTime);
         //}
-    }
-
-    private void PlayFallingSoundFX()
-    {
-        _bulletMotionSoundFX.PlaySound();
     }
 }
