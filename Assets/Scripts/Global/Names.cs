@@ -27,4 +27,5 @@ public static class Names
     public static string MetalGround { get; private set; } = "Metal Ground";
     public static string Shield { get; private set; } = "Shield";
     public static string LightMortarSupport { get; private set; } = "60mm Mortar Support";
+    public static string ModifyGround { get; private set; } = "Modify Ground";
 }

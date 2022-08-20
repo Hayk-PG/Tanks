@@ -12,6 +12,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     public Action OnChangeToMetalGround { get; set; }
     public Action OnActivateShields { get; set; }
     public Action OnArtillery { get; set; }
+    public Action OnModifyGround { get; set; }
 
 
 
@@ -73,6 +74,9 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
             
         if (propsTypeButton._properties.SupportOrPropsType == Names.LightMortarSupport)
             OnArtillery?.Invoke();
+
+        if (propsTypeButton._properties.SupportOrPropsType == Names.ModifyGround)
+            OnModifyGround?.Invoke();
 
         OnAmmoTypeController?.Invoke();
     }
