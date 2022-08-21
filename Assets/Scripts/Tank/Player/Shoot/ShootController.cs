@@ -147,6 +147,7 @@ public class ShootController : BaseShootController
         {
             InstantiateBullet(force);
             AddForce(force);
+            OnShoot?.Invoke();
         }
     }
 

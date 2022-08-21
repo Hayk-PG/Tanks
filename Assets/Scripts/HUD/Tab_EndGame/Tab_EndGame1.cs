@@ -37,11 +37,18 @@ public partial class Tab_EndGame
     public Action OnGameResultsFinished { get; set; }
 
 
+
+    private void DeactivateTanks()
+    {
+        GlobalFunctions.Loop<TankController>.Foreach(FindObjectsOfType<TankController>(), tank => { tank.gameObject.SetActive(false); });
+    }
+
     private IEnumerator DisplayController(bool _isCoroutineRunning, Values values, GameResult gameResult)
     {
         SetLevelText(Data.Manager.Level);
         SetSliderXPMinAndMaxValues(Data.Manager.PointsSliderMinAndMaxValues[Data.Manager.Level, 0], Data.Manager.PointsSliderMinAndMaxValues[Data.Manager.Level, 1]);
         SetSliderXPValue(Data.Manager.Points);
+        DeactivateTanks();
 
         yield return new WaitForSeconds(1);
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);

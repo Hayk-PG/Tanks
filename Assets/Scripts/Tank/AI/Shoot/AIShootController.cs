@@ -125,5 +125,6 @@ public class AIShootController : BaseShootController
         _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
         mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
         TrajectoryTime = 1;
+        OnShoot?.Invoke();
     }
 }

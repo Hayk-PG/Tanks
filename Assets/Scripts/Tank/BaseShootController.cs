@@ -35,6 +35,7 @@ public class BaseShootController: MonoBehaviour
     public Shoot _shoot;
 
     internal Action<bool> OnApplyingForce { get; set; }
+    internal Action OnShoot { get; set; }
 
 
     protected virtual void Awake()
