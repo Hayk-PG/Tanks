@@ -24,6 +24,8 @@ public class HealthController : MonoBehaviour, IDamage
   
     public Action<BasePlayer, int> OnTakeDamage { get; set; }
     public Action<int> OnUpdateHealthBar { get; set; }
+    public Action<int> OnTankDamageFire { get; set; }
+
 
     private void Awake()
     {
@@ -42,6 +44,7 @@ public class HealthController : MonoBehaviour, IDamage
 
             OnUpdateHealthBar?.Invoke(Health);
             OnTakeDamage?.Invoke(_tankController.BasePlayer ,DamageValue(DamageValue(damage)));
+            OnTankDamageFire?.Invoke(Health);
         }
     }
 
@@ -67,6 +70,7 @@ public class HealthController : MonoBehaviour, IDamage
 
             isDone = true;
             text = "+" + 20;
+            OnTankDamageFire?.Invoke(Health);
         }
     }
 }

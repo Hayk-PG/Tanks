@@ -32,13 +32,12 @@ public class LevelGenerator : MonoBehaviour
     }
     public float MapHorizontalStartPoint { get; private set; }
     public float MapHorizontalEndPoint { get; private set; }
-
-    private Texture2D MapTexture => _maps.All[CurrentMapIndex].Texture;
     private float MapTextureWidth => MapTexture.width;
     private float MapTextureHeight => MapTexture.height;
     private float QuarterOfMapTextureWidth => MapTextureWidth / 4;
     private float QuarterOfMapTextureHeight => MapTextureHeight / 4;
-
+    private Texture2D MapTexture => _maps.All[CurrentMapIndex].Texture;
+    
 
 
     private void Awake()
