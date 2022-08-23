@@ -3,26 +3,23 @@ using UnityEngine;
 
 public class AIShootController : BaseShootController
 {
-    private Transform _player;
-    private Vector3 _target;
+    [SerializeField] private BulletController[] _bulletsPrefab;
+    [SerializeField] private int _activeBulletIndex;
+
     private Rigidbody _rigidBody;
     private AITankMovement _aiTankMovement;
+    private AIEnemyDataGetter _aiEnemyDataGetter;
+    private Vector3 _target;    
     private IScore _iScore;
     private Quaternion _lookRot;
     private Quaternion _rot;
     private Quaternion _desiredRotation;
+     
+    private float _defaultTrajectoryTime = 1;
+    private float _desiredTrajectoryTime = 1;
+    private float _currentTrajectoryTime = 1;
+    private float _currentOffsetX = 0;
 
-    [SerializeField] private BulletController[] _bulletsPrefab;
-    [SerializeField] private int _activeBulletIndex;
-
-    private delegate float TempValue();
-    private TempValue TrajectoryTimeOffset { get; set; }
-    private TempValue TrajectoryTimeReset
-    {
-        get => delegate { return Mathf.Lerp(TrajectoryTime, 1, 1 * Time.deltaTime); };
-    }
-    private float TrajectoryTime { get; set; } = 1;
-    private float TargetOffsetX { get; set; } = 0;
     private bool CanRotateCanon
     {
         get
@@ -33,12 +30,14 @@ public class AIShootController : BaseShootController
     }
 
 
+
+
     protected override void Awake()
     {
         base.Awake();
-        _player = GameObject.FindGameObjectWithTag("Player").transform;
         _rigidBody = GetComponent<Rigidbody>();
         _aiTankMovement = GetComponent<AITankMovement>();
+        _aiEnemyDataGetter = Get<AIEnemyDataGetter>.From(gameObject);
         _iScore = Get<IScore>.From(gameObject);
     }
 
@@ -76,32 +75,64 @@ public class AIShootController : BaseShootController
             case SingleGameDifficultyLevel.Easy: return;
             case SingleGameDifficultyLevel.Normal:
                 SubscribeToAICanonRaycast();
-                TargetOffsetX = 0.5f;
-                TrajectoryTimeOffset = delegate { return Mathf.Lerp(TrajectoryTime, 1.5f, 1 * Time.deltaTime); };
+                StartCoroutine(OnHigherThanEasyDifficultyLevel());         
                 break;
 
             case SingleGameDifficultyLevel.Hard:
                 SubscribeToAICanonRaycast();
-                TargetOffsetX = 1;
-                TrajectoryTimeOffset = delegate { return Mathf.Lerp(TrajectoryTime, 2, 1 * Time.deltaTime); };
+                _desiredTrajectoryTime = 2;
                 break;
         }
     }
 
-    private void OnAICanonRaycast(float distance, bool isRaycastHit)
+    private IEnumerator OnHigherThanEasyDifficultyLevel()
+    {
+        while (true)
+        {
+            _desiredTrajectoryTime = Random.Range(1.5f, 2);
+            yield return new WaitForSeconds(2);
+        }
+    }
+
+    private void OnAICanonRaycast(bool isRaycastHit, float hitPointDistance)
     {
         if (CanRotateCanon)
         {
-            if (distance > 3 && TrajectoryTime < 2 || distance <= 3 && distance > 0 && TrajectoryTime < 1.5f && isRaycastHit)
-                TrajectoryTime = TrajectoryTimeOffset();
-            if (!isRaycastHit && distance < 3)
-                TrajectoryTime = TrajectoryTimeReset();
+            if (isRaycastHit)
+            {
+                if (hitPointDistance > _aiEnemyDataGetter.Distance || hitPointDistance <= _aiEnemyDataGetter.Distance && _aiEnemyDataGetter.Distance > 8)
+                {
+                    _currentTrajectoryTime = _desiredTrajectoryTime;
+                    _currentOffsetX = Mathf.Lerp(0, _aiEnemyDataGetter.Distance, _currentTrajectoryTime) / 10;
+                }
+
+                if (hitPointDistance <= _aiEnemyDataGetter.Distance && _aiEnemyDataGetter.Distance < 8)
+                {
+                    _currentTrajectoryTime = _defaultTrajectoryTime;
+                    _currentOffsetX = 0;
+                }
+            }
+            else
+            {
+                if (_aiEnemyDataGetter.Distance > 8)
+                {
+                    _currentTrajectoryTime = _desiredTrajectoryTime;
+                    _currentOffsetX = Mathf.Lerp(0, _aiEnemyDataGetter.Distance, _currentTrajectoryTime) / 10;
+                }
+                else
+                {
+                    _currentTrajectoryTime = _defaultTrajectoryTime;
+                    _currentOffsetX = 0;
+                }
+            }
         }
+
+        print(_aiEnemyDataGetter.Distance + "/" + _currentOffsetX);
     }
 
     public void RotateCanon()
     {
-        _target = _trajectory.PredictedTrajectory(new Vector3(_player.position.x - TargetOffsetX, _player.position.y, _player.position.z), transform.position, TrajectoryTime);
+        _target = _trajectory.PredictedTrajectory(new Vector3(_aiEnemyDataGetter.Enemy.position.x - _currentOffsetX, _aiEnemyDataGetter.Enemy.position.y, _aiEnemyDataGetter.Enemy.position.z), transform.position, _currentTrajectoryTime);
         _lookRot = Quaternion.LookRotation(Vector3.forward, _target);
         _rot = _lookRot * Quaternion.Euler(_canon._rotationStabilizer.x, _canon._rotationStabilizer.y, _canon._rotationStabilizer.z);
         _desiredRotation = Quaternion.Slerp(_desiredRotation, _rot, _canon._rotationSpeed);
@@ -124,7 +155,7 @@ public class AIShootController : BaseShootController
         bullet.RigidBody.velocity = _target;
         _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
         mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
-        TrajectoryTime = 1;
+        _currentTrajectoryTime = _defaultTrajectoryTime;
         OnShoot?.Invoke();
     }
 }

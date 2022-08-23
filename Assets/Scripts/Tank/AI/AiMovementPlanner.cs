@@ -83,7 +83,7 @@ public class AiMovementPlanner : MonoBehaviour
     internal void MovementPlanner()
     {
         _rayCasts.CastRays(Vector3.zero, Vector3.zero);
-        _initializedValues = new InitializedValues(Random.Range(1, 10), 0, Vector3.zero);
+        _initializedValues = new InitializedValues(Random.Range(0, 4), 0, Vector3.zero);
 
         if (_rayCasts.DownHit.collider?.tag == Tags.Tile)
         {
