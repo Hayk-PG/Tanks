@@ -57,6 +57,13 @@ public class TileModifyGUI : MonoBehaviour
         {
             Vector3 newTilePosition = _currentTilePosition + _tileModifyGUIElement._corespondentPosition;
             GameObject tile = Instantiate(_prefab, newTilePosition, Quaternion.identity, _levelGenerator.transform);
+
+            if (_tilesData.TilesDict.ContainsKey(newTilePosition))
+            {
+                Destroy(_tilesData.TilesDict[newTilePosition]);
+                _tilesData.TilesDict.Remove(newTilePosition);
+            }
+
             _tilesData.TilesDict.Add(newTilePosition, tile);
             _tileModifyGUIElement._guiElement.SetActive(false);
             _changeTiles.UpdateTiles();

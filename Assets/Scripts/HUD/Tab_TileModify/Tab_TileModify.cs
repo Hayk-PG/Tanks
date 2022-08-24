@@ -109,14 +109,11 @@ public class Tab_TileModify : MonoBehaviour
                     bool haveLeftTilesBeenFound = tile.Key.x <= _localPlayer._localPlayerTransform.position.x - _tilesData.Size && tile.Key.x >= _localPlayer._localPlayerTransform.position.x - (_tilesData.Size * 6);
                     bool haveRIghtTilesBeenFound = tile.Key.x >= _localPlayer._localPlayerTransform.position.x + _tilesData.Size && tile.Key.x <= _localPlayer._localPlayerTransform.position.x + (_tilesData.Size * 6);
 
-                    if (!_tilesData.TilesDict.ContainsKey(tile.Key + new Vector3(0, _tilesData.Size, 0)))
-                    {
-                        if (haveLeftTilesBeenFound && tile.Value != null && Get<TileModifyGUI>.FromChild(tile.Value) != null)
-                            foundTiles.Add(tile.Value);
+                    if (haveLeftTilesBeenFound && tile.Value != null && Get<TileModifyGUI>.FromChild(tile.Value) != null)
+                        foundTiles.Add(tile.Value);
 
-                        if (haveRIghtTilesBeenFound && tile.Value != null && Get<TileModifyGUI>.FromChild(tile.Value) != null)
-                            foundTiles.Add(tile.Value);
-                    }
+                    if (haveRIghtTilesBeenFound && tile.Value != null && Get<TileModifyGUI>.FromChild(tile.Value) != null)
+                        foundTiles.Add(tile.Value);
                 }
 
                 foreach (var tile in foundTiles)
