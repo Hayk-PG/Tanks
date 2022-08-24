@@ -16,11 +16,13 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     public Action<IScore, float> OnExplodeOnCollision { get; set; }
     public Action<bool> OnExplodeOnLimit { get; set; }
     public Action<VelocityData> OnBulletVelocity { get; set; }
+    public Action OnExitCollision { get; set; }
 
     public TurnController TurnController { get; set; }
 
     protected WindSystemController _windSystemController;
     protected bool _isWindActivated;
+    protected int _collisionsCount;
     public struct VelocityData
     {
         internal Rigidbody _rigidBody;
@@ -75,8 +77,19 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        OnCollision?.Invoke(collision.collider, OwnerScore, Distance);
-        OnExplodeOnCollision?.Invoke(OwnerScore, Distance);
+        _collisionsCount++;
+
+        if (_collisionsCount <= 1)
+        {
+            OnCollision?.Invoke(collision.collider, OwnerScore, Distance);
+            OnExplodeOnCollision?.Invoke(OwnerScore, Distance);
+        }
+    }
+
+    protected virtual void OnCollisionExit(Collision collision)
+    {
+        _collisionsCount = 0;
+        OnExitCollision?.Invoke();
     }
  
     protected virtual void ExplodeOnLimit()

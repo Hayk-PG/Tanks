@@ -28,12 +28,14 @@ public partial class Data : MonoBehaviour
 
     private void OnEnable()
     {
-        _myPlayfab.OnUpdateReadOnlyData += OnUpdateReadOnlyData;
+        if (_myPlayfab != null)
+            _myPlayfab.OnUpdateReadOnlyData += OnUpdateReadOnlyData;
     }
 
     private void OnDisable()
     {
-        _myPlayfab.OnUpdateReadOnlyData -= OnUpdateReadOnlyData;
+        if (_myPlayfab != null)
+            _myPlayfab.OnUpdateReadOnlyData -= OnUpdateReadOnlyData;
     }
 
     public void OnUpdateReadOnlyData(string playfabId, Action<string, Dictionary<string, string>> updateUserDataRequest)

@@ -126,8 +126,6 @@ public class AIShootController : BaseShootController
                 }
             }
         }
-
-        print(_aiEnemyDataGetter.Distance + "/" + _currentOffsetX);
     }
 
     public void RotateCanon()
