@@ -2,13 +2,10 @@
 
 public class PlayerDamageCameraFX : BaseCameraFX
 {
-    private Animator _animator;
-
-    private const string _damageFX = "PPImageFilteringAnim";
-
+    private Animator _animator;  
     private GameManager _gameManager;
     private HealthController _localHp;
-
+    private const string _damageFX = "PPImageFilteringAnim";
 
     protected override void Awake()
     {
@@ -19,25 +16,27 @@ public class PlayerDamageCameraFX : BaseCameraFX
 
     private void OnEnable()
     {
-        if (_gameManager != null) _gameManager.OnGameStarted += GetLocalPlayerOnGameStart;
+        _gameManager.OnGameStarted += GetLocalPlayerOnGameStart;
     }
 
     private void OnDisable()
     {
-        if (_gameManager != null) _gameManager.OnGameStarted -= GetLocalPlayerOnGameStart;
-        if (_localHp != null) _localHp.OnTakeDamage -= PlayerDamageFX;
+        _gameManager.OnGameStarted -= GetLocalPlayerOnGameStart;
+
+        if (_localHp != null)
+            _localHp.OnTakeDamage -= PlayerDamageFX;
     }
 
     private void GetLocalPlayerOnGameStart()
     {
-        _localHp = GlobalFunctions.ObjectsOfType<HealthController>.Find(hp => hp.tag == Tags.Player);
+        _localHp = GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.BasePlayer != null).GetComponent<HealthController>();
 
-        if (_localHp != null) _localHp.OnTakeDamage += PlayerDamageFX;
+        if (_localHp != null)
+            _localHp.OnTakeDamage += PlayerDamageFX;
     }
 
     public void PlayerDamageFX(BasePlayer basePlayer,int damage)
     {
-        if (basePlayer != null)
-            _animator.Play(_damageFX);
+        _animator.Play(_damageFX);
     }
 }

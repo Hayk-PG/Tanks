@@ -68,7 +68,7 @@ public class MainCameraController : MonoBehaviour
         {
             Vector3 targetPosition = new Vector3(Center.x, Center.y + _yOffset, transform.position.z);
             Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
-            transform.position = ClampPosition(smoothPosition);
+            transform.position = smoothPosition;
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
             _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 5);
             _hudCamera.orthographicSize = _camera.orthographicSize;

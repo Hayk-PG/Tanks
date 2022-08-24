@@ -2,45 +2,54 @@
 
 public class ScreenText : MonoBehaviour
 {
-    private PlayerDamageScreenText _playerDamageScreenText;
-    private EnemyHitScreenText _enemyHitScreenText;
-
+    private GameManager _gameManager;
     private HealthController _playerHealthController;
     private ScoreController _scoreController;
 
-    private string _onGetPointsText;
 
 
     private void Awake()
     {
-        _playerDamageScreenText = Get<PlayerDamageScreenText>.FromChild(gameObject);
-        _enemyHitScreenText = Get<EnemyHitScreenText>.FromChild(gameObject);
+        _gameManager = FindObjectOfType<GameManager>();
+    }
+
+    private void OnEnable()
+    {
+        _gameManager.OnGameStarted += OnGameStarted;
     }
 
     private void OnDisable()
     {
-        if (_playerHealthController != null) _playerHealthController.OnTakeDamage -= OnTakeDamage;
-        if (_scoreController != null) _scoreController.OnHitEnemy -= OnGetPoints; 
+        _gameManager.OnGameStarted -= OnGameStarted;
+
+        if (_playerHealthController != null)
+            _playerHealthController.OnTakeDamage -= OnTakeDamage;
+
+        if (_scoreController != null)
+            _scoreController.OnHitEnemy -= OnGetPoints;
     }
 
-    public void CallPlayerEvents(HealthController playerHealth, ScoreController scoreController)
+    private void OnGameStarted()
     {
-        _playerHealthController = playerHealth;
-        _scoreController = scoreController;
+        TankController localTank = GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.BasePlayer != null);
 
-        if (_playerHealthController != null) _playerHealthController.OnTakeDamage += OnTakeDamage;
-        if (_scoreController != null) _scoreController.OnHitEnemy += OnGetPoints;
+        if(localTank != null)
+        {
+            _playerHealthController = Get<HealthController>.From(localTank.gameObject);
+            _scoreController = Get<ScoreController>.From(localTank.gameObject);
+
+            _playerHealthController.OnTakeDamage += OnTakeDamage;
+            _scoreController.OnHitEnemy += OnGetPoints;
+        }
     }
 
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
-        if (basePlayer != null && _playerDamageScreenText != null)
-            _playerDamageScreenText.Display(-damage);
+        SecondarySoundController.PlaySound(0, 0);
     }
 
     private void OnGetPoints(int[] scoreValues)
     {
-        _onGetPointsText = "+" + scoreValues[0] + " (Hit)" + "\n" + "+" + scoreValues[1] + " (Bonus)";
-        _enemyHitScreenText.Display(_onGetPointsText);
+        SecondarySoundController.PlaySound(0, 1);
     }
 }
