@@ -78,7 +78,7 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        if (updateTiles) _changeTiles.UpdateTiles();
+        if (updateTiles) _changeTiles.UpdateTiles(null);
     }
 
     private void GetPixelColor(int x, int y, out bool isPixelTransparent)

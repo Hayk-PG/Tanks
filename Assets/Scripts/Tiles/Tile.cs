@@ -65,7 +65,7 @@ public class Tile : MonoBehaviour, IDestruct
         transform.position = _desiredPosition;
         _groundSlam.OnGroundSlam(new Vector3(transform.position.x, transform.position.y - (_tileSize.y / 2), transform.position.z));
         _isSuspended = false;
-        _changeTiles.UpdateTiles();
+        _changeTiles.UpdateTiles(transform.position);
     }
 
     public void Destruct(int damage, int tileParticleIndex)
@@ -94,7 +94,7 @@ public class Tile : MonoBehaviour, IDestruct
         _collider.isTrigger = true;
         _explosion.SetActive(true);
         _explosion.transform.parent = null;
-        _changeTiles.UpdateTiles();
+        _changeTiles.UpdateTiles(transform.position);
         if(_tileParticles != null) _tileParticles.TileParticlesActivity(tileParticleIndex, true);
         Destroy(gameObject);
     }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class ChangeTiles : BaseChangeTiles
 {
+    private List<Vector3> _optimizedTilesList;
     private float second;
     private IEnumerator _coroutine;
 
@@ -14,22 +16,20 @@ public class ChangeTiles : BaseChangeTiles
     protected override void Awake()
     {
         base.Awake();
-        _coroutine = UpdateTilesCoroutine(second);
+        _coroutine = UpdateTilesCoroutine(second, null);
     }
 
-    public void UpdateTiles()
+    public void UpdateTiles(Vector3? currentTilePosition)
     {
         second = 0;
 
         StopCoroutine();
-        StartCoroutine();
-
-        //StartCoroutine(UpdateTilesCoroutine(second));
+        StartCoroutine(currentTilePosition);
     }
 
-    private void StartCoroutine()
+    private void StartCoroutine(Vector3? currentTilePosition)
     {
-        _coroutine = UpdateTilesCoroutine(second);
+        _coroutine = UpdateTilesCoroutine(second, currentTilePosition);
         StartCoroutine(_coroutine);
     }
 
@@ -41,82 +41,7 @@ public class ChangeTiles : BaseChangeTiles
             _coroutine = null;
         }
     }
-
-    private IEnumerator UpdateTilesCoroutine(float time)
-    {
-        while (time < 1)
-        {
-            time += 1 * Time.deltaTime;
-
-            for (int i = 0; i < TilesGenerator.TilesDict.Keys.ToList().Count; i++)
-            {
-                if (HasTile(TilesGenerator.TilesDict.Keys.ToList()[i]))
-                {
-                    ThisTilePos = TilesGenerator.TilesDict.Keys.ToList()[i];
-
-                    if (!HasTile(ThisTilePos + Vertical))
-                    {
-                        if (HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
-                        {
-                            CreateTopTile();
-                        }
-
-                        if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Vertical + Horizontal))
-                        {
-                            CreateTopRightTile();
-                        }
-
-                        if (HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos - Vertical - Horizontal))
-                        {
-                            CreateTopLeftTile();
-                        }
-
-                        if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
-                        {
-                            CreateRightTopLeftTile();
-                        }
-
-                        if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical - Horizontal))
-                        {
-                            CreateRightSlope();
-                        }
-
-                        if (!HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical + Horizontal))
-                        {
-                            CreateLeftSlope();
-                        }
-                    }
-                    else
-                    {
-                        if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
-                        {
-                            CreateRightTile();
-                        }
-
-                        if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
-                        {
-                            CreateLeftTile();
-                        }
-
-                        if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
-                        {
-                            CreateLeftRightTile();
-                        }
-
-                        if(HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
-                        {
-                            CreateMiddleTile();
-                        }
-                    }
-                }
-            }
-
-            yield return new WaitForSeconds(0.02f);
-        }
-
-        OnTilesUpdated?.Invoke(TilesGenerator);
-    }
-
+   
     private void CreateTopTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[0]);
@@ -165,5 +90,133 @@ public class ChangeTiles : BaseChangeTiles
     private void CreateMiddleTile()
     {
         SetTile(ThisTilePos, TilesGenerator.TilesPrefabs[1]);
+    }
+
+    private void CreateTile(Vector3 position)
+    {
+        if (HasTile(position))
+        {
+            ThisTilePos = position;
+
+            if (!HasTile(ThisTilePos + Vertical))
+            {
+                if (HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                {
+                    CreateTopTile();
+                }
+
+                if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Vertical + Horizontal))
+                {
+                    CreateTopRightTile();
+                }
+
+                if (HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos - Vertical - Horizontal))
+                {
+                    CreateTopLeftTile();
+                }
+
+                if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
+                {
+                    CreateRightTopLeftTile();
+                }
+
+                if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical - Horizontal))
+                {
+                    CreateRightSlope();
+                }
+
+                if (!HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical + Horizontal))
+                {
+                    CreateLeftSlope();
+                }
+            }
+            else
+            {
+                if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
+                {
+                    CreateRightTile();
+                }
+
+                if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                {
+                    CreateLeftTile();
+                }
+
+                if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
+                {
+                    CreateLeftRightTile();
+                }
+
+                if (HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
+                {
+                    CreateMiddleTile();
+                }
+            }
+        }
+    }
+
+    private void StoreInOptimizedTilesList(Vector3 currentTilePosition)
+    {
+        _optimizedTilesList = new List<Vector3>();
+
+        foreach (var tile in TilesGenerator.TilesDict)
+        {
+            if (tile.Key == currentTilePosition || tile.Key.x >= currentTilePosition.x - 1 && tile.Key.x <= currentTilePosition.x + 1)
+            {
+                _optimizedTilesList.Add(tile.Key);
+            }
+        }
+    }
+
+    private void CreateTilesFromOptimizedTilesList()
+    {
+        for (int i = 0; i < _optimizedTilesList.Count; i++)
+        {
+            CreateTile(_optimizedTilesList[i]);
+        }
+    }
+
+    private void CreateTilesFromTilesDict()
+    {
+        for (int i = 0; i < TilesGenerator.TilesDict.Keys.ToList().Count; i++)
+        {
+            if (HasTile(TilesGenerator.TilesDict.Keys.ToList()[i]))
+            {
+                ThisTilePos = TilesGenerator.TilesDict.Keys.ToList()[i];
+                CreateTile(ThisTilePos);
+            }
+        }
+    }
+
+    private IEnumerator UpdateTilesCoroutine(float time, Vector3? currentTilePosition)
+    {
+        if (currentTilePosition != null)
+        {
+            StoreInOptimizedTilesList(currentTilePosition.Value);
+
+            yield return null;
+
+            while (time < 1)
+            {
+                time += 1 * Time.deltaTime;
+                CreateTilesFromOptimizedTilesList();
+                yield return new WaitForSeconds(0.02f);
+            }
+
+            print("aaaa");
+        }
+        else
+        {
+            while (time < 1)
+            {
+                time += 1 * Time.deltaTime;
+                CreateTilesFromTilesDict();
+                yield return new WaitForSeconds(0.02f);
+            }
+
+            print("bbbb");
+        }
+
+        OnTilesUpdated?.Invoke(TilesGenerator);
     }
 }

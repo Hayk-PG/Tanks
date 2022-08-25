@@ -66,7 +66,7 @@ public class TileModifyGUI : MonoBehaviour
 
             _tilesData.TilesDict.Add(newTilePosition, tile);
             _tileModifyGUIElement._guiElement.SetActive(false);
-            _changeTiles.UpdateTiles();
+            _changeTiles.UpdateTiles(newTilePosition);
             _tabTileModify.SubtractScore();
         }
     }
