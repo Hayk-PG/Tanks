@@ -17,9 +17,11 @@ using UnityEngine;
 public class SoundController : MonoBehaviour
 {
     private static SoundController _inst;
+    private MyScene _myScene;
     private AudioSource _musicSRC;
     private AudioSource _soundSRC;
     private Animator _musicAnimator;
+    
     public enum MusicVolume { Down, Up}
 
     [SerializeField] private SoundsList[] _soundsList;
@@ -32,9 +34,20 @@ public class SoundController : MonoBehaviour
     private void Awake()
     {
         Instance();
+        _myScene = FindObjectOfType<MyScene>();
         _musicSRC = Get<AudioSource>.From(transform.Find("MusicSRC").gameObject);
         _soundSRC = Get<AudioSource>.From(transform.Find("SoundSRC").gameObject);
-        _musicAnimator = Get<Animator>.From(_musicSRC.gameObject);
+        _musicAnimator = Get<Animator>.From(_musicSRC.gameObject);       
+    }
+
+    private void OnEnable()
+    {
+        _myScene.OnDestroyOnLoadMenuScene += OnDestroyOnLoadMenuScene;
+    }
+
+    private void OnDisable()
+    {
+        _myScene.OnDestroyOnLoadMenuScene -= OnDestroyOnLoadMenuScene;
     }
 
     private void Instance()
@@ -48,6 +61,11 @@ public class SoundController : MonoBehaviour
             _inst = this;
             DontDestroyOnLoad(gameObject);
         }
+    }
+
+    private void OnDestroyOnLoadMenuScene()
+    {
+        Destroy(gameObject);
     }
 
     public static void MusicSRCCondition(bool isMuted)
