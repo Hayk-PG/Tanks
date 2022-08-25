@@ -19,6 +19,9 @@ public class BulletCollision : GetBulletController
 
     protected virtual void OnCollision(Collider collider, IScore ownerScore, float distance)
     {
+        if (Get<TankController>.From(collider.gameObject) != null)
+            SecondarySoundController.PlaySound(0, 2);
+
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => OnCollisionInOfflineMode(collider, ownerScore), () => OnCollisionInOnlineMode(collider, ownerScore));       
     }
 
