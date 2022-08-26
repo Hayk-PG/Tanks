@@ -4,15 +4,22 @@ using UnityEngine.UI;
 
 public class Fuel : MonoBehaviour
 {
+    [SerializeField] private Image _oilFilled;
     private TankMovement _tankMovement;
-    private Slider _slder;
+    private float _oilAmmount;
+    private float OilFilledAmmount
+    {
+        get => _oilAmmount / 1000;
+    }
+
+
     public Action<bool> OnFuelValue { get; set; }
 
 
     private void Awake()
     {
-        _slder = Get<Slider>.FromChild(gameObject);
-        _slder.value = 1000;
+        _oilAmmount = 1000;
+        _oilFilled.fillAmount = _oilAmmount / 1000;      
     }
 
     private void OnDisable()
@@ -35,16 +42,20 @@ public class Fuel : MonoBehaviour
 
     private void DecreaseFuelAmmount(float rpm)
     {
-        _slder.value -= Mathf.Abs(rpm / 2) * Time.deltaTime;
-        OnFuelValue?.Invoke(_slder.value > 0);
+        _oilAmmount -= Mathf.Abs(rpm / 2) * Time.deltaTime;
+        _oilFilled.fillAmount = OilFilledAmmount;
+        OnFuelValue?.Invoke(_oilAmmount > 0);
     }
 
     private void ResetFuelSlider()
     {
-        if (_slder.value != 1000)
-        {
-            _slder.value += 5000 * Time.deltaTime;
-        }
+        if (_oilAmmount != 1000)
+            _oilAmmount += 5000 * Time.deltaTime;
+
+        if (_oilAmmount > 1000)
+            _oilAmmount = 1000;
+
+        _oilFilled.fillAmount = OilFilledAmmount;
     }
 }
 
