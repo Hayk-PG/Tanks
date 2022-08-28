@@ -6,4 +6,5 @@ public interface IDamage
     Action<BasePlayer, int> OnTakeDamage { get; set; }
     Action<int> OnUpdateHealthBar { get; set; }
     void Damage(int damage);
+    void CameraChromaticAberrationFX();
 }

@@ -3,8 +3,16 @@ using UnityEngine;
 
 public class AIShootController : BaseShootController
 {
-    [SerializeField] private BulletController[] _bulletsPrefab;
+    [SerializeField] private WeaponProperties[] _bulletsPrefab;
     [SerializeField] private int _activeBulletIndex;
+
+    private struct BulletsList
+    {
+        internal WeaponProperties _weaponProperties;
+        internal int _count;
+        internal bool _isUnlockingTimerRunning;
+    }
+    private BulletsList[] _cachedBulletsList;
 
     private Rigidbody _rigidBody;
     private AITankMovement _aiTankMovement;
@@ -39,6 +47,8 @@ public class AIShootController : BaseShootController
         _aiTankMovement = GetComponent<AITankMovement>();
         _aiEnemyDataGetter = Get<AIEnemyDataGetter>.From(gameObject);
         _iScore = Get<IScore>.From(gameObject);
+        InitializeBulletsList(_bulletsPrefab.Length);
+        _activeBulletIndex = 0;
     }
 
     private void Start()
@@ -60,6 +70,87 @@ public class AIShootController : BaseShootController
     private void Update()
     {
         RotateCanon();
+    }
+
+    private void InitializeBulletsList(int length)
+    {
+        _cachedBulletsList = new BulletsList[length];
+
+        for (int i = 0; i < _cachedBulletsList.Length; i++)
+        {
+            _cachedBulletsList[i]._weaponProperties = _bulletsPrefab[i];
+            _cachedBulletsList[i]._count = _bulletsPrefab[i]._value;
+            _cachedBulletsList[i]._isUnlockingTimerRunning = false;
+        }
+    }
+
+    private bool HaveEnoughBulletsCount(int index)
+    {
+        return _cachedBulletsList[index]._count > 0;
+    }
+
+    private bool HaveRequiredScoreAmmount(int index)
+    {
+        return _scoreController.Score >= _bulletsPrefab[_activeBulletIndex]._requiredScoreAmmount;
+    }
+
+    private bool IsCurrentWeaponUnclockingTimerRunning(int index)
+    {
+        return _cachedBulletsList[index]._isUnlockingTimerRunning;
+    }
+
+    private void UpdateBulletsCount(int index, int number)
+    {
+        _cachedBulletsList[index]._count += number;
+    }
+
+    private void UsedActiveWeapon()
+    {
+        UpdateBulletsCount(_activeBulletIndex, -1);
+
+        if (_activeBulletIndex > 0 && !IsCurrentWeaponUnclockingTimerRunning(_activeBulletIndex))
+            StartCoroutine(RunWeaponTimer(_activeBulletIndex));
+    }
+
+    private void ActivateRandomWeapon()
+    {
+        int randomIndex = Random.Range(0, _cachedBulletsList.Length);
+
+        if (HaveEnoughBulletsCount(randomIndex))
+        {
+            _activeBulletIndex = randomIndex;
+        }
+
+        if(!HaveEnoughBulletsCount(randomIndex) && !IsCurrentWeaponUnclockingTimerRunning(randomIndex) && HaveRequiredScoreAmmount(randomIndex))
+        {         
+            UpdateBulletsCount(randomIndex, _bulletsPrefab[randomIndex]._value);
+            _activeBulletIndex = randomIndex;
+        }
+
+        if(!HaveEnoughBulletsCount(randomIndex) && IsCurrentWeaponUnclockingTimerRunning(randomIndex))
+        {
+            _activeBulletIndex = 0;
+        }
+    }
+
+    private IEnumerator RunWeaponTimer(int weaponIndex)
+    {
+        _cachedBulletsList[weaponIndex]._isUnlockingTimerRunning = true;
+
+        float unlockTime = (_bulletsPrefab[weaponIndex]._minutes * 60) + _bulletsPrefab[weaponIndex]._seconds;
+
+        while (unlockTime > 0)
+        {
+            unlockTime--;
+            yield return new WaitForSeconds(1);
+        }
+
+        yield return null;
+
+        if (unlockTime == 0)
+        {
+            _cachedBulletsList[weaponIndex]._isUnlockingTimerRunning = false;
+        }
     }
 
     private void SubscribeToAICanonRaycast()
@@ -148,12 +239,17 @@ public class AIShootController : BaseShootController
     {
         yield return new WaitForSeconds(2);
 
-        BulletController bullet = Instantiate(_bulletsPrefab[_activeBulletIndex], _shootPoint.position, _canonPivotPoint.rotation);
-        bullet.OwnerScore = _iScore;
-        bullet.RigidBody.velocity = _target;
-        _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
-        mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
-        _currentTrajectoryTime = _defaultTrajectoryTime;
-        OnShoot?.Invoke();
+        if (HaveEnoughBulletsCount(_activeBulletIndex))
+        {
+            BulletController bullet = Instantiate(_cachedBulletsList[_activeBulletIndex]._weaponProperties._prefab, _shootPoint.position, _canonPivotPoint.rotation);
+            bullet.OwnerScore = _iScore;
+            bullet.RigidBody.velocity = _target;
+            _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
+            mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
+            _currentTrajectoryTime = _defaultTrajectoryTime;
+            OnShoot?.Invoke();
+            UsedActiveWeapon();
+            ActivateRandomWeapon();
+        }
     }
 }

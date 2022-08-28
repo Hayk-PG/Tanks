@@ -71,6 +71,6 @@ public class Explosion : MonoBehaviour
 
     protected virtual void DamageAndScoreInOlineMode(IDamage iDamage, int[] scoreValues)
     {
-        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scoreValues);
+        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scoreValues, 0);
     }
 }

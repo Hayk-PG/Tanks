@@ -11,6 +11,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     }
 
 
+    #region Collison
     public void CallOnCollisionRPC(Collider collider, IScore iScore, int destructDamage)
     {
         if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
@@ -35,8 +36,10 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
         IScore iScore = GameObject.Find(ownerName)?.GetComponent<IScore>();
         iScore?.GetScore(10, null);
     }
+    #endregion
 
-    public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int[] scoreValues)
+    #region Damage
+    public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int[] scoreValues, int damageTypeIndex)
     {
         if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
@@ -47,24 +50,29 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
                 iDamageOwnerName,
                 ownerName,
                 damageValue,
-                scoreValues
+                scoreValues,
+                damageTypeIndex
             };
 
             photonView.RPC("DamageAndScoreRPC", RpcTarget.AllViaServer, data);
         }
     }
-
+   
     [PunRPC]
     private void DamageAndScoreRPC(object[] data)
     {
         if(data != null)
         {
             IDamage iDamage = GameObject.Find((string)data[0])?.GetComponent<IDamage>();
-            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>();            
+            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>();
             iDamage?.Damage((int)data[2]);
             int[] scoreValues = (int[])data[3];
             iScore?.GetScore(scoreValues[0] + scoreValues[1], iDamage);
             iScore?.HitEnemyAndGetScore(scoreValues, iDamage);
+
+            if ((int)data[4] == 1)
+                iDamage.CameraChromaticAberrationFX();
         }
     }
+    #endregion
 }

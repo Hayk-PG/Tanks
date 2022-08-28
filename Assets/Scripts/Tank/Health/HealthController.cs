@@ -73,4 +73,12 @@ public class HealthController : MonoBehaviour, IDamage
             OnTankDamageFire?.Invoke(Health);
         }
     }
+
+    public void CameraChromaticAberrationFX()
+    {
+        if(_tankController.BasePlayer != null)
+        {
+            FindObjectOfType<CameraChromaticAberration>().CameraGlitchFX(60);
+        }
+    }
 }

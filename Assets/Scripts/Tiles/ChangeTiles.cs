@@ -202,8 +202,6 @@ public class ChangeTiles : BaseChangeTiles
                 CreateTilesFromOptimizedTilesList();
                 yield return new WaitForSeconds(0.02f);
             }
-
-            print("aaaa");
         }
         else
         {
@@ -213,8 +211,6 @@ public class ChangeTiles : BaseChangeTiles
                 CreateTilesFromTilesDict();
                 yield return new WaitForSeconds(0.02f);
             }
-
-            print("bbbb");
         }
 
         OnTilesUpdated?.Invoke(TilesGenerator);

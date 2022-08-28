@@ -8,6 +8,7 @@ public class BaseShootController: MonoBehaviour
     protected BaseTrajectory _trajectory;
     protected AICanonRaycast _aiCanonRaycast;
     protected PlayerTurn _playerTurn;
+    protected ScoreController _scoreController;
     protected MainCameraController mainCameraController;
 
     [Serializable] public struct Canon
@@ -45,6 +46,7 @@ public class BaseShootController: MonoBehaviour
         _trajectory = Get<BaseTrajectory>.From(_shootPoint.gameObject);
         _aiCanonRaycast = Get<AICanonRaycast>.From(_trajectory.gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
+        _scoreController = Get<ScoreController>.From(gameObject);
         mainCameraController = FindObjectOfType<MainCameraController>();
     }
 
