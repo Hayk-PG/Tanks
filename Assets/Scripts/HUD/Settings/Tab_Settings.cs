@@ -24,10 +24,12 @@ public class Tab_Settings : MonoBehaviour
     private void OpenTab()
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
+        UISoundController.PlaySound(1, 2);
     }
 
     public void CloseTab()
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
+        UISoundController.PlaySound(1, 3);
     }
 }

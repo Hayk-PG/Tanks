@@ -51,5 +51,11 @@ public class AmmoTypeController : MonoBehaviour
 
         OnInformAboutTabActivityToTabsCustomization?.Invoke(_rectTransform.anchoredPosition.x > 0);
         _cameraBlur.ScreenBlur(_rectTransform.anchoredPosition.x > 0);
+        PlaySoundFx(_rectTransform.anchoredPosition.x > 0 ? 0 : 1);
+    }
+
+    public void PlaySoundFx(int clipIndex)
+    {
+        UISoundController.PlaySound(1, clipIndex);
     }
 }
