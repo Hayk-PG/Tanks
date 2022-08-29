@@ -2,7 +2,7 @@
 
 public class PlayerShields : PlayerDeployProps
 {
-    private Shields _shields;
+    protected Shields _shields;
     private GlobalActivityTimer _globalActivityTimer;
     private int _endTime = 60;
     public bool IsShieldActive { get; set; }

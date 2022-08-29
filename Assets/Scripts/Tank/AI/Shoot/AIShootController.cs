@@ -124,6 +124,7 @@ public class AIShootController : BaseShootController
         if(!HaveEnoughBulletsCount(randomIndex) && !IsCurrentWeaponUnclockingTimerRunning(randomIndex) && HaveRequiredScoreAmmount(randomIndex))
         {         
             UpdateBulletsCount(randomIndex, _bulletsPrefab[randomIndex]._value);
+            _scoreController.Score -= _bulletsPrefab[randomIndex]._requiredScoreAmmount;
             _activeBulletIndex = randomIndex;
         }
 
