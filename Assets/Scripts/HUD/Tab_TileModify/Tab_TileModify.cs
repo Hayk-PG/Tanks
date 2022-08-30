@@ -19,7 +19,8 @@ public class Tab_TileModify : MonoBehaviour
     private LocalPlayer _localPlayer;   
     private List<GameObject> foundTiles;
     [SerializeField] private TMP_Text _scoreText;
-    private int _priceForOneTile = 0;
+    [SerializeField] private TMP_Text _priceText;
+    private int _priceForOneTile = 250;
 
     private string ScoreText
     {
@@ -46,6 +47,7 @@ public class Tab_TileModify : MonoBehaviour
         _tilesData = FindObjectOfType<TilesData>();
         _gameManager = FindObjectOfType<GameManager>();
         _turnController = FindObjectOfType<TurnController>();
+        _priceText.text = "= " + _priceForOneTile;
     }
 
     private void OnEnable()
