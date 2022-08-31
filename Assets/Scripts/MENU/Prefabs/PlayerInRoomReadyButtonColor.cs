@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerInRoomReadyButtonColor : MonoBehaviour
 {
+    [SerializeField] private GameObject[] _buttonImages;
     private PlayerInRoom _playerInRoom;
-
-    [SerializeField] private Color[] _statusButtonBackgroundColor;
-    [SerializeField] private Color[] _statusButtonFrameColor;
-    [SerializeField] private Image _imageFrame, _imageBackground;
+    private bool _isSoundFxPlayed;
+    
 
 
     private void Awake()
@@ -22,7 +20,33 @@ public class PlayerInRoomReadyButtonColor : MonoBehaviour
 
     public void ReadyButtonColor(bool isPlayerReady)
     {
-        _imageBackground.color = isPlayerReady ? _statusButtonBackgroundColor[0] : _statusButtonBackgroundColor[1];
-        _imageFrame.color = isPlayerReady ? _statusButtonFrameColor[0] : _statusButtonFrameColor[1];
+        ButtonImagesActivity(isPlayerReady);
     } 
+    
+    private void ButtonImagesActivity(bool isActive)
+    {
+        if (_buttonImages[0].activeInHierarchy != isActive)
+        {
+            _buttonImages[0].SetActive(isActive);
+
+            if (_isSoundFxPlayed)
+                _isSoundFxPlayed = false;
+        }
+            
+
+        if (_buttonImages[1].activeInHierarchy == isActive)
+        {
+            _buttonImages[1].SetActive(isActive);
+            SoundFX();
+        }
+    }
+
+    private void SoundFX()
+    {
+        if (!_isSoundFxPlayed)
+        {
+            UISoundController.PlaySound(2, 0);
+            _isSoundFxPlayed = true;
+        }
+    }
 }

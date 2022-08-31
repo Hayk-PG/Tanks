@@ -64,6 +64,7 @@ public class ShootController : BaseShootController
     protected override void Awake()
     {
         base.Awake();
+        ShootPointGameobjectActivity(false);
         _tankController = Get<TankController>.From(gameObject);
         _tankMovement = Get<TankMovement>.From(gameObject);
         _rigidBody = GetComponent<Rigidbody>();       
@@ -74,6 +75,7 @@ public class ShootController : BaseShootController
 
     private void OnEnable()
     {
+        _tankController.OnInitialize += OnInitialize;
         _tankController.OnControllers += OnControllers;
         _tankController.OnShootButtonClick += OnShootButtonClick;
         _tankMovement.OnDirectionValue += OnMovementDirectionValue;
@@ -81,6 +83,7 @@ public class ShootController : BaseShootController
 
     private void OnDisable()
     {
+        _tankController.OnInitialize -= OnInitialize;
         _tankController.OnControllers -= OnControllers;
         _tankController.OnShootButtonClick -= OnShootButtonClick;
         _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
@@ -96,16 +99,29 @@ public class ShootController : BaseShootController
         }
     }
 
+    private void OnInitialize()
+    {
+        ShootPointGameobjectActivity(true);
+    }
+
+    private void ShootPointGameobjectActivity(bool isActive)
+    {
+        if (_shootPoint.gameObject.activeInHierarchy != isActive)
+            _shootPoint.gameObject.SetActive(isActive);
+    }
+
     private void OnMovementDirectionValue(float direction)
     {
         if (_tankController.BasePlayer != null)
-            _shootPoint.gameObject.SetActive(direction == 0);
+        {
+            ShootPointGameobjectActivity(direction == 0);
+        }
     }
 
     private void OnControllers(Vector2 values)
     {
         Direction = -values.y;
-        CurrentForce = Mathf.Clamp(CurrentForce + values.x * 2 * Time.deltaTime, _shoot._minForce, _shoot._maxForce);       
+        CurrentForce = Mathf.Clamp(CurrentForce + (_playerTurn.MyTurn == TurnState.Player1 ? values.x: -values.x) * 2 * Time.deltaTime, _shoot._minForce, _shoot._maxForce);       
     }
 
     public void RotateCanon()
@@ -120,7 +136,8 @@ public class ShootController : BaseShootController
 
     private void ApplyForce()
     {
-        _trajectory.PredictedTrajectory(CurrentForce);
+        if(_shootPoint != null && _shootPoint.gameObject.activeInHierarchy)
+            _trajectory.PredictedTrajectory(CurrentForce);
     }
 
     private void OnShootButtonClick(bool isTrue)
