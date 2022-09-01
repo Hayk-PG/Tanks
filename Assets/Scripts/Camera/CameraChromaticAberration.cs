@@ -3,16 +3,13 @@ using UnityEngine;
 
 public class CameraChromaticAberration : BaseCameraFX
 {
-    private float _currentDuration;
     private IEnumerator _coroutine;
 
 
     public void CameraGlitchFX(float duration)
     {
-        float newDuration = _currentDuration + duration;
-        _currentDuration = 0;
         CoroutineStop();
-        CoroutineStart(newDuration);
+        CoroutineStart(duration);
     }
 
     private void CoroutineStart(float duration)
@@ -32,21 +29,9 @@ public class CameraChromaticAberration : BaseCameraFX
 
     private IEnumerator Coroutine(float duration)
     {
-        _currentDuration = duration;
         ChromaticAberration(true);
-
-        while (_currentDuration > 0)
-        {
-            _currentDuration -= 1 * Time.deltaTime;
-            
-            if (_currentDuration <= 0)
-            {
-                _currentDuration = 0;
-                ChromaticAberration(false);
-            }
-
-            yield return null;
-        }
+        yield return new WaitForSeconds(duration);
+        ChromaticAberration(false);
     }
 
     private void ChromaticAberration(bool isEnabled)

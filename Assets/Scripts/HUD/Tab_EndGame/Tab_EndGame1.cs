@@ -128,5 +128,6 @@ public partial class Tab_EndGame
         SetLevelText(newLevel);
         SetSliderXPMinAndMaxValues(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0], Data.Manager.PointsSliderMinAndMaxValues[newLevel, 1]);
         SetSliderXPValue(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0]);
+        SecondarySoundController.PlaySound(0, 4);
     }
 }

@@ -41,6 +41,7 @@ public partial class Tab_EndGame
     private void PointsPlus(int points)
     {
         _ui._textPointsPlusAnim.SetTrigger(Names.Play);
+        SecondarySoundController.PlaySound(0, 3);
 
         if(_ui._textPointsPlusAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
             _ui._textPointsPlus.text = "+" + points;
