@@ -6,8 +6,6 @@ public class Tab_EndgameChat : MonoBehaviour
 {
     [SerializeField] private CanvasGroup _canvasGroupChat;
     [SerializeField] private CanvasGroup _canvasGroupTabResult;
-    [SerializeField] private Button _buttonChat;
-    [SerializeField] private Button buttonDimed;
 
     public bool IsChatOpened
     {
@@ -16,22 +14,16 @@ public class Tab_EndgameChat : MonoBehaviour
     public Action OnChatOpen { get; set; }
 
 
-
-    private void Update()
+    public void OpenChatTab()
     {
-        _buttonChat.onClick.RemoveAllListeners();
-        _buttonChat.onClick.AddListener(delegate
-        {
-            GlobalFunctions.CanvasGroupActivity(_canvasGroupChat, true);
-            GlobalFunctions.CanvasGroupActivity(_canvasGroupTabResult, false);
-            OnChatOpen?.Invoke();
-        });
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupChat, true);
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupTabResult, false);
+        OnChatOpen?.Invoke();
+    }
 
-        buttonDimed.onClick.RemoveAllListeners();
-        buttonDimed.onClick.AddListener(delegate 
-        {
-            GlobalFunctions.CanvasGroupActivity(_canvasGroupChat, false);
-            GlobalFunctions.CanvasGroupActivity(_canvasGroupTabResult, true);
-        });
+    public void CloseChatTab()
+    {
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupChat, false);
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupTabResult, true);
     }
 }

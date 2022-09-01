@@ -45,23 +45,19 @@ public class Tab_EndgameRematchButton : MonoBehaviour
         _tabEndgameTimer.OnTimerEnd -= OnTimerEnd;
     }
 
-    private void Update()
-    {
-        _button.onClick.RemoveAllListeners();
-        _button.onClick.AddListener(delegate 
-        {
-            if (!IsClicked)
-            {
-                OnRematch?.Invoke();
-                IsClicked = true;
-                ButtonTextColor = _clickedColor;
-            }
-        });
-    }
-
     private void OnTimerEnd(string buttonText)
     {
         ButtonText = buttonText;
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
+    }
+
+    public void Rematch()
+    {
+        if (!IsClicked)
+        {
+            OnRematch?.Invoke();
+            IsClicked = true;
+            ButtonTextColor = _clickedColor;
+        }
     }
 }
