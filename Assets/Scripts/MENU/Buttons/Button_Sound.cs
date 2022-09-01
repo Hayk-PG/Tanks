@@ -2,11 +2,11 @@
 
 public class Button_Sound : MonoBehaviour
 {
-    [SerializeField] private int _listIndex;
-    [SerializeField] private int _clipIndex;
+    [SerializeField] protected int _listIndex;
+    [SerializeField] protected int _clipIndex;
 
 
-    public void OnButtonSound()
+    public virtual void OnButtonSound()
     {
         UISoundController.PlaySound(_listIndex, _clipIndex);
     }
