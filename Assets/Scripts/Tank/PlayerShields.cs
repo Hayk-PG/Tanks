@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class PlayerShields : PlayerDeployProps
+﻿public class PlayerShields : PlayerDeployProps
 {
     protected Shields _shields;
     private GlobalActivityTimer _globalActivityTimer;
@@ -26,7 +24,7 @@ public class PlayerShields : PlayerDeployProps
         _propsTabCustomization.OnActivateShields -= OnActivateShields;
     }
 
-    protected override void OnInitialize()
+    protected override void SubscribeToPropsEvent()
     {
         _propsTabCustomization.OnActivateShields += OnActivateShields;
     }
@@ -58,20 +56,12 @@ public class PlayerShields : PlayerDeployProps
         _shields.RunTimerCoroutine(_endTime);
     }
 
-    private void ShieldActivityRPC(int index, bool isActive)
-    {
-        if (_photonPlayerDeployRPC == null)
-            _photonPlayerDeployRPC = Get<PhotonPlayerDeployPropsRPC>.From(_tankController.BasePlayer.gameObject);
-
-        _photonPlayerDeployRPC.CalShieldsActivityRPC(index);
-    }
-
     private void OnActivateShields()
     {
         if (_playerTurn.IsMyTurn)
         {
             int index = _playerTurn.MyTurn == TurnState.Player1 ? 0 : 1;
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, ()=> ActivateShields(0), ()=> ShieldActivityRPC(index, true));
+            _iPlayerDeployProps?.ActivateShields(index);         
             _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
         }
     }

@@ -13,7 +13,7 @@ public class PlayerDeployMetalCube : PlayerDeployProps
         _propsTabCustomization.OnInstantiateMetalCube -= OnInstantiate;
     }
 
-    protected override void OnInitialize()
+    protected override void SubscribeToPropsEvent()
     {
         _propsTabCustomization.OnInstantiateMetalCube += OnInstantiate;
     }
@@ -25,6 +25,6 @@ public class PlayerDeployMetalCube : PlayerDeployProps
 
     protected override void Result(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
     {
-        TileProps(isPlayer1, transformPosition, tilePosition);
+        _iPlayerDeployProps?.ArmoredCubeTileProps(isPlayer1, transformPosition, tilePosition);
     }
 }

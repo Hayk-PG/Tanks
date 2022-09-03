@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class AiChangeTileToArmoredTile : PlayerChangeTileToMetalGround
 {
-    private TurnController _turnController;
     private ScoreController _scoreController;
     private ChangeTiles _changeTiles;
     private bool _canUseAgain = true;

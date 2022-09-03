@@ -1,8 +1,8 @@
 ﻿using Photon.Pun;
 
-public class PhotonPlayerShootRPC : PhotonPlayerBaseRPC
+public class PhotonPlayerShootRPC : PhotonPlayerBaseRPC, IShoot
 {
-    public void CallShootRPC(float force)
+    public void Shoot(float force)
     {
         _photonPlayerController.PhotonView.RPC("ShootRPC", RpcTarget.AllViaServer, force);
     }

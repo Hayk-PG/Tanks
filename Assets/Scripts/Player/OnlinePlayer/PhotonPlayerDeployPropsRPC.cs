@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Photon.Pun;
 
-public class PhotonPlayerDeployPropsRPC : PhotonPlayerBaseRPC
+public class PhotonPlayerDeployPropsRPC : PhotonPlayerBaseRPC, IPlayerDeployProps
 {
     public void CallSandBagsRPC(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
     {
@@ -14,14 +14,36 @@ public class PhotonPlayerDeployPropsRPC : PhotonPlayerBaseRPC
         _photonPlayerTankController?._playerDeployProps.TileProps(isPlayer1, transformPosition, tilePosition);
     }
 
-    public void CalShieldsActivityRPC(int playerIndex)
+    public void ActivateShields(int playerIndex)
     {
-        _photonPlayerController.PhotonView.RPC("ShieldsActivityRPC", RpcTarget.AllViaServer, playerIndex);
+        _photonPlayerController.PhotonView.RPC("ActivateShieldsRPC", RpcTarget.AllViaServer, playerIndex);
     }
 
     [PunRPC]
-    private void ShieldsActivityRPC(int playerIndex)
+    private void ActivateShieldsRPC(int playerIndex)
     {
         _photonPlayerTankController?._playerShields.ActivateShields(playerIndex);
+    }
+
+    public void ArmoredCubeTileProps(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
+    {
+        _photonPlayerController.PhotonView.RPC("ArmoredCubeTilePropsRPC", RpcTarget.AllViaServer, isPlayer1, transformPosition, tilePosition);
+    }
+
+    [PunRPC]
+    private void ArmoredCubeTilePropsRPC(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
+    {
+        _photonPlayerTankController?._playerDeployMetalCube.TileProps(isPlayer1, transformPosition, tilePosition);
+    }
+
+    public void ChangeGroundToArmoredGround(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
+    {
+        _photonPlayerController.PhotonView.RPC("ChangeGroundToArmoredGroundRPC", RpcTarget.AllViaServer, isPlayer1, transformPosition, tilePosition);
+    }
+
+    [PunRPC]
+    private void ChangeGroundToArmoredGroundRPC(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
+    {
+        _photonPlayerTankController?._playerChangeTileToMetalGround.TileProps(isPlayer1, transformPosition, tilePosition);
     }
 }

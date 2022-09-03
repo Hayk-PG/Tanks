@@ -24,6 +24,7 @@ public class ShootController : BaseShootController
     private Rigidbody _rigidBody;   
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
     private IScore _iScore;
+    private IShoot _iShoot;
     private PlayerAmmoType _playerAmmoType;
     
     [HideInInspector] [SerializeField] private BulletController _instantiatedBullet;
@@ -69,7 +70,7 @@ public class ShootController : BaseShootController
         _tankMovement = Get<TankMovement>.From(gameObject);
         _rigidBody = GetComponent<Rigidbody>();       
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
-        _iScore = Get<IScore>.From(gameObject);
+        _iScore = Get<IScore>.From(gameObject);       
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);        
     }
 
@@ -101,6 +102,7 @@ public class ShootController : BaseShootController
 
     private void OnInitialize()
     {
+        _iShoot = Get<IShoot>.From(_tankController.BasePlayer.gameObject);
         ShootPointGameobjectActivity(true);
     }
 
@@ -144,7 +146,7 @@ public class ShootController : BaseShootController
     {
         if (_playerTurn.IsMyTurn)
         {
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => ShootBullet(CurrentForce), () => ShootBulletRPC(CurrentForce));
+            _iShoot?.Shoot(CurrentForce);           
             AmmoUpdate();
         }
     }
@@ -178,14 +180,6 @@ public class ShootController : BaseShootController
         }
     }
 
-    private void ShootBulletRPC(float force)
-    {
-        if (_photonPlayerShootRPC == null)
-            _photonPlayerShootRPC = _tankController.BasePlayer.GetComponent<PhotonPlayerShootRPC>();
-
-        _photonPlayerShootRPC?.CallShootRPC(force);
-    } 
-    
     private void AddForce(float force)
     {
         if(!_isSandbagsTriggered)

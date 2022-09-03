@@ -6,7 +6,6 @@ public class AIShields : PlayerShields
     [SerializeField] private PropsProperties _shieldProperties;
     private ScoreController _scoreController;
     private HealthController _healthController;
-    private TurnController _turnController;
     private int _time;
 
 

@@ -13,6 +13,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     public Action OnActivateShields { get; set; }
     public Action OnArtillery { get; set; }
     public Action OnModifyGround { get; set; }
+    public Action OnSkipTurn { get; set; }
 
 
 
@@ -68,15 +69,16 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
             OnChangeToMetalGround?.Invoke();
 
         if (propsTypeButton._properties.SupportOrPropsType == Names.Shield)
-        {
             OnActivateShields?.Invoke();
-        }
-            
+
         if (propsTypeButton._properties.SupportOrPropsType == Names.LightMortarSupport)
             OnArtillery?.Invoke();
 
         if (propsTypeButton._properties.SupportOrPropsType == Names.ModifyGround)
             OnModifyGround?.Invoke();
+
+        if (propsTypeButton._properties.SupportOrPropsType == Names.SkipTurn)
+            OnSkipTurn?.Invoke();
 
         OnAmmoTypeController?.Invoke();
     }

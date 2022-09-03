@@ -13,7 +13,7 @@ public class PlayerChangeTileToMetalGround : PlayerDeployProps
         _propsTabCustomization.OnChangeToMetalGround -= OnInstantiate;
     }
 
-    protected override void OnInitialize()
+    protected override void SubscribeToPropsEvent()
     {
         _propsTabCustomization.OnChangeToMetalGround += OnInstantiate;
     }
@@ -31,6 +31,6 @@ public class PlayerChangeTileToMetalGround : PlayerDeployProps
 
     protected override void Result(bool isPlayer1, Vector3 transformPosition, Vector3 tilePosition)
     {
-        TileProps(isPlayer1, transformPosition, tilePosition);
+        _iPlayerDeployProps.ChangeGroundToArmoredGround(isPlayer1, transformPosition, tilePosition);
     }
 }
