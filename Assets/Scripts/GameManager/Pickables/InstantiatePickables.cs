@@ -1,44 +1,29 @@
-﻿using System.Collections;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
+using System.Collections;
 using UnityEngine;
 
-public class InstantiatePickables : MonoBehaviour
+public class InstantiatePickables : MonoBehaviourPun
 {
-    [SerializeField] private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
     private GameManager _gameManager;
-    private LevelGenerator _levelGenerator;
     private Transform _player1, _player2;
-    private float _leftSideX, _rightSideX;
-    private Vector3 RandomSpawnPosition
-    {
-        get
-        {
-            return new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
-        }
-    }
+   
     private bool IsThereOtherActiveParachute
     {
         get => FindObjectOfType<ParachuteWithWoodBoxController>();
     }
-    private float RandomTime
-    {
-        get
-        {
-            return Random.Range(30, 120);
-        }
-    }
-    private int RandomContent
-    {
-        get
-        {
-            return Random.Range(0, 3);
-        }
-    }
+    public Vector3 RandomSpawnPosition { get; set; }    
+    public float RandomTime { get; set; }
+    public int RandomContent { get; set; }
+
+    public System.Action<object[]> OnInstantiateWoodenBox { get; set; }
+
 
 
     private void Awake()
     {
         _gameManager = Get<GameManager>.From(gameObject);
-        _levelGenerator = FindObjectOfType<LevelGenerator>();
     }
 
     private void OnEnable()
@@ -63,12 +48,27 @@ public class InstantiatePickables : MonoBehaviour
     {
         while (true)
         {
+            RandomTime = Random.Range(30, 120);
             yield return new WaitForSeconds(RandomTime);
 
-            if (_player1 != null && _player2 != null && !IsThereOtherActiveParachute)
+            RandomSpawnPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);           
+            RandomContent = Random.Range(0, 4);
+
+            if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
             {
-                ParachuteWithWoodBoxController parachute = Instantiate(_parachuteWithWoodBoxController, RandomSpawnPosition, Quaternion.identity);
-                parachute.RandomContent = RandomContent;
+                if (_player1 != null && _player2 != null && !IsThereOtherActiveParachute)
+                {
+                    EventInfo.Content_InstantiateWoodenBox = new object[]
+                    {
+                    RandomSpawnPosition,
+                    RandomContent
+                    };
+
+                    //ONLINE
+                    PhotonNetwork.RaiseEvent(EventInfo.Code_InstantiateWoodenBox, EventInfo.Content_InstantiateWoodenBox, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+                    //OFFLINE
+                    OnInstantiateWoodenBox?.Invoke(EventInfo.Content_InstantiateWoodenBox);
+                }
             }
         }
     }

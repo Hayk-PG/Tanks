@@ -36468,6 +36468,51 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6881935320404064987}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1764015639
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1764015641}
+  - component: {fileID: 1764015640}
+  m_Layer: 0
+  m_Name: WoodenBoxSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1764015640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764015639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92dd8bcfe0ccce04bb287ec7a05e1a20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _parachuteWithWoodBoxController: {fileID: 1071289493604564194, guid: 8a7e05fea83231349919f5a19aab34c3,
+    type: 3}
+--- !u!4 &1764015641
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764015639}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1789119046
 GameObject:
   m_ObjectHideFlags: 0
@@ -36941,7 +36986,6 @@ GameObject:
   - component: {fileID: 1950072988}
   - component: {fileID: 1950072985}
   - component: {fileID: 1950072987}
-  - component: {fileID: 1950072989}
   m_Layer: 0
   m_Name: TileGenerator
   m_TagString: Untagged
@@ -37048,19 +37092,6 @@ MonoBehaviour:
     _prefab: {fileID: 2090463658}
   _maps: {fileID: 11400000, guid: 271870429e7b7ae43a34f7c34e5e6f36, type: 2}
   _currentMapIndex: 0
---- !u!114 &1950072989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1950072984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bfb929552e4fc44aa5403f32a19373c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefab: {fileID: 5101971777255703518, guid: 5f35424ca3928c649b3257eaa46d0a43, type: 3}
 --- !u!1 &1975519961
 GameObject:
   m_ObjectHideFlags: 0
@@ -37318,9 +37349,11 @@ GameObject:
   - component: {fileID: 2025759510}
   - component: {fileID: 2025759517}
   - component: {fileID: 2025759518}
+  - component: {fileID: 2025759526}
   - component: {fileID: 2025759522}
   - component: {fileID: 2025759524}
   - component: {fileID: 2025759525}
+  - component: {fileID: 2025759527}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -37576,8 +37609,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1d957d040a96f4b970b10b6c24705b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parachuteWithWoodBoxController: {fileID: 1071289493604564194, guid: 8a7e05fea83231349919f5a19aab34c3,
-    type: 3}
+--- !u!114 &2025759526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025759507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b87798af8899ce740a078c7f11fca7d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _parachuteWithWoodBoxController: {fileID: 0}
+--- !u!114 &2025759527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025759507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bfb929552e4fc44aa5403f32a19373c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 5101971777255703518, guid: 5f35424ca3928c649b3257eaa46d0a43, type: 3}
 --- !u!1 &2090463658
 GameObject:
   m_ObjectHideFlags: 0

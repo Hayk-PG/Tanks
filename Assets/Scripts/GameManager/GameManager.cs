@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviourPun
     {
         if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
-            PhotonNetwork.RaiseEvent(EventInfo._code_InstantiatePlayers, EventInfo._content_InstantiatePlayers, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent(EventInfo.Code_InstantiatePlayers, EventInfo.Content_InstantiatePlayers, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
         }
     }
 }

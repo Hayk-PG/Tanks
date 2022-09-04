@@ -2,8 +2,9 @@
 
 public class WoodBox : MonoBehaviour
 {
-    private enum Content { AddScore, AddHealth, AddWeapon}
+    private enum Content { AddScore, AddHealth, AddWeapon, GiveTurn}
     private Tab_WoodboxContent _tabWoodboxContent;
+    private TurnController _turnController;
     [SerializeField] private Content _content;
     private int _contentIndex;
 
@@ -12,6 +13,7 @@ public class WoodBox : MonoBehaviour
     private void Awake()
     {
         _tabWoodboxContent = FindObjectOfType<Tab_WoodboxContent>();
+        _turnController = FindObjectOfType<TurnController>();
     }
 
     public void OnContent(int contentIndex, TankController tankController)
@@ -24,6 +26,7 @@ public class WoodBox : MonoBehaviour
             case Content.AddScore: AddPlayerScore(tankController); break;
             case Content.AddHealth: AddPlayerHealth(tankController); break;
             case Content.AddWeapon: AddWeapon(tankController); break;
+            case Content.GiveTurn: GiveTurn(tankController); break;
         }
     }
 
@@ -63,6 +66,19 @@ public class WoodBox : MonoBehaviour
 
             if (isDone)
                 _tabWoodboxContent.OnContent(Tab_WoodboxContent.Content.Bullet, text);
+        }
+    }
+
+    private void GiveTurn(TankController tankController)
+    {
+        PlayerTurn playerTurn = Get<PlayerTurn>.From(tankController.gameObject);
+
+        if(playerTurn != null)
+        {
+            if (playerTurn.IsMyTurn)
+            {
+                _turnController.SetNextTurn(playerTurn.MyTurn == TurnState.Player1 ? TurnState.Player2 : TurnState.Player1);
+            }
         }
     }
 }

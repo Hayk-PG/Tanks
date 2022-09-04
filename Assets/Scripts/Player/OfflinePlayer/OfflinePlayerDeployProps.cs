@@ -16,4 +16,9 @@ public class OfflinePlayerDeployProps : OfflinePlayerBase, IPlayerDeployProps
     {
         _offlinePlayerTankController?._playerChangeTileToMetalGround.TileProps(isPlayer1, transformPosition, tilePosition);
     }
+
+    public void SkipTurn(TurnState turnState)
+    {
+        _offlinePlayerTankController?._playerTankSkipTurn.Skip(turnState);
+    }
 }

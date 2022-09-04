@@ -2,7 +2,6 @@
 
 public class PlayerTankSkipTurn : PlayerDeployProps
 {
-    private ISkipTurn _iSkipTurn;
     private ScoreController _scoreController;
 
 
@@ -23,17 +22,16 @@ public class PlayerTankSkipTurn : PlayerDeployProps
         _propsTabCustomization.OnSkipTurn -= OnSkipTurn;
     }
 
-    protected override void OnInitialize()
+    protected override void SubscribeToPropsEvent()
     {
         _propsTabCustomization.OnSkipTurn += OnSkipTurn;
-        _iSkipTurn = Get<ISkipTurn>.From(_tankController.BasePlayer.gameObject);
     }
 
     private void OnSkipTurn()
     {
         if (_playerTurn.IsMyTurn)
         {
-            _iSkipTurn.SkipTurn(_playerTurn.MyTurn == TurnState.Player1 ? TurnState.Player2 : TurnState.Player1);
+            _iPlayerDeployProps.SkipTurn(_playerTurn.MyTurn == TurnState.Player1 ? TurnState.Player2 : TurnState.Player1);
             _scoreController.GetScore(100, null);
         }
     }

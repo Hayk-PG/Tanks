@@ -47,7 +47,7 @@ public class Tab_TileModify : MonoBehaviour
         _tilesData = FindObjectOfType<TilesData>();
         _gameManager = FindObjectOfType<GameManager>();
         _turnController = FindObjectOfType<TurnController>();
-        _priceText.text = "= " + _priceForOneTile;
+        _priceText.text = "-" + _priceForOneTile;
     }
 
     private void OnEnable()

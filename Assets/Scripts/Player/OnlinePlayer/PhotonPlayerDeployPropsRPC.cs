@@ -46,4 +46,15 @@ public class PhotonPlayerDeployPropsRPC : PhotonPlayerBaseRPC, IPlayerDeployProp
     {
         _photonPlayerTankController?._playerChangeTileToMetalGround.TileProps(isPlayer1, transformPosition, tilePosition);
     }
+
+    public void SkipTurn(TurnState turnState)
+    {
+        _photonPlayerController.PhotonView.RPC("SkipTurnRPC", RpcTarget.AllViaServer, turnState);
+    }
+
+    [PunRPC]
+    private void SkipTurnRPC(TurnState turnState)
+    {
+        _photonPlayerTankController?._playerTankSkipTurn.Skip(turnState);
+    }
 }

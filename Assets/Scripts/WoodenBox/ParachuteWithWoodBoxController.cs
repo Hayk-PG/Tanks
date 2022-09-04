@@ -4,25 +4,27 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 {    
     [SerializeField] private GameObject _parachute;
     [SerializeField] private GameObject _sparkles;
-    [SerializeField] private GameObject _woodBoxExplosion;
-    private Rigidbody _rigidbody;
+    [SerializeField] private GameObject _woodBoxExplosion;   
     private Animator _parachuteAnim;
     private WoodBox _woodBox;
     private TankController _tankController;
+    private WoodenBoxSerializer _woodenBoxSerializer;
     private delegate float Value();
     private Value _gravity;
     private int _collisionCount = 0;
 
+    public Rigidbody RigidBody;
     public int RandomContent { get; set; }
 
 
 
     private void Awake()
     {
-        _rigidbody = Get<Rigidbody>.From(gameObject);
+        RigidBody = Get<Rigidbody>.From(gameObject);
         _parachuteAnim = Get<Animator>.From(gameObject);
         _woodBox = Get<WoodBox>.From(gameObject);
         _gravity = delegate { return 30 * Time.fixedDeltaTime; };
+        _woodenBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();
     }
 
     private void FixedUpdate()
@@ -63,11 +65,11 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
     private void Rigidbody()
     {
-        _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, _rigidbody.velocity.y * _gravity(), 0);
-        _rigidbody.position = new Vector3(_rigidbody.position.x, _rigidbody.position.y, 0);
-        _rigidbody.rotation = Quaternion.Euler(0, 0, _rigidbody.rotation.z);
+        RigidBody.velocity = new Vector3(RigidBody.velocity.x, RigidBody.velocity.y * _gravity(), 0);
+        RigidBody.position = new Vector3(RigidBody.position.x, RigidBody.position.y, 0);
+        RigidBody.rotation = Quaternion.Euler(0, 0, RigidBody.rotation.z);
 
-        if (_rigidbody.position.y <= -5)
+        if (RigidBody.position.y <= -5)
             DestroyGameobject();
     }
 
@@ -79,9 +81,21 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
     private void DestroyGameobject()
     {
+        if (MyPhotonNetwork.IsOfflineMode)
+        {
+            Explosion();
+            Destroy(gameObject);
+        }
+        else
+        {
+            _woodenBoxSerializer.DestroyParachuteWithWoodBoxController();
+        }       
+    }
+
+    public void Explosion()
+    {
         _woodBoxExplosion.SetActive(true);
         _woodBoxExplosion.transform.SetParent(null);
-        Destroy(gameObject);
     }
 
     public void OnAnimationEnd()

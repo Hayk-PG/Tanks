@@ -20,7 +20,7 @@ public class InstantiateOnlinePlayers : MonoBehaviour
 
     private void Instantiate(EventData data)
     {
-        if (data.Code == EventInfo._code_InstantiatePlayers)
+        if (data.Code == EventInfo.Code_InstantiatePlayers)
         {
             GameObject onlinePlayer = PhotonNetwork.Instantiate(_onlinePlayer, Vector3.zero, Quaternion.identity);
             Player player = PhotonNetwork.CurrentRoom.GetPlayer(onlinePlayer.GetComponent<PhotonView>().CreatorActorNr);
