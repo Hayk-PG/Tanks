@@ -97,10 +97,10 @@ public class AmmoTypeButton : MonoBehaviour
         public int Seconds { get; set; }
         public float BulletMaxForce { get; set; }
         public float BulletForceMaxSpeed { get; set; }
-        public string Radius
+        public float Radius
         {
-            get => _textStatsValues[1].text;
-            set => _textStatsValues[1].text = value;
+            get => float.Parse(_textStatsValues[1].text);
+            set => _textStatsValues[1].text = value.ToString();
         }
         public string WeaponType
         {

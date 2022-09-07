@@ -70,22 +70,15 @@ public class Tile : MonoBehaviour, IDestruct
 
     public void Destruct(int damage, int tileParticleIndex)
     {
-        if (!IsProtected)
-        {
-            Destruction(tileParticleIndex);
-        }
-        else
-        {
-            Health -= damage;
-            OnTileHealth?.Invoke(Health);
+        Health -= IsProtected ? damage : damage * 10;
+        OnTileHealth?.Invoke(Health);
 
-            if (Health <= 0)
-            {
-                IsProtected = false;
-                _sandbags = Get<Sandbags>.FromChild(gameObject);
-                _sandbags?.OnSandbags?.Invoke(false);
-                Destruction(tileParticleIndex);
-            }
+        if (Health <= 0)
+        {
+            IsProtected = false;
+            _sandbags = Get<Sandbags>.FromChild(gameObject);
+            _sandbags?.OnSandbags?.Invoke(false);
+            Destruction(tileParticleIndex);
         }
     }
 

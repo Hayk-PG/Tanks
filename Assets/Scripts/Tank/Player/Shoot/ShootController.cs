@@ -18,17 +18,17 @@ public class ShootController : BaseShootController
             this._maxForce = _maxForce;
         }
     }
-    private TankController _tankController;
-    private TankMovement _tankMovement;
-    private PhotonPlayerShootRPC _photonPlayerShootRPC;
-    private Rigidbody _rigidBody;   
-    private GameManagerBulletSerializer _gameManagerBulletSerializer;
-    private IScore _iScore;
-    private IShoot _iShoot;
-    private PlayerAmmoType _playerAmmoType;
+    protected TankController _tankController;
+    protected TankMovement _tankMovement;
+    protected PhotonPlayerShootRPC _photonPlayerShootRPC;
+    protected Rigidbody _rigidBody;
+    protected GameManagerBulletSerializer _gameManagerBulletSerializer;
+    protected IScore _iScore;
+    protected IShoot _iShoot;
+    protected PlayerAmmoType _playerAmmoType;
     
-    [HideInInspector] [SerializeField] private BulletController _instantiatedBullet;
-    [HideInInspector] [SerializeField] private int _activeAmmoIndex;
+    [HideInInspector] [SerializeField] protected BulletController _instantiatedBullet;
+    [HideInInspector] [SerializeField] protected int _activeAmmoIndex;
 
     public BulletController Bullet
     {
@@ -56,7 +56,7 @@ public class ShootController : BaseShootController
         get => _shoot._isApplyingForce;
         set => _shoot._isApplyingForce = value;
     }
-    private bool _isSandbagsTriggered;
+    protected bool _isSandbagsTriggered;
 
     public Action<bool> OnCanonRotation { get; set; }
     internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
@@ -74,7 +74,7 @@ public class ShootController : BaseShootController
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);        
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         _tankController.OnInitialize += OnInitialize;
         _tankController.OnControllers += OnControllers;
@@ -82,7 +82,7 @@ public class ShootController : BaseShootController
         _tankMovement.OnDirectionValue += OnMovementDirectionValue;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
         _tankController.OnControllers -= OnControllers;
@@ -90,7 +90,7 @@ public class ShootController : BaseShootController
         _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (_playerTurn.IsMyTurn)
         {
@@ -100,19 +100,19 @@ public class ShootController : BaseShootController
         }
     }
 
-    private void OnInitialize()
+    protected virtual void OnInitialize()
     {
         _iShoot = Get<IShoot>.From(_tankController.BasePlayer.gameObject);
         ShootPointGameobjectActivity(true);
     }
 
-    private void ShootPointGameobjectActivity(bool isActive)
+    protected virtual void ShootPointGameobjectActivity(bool isActive)
     {
         if (_shootPoint.gameObject.activeInHierarchy != isActive)
             _shootPoint.gameObject.SetActive(isActive);
     }
 
-    private void OnMovementDirectionValue(float direction)
+    protected virtual void OnMovementDirectionValue(float direction)
     {
         if (_tankController.BasePlayer != null)
         {
@@ -120,13 +120,13 @@ public class ShootController : BaseShootController
         }
     }
 
-    private void OnControllers(Vector2 values)
+    protected virtual void OnControllers(Vector2 values)
     {
         Direction = -values.y;
         CurrentForce = Mathf.Clamp(CurrentForce + (_playerTurn.MyTurn == TurnState.Player1 ? values.x: -values.x) * 2 * Time.deltaTime, _shoot._minForce, _shoot._maxForce);       
     }
 
-    public void RotateCanon()
+    public virtual void RotateCanon()
     {
         _canon._currentEulerAngleX = _canonPivotPoint.localEulerAngles.x;
 
@@ -136,13 +136,13 @@ public class ShootController : BaseShootController
         _canonPivotPoint.localEulerAngles = new Vector3(_canon._currentEulerAngleX += (_canon._rotationSpeed * Direction * Time.deltaTime), 0, 0) + _canon._rotationStabilizer;
     }
 
-    private void ApplyForce()
+    protected virtual void ApplyForce()
     {
         if(_shootPoint != null && _shootPoint.gameObject.activeInHierarchy)
             _trajectory.PredictedTrajectory(CurrentForce);
     }
 
-    private void OnShootButtonClick(bool isTrue)
+    protected virtual void OnShootButtonClick(bool isTrue)
     {
         if (_playerTurn.IsMyTurn)
         {
@@ -151,7 +151,7 @@ public class ShootController : BaseShootController
         }
     }
 
-    private void InstantiateBullet(float force)
+    protected virtual void InstantiateBullet(float force)
     {
         Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._prefab, _shootPoint.position, _canonPivotPoint.rotation);
         Bullet.OwnerScore = _iScore;
@@ -160,9 +160,14 @@ public class ShootController : BaseShootController
         mainCameraController.CameraOffset(_playerTurn, Bullet.transform, null, null);
     }
 
-    public void ShootBullet(float force)
+    protected virtual bool HaveEnoughBullets()
     {
-        if(_playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0)
+        return _playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0;
+    }
+
+    public virtual void ShootBullet(float force)
+    {
+        if(HaveEnoughBullets())
         {
             InstantiateBullet(force);
             AddForce(force);
@@ -170,7 +175,7 @@ public class ShootController : BaseShootController
         }
     }
 
-    private void AmmoUpdate()
+    protected virtual void AmmoUpdate()
     {
         if (_playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0)
         {
@@ -180,13 +185,13 @@ public class ShootController : BaseShootController
         }
     }
 
-    private void AddForce(float force)
+    protected virtual void AddForce(float force)
     {
         if(!_isSandbagsTriggered)
             _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
     }
 
-    public void OnEnteredSandbagsTrigger(bool isEntered)
+    public virtual void OnEnteredSandbagsTrigger(bool isEntered)
     {
         _isSandbagsTriggered = isEntered;
     }

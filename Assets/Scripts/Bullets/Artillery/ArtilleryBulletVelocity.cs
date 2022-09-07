@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ArtilleryBulletVelocity : BulletVelocity
+﻿public class ArtilleryBulletVelocity : BulletVelocity
 {
     protected override void OnBulletVelocity(BulletController.VelocityData velocityData)
     {

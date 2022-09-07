@@ -39,6 +39,16 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 stream.SendNext(_gameManagerBulletSerializer.BulletController.RigidBody.rotation);
             }
 
+            foreach (var bullet in _gameManagerBulletSerializer.MultipleBulletsController)
+            {
+                if (bullet != null)
+                {
+                    stream.SendNext(bullet.RigidBody.position);
+                    stream.SendNext(bullet.RigidBody.velocity);
+                    stream.SendNext(bullet.RigidBody.rotation);
+                }
+            }
+
             stream.SendNext(_turnTimer.Seconds);
             stream.SendNext(_turnTimer.IsTurnChanged);
 
@@ -72,6 +82,19 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
 
                 float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
                 _gameManagerBulletSerializer.BulletController.RigidBody.position += (_gameManagerBulletSerializer.BulletController.RigidBody.velocity * lag);
+            }
+
+            foreach (var bullet in _gameManagerBulletSerializer.MultipleBulletsController)
+            {
+                if (bullet != null)
+                {
+                    bullet.RigidBody.position = (Vector3)stream.ReceiveNext();
+                    bullet.RigidBody.velocity = (Vector3)stream.ReceiveNext();
+                    bullet.RigidBody.rotation = (Quaternion)stream.ReceiveNext();
+
+                    float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+                    bullet.RigidBody.position += (bullet.RigidBody.velocity * lag);
+                }
             }
 
             _turnTimer.Seconds = (int)stream.ReceiveNext();

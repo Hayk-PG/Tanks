@@ -46,7 +46,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
                 _damageValue = prop._damageValue,
                 _minutes = prop._minutes,
                 _seconds = prop._seconds,
-                _massWalue = prop._radius,
+                _radius = prop._radius,
                 _weaponType = prop._weaponType,
                 _supportType = prop._supportType,
                 _icon = prop._icon

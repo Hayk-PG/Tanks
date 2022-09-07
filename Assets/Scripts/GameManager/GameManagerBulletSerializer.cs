@@ -4,10 +4,16 @@ using UnityEngine;
 public class GameManagerBulletSerializer : MonoBehaviourPun
 {
     [SerializeField] BulletController _bulletController;
+    [SerializeField] BulletController[] _multipleBulletsController = new BulletController[10];
     public BulletController BulletController
     {
         get => _bulletController;
         set => _bulletController = value;
+    }
+    public BulletController[] MultipleBulletsController
+    {
+        get => _multipleBulletsController;
+        set => _multipleBulletsController = value;
     }
 
 

@@ -29,12 +29,12 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         public int? _seconds;
         public float? _bulletMaxForce;
         public float? _bulletForceMaxSpeed;
-        public string _massWalue;
+        public float? _radius;
         public string _weaponType;
         public string _supportType;       
         public Sprite _icon;
 
-        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? damageValue, int? minutes, int? seconds, float? bulletMaxForce, float? bulletForceMaxSpeed, string radius, string weaponType, string supportType, Sprite icon)
+        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? damageValue, int? minutes, int? seconds, float? bulletMaxForce, float? bulletForceMaxSpeed, float? radius, string weaponType, string supportType, Sprite icon)
         {
             _buttonType = buttonType;
             _index = index;
@@ -45,7 +45,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
             _seconds = seconds;
             _bulletMaxForce = bulletMaxForce;
             _bulletForceMaxSpeed = bulletForceMaxSpeed;
-            _massWalue = radius;
+            _radius = radius;
             _weaponType = weaponType;
             _supportType = supportType;
             _icon = icon;
@@ -80,7 +80,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         if (properties._seconds != null) button._properties.Seconds = (int)properties._seconds;
         if (properties._bulletMaxForce != null) button._properties.BulletMaxForce = (float)properties._bulletMaxForce;
         if (properties._bulletForceMaxSpeed != null) button._properties.BulletForceMaxSpeed = (float)properties._bulletForceMaxSpeed;
-        if (properties._massWalue != null) button._properties.Radius = properties._massWalue;
+        if (properties._radius != null) button._properties.Radius = (float)properties._radius;
         if (properties._weaponType != null) button._properties.WeaponType = properties._weaponType;
         if (properties._supportType != null) button._properties.SupportOrPropsType = properties._supportType;
         if (properties._icon != null) button._properties.Icon = properties._icon;

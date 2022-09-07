@@ -1,16 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ArtilleryBulletExplosion : BulletExplosion
+﻿public class ArtilleryBulletExplosion : BulletExplosion
 {
-    private ArtilleryBulletController _artillertBulletController;
+    private BulletController _bulletController;
+
 
     protected override void Awake()
     {
         base.Awake();
 
-        _artillertBulletController = Get<ArtilleryBulletController>.From(gameObject);
+        _bulletController = Get<BulletController>.From(gameObject);
     }
 
     protected override void DestroyBullet()
@@ -20,7 +17,7 @@ public class ArtilleryBulletExplosion : BulletExplosion
 
     protected override void SetTurnToTransition()
     {
-        if (_artillertBulletController.IsLastShellOfBarrage)
+        if (_bulletController.IsLastShellOfBarrage)
             base.SetTurnToTransition();
     }
 }

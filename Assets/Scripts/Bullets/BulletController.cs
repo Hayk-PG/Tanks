@@ -5,12 +5,12 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
 {
     public Rigidbody RigidBody { get; protected set; }
     public IScore OwnerScore { get; set; }
-
     public Vector3 StartPosition { get; set; }
     public float Distance
     {
         get => Vector3.Distance(StartPosition, transform.position);
     }
+    public bool IsLastShellOfBarrage { get; set; }
 
     public Action<Collider, IScore, float> OnCollision { get; set; }
     public Action<IScore, float> OnExplodeOnCollision { get; set; }
