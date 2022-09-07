@@ -2,7 +2,6 @@
 
 public class PlayerTurn : MonoBehaviour
 {
-    [SerializeField]
     private TurnState _myTurn;
     private TurnController _turnController;
 

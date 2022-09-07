@@ -9,7 +9,7 @@ public class GetScoreFromTerOccInd : MonoBehaviour
     private MyPlugins _myPlugins;
     private TerritoryOccupiedIndicator _terrOccInd;
 
-    [SerializeField] private int _sec;
+    private int _sec;
 
     private bool IsPlayer1PercentHigh => _terrOccInd.Player1Percentage >= 50;
     private bool IsPlayer2PercentHigh => _terrOccInd.Player2Percentage >= 50;

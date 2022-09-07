@@ -6,9 +6,9 @@ public class HealthController : MonoBehaviour, IDamage
     private TankController _tankController;
     private VehiclePool _vehiclePool;
     private PlayerShields _playerShields;
-
-    [SerializeField] private int _currentHealth;
+  
     [SerializeField][Range(0, 100)] private int _armor;
+    private int _currentHealth;
     private int _minHealth = 0;
     private int _maxHealth = 100;
     public int Health

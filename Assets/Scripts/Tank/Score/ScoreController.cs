@@ -11,7 +11,6 @@ public class ScoreController : MonoBehaviour, IScore
     private SupportsTabCustomization _supportTabCustomization;
     private GetScoreFromTerOccInd _getScoreFromTerOccInd;
 
-    [SerializeField]
     private int _score;
 
     public int Score
