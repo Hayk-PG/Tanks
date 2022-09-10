@@ -2,16 +2,16 @@
 
 public class PlayerHUD : MonoBehaviour
 { 
-    private Canvas _canvas;
-    private CanvasGroup _mainCanvasGroup;
-    private CanvasGroup _canvasGroupShootValues;
-    private TankController _tankController;
-    private TankMovement _tankMovement;
-    private PhotonPlayerEnableHUDRPC _photonPlayerEnableHUDRPC;
-    private VehicleFall _vehicleFall;
+    protected Canvas _canvas;
+    protected CanvasGroup _mainCanvasGroup;
+    protected CanvasGroup _canvasGroupShootValues;
+    protected TankController _tankController;
+    protected TankMovement _tankMovement;
+    protected PhotonPlayerEnableHUDRPC _photonPlayerEnableHUDRPC;
+    protected VehicleFall _vehicleFall;
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _canvas = GetComponent<Canvas>();
         _mainCanvasGroup = GetComponent<CanvasGroup>();
@@ -21,12 +21,12 @@ public class PlayerHUD : MonoBehaviour
         _vehicleFall = Get<VehicleFall>.From(gameObject);
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         _canvas.worldCamera = Camera.main;
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (_vehicleFall != null)
             _vehicleFall.OnVehicleFell += EnablePlayerHUD;
@@ -35,7 +35,7 @@ public class PlayerHUD : MonoBehaviour
             _tankMovement.OnDirectionValue += OnMovementDirectionValue;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if (_vehicleFall != null)
             _vehicleFall.OnVehicleFell -= EnablePlayerHUD;
@@ -44,12 +44,12 @@ public class PlayerHUD : MonoBehaviour
             _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
     }
 
-    public void MainCanvasGroupActivity(bool isActive)
+    public virtual void MainCanvasGroupActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_mainCanvasGroup, isActive);
     }
 
-    private void MainCanvasGroupActivityInOnlineMode()
+    protected virtual void MainCanvasGroupActivityInOnlineMode()
     {
         if (_tankController.BasePlayer != null && _photonPlayerEnableHUDRPC == null)
             _photonPlayerEnableHUDRPC = Get<PhotonPlayerEnableHUDRPC>.From(_tankController.BasePlayer.gameObject);
@@ -57,7 +57,7 @@ public class PlayerHUD : MonoBehaviour
         _photonPlayerEnableHUDRPC?.CallHUDRPC(true);
     }
 
-    private void OnMovementDirectionValue(float direction)
+    protected virtual void OnMovementDirectionValue(float direction)
     {
         if(_tankController?.BasePlayer != null)
         {
@@ -65,7 +65,7 @@ public class PlayerHUD : MonoBehaviour
         }
     }
 
-    private void EnablePlayerHUD()
+    protected virtual void EnablePlayerHUD()
     {
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => MainCanvasGroupActivity(true), MainCanvasGroupActivityInOnlineMode);
     }

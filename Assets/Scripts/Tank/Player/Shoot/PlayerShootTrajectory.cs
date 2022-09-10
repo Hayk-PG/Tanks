@@ -3,18 +3,24 @@
 public class PlayerShootTrajectory : BaseTrajectory
 {
     [SerializeField] private GameObject pointsPrefab;
+    [SerializeField] private GameObject _pointTarget;
     [SerializeField] private int numberOfPoints;
-
     private GameObject[] points;
     private SpriteRenderer[] _tracePointsSpriteRenderer;
     private GameObject _tracePointsParent;
     private Color _tracePointsColor = new Color(1, 1, 1, 0.3f);
     private Color _tracePointsResetColor = new Color(1, 1, 1, 0.0f);
+    private Collider[] _colliders;
 
 
     void Awake()
     {
         InstantiatePoints();
+    }
+
+    private void FixedUpdate()
+    {
+        PointsOverlapSphere();
     }
 
     void InstantiatePoints()
@@ -93,5 +99,71 @@ public class PlayerShootTrajectory : BaseTrajectory
             float dist = i * 0.02f;
             points[i].transform.position = PointPosition(transform.forward, force, dist);
         }
+    }
+
+    private void PointsOverlapSphere()
+    {
+        _pointTarget.SetActive(false);
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            _colliders = Physics.OverlapSphere(points[i].transform.position, 0.1f);
+
+            if(_colliders.Length > 0)
+            {
+                for (int x = i; x < points.Length; x++)
+                {
+                    points[x].SetActive(false);
+                }
+
+                _pointTarget.SetActive(true);
+                _pointTarget.transform.position = _colliders[0].ClosestPoint(points[i].transform.position);
+                _pointTarget.transform.Rotate(Vector3.forward);
+                break;
+            }
+            else
+            {
+                points[i].SetActive(true);
+            }
+
+
+            //if(Physics.OverlapSphereNonAlloc(points[i].transform.position, _radius, _colliders) > 0)
+            //{
+            //    print("aaa");
+
+            //    for (int x = i; x < points.Length; x++)
+            //    {
+            //        points[x].SetActive(false);
+            //    }
+            //}
+            //else
+            //{
+            //    points[i].SetActive(true);
+            //}
+        }
+
+
+
+        //_pointTarget.SetActive(false);
+
+        //for (int i = 0; i < points.Length; i++)
+        //{
+        //    if (Physics.SphereCast(points[i].transform.position, 0.2f, _parent.forward, out RaycastHit hit, _rayMaxDistance))
+        //    {
+        //        for (int x = i; x < points.Length; x++)
+        //        {
+        //            points[x].SetActive(false);
+        //        }
+
+        //        //_pointTarget.SetActive(true);
+        //        //_pointTarget.transform.position = hit.point;
+        //        //_pointTarget.transform.rotation = Quaternion.Euler(0, 0, 0);
+        //        break;
+        //    }
+        //    else
+        //    {
+        //        points[i].SetActive(true);
+        //    }
+        //} 
     }
 }

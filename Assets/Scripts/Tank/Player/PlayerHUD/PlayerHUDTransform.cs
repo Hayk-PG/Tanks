@@ -2,12 +2,10 @@
 
 public class PlayerHUDTransform : MonoBehaviour
 {
-    public Transform Target { get; set; }
-
-    [SerializeField]
+    [SerializeField] 
     private float _xPositionModifier, _yPositionModifier; //-0.5f, 0.35f
-
     private Quaternion _noRotation = Quaternion.Euler(0, 0, 0);
+    public Transform Target { get; set; }
 
 
     private void Awake()

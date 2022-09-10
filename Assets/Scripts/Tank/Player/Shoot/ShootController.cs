@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ShootController : BaseShootController
 {
-    internal class PlayerHUDValues
+    public class PlayerHUDValues
     {
         internal float _currentAngle, _minAngle, _maxAngle;
         internal float _currentForce, _minForce, _maxForce;
@@ -59,7 +59,7 @@ public class ShootController : BaseShootController
     protected bool _isSandbagsTriggered;
 
     public Action<bool> OnCanonRotation { get; set; }
-    internal event Action<PlayerHUDValues> OnUpdatePlayerHUDValues;
+    public Action<PlayerHUDValues> OnUpdatePlayerHUDValues { get; set; }
    
 
     protected override void Awake()
@@ -97,6 +97,10 @@ public class ShootController : BaseShootController
             RotateCanon();
             ApplyForce();
             OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
+        }
+        else
+        {
+            ShootPointGameobjectActivity(false);
         }
     }
 
