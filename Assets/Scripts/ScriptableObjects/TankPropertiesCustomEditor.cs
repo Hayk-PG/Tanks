@@ -59,4 +59,21 @@ public class ScriptableComponentsCustomEditor : Editor
         }
     }
 }
+
+[CustomEditor(typeof(WeaponProperties))]
+public class WeaponPropertiesCustomEditor: Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        WeaponProperties weaponProperties = (WeaponProperties)target;
+
+        if (GUILayout.Button("Set properties", GUILayout.Height(40)))
+        {
+            weaponProperties.OnClickSetWeaponProperties();
+        }
+    }
+}
+
 #endif

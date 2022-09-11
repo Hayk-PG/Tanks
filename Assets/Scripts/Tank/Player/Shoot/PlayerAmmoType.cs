@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class PlayerAmmoType : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class PlayerAmmoType : MonoBehaviour
         get => _weaponsBulletsCount.ToArray();
         set => _weaponsBulletsCount = value.ToList();
     }
+
+    internal Action<int> OnWeaponChanged { get; set; }
+
 
     private void Awake()
     {
@@ -72,6 +76,8 @@ public class PlayerAmmoType : MonoBehaviour
         GetMoreBullets(ammoTypeButton);
         UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
         SetBulletSpecs(ammoTypeButton);
+
+        OnWeaponChanged?.Invoke(_shootController.ActiveAmmoIndex);
     }
 
     private void GetMoreBullets(AmmoTypeButton ammoTypeButton)

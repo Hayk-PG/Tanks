@@ -6,8 +6,9 @@ public class Explosion : MonoBehaviour
     public IScore OwnerScore { get; set; }
     public float Distance { get; set; }
 
-    [SerializeField] protected float _radius;
-    [SerializeField] protected float _maxDamageValue;
+    [HideInInspector]
+    [SerializeField]
+    protected float _radius, _maxDamageValue;
     protected int _currentDamageValue;
     protected float _percentage;
     protected float _distanceFactorPercentage;
@@ -15,6 +16,17 @@ public class Explosion : MonoBehaviour
     protected Collider[] _colliders;
     protected List<IDamage> _iDamages;
     protected GameManagerBulletSerializer _gameManagerBulletSerializer;
+
+    public float RadiusValue
+    {
+        get => _radius;
+        set => _radius = value;
+    }
+    public float DamageValue
+    {
+        get => _maxDamageValue;
+        set => _maxDamageValue = value;
+    }
 
 
     protected virtual void Awake()

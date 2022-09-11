@@ -2,9 +2,20 @@
 
 public class BulletCollision : GetBulletController
 {
-    [SerializeField] protected int _destructDamage;
-    [SerializeField] protected int _tileParticleIndex;
+    [HideInInspector]
+    [SerializeField]
+    protected int _destructDamage, _tileParticleIndex;
 
+    public int DestructDamage
+    {
+        get => _destructDamage;
+        set => _destructDamage = value;
+    }
+    public int TileParticleIndex
+    {
+        get => _tileParticleIndex;
+        set => _tileParticleIndex = value;
+    }
 
 
     protected virtual void OnEnable()

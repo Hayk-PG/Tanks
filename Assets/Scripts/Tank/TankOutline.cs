@@ -28,9 +28,9 @@ public class TankOutline : MonoBehaviour
     {
         if(_playerTurn != null)
         {
-            for (int i = 0; i < _playerTurn.GetComponentsInChildren<MeshRenderer>().Length; i++)
+            for (int i = 0; i < _playerTurn.GetComponentsInChildren<MeshRenderer>(true).Length; i++)
             {                
-                Outline outline = _playerTurn.GetComponentsInChildren<MeshRenderer>()[i].gameObject.AddComponent<Outline>();
+                Outline outline = _playerTurn.GetComponentsInChildren<MeshRenderer>(true)[i].gameObject.AddComponent<Outline>();
 
                 if (outline != null)
                 {

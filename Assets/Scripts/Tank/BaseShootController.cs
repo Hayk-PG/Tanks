@@ -11,6 +11,8 @@ public class BaseShootController: MonoBehaviour
     protected ScoreController _scoreController;
     protected MainCameraController mainCameraController;
 
+    internal Transform CanonPivotPoint => _canonPivotPoint;
+
     [Serializable] public struct Canon
     {
         internal float _currentEulerAngleX;
