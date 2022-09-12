@@ -107,17 +107,31 @@ public class ChangeTiles : BaseChangeTiles
 
                 if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Vertical + Horizontal))
                 {
-                    CreateTopRightTile();
+                    if (position.x != LevelGenerator.MapHorizontalEndPoint)
+                        CreateTopRightTile();
+                    else
+                        CreateTopTile();                   
                 }
 
                 if (HasTile(ThisTilePos + Horizontal) && !HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos - Vertical - Horizontal))
                 {
-                    CreateTopLeftTile();
+                    if (position.x != LevelGenerator.MapHorizontalStartPoint)
+                        CreateTopLeftTile();
+                    else
+                        CreateTopTile(); 
+
                 }
 
                 if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
                 {
-                    CreateRightTopLeftTile();
+                    if (position.x != LevelGenerator.MapHorizontalStartPoint && position.x != LevelGenerator.MapHorizontalEndPoint)
+                        CreateRightTopLeftTile();
+
+                    if (position.x == LevelGenerator.MapHorizontalStartPoint)
+                        CreateTopRightTile();
+
+                    if (position.x == LevelGenerator.MapHorizontalEndPoint)
+                        CreateTopLeftTile();
                 }
 
                 if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal) && HasTile(ThisTilePos - Vertical) && HasTile(ThisTilePos - Vertical - Horizontal))
@@ -134,12 +148,18 @@ public class ChangeTiles : BaseChangeTiles
             {
                 if (HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))
                 {
-                    CreateRightTile();
+                    if (position.x != LevelGenerator.MapHorizontalEndPoint)
+                        CreateRightTile();
+                    else
+                        CreateMiddleTile();                   
                 }
 
                 if (!HasTile(ThisTilePos - Horizontal) && HasTile(ThisTilePos + Horizontal))
                 {
-                    CreateLeftTile();
+                    if (position.x != LevelGenerator.MapHorizontalStartPoint)
+                        CreateLeftTile();
+                    else
+                        CreateMiddleTile();                   
                 }
 
                 if (!HasTile(ThisTilePos - Horizontal) && !HasTile(ThisTilePos + Horizontal))

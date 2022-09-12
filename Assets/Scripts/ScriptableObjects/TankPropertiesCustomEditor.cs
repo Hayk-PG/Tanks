@@ -76,4 +76,20 @@ public class WeaponPropertiesCustomEditor: Editor
     }
 }
 
+[CustomEditor(typeof(DetailsLevel))]
+public class DetailsLevelCustomEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        DetailsLevel detailsLevel = (DetailsLevel)target;
+
+        if (GUILayout.Button("Place", GUILayout.Height(40)))
+        {
+            detailsLevel.Place();
+        }
+    }
+}
+
 #endif

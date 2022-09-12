@@ -3,6 +3,7 @@
 public class BaseChangeTiles : MonoBehaviour
 {
     protected TilesData TilesGenerator { get; set; }
+    protected LevelGenerator LevelGenerator { get; set; }
 
     protected Vector3 ThisTilePos;
 
@@ -13,6 +14,7 @@ public class BaseChangeTiles : MonoBehaviour
     protected virtual void Awake()
     {
         TilesGenerator = GetComponent<TilesData>();
+        LevelGenerator = Get<LevelGenerator>.From(gameObject);
     }
 
     public bool HasTile(Vector3 pos)
