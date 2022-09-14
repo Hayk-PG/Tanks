@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1652370535261817517}
   - component: {fileID: 444112579253143166}
   - component: {fileID: 9052701511652307070}
+  - component: {fileID: 3770913069132500208}
   m_Layer: 0
   m_Name: Canon
   m_TagString: Untagged
@@ -79,6 +80,18 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &3770913069132500208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25729993853651775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 210610f804fbf0240959c43478bd670b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &49565156161592200
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,9 +221,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af4eb96fba8d32643a5e098be2c921b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _normalSpeed: 485
-  _accelerated: 2250
-  _maxBrake: 485
+  _normalSpeed: 350
+  _accelerated: 2000
+  _maxBrake: 350
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
 --- !u!114 &6621632061778964148
 MonoBehaviour:
@@ -254,9 +267,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canon:
-    _minEulerAngleX: -70
-    _maxEulerAngleX: 5
-    _rotationSpeed: 30
+    _minEulerAngleX: -55
+    _maxEulerAngleX: 12
+    _rotationSpeed: 10
     _rotationStabilizer: {x: 0, y: 0, z: 0}
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
@@ -550,6 +563,7 @@ GameObject:
   - component: {fileID: 4832996197947016277}
   - component: {fileID: 7495476818694505245}
   - component: {fileID: 8360740758682179812}
+  - component: {fileID: 1551311995677492345}
   m_Layer: 0
   m_Name: Canon
   m_TagString: Untagged
@@ -618,6 +632,18 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &1551311995677492345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1561396778012117204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 210610f804fbf0240959c43478bd670b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1793339230473270793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1471,6 +1497,7 @@ GameObject:
   - component: {fileID: 7398391793708826375}
   - component: {fileID: 2698214361599768729}
   - component: {fileID: 7285801729523373029}
+  - component: {fileID: 4080682430614994553}
   m_Layer: 0
   m_Name: Canon
   m_TagString: Untagged
@@ -1539,6 +1566,18 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &4080682430614994553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8915429710594499512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 210610f804fbf0240959c43478bd670b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &379964698375038873
 PrefabInstance:
   m_ObjectHideFlags: 0
