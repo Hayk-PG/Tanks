@@ -3,13 +3,20 @@ using UnityEngine;
 using TMPro;
 
 public class Tab_TileModify : MonoBehaviour
-{   
+{
+    public enum TileModifyType { NewTile, ArmoredCube, ArmoredTile }
     internal class LocalPlayer
     {
         internal PlayerTurn _localPlayerTurn;
         internal ScoreController _localPlayerScoreController;
         internal Transform _localPlayerTransform;
     }
+    [SerializeField] 
+    private TMP_Text _scoreText;
+    [SerializeField] 
+    private TMP_Text _priceText;
+
+    private TileModifyType _tileModifyType;
     private CanvasGroup _canvasGroup;
     private PropsTabCustomization _propsTabCustomization;
     private HUDMainTabsActivity _hudMainTabsActivity;
@@ -18,10 +25,12 @@ public class Tab_TileModify : MonoBehaviour
     private TurnController _turnController;
     private LocalPlayer _localPlayer;   
     private List<GameObject> foundTiles;
-    [SerializeField] private TMP_Text _scoreText;
-    [SerializeField] private TMP_Text _priceText;
-    private int _priceForOneTile = 250;
-
+    
+    private int Price
+    {
+        get => int.Parse(_priceText.text);
+        set => _priceText.text = value.ToString();
+    }
     private string ScoreText
     {
         get => _scoreText.text;
@@ -33,9 +42,12 @@ public class Tab_TileModify : MonoBehaviour
     }
     public bool CanModifyTiles
     {
-        get => _localPlayer._localPlayerScoreController.Score >= _priceForOneTile;
+        get => _localPlayer._localPlayerScoreController.Score >= Price;
     }
     public bool IsTab_TileModifyOpen { get; private set; }
+    public int GroundModifyPrice { get; private set; } = 250;
+    public int ArmoredCubePrice { get; private set; } = 1000;
+    public int ArmoredTilePrice { get; private set; } = 1000;
 
 
 
@@ -47,13 +59,15 @@ public class Tab_TileModify : MonoBehaviour
         _tilesData = FindObjectOfType<TilesData>();
         _gameManager = FindObjectOfType<GameManager>();
         _turnController = FindObjectOfType<TurnController>();
-        _priceText.text = "-" + _priceForOneTile;
+        _priceText.text = 0.ToString();
     }
 
     private void OnEnable()
     {
         _gameManager.OnGameStarted += OnGameStarted;
         _propsTabCustomization.OnModifyGround += OnModifyGround;
+        _propsTabCustomization.OnInstantiateMetalCube += OnInstantiateMetalCube;
+        _propsTabCustomization.OnChangeToMetalGround += OnChangeToMetalGround;
         _turnController.OnTurnChanged += OnTurnChanged;
     }
 
@@ -61,7 +75,19 @@ public class Tab_TileModify : MonoBehaviour
     {
         _gameManager.OnGameStarted -= OnGameStarted;
         _propsTabCustomization.OnModifyGround -= OnModifyGround;
+        _propsTabCustomization.OnInstantiateMetalCube -= OnInstantiateMetalCube;
+        _propsTabCustomization.OnChangeToMetalGround -= OnChangeToMetalGround;
         _turnController.OnTurnChanged -= OnTurnChanged;
+    }
+
+    private void SetTileModifyType(TileModifyType tileModifyType)
+    {
+        _tileModifyType = tileModifyType;
+    }
+
+    private void SetPrice(int price)
+    {
+        Price = price;
     }
 
     private void OnGameStarted()
@@ -71,6 +97,22 @@ public class Tab_TileModify : MonoBehaviour
 
     private void OnModifyGround()
     {
+        SetPrice(GroundModifyPrice);
+        SetTileModifyType(TileModifyType.NewTile);
+        Invoke("FindTilesAroundPlayer", 0.1f);
+    }
+
+    private void OnInstantiateMetalCube()
+    {
+        SetPrice(ArmoredCubePrice);
+        SetTileModifyType(TileModifyType.ArmoredCube);
+        Invoke("FindTilesAroundPlayer", 0.1f);
+    }
+
+    private void OnChangeToMetalGround()
+    {
+        SetPrice(ArmoredTilePrice);
+        SetTileModifyType(TileModifyType.ArmoredTile);
         Invoke("FindTilesAroundPlayer", 0.1f);
     }
 
@@ -122,7 +164,7 @@ public class Tab_TileModify : MonoBehaviour
                 {
                     if (!Get<Tile>.From(tile).IsProtected)
                     {
-                        Get<TileModifyGUI>.FromChild(tile).EnableGUI();
+                        Get<TileModifyGUI>.FromChild(tile).EnableGUI(_tileModifyType);
                     }
                 }
             }
@@ -148,9 +190,9 @@ public class Tab_TileModify : MonoBehaviour
     {
         if (IsLocalInitialized)
         {
-            int newScore = _localPlayer._localPlayerScoreController.Score - _priceForOneTile;
+            int newScore = _localPlayer._localPlayerScoreController.Score - Price;
             ScoreText = newScore.ToString();
-            _localPlayer._localPlayerScoreController.GetScore(-_priceForOneTile, null);
+            _localPlayer._localPlayerScoreController.GetScore(-Price, null);
         }
     }
 }

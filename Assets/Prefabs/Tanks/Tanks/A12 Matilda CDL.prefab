@@ -102,26 +102,24 @@ GameObject:
   m_Component:
   - component: {fileID: 6885597554559236453}
   - component: {fileID: 4196660827132674892}
-  - component: {fileID: 6749123933971858629}
+  - component: {fileID: 6847458560380076742}
+  - component: {fileID: -6488368001851520092}
   - component: {fileID: 4322948603615829862}
-  - component: {fileID: -4558625222255782176}
-  - component: {fileID: 7288979360651470493}
+  - component: {fileID: 6749123933971858629}
   - component: {fileID: 6621632061778964148}
+  - component: {fileID: 7288979360651470493}
   - component: {fileID: -8284633234395474041}
   - component: {fileID: -6398384661234767197}
-  - component: {fileID: -1847591985946522256}
-  - component: {fileID: 1204387182832262668}
   - component: {fileID: -3408009379430772200}
   - component: {fileID: -8763579261242962646}
   - component: {fileID: -3297852539457437077}
   - component: {fileID: 1372928343867255688}
+  - component: {fileID: -1847591985946522256}
+  - component: {fileID: 1245378656900635281}
+  - component: {fileID: 1204387182832262668}
   - component: {fileID: 9014211575401728543}
   - component: {fileID: -342251975026656463}
-  - component: {fileID: -6240320158134280845}
-  - component: {fileID: -3029627527701613501}
-  - component: {fileID: 1245378656900635281}
-  - component: {fileID: -6488368001851520092}
-  - component: {fileID: 6847458560380076742}
+  - component: {fileID: -4558625222255782176}
   m_Layer: 9
   m_Name: A12 Matilda CDL
   m_TagString: Player
@@ -173,7 +171,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6749123933971858629
+--- !u!114 &6847458560380076742
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,7 +180,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 49565156161592200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2179aa618d903744b92079e50222c106, type: 3}
+  m_Script: {fileID: 11500000, guid: a1ec0004b6bf46043a39929f7d7c03ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tankName: A12 Matilda CDL
+  _starsCount: 2
+  _getItNowPrice: 0
+  _initialBuildHours: 0
+  _initialBuildMinutes: 0
+  _initialBuildSeconds: 0
+  _requiredItems: []
+  _availableInLevel: 0
+--- !u!114 &-6488368001851520092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49565156161592200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 834d39d04d99374499efc4881aec0205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4322948603615829862
@@ -197,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed813e4f4acfce044bcc6a0743a9070d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-4558625222255782176
+--- !u!114 &6749123933971858629
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,7 +224,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 49565156161592200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52229c3c16edd7946a9be8de5ffabd0e, type: 3}
+  m_Script: {fileID: 11500000, guid: 2179aa618d903744b92079e50222c106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6621632061778964148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49565156161592200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bd52720c60e6244ca9a032054006c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7288979360651470493
@@ -225,18 +255,6 @@ MonoBehaviour:
   _accelerated: 2000
   _maxBrake: 350
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
---- !u!114 &6621632061778964148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49565156161592200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bd52720c60e6244ca9a032054006c4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-8284633234395474041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,30 +291,6 @@ MonoBehaviour:
     _rotationStabilizer: {x: 0, y: 0, z: 0}
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
---- !u!114 &-1847591985946522256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49565156161592200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 663111fc0465c7d45b0e4ef156f62d6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1204387182832262668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49565156161592200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f36e5f0d1e666943a490cefe9cf08e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-3408009379430772200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,6 +340,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcde7a708184f0d49b043be34837c788, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1847591985946522256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49565156161592200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 663111fc0465c7d45b0e4ef156f62d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1245378656900635281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49565156161592200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efdfe2b5759b6534cb4339fcfec0b853, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1204387182832262668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49565156161592200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f36e5f0d1e666943a490cefe9cf08e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &9014211575401728543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,7 +400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cf250706e0ab874c8c6289ce59f3471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-6240320158134280845
+--- !u!114 &-4558625222255782176
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -379,65 +409,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 49565156161592200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 546b55425ba17a4479a3c0e9052e4153, type: 3}
+  m_Script: {fileID: 11500000, guid: 52229c3c16edd7946a9be8de5ffabd0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-3029627527701613501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49565156161592200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2329771cf5e5e8c49b7d1ba6106e18b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1245378656900635281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49565156161592200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efdfe2b5759b6534cb4339fcfec0b853, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-6488368001851520092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49565156161592200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834d39d04d99374499efc4881aec0205, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6847458560380076742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49565156161592200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1ec0004b6bf46043a39929f7d7c03ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tankName: A12 Matilda CDL
-  _starsCount: 2
-  _getItNowPrice: 0
-  _initialBuildHours: 0
-  _initialBuildMinutes: 0
-  _initialBuildSeconds: 0
-  _requiredItems: []
-  _availableInLevel: 0
 --- !u!1 &1124228978254418348
 GameObject:
   m_ObjectHideFlags: 0

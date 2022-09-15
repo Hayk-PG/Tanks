@@ -9,7 +9,6 @@ public class DetailsLevel : MonoBehaviour
 
     public void Place()
     {
-        //print(_meshFilter.sharedMesh.bounds.size);
         float x = 0;
         float y = 0;
         Vector3 position = _meshFilter.gameObject.transform.position;
@@ -22,3 +21,4 @@ public class DetailsLevel : MonoBehaviour
         }
     }
 }
+ 

@@ -1,55 +1,58 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class AiChangeTileToArmoredTile : PlayerChangeTileToMetalGround
+public class AiChangeTileToArmoredTile : MonoBehaviour
 {
     private ScoreController _scoreController;
+    private PlayerTurn _playerTurn;
+    private TurnController _turnController;
+    private Tab_TileModify _tab_TileModify;
+    private GlobalTileController _globalTileController;
     private ChangeTiles _changeTiles;
+    private TilesData _tilesData;
     private bool _canUseAgain = true;
 
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         _scoreController = Get<ScoreController>.From(gameObject);
+        _playerTurn = Get<PlayerTurn>.From(gameObject);
         _turnController = FindObjectOfType<TurnController>();
+        _tab_TileModify = FindObjectOfType<Tab_TileModify>();
+        _globalTileController = FindObjectOfType<GlobalTileController>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
+        _tilesData = FindObjectOfType<TilesData>();
     }
 
-    protected override void Start()
-    {
-        _relatedPropsTypeButton = GlobalFunctions.ObjectsOfType<AmmoTypeButton>.Find(props => props._properties.SupportOrPropsType == Names.MetalGround);
-    }
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
         _turnController.OnTurnChanged += OnTurnChanged;
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
-    protected virtual void OnTurnChanged(TurnState turnState)
+    private void OnTurnChanged(TurnState turnState)
     {
         if (turnState == _playerTurn.MyTurn)
         {
-            if (_scoreController.Score >= _relatedPropsTypeButton._properties.RequiredScoreAmmount && _canUseAgain)
+            if (_scoreController.Score >= _tab_TileModify.ArmoredTilePrice && _canUseAgain)
             {
-                InstantiateHelper(out bool isPlayer1, out Vector3 transformPosition);
-
                 foreach (var tile in _tilesData.TilesDict)
                 {
                     if (tile.Value != null)
                     {
-                        if (IsTileFound(tile.Key.x, isPlayer1, transformPosition) && tile.Value.GetComponent<TileProps>() != null)
+                        if(tile.Key.x >= transform.position.x - 0.5f && tile.Key.x <= transform.position.x + 0.5f)
                         {
-                            if (!tile.Value.GetComponent<Tile>().IsProtected && !_changeTiles.HasTile(tile.Key - Vector3.up))
-                            {
-                                Result(isPlayer1, transformPosition, tile.Key);
-                                _scoreController.Score -= _relatedPropsTypeButton._properties.RequiredScoreAmmount;
-                                StartCoroutine(RunPropsTimerCoroutine());
+                            TileProps tp = Get<TileProps>.From(tile.Value);
+                            Tile t = Get<Tile>.From(tile.Value);
+
+                            if (tp != null && !t.IsProtected && !_changeTiles.HasTile(tile.Key - Vector3.up))
+                            {                               
+                                StartCoroutine(ActivateArmoredTile());
                                 break;
                             }
                         }
@@ -59,11 +62,11 @@ public class AiChangeTileToArmoredTile : PlayerChangeTileToMetalGround
         }
     }
 
-    private IEnumerator RunPropsTimerCoroutine()
+    private IEnumerator ActivateArmoredTile()
     {
+        _scoreController.Score -= _tab_TileModify.ArmoredTilePrice;
         _canUseAgain = false;
-        float t = (_relatedPropsTypeButton._properties.Minutes * 60) + _relatedPropsTypeButton._properties.Seconds;
-        yield return new WaitForSeconds(t);
+        yield return new WaitForSeconds(60);
         _canUseAgain = true;
     }
 }

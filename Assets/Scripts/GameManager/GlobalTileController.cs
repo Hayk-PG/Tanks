@@ -16,9 +16,18 @@ public class GlobalTileController : MonoBehaviourPun
         _parent = transform;
     }
 
+    #region Modify
     public void Modify(Vector3 newTilePosition)
-    {
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => Offline(newTilePosition), () => Online(newTilePosition));
+    {  
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
+            delegate 
+            {
+                CreateNewTile(newTilePosition);
+            }, 
+            delegate 
+            {
+                photonView.RPC("CreateNewTile", RpcTarget.AllViaServer, newTilePosition);
+            });
     }
 
     [PunRPC]
@@ -35,14 +44,32 @@ public class GlobalTileController : MonoBehaviourPun
         _tilesData.TilesDict.Add(newTilePosition, tile);
         _changeTiles.UpdateTiles(newTilePosition);
     }
+    #endregion
 
-    private void Offline(Vector3 newTilePosition)
+    #region TileProps
+    public void Modify(Vector3 currentTilePosition, Tab_TileModify.TileModifyType tileModifyType)
     {
-        CreateNewTile(newTilePosition);
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, 
+            delegate 
+            {
+                ActivateTileProps(currentTilePosition, tileModifyType);
+            }, 
+            delegate 
+            {
+                photonView.RPC("ActivateTileProps", RpcTarget.AllViaServer, currentTilePosition, tileModifyType);
+            });
     }
 
-    private void Online(Vector3 newTilePosition)
+    [PunRPC]
+    private void ActivateTileProps(Vector3 currentTilePosition, Tab_TileModify.TileModifyType tileModifyType)
     {
-        photonView.RPC("CreateNewTile", RpcTarget.AllViaServer, newTilePosition);
+        TileProps tileProps = _tilesData.TilesDict[currentTilePosition].GetComponent<TileProps>();
+
+        TileProps.PropsType propsType = tileModifyType == Tab_TileModify.TileModifyType.ArmoredCube ?
+        TileProps.PropsType.MetalCube : tileModifyType == Tab_TileModify.TileModifyType.ArmoredTile ?
+        TileProps.PropsType.MetalGround : TileProps.PropsType.Sandbags;
+
+        tileProps?.ActiveProps(propsType, true, null);
     }
+    #endregion
 }
