@@ -28,7 +28,9 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         _destructDamage = Random.Range(randomRanges._rangeDestructDamageValues[0], randomRanges._rangeDestructDamageValues[1]);
         _bulletMaxForce = Random.Range(randomRanges._rangeBulletMaxForceVaues[0], randomRanges._rangeBulletMaxForceVaues[1]);
         _bulletForceMaxSpeed = Random.Range(randomRanges._rangeBulletForceMaxSpeedValues[0], randomRanges._rangeBulletForceMaxSpeedValues[1]);
-        _radius = Random.Range(randomRanges._rangeRadiusValues[0], randomRanges._rangeRadiusValues[1]);
+
+        float radiusRound = Mathf.Round(Random.Range(randomRanges._rangeRadiusValues[0], randomRanges._rangeRadiusValues[1]) * 100) * 0.01f;
+        _radius = radiusRound;
     }
 
     private void SetExplosionValues()
@@ -42,8 +44,7 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
     {
         BulletCollision bulletCollision = Get<BulletCollision>.From(_prefab.gameObject);
         bulletCollision.DestructDamage = _destructDamage;
-        bulletCollision.TileParticleIndex = _tileParticleIndex;
-        Debug.Log(bulletCollision.DestructDamage);
+        bulletCollision.TileParticleIndex = _tileParticleIndex;        
     }
 
     public void Randomize()
@@ -86,14 +87,15 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
                 Randomizer(randomHeavy);
                 break;
         }
-
-        EditorUtility.SetDirty(this);
     }
 
     public void OnClickSetWeaponProperties()
     {
         SetExplosionValues();
         SetCollisionValues();
-        EditorUtility.SetDirty(this);       
+
+#if UNITY_EDITOR
+        PrefabUtility.SavePrefabAsset(_prefab.gameObject);
+#endif
     }
 }

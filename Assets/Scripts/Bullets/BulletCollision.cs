@@ -2,7 +2,6 @@
 
 public class BulletCollision : GetBulletController
 {
-    [HideInInspector]
     [SerializeField]
     protected int _destructDamage, _tileParticleIndex;
 

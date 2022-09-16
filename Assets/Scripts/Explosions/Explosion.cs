@@ -6,7 +6,6 @@ public class Explosion : MonoBehaviour
     public IScore OwnerScore { get; set; }
     public float Distance { get; set; }
 
-    [HideInInspector]
     [SerializeField]
     protected float _radius, _maxDamageValue;
     protected int _currentDamageValue;
