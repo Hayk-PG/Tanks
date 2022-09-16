@@ -11,20 +11,27 @@ public class BaseWeaponProperties<T> : ScriptableObject
     public AmmoTypeStars _ammoTypeStars;
     public int _requiredScoreAmmount;
 
+    public enum Type { Light, Medium, Heavy }
+    
     [Header("Weapons type")]
     public int _index;
-    public int _value;    
+    public int _value;  
+    [Range(0, 10)]
     public int _minutes;
+    [Range(0, 60)]
     public int _seconds;
+    public Type _type;
+  
+    [Range(0, 100)]
     public int _damageValue;
-    public int _destructDamage;
-    public int _tileParticleIndex;
+    [Range(0, 1)]
     public float _radius;
-    public string _weaponType;
-
-    [Header("Bullet specs")]
+    [Range(0, 20)]
+    public int _destructDamage;    
     [Range(3, 50)] public float _bulletMaxForce;
     [Range(1, 10)] public float _bulletForceMaxSpeed;
+    public int _tileParticleIndex;   
+    public string _weaponType;  
 
     [Header("Support or props type")]
     public string _supportType;

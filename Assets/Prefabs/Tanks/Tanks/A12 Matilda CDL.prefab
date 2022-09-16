@@ -113,6 +113,7 @@ GameObject:
   - component: {fileID: -3408009379430772200}
   - component: {fileID: -8763579261242962646}
   - component: {fileID: -3297852539457437077}
+  - component: {fileID: 5710423222985878074}
   - component: {fileID: 1372928343867255688}
   - component: {fileID: -1847591985946522256}
   - component: {fileID: 1245378656900635281}
@@ -303,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42eb9b573ac7ee545b5fec0b60624f38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _armor: 50
+  _armor: 60
 --- !u!114 &-8763579261242962646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,6 +329,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07c75a6db656edd49b95c65c33c7f81a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5710423222985878074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49565156161592200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ee74307ae3b7084e9f2779cd5abe3ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shieldPriceReducePercent: 50
+  _tileModifyPriceReducePercent: 30
+  _armoredCubePriceReducePercent: 60
+  _armoredTilePriceReducePercent: 60
 --- !u!114 &1372928343867255688
 MonoBehaviour:
   m_ObjectHideFlags: 0

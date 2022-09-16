@@ -45,10 +45,19 @@ public class Tab_TileModify : MonoBehaviour
         get => _localPlayer._localPlayerScoreController.Score >= Price;
     }
     public bool IsTab_TileModifyOpen { get; private set; }
-    public int GroundModifyPrice { get; private set; } = 250;
-    public int ArmoredCubePrice { get; private set; } = 1000;
-    public int ArmoredTilePrice { get; private set; } = 1000;
 
+    public class Prices
+    {
+        public string Name { get; set; }
+        public int Price { get; set; }
+    }
+
+    public Prices[] NewPrices = new Prices[3]
+    {
+        new Prices{Name = Names.ModifyGround, Price = 250},
+        new Prices{Name = Names.MetalCube, Price = 1000},
+        new Prices{Name = Names.MetalGround, Price = 1000}
+    };
 
 
     private void Awake()
@@ -97,21 +106,21 @@ public class Tab_TileModify : MonoBehaviour
 
     private void OnModifyGround()
     {
-        SetPrice(GroundModifyPrice);
+        SetPrice(NewPrices[0].Price);
         SetTileModifyType(TileModifyType.NewTile);
         Invoke("FindTilesAroundPlayer", 0.1f);
     }
 
     private void OnInstantiateMetalCube()
     {
-        SetPrice(ArmoredCubePrice);
+        SetPrice(NewPrices[1].Price);
         SetTileModifyType(TileModifyType.ArmoredCube);
         Invoke("FindTilesAroundPlayer", 0.1f);
     }
 
     private void OnChangeToMetalGround()
     {
-        SetPrice(ArmoredTilePrice);
+        SetPrice(NewPrices[2].Price);
         SetTileModifyType(TileModifyType.ArmoredTile);
         Invoke("FindTilesAroundPlayer", 0.1f);
     }

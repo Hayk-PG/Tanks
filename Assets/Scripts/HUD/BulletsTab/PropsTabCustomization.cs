@@ -7,6 +7,11 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     [Header("Props")]
     [SerializeField] private PropsProperties[] _props;
 
+    public AmmoTypeButton[] InstantiatedTypeButtons
+    {
+        get => _instantiatedButtons.ToArray();
+    }
+
     public Action OnInstantiateSandbags { get; set; }
     public Action OnInstantiateMetalCube { get; set; }
     public Action OnChangeToMetalGround { get; set; }
@@ -14,8 +19,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     public Action OnArtillery { get; set; }
     public Action OnModifyGround { get; set; }
     public Action OnSkipTurn { get; set; }
-
-
+ 
 
     private void Start()
     {

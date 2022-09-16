@@ -69,6 +69,11 @@ public class WeaponPropertiesCustomEditor: Editor
 
         WeaponProperties weaponProperties = (WeaponProperties)target;
 
+        if (GUILayout.Button("Randomize", GUILayout.Height(40)))
+        {
+            weaponProperties.Randomize();
+        }
+
         if (GUILayout.Button("Set properties", GUILayout.Height(40)))
         {
             weaponProperties.OnClickSetWeaponProperties();

@@ -21,17 +21,10 @@ public class CurrentWeaponStatus : MonoBehaviour
             get => _currentWeaponIcon.sprite;
             set => _currentWeaponIcon.sprite = value;
         }
-        public int BulletsLeft
+        public string Text
         {
-            get
-            {
-                if (int.TryParse(_bulletsLeftText.text, out int bulletsLeft)) return bulletsLeft;
-                else return 0;
-            }
-            set
-            {
-                _bulletsLeftText.text = value.ToString();
-            }
+            get => _bulletsLeftText.text;
+            set => _bulletsLeftText.text = value;
         }
     }
 
@@ -59,7 +52,9 @@ public class CurrentWeaponStatus : MonoBehaviour
     private void OnUpdateDisplayedWeapon(WeaponProperties weaponProperty, int bulletsLeft)
     {
         _properties.CurrentWeaponIcon = weaponProperty._icon;
-        _properties.BulletsLeft = bulletsLeft;
-        if (_animator != null) _animator.SetTrigger(Names.Play);
+        _properties.Text = bulletsLeft < 100 ? bulletsLeft.ToString() : "∞";
+
+        if (_animator != null)
+            _animator.SetTrigger(Names.Play);
     }
 }
