@@ -184,14 +184,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ec0004b6bf46043a39929f7d7c03ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tankName: A12 Matilda CDL
-  _starsCount: 2
-  _getItNowPrice: 0
-  _initialBuildHours: 0
-  _initialBuildMinutes: 0
-  _initialBuildSeconds: 0
-  _requiredItems: []
-  _availableInLevel: 0
+  _tankName: Mada-12
+  _starsCount: 3
+  _getItNowPrice: 303
+  _initialBuildHours: 8
+  _initialBuildMinutes: 35
+  _initialBuildSeconds: 19
+  _availableInLevel: 2
+  _requiredItems:
+  - _item: {fileID: 11400000, guid: 077ddc907e3750741a03e9e75654cf03, type: 2}
+    _number: 5
+  - _item: {fileID: 11400000, guid: 683eb51f5ebca6e48970148797edb3b5, type: 2}
+    _number: 1
 --- !u!114 &-6488368001851520092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,8 +257,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _normalSpeed: 350
-  _accelerated: 2000
   _maxBrake: 350
+  _accelerated: 2000
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
 --- !u!114 &-8284633234395474041
 MonoBehaviour:

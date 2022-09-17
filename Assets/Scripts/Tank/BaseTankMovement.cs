@@ -4,10 +4,12 @@ using UnityEngine;
 [Serializable]
 public class BaseTankMovement : MonoBehaviour
 {
-    [Header("Movement parameters")]
-    [Range(0, 1000)] public float _normalSpeed;
-    public float _accelerated;    
+    [Header("Movement parameters")] [Range(0, 1000)] 
+    public float _normalSpeed;
+    [Range(0, 1000)]
     public float _maxBrake;
+    [Range(0, 3000)]
+    public float _accelerated; 
     public Vector3 _normalCenterOfMass;
     protected float _currentBrake;
     protected float _currentSpeed;

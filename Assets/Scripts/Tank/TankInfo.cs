@@ -10,18 +10,26 @@ public class TankInfo : MonoBehaviour
     }
 
     [Header("Name")]
-    [SerializeField] private string _tankName;
+    [SerializeField] 
+    private string _tankName;
     [Header("Stars")]
-    [SerializeField] private int _starsCount;
+    [SerializeField] [Range(0,5)]
+    private int _starsCount;
     [Header("Price")]
-    [SerializeField] private int _getItNowPrice;
+    [SerializeField] [Range(0,1000)]
+    private int _getItNowPrice;
     [Header("Build")]
-    [SerializeField] private int _initialBuildHours;
-    [SerializeField] private int _initialBuildMinutes;
-    [SerializeField] private int _initialBuildSeconds;
-    [SerializeField] private Items[] _requiredItems;
+    [SerializeField] [Range(0, 24)]
+    private int _initialBuildHours;
+    [SerializeField] [Range(0, 60)]
+    private int _initialBuildMinutes;
+    [SerializeField] [Range(0, 60)]
+    private int _initialBuildSeconds;
     [Header("Needed Level")]
-    [SerializeField] private int _availableInLevel;  
+    [SerializeField] [Range(0, 100)]
+    private int _availableInLevel;  
+    [SerializeField] private Items[] _requiredItems;
+    
 
     public string TankName
     {

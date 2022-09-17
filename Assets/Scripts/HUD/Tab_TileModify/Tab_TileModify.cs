@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class Tab_TileModify : MonoBehaviour
 {
     public enum TileModifyType { NewTile, ArmoredCube, ArmoredTile }
     internal class LocalPlayer
     {
-        internal PlayerTurn _localPlayerTurn;
-        internal ScoreController _localPlayerScoreController;
-        internal Transform _localPlayerTransform;
+        internal PlayerTurn _turn;
+        internal ScoreController _score;
+        internal Transform _transform;
     }
     [SerializeField] 
     private TMP_Text _scoreText;
@@ -42,7 +43,7 @@ public class Tab_TileModify : MonoBehaviour
     }
     public bool CanModifyTiles
     {
-        get => _localPlayer._localPlayerScoreController.Score >= Price;
+        get => _localPlayer._score.Score >= Price;
     }
     public bool IsTab_TileModifyOpen { get; private set; }
 
@@ -108,21 +109,21 @@ public class Tab_TileModify : MonoBehaviour
     {
         SetPrice(NewPrices[0].Price);
         SetTileModifyType(TileModifyType.NewTile);
-        Invoke("FindTilesAroundPlayer", 0.1f);
+        StartCoroutine(StartFindTilesAroundPlayer(false));
     }
 
     private void OnInstantiateMetalCube()
     {
         SetPrice(NewPrices[1].Price);
         SetTileModifyType(TileModifyType.ArmoredCube);
-        Invoke("FindTilesAroundPlayer", 0.1f);
+        StartCoroutine(StartFindTilesAroundPlayer(false));
     }
 
     private void OnChangeToMetalGround()
     {
         SetPrice(NewPrices[2].Price);
         SetTileModifyType(TileModifyType.ArmoredTile);
-        Invoke("FindTilesAroundPlayer", 0.1f);
+        StartCoroutine(StartFindTilesAroundPlayer(true));
     }
 
     private void OnTurnChanged(TurnState turnState)
@@ -138,35 +139,47 @@ public class Tab_TileModify : MonoBehaviour
         {
             _localPlayer = new LocalPlayer
             {
-                _localPlayerTransform = localPlayerTransform,
-                _localPlayerTurn = Get<PlayerTurn>.From(localPlayerTransform.gameObject),
-                _localPlayerScoreController = Get<ScoreController>.From(localPlayerTransform.gameObject)
+                _transform = localPlayerTransform,
+                _turn = Get<PlayerTurn>.From(localPlayerTransform.gameObject),
+                _score = Get<ScoreController>.From(localPlayerTransform.gameObject)
             };
         }
     }
 
-    public void FindTilesAroundPlayer()
+    private void StoreFoundTiles(bool canStore, GameObject tile)
+    {
+        if (canStore && tile != null && Get<TileModifyGUI>.FromChild(tile) != null)
+        {
+            foundTiles.Add(tile);
+        }
+    }
+
+    public void FindTilesAroundPlayer(bool isArmoredGround)
     {
         if (IsLocalInitialized)
         {
-            if (_localPlayer._localPlayerTurn.IsMyTurn)
+            if (_localPlayer._turn.IsMyTurn)
             {
                 _hudMainTabsActivity.CanvasGroupsActivity(false);
                 GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
-                ScoreText = _localPlayer._localPlayerScoreController.Score.ToString();
+                ScoreText = _localPlayer._score.Score.ToString();
                 foundTiles = new List<GameObject>();
                 IsTab_TileModifyOpen = true;
 
                 foreach (var tile in _tilesData.TilesDict)
                 {
-                    bool haveLeftTilesBeenFound = tile.Key.x <= _localPlayer._localPlayerTransform.position.x - _tilesData.Size && tile.Key.x >= _localPlayer._localPlayerTransform.position.x - (_tilesData.Size * 6);
-                    bool haveRIghtTilesBeenFound = tile.Key.x >= _localPlayer._localPlayerTransform.position.x + _tilesData.Size && tile.Key.x <= _localPlayer._localPlayerTransform.position.x + (_tilesData.Size * 6);
-
-                    if (haveLeftTilesBeenFound && tile.Value != null && Get<TileModifyGUI>.FromChild(tile.Value) != null)
-                        foundTiles.Add(tile.Value);
-
-                    if (haveRIghtTilesBeenFound && tile.Value != null && Get<TileModifyGUI>.FromChild(tile.Value) != null)
-                        foundTiles.Add(tile.Value);
+                    if (!isArmoredGround)
+                    {
+                        bool haveLeftTilesBeenFound = tile.Key.x <= _localPlayer._transform.position.x - _tilesData.Size && tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6);
+                        bool haveRIghtTilesBeenFound = tile.Key.x >= _localPlayer._transform.position.x + _tilesData.Size && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
+                        StoreFoundTiles(haveLeftTilesBeenFound, tile.Value);
+                        StoreFoundTiles(haveRIghtTilesBeenFound, tile.Value);
+                    }
+                    else
+                    {
+                        bool foundNearTiles = tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6) && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
+                        StoreFoundTiles(foundNearTiles, tile.Value);
+                    }
                 }
 
                 foreach (var tile in foundTiles)
@@ -178,6 +191,12 @@ public class Tab_TileModify : MonoBehaviour
                 }
             }
         }
+    }
+
+    private IEnumerator StartFindTilesAroundPlayer(bool isArmoredGround)
+    {
+        yield return new WaitForSeconds(0.01f);
+        FindTilesAroundPlayer(isArmoredGround);
     }
 
     public void OnClickToClose()
@@ -199,9 +218,9 @@ public class Tab_TileModify : MonoBehaviour
     {
         if (IsLocalInitialized)
         {
-            int newScore = _localPlayer._localPlayerScoreController.Score - Price;
+            int newScore = _localPlayer._score.Score - Price;
             ScoreText = newScore.ToString();
-            _localPlayer._localPlayerScoreController.GetScore(-Price, null);
+            _localPlayer._score.GetScore(-Price, null);
         }
     }
 }

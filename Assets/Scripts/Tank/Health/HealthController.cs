@@ -70,6 +70,8 @@ public class HealthController : MonoBehaviour, IDamage
 
             isDone = true;
             text = "+" + 20;
+
+            OnUpdateHealthBar?.Invoke(Health);
             OnTankDamageFire?.Invoke(Health);
         }
     }
