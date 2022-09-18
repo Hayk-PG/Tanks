@@ -4,33 +4,34 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable objects/Weapons/New weapon")]
 public class WeaponProperties : BaseWeaponProperties<BulletController>
 {
-    internal struct RandomRanges
+    internal struct RandomType
     {
-        internal int[] _rangeDamageValues;
-        internal int[] _rangeDestructDamageValues;
-        internal int[] _rangeBulletMaxForceVaues;
-        internal int[] _rangeBulletForceMaxSpeedValues;
-        internal float[] _rangeRadiusValues;
-
-        internal RandomRanges(int[] rangeDamageValues, int[] rangeDestructDamageValues, int[] rangeBulletMaxForceVaues, int[] rangeBulletForceMaxSpeedValues, float[] rangeRadiusValues)
-        {
-            _rangeDamageValues = rangeDamageValues;
-            _rangeDestructDamageValues = rangeDestructDamageValues;
-            _rangeBulletMaxForceVaues = rangeBulletMaxForceVaues;
-            _rangeBulletForceMaxSpeedValues = rangeBulletForceMaxSpeedValues;
-            _rangeRadiusValues = rangeRadiusValues;
-        }
+        internal int?[] _damageValues;
+        internal int?[] _destructDamageValues;
+        internal int?[] _bulletMaxForceVaues;
+        internal int?[] _bulletForceMaxSpeedValues;
+        internal float?[] _radiusValues;
     }
 
-    private void Randomizer(RandomRanges randomRanges)
+    private void Randomizer(RandomType randomType)
     {
-        _damageValue = Random.Range(randomRanges._rangeDamageValues[0], randomRanges._rangeDamageValues[1]);
-        _destructDamage = Random.Range(randomRanges._rangeDestructDamageValues[0], randomRanges._rangeDestructDamageValues[1]);
-        _bulletMaxForce = Random.Range(randomRanges._rangeBulletMaxForceVaues[0], randomRanges._rangeBulletMaxForceVaues[1]);
-        _bulletForceMaxSpeed = Random.Range(randomRanges._rangeBulletForceMaxSpeedValues[0], randomRanges._rangeBulletForceMaxSpeedValues[1]);
+        if(randomType._damageValues != null) 
+            _damageValue = Random.Range(randomType._damageValues[0].Value, randomType._damageValues[1].Value);
 
-        float radiusRound = Mathf.Round(Random.Range(randomRanges._rangeRadiusValues[0], randomRanges._rangeRadiusValues[1]) * 100) * 0.01f;
-        _radius = radiusRound;
+        if (randomType._destructDamageValues != null)
+            _destructDamage = Random.Range(randomType._destructDamageValues[0].Value, randomType._destructDamageValues[1].Value);
+
+        if (randomType._bulletMaxForceVaues != null)
+            _bulletMaxForce = Random.Range(randomType._bulletMaxForceVaues[0].Value, randomType._bulletMaxForceVaues[1].Value);
+
+        if (randomType._bulletForceMaxSpeedValues != null)
+            _bulletForceMaxSpeed = Random.Range(randomType._bulletForceMaxSpeedValues[0].Value, randomType._bulletForceMaxSpeedValues[1].Value);
+
+        if(randomType._radiusValues != null)
+        {
+            float radiusRound = Mathf.Round(Random.Range(randomType._radiusValues[0].Value, randomType._radiusValues[1].Value) * 100) * 0.01f;
+            _radius = radiusRound;
+        }
     }
 
     private void SetExplosionValues()
@@ -47,52 +48,116 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         bulletCollision.TileParticleIndex = _tileParticleIndex;        
     }
 
+
+
     public void Randomize()
     {
         switch (_type)
         {
             case Type.Light:
-                RandomRanges randomLight = new RandomRanges
-                    (
-                    new int[2] { 10, 25 },
-                    new int[2] { 3, 10 },
-                    new int[2] { 16, 20 },
-                    new int[2] { 6, 10 },
-                    new float[2] { 0.3f, 0.5f }
-                    );
-                Randomizer(randomLight);
+
+                RandomType randomLight = new RandomType
+                {
+                    _damageValues = new int?[2] { 5, 15 },
+                    _destructDamageValues = new int?[2] { 10, 12 },
+                    _radiusValues = new float?[2] { 0.3f, 0.32f }
+                };
+
+                Randomizer(randomLight);               
                 break;
 
             case Type.Medium:
-                RandomRanges randomMedium = new RandomRanges
-                    (
-                    new int[2] { 25, 40 },
-                    new int[2] { 10, 15 },
-                    new int[2] { 13, 16 },
-                    new int[2] { 5, 6 },
-                    new float[2] { 0.2f, 0.3f }
-                    );
+
+                RandomType randomMedium = new RandomType
+                {
+                    _damageValues = new int?[2] { 20, 35 },
+                    _destructDamageValues = new int?[2] { 13, 16 },
+                    _radiusValues = new float?[2] { 0.37f, 0.4f }
+                };
+
                 Randomizer(randomMedium);
                 break;
 
             case Type.Heavy:
-                RandomRanges randomHeavy = new RandomRanges
-                    (
-                    new int[2] { 40, 60 },
-                    new int[2] { 15, 20 },
-                    new int[2] { 9, 13 },
-                    new int[2] { 2, 5 },
-                    new float[2] { 0.1f, 0.2f }
-                    );
+
+                RandomType randomHeavy = new RandomType
+                {
+                    _damageValues = new int?[2] { 40, 70 },
+                    _destructDamageValues = new int?[2] { 17, 20 },
+                    _radiusValues = new float?[2] { 0.33f, 0.36f }
+                };
+
                 Randomizer(randomHeavy);
+                break;
+        }
+
+        switch (_range)
+        {
+            case Range.Long:
+
+                RandomType randomLong = new RandomType
+                {
+                    _bulletMaxForceVaues = new int?[2] { 16, 20 },
+                    _bulletForceMaxSpeedValues = new int?[2] { 6, 10 }
+                };
+
+                Randomizer(randomLong);
+                break;
+
+            case Range.Medium:
+
+                RandomType randomMedium = new RandomType
+                {
+                    _bulletMaxForceVaues = new int?[2] { 13, 15 },
+                    _bulletForceMaxSpeedValues = new int?[2] { 4, 5 }
+                };
+
+                Randomizer(randomMedium);
+                break;
+
+            case Range.Close:
+
+                RandomType randomClose = new RandomType
+                {
+                    _bulletMaxForceVaues = new int?[2] { 10, 12 },
+                    _bulletForceMaxSpeedValues = new int?[2] { 1, 3 }
+                };
+
+                Randomizer(randomClose);
                 break;
         }
     }
 
+    private void DefineRangeType()
+    {
+        string longRange = " (LR)";
+        string mediumRange = " (MR)";
+        string closeRange = " (CR)";
+
+        string range = _bulletMaxForce >= 16 ? longRange :
+                       _bulletMaxForce >= 13 && _bulletMaxForce < 15 ? mediumRange :
+                       _bulletMaxForce >= 10 && _bulletMaxForce < 12 ? closeRange : "";
+
+        if (_weaponType.Contains(longRange))
+            _weaponType.Substring(_weaponType.Length - longRange.Length, _weaponType.Length);
+
+        if (_weaponType.Contains(mediumRange))
+            _weaponType.Substring(_weaponType.Length - mediumRange.Length, _weaponType.Length);
+
+        if (_weaponType.Contains(closeRange))
+            _weaponType.Substring(_weaponType.Length - closeRange.Length, _weaponType.Length);
+
+        _weaponType += range;
+    }
+
     public void OnClickSetWeaponProperties()
     {
+        if (_type == Type.Light)
+            _tileParticleIndex = 1000;
+
         SetExplosionValues();
         SetCollisionValues();
+        DefineRangeType();
 
 #if UNITY_EDITOR
         PrefabUtility.SavePrefabAsset(_prefab.gameObject);

@@ -12,6 +12,7 @@ public class BaseWeaponProperties<T> : ScriptableObject
     public int _requiredScoreAmmount;
 
     public enum Type { Light, Medium, Heavy }
+    public enum Range { Close, Medium, Long}
     
     [Header("Weapons type")]
     public int _index;
@@ -21,10 +22,11 @@ public class BaseWeaponProperties<T> : ScriptableObject
     [Range(0, 60)]
     public int _seconds;
     public Type _type;
+    public Range _range;
   
-    [Range(0, 100)]
+    [Range(0, 70)]
     public int _damageValue;
-    [Range(0, 1)]
+    [Range(0.3f, 0.4f)]
     public float _radius;
     [Range(0, 20)]
     public int _destructDamage;    
