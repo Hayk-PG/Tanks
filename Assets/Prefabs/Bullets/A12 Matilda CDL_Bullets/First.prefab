@@ -37,6 +37,7 @@ Transform:
   m_Children:
   - {fileID: 6310646853915315713}
   - {fileID: 6397670927999940446}
+  - {fileID: 5572900675610723626}
   - {fileID: 7088052780700750272}
   - {fileID: 4264670497613922312}
   - {fileID: 257731424503725665}
@@ -152,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _muzzleFlash: {fileID: 16104283843019344}
-  _trail: {fileID: 7088052780700750285}
+  _trail: {fileID: 4555306806294601047}
   _explosion: {fileID: 4264670497613922314}
   _optionalExplosion: {fileID: 257731424503725676}
 --- !u!1 &8539396785219521403
@@ -279,7 +280,7 @@ PrefabInstance:
     - target: {fileID: 215989932451253209, guid: 0273878734653874a86f0ff1654bb8d3,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 215989932451253209, guid: 0273878734653874a86f0ff1654bb8d3,
         type: 3}
@@ -313,6 +314,87 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 215989932451253209, guid: 0273878734653874a86f0ff1654bb8d3,
     type: 3}
   m_PrefabInstance: {fileID: 738260971375198414}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6537838212009116558
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2487785652516987228}
+    m_Modifications:
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317401962303758041, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+        type: 3}
+      propertyPath: m_Name
+      value: CFXR Fire Trail
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac, type: 3}
+--- !u!1 &4555306806294601047 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7317401962303758041, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+    type: 3}
+  m_PrefabInstance: {fileID: 6537838212009116558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5572900675610723626 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1724309747316328100, guid: 800bd1bc7d1edd04c96fcf66dfc1d2ac,
+    type: 3}
+  m_PrefabInstance: {fileID: 6537838212009116558}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7070541523525186316
 PrefabInstance:
@@ -444,7 +526,7 @@ PrefabInstance:
     - target: {fileID: 6426842504716612356, guid: cd2ebdc68174e0e4aaad1a7e33e4188d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6426842504716612356, guid: cd2ebdc68174e0e4aaad1a7e33e4188d,
         type: 3}
@@ -523,6 +605,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CFXR Fire Trail (stretched)
       objectReference: {fileID: 0}
+    - target: {fileID: 30028460933735169, guid: 9e09f4e1cc586e649af32d6d380548f6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 30028460933735180, guid: 9e09f4e1cc586e649af32d6d380548f6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -561,7 +648,7 @@ PrefabInstance:
     - target: {fileID: 30028460933735180, guid: 9e09f4e1cc586e649af32d6d380548f6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 30028460933735180, guid: 9e09f4e1cc586e649af32d6d380548f6,
         type: 3}
@@ -580,12 +667,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e09f4e1cc586e649af32d6d380548f6, type: 3}
---- !u!1 &7088052780700750285 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 30028460933735169, guid: 9e09f4e1cc586e649af32d6d380548f6,
-    type: 3}
-  m_PrefabInstance: {fileID: 7077262549916857036}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7088052780700750272 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 30028460933735180, guid: 9e09f4e1cc586e649af32d6d380548f6,
@@ -733,7 +814,7 @@ PrefabInstance:
     - target: {fileID: 9080224173734494108, guid: 2cae572436fc90a428467be0ffff51a4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9080224173734494108, guid: 2cae572436fc90a428467be0ffff51a4,
         type: 3}
