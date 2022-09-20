@@ -2,10 +2,11 @@
 
 public class PlayerShootTrajectory : BaseTrajectory
 {
-    [SerializeField] private GameObject pointsPrefab;
-    [SerializeField] private GameObject _pointTarget;
-    [SerializeField] private int numberOfPoints;
+    [SerializeField]
+    private GameObject pointsPrefab, _pointTarget;
     private GameObject[] points;
+    [SerializeField] 
+    private int numberOfPoints;   
     private SpriteRenderer[] _tracePointsSpriteRenderer;
     private GameObject _tracePointsParent;
     private Color _tracePointsColor = new Color(1, 1, 1, 0.3f);
@@ -13,17 +14,12 @@ public class PlayerShootTrajectory : BaseTrajectory
     private Collider[] _colliders;
 
 
-    void Awake()
+    private void Awake()
     {
         InstantiatePoints();
     }
 
-    private void FixedUpdate()
-    {
-        PointsOverlapSphere();
-    }
-
-    void InstantiatePoints()
+    private void InstantiatePoints()
     {
         points = new GameObject[numberOfPoints];
 
@@ -74,14 +70,14 @@ public class PlayerShootTrajectory : BaseTrajectory
         }
     }
 
-    void GraduallyResizingPoints(int index)
+    private void GraduallyResizingPoints(int index)
     {
         float s = points[0].transform.localScale.x / numberOfPoints;
 
         if(index > 0) PointsScale(index, s);
     }
 
-    void PointsScale(int index, float s)
+    private void PointsScale(int index, float s)
     {
         points[index].transform.localScale = new Vector3(points[index - 1].transform.localScale.x - s, points[index - 1].transform.localScale.y - s, points[index - 1].transform.localScale.z - s);
     }
@@ -101,7 +97,7 @@ public class PlayerShootTrajectory : BaseTrajectory
         }
     }
 
-    private void PointsOverlapSphere()
+    public override void PointsOverlapSphere()
     {
         _pointTarget.SetActive(false);
 
@@ -125,45 +121,6 @@ public class PlayerShootTrajectory : BaseTrajectory
             {
                 points[i].SetActive(true);
             }
-
-
-            //if(Physics.OverlapSphereNonAlloc(points[i].transform.position, _radius, _colliders) > 0)
-            //{
-            //    print("aaa");
-
-            //    for (int x = i; x < points.Length; x++)
-            //    {
-            //        points[x].SetActive(false);
-            //    }
-            //}
-            //else
-            //{
-            //    points[i].SetActive(true);
-            //}
         }
-
-
-
-        //_pointTarget.SetActive(false);
-
-        //for (int i = 0; i < points.Length; i++)
-        //{
-        //    if (Physics.SphereCast(points[i].transform.position, 0.2f, _parent.forward, out RaycastHit hit, _rayMaxDistance))
-        //    {
-        //        for (int x = i; x < points.Length; x++)
-        //        {
-        //            points[x].SetActive(false);
-        //        }
-
-        //        //_pointTarget.SetActive(true);
-        //        //_pointTarget.transform.position = hit.point;
-        //        //_pointTarget.transform.rotation = Quaternion.Euler(0, 0, 0);
-        //        break;
-        //    }
-        //    else
-        //    {
-        //        points[i].SetActive(true);
-        //    }
-        //} 
     }
 }

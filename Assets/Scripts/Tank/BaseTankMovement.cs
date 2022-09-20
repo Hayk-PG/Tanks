@@ -9,7 +9,9 @@ public class BaseTankMovement : MonoBehaviour
     [Range(0, 1000)]
     public float _maxBrake;
     [Range(0, 3000)]
-    public float _accelerated; 
+    public float _accelerated;
+    [Range(0, 100)]
+    public int _damageFactor;
     public Vector3 _normalCenterOfMass;
     protected float _currentBrake;
     protected float _currentSpeed;
@@ -26,10 +28,17 @@ public class BaseTankMovement : MonoBehaviour
     protected Vector3 _vectorRight;
     protected Vector3 _vectorLeft;
 
+    public virtual int DamageFactor
+    {
+        get
+        {
+            return (_healthController.Health + _damageFactor) >= 100 ? 100 : _healthController.Health + _damageFactor;
+        }
+    }
     public virtual float Speed
     {
         get => _currentSpeed;
-        set => _currentSpeed = value / 100 * _healthController.Health;
+        set => _currentSpeed = value / 100 * DamageFactor;
     }
     public virtual float Direction { get; set; }
     protected float RotationXAxis { get; set; }

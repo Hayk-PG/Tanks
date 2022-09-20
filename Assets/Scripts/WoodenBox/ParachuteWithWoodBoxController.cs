@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class ParachuteWithWoodBoxController : MonoBehaviour
 {    
@@ -15,6 +16,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
     public Rigidbody RigidBody;
     public int RandomContent { get; set; }
+    public float RandomDestroyTime { get; set; }
 
 
 
@@ -25,6 +27,11 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
         _woodBox = Get<WoodBox>.From(gameObject);
         _gravity = delegate { return 30 * Time.fixedDeltaTime; };
         _woodenBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(DestroyAfterTime());
     }
 
     private void FixedUpdate()
@@ -47,6 +54,12 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
             if (isCollidedWithBullet)
                 OnCollisionWithBullet();
         }
+    }
+
+    private IEnumerator DestroyAfterTime()
+    {
+        yield return new WaitForSeconds(RandomDestroyTime);
+        DestroyGameobject();
     }
 
     private void OnCollisionWithTank(Collision collision)

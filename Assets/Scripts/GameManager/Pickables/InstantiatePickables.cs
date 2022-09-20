@@ -15,6 +15,7 @@ public class InstantiatePickables : MonoBehaviourPun
     }
     public Vector3 RandomSpawnPosition { get; set; }    
     public float RandomTime { get; set; }
+    public float RandomDestroyTime { get; set; }
     public int RandomContent { get; set; }
 
     public System.Action<object[]> OnInstantiateWoodenBox { get; set; }
@@ -53,6 +54,7 @@ public class InstantiatePickables : MonoBehaviourPun
 
             RandomSpawnPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);           
             RandomContent = Random.Range(0, 4);
+            RandomDestroyTime = Random.Range(60, 90);
 
             if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
             {
@@ -61,7 +63,8 @@ public class InstantiatePickables : MonoBehaviourPun
                     EventInfo.Content_InstantiateWoodenBox = new object[]
                     {
                     RandomSpawnPosition,
-                    RandomContent
+                    RandomContent,
+                    RandomDestroyTime
                     };
 
                     //ONLINE

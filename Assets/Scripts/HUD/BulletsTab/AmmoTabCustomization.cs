@@ -35,7 +35,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
             _icon = weaponProperty._icon
         }, weaponProperty._ammoTypeStars);
 
-        OnSendWeaponPointsToUnlock?.Invoke(weaponProperty._requiredScoreAmmount);
+        OnSendWeaponPointsToUnlock?.Invoke(button);
         Conditions<bool>.Compare(loopIndex == 0, () => SetDefaultAmmo(button), null);
         CacheAmmoTypeButtons(button);
     }

@@ -90,13 +90,14 @@ public class ShootController : BaseShootController
         _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         if (_playerTurn.IsMyTurn)
         {
             RotateCanon();
             ApplyForce();
             OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
+            _trajectory.PointsOverlapSphere();
         }
         else
         {
@@ -176,6 +177,7 @@ public class ShootController : BaseShootController
             InstantiateBullet(force);
             AddForce(force);
             OnShoot?.Invoke();
+            OnDash?.Invoke(_tankMovement.Direction);
         }
     }
 

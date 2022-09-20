@@ -16,7 +16,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
     public Action<T> OnSupportOrPropsChanged { get; set; }
     public Action OnAmmoTypeController { get; set; }
     public Action<Action<int, List<int>>> OnGetPointsAndAmmoDataFromPlayer { get; set; }
-    public Action<int> OnSendWeaponPointsToUnlock { get; set; }
+    public Action<AmmoTypeButton> OnSendWeaponPointsToUnlock { get; set; }
 
     public struct Properties
     {

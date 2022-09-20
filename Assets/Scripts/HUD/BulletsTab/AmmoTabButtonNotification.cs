@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AmmoTabButtonNotification : MonoBehaviour
 {
-    public List<int> _weaponsPointsToUnlock = new List<int>();
+    public List<AmmoTypeButton> _weapons = new List<AmmoTypeButton>();
 
     private AmmoTabCustomization _ammoTabCustomization;
     private ScoreController _playerScoreController;
@@ -18,7 +18,8 @@ public class AmmoTabButtonNotification : MonoBehaviour
     private bool _isAmmoTabOpen;
     private int _weaponsPointsToUnlockDeleteRange;
 
-    public Action OnNewAwailableWeaponNotification;
+    public Action OnNewAwailableWeaponNotification { get; set; }
+    public Action<List<AmmoTypeButton>, bool> OnDisplayAvailableWeapons { get; set; }
 
 
     private void Awake()
@@ -42,9 +43,10 @@ public class AmmoTabButtonNotification : MonoBehaviour
             _playerScoreController.OnPlayerGetsPoints -= PlayerGetsPoints;
     }
 
-    private void CacheWeaponsPointsToUnlock(int pointsToUnlock)
+    private void CacheWeaponsPointsToUnlock(AmmoTypeButton ammoTypeButton)
     {
-        if(pointsToUnlock > 0) _weaponsPointsToUnlock.Add(pointsToUnlock);
+        if(ammoTypeButton._properties.RequiredScoreAmmount > 0) 
+            _weapons.Add(ammoTypeButton);
     }
 
     public void CallPlayerEvents(ScoreController scoreController)
@@ -57,14 +59,14 @@ public class AmmoTabButtonNotification : MonoBehaviour
     {
         _isNewWeaponAvailable = false;
 
-        Conditions<List<int>>.CheckNull(_weaponsPointsToUnlock, null, () => CheckForNewAvailableWeapon(points));
+        Conditions<List<int>>.CheckNull(_weapons, null, () => CheckForNewAvailableWeapon(points));
     }
 
     private void CheckForNewAvailableWeapon(int points)
     {
-        for (int i = _weaponsPointsToUnlock.Count - 1; i >= 0; i--)
+        for (int i = _weapons.Count - 1; i >= 0; i--)
         {
-            if (points >= _weaponsPointsToUnlock[i])
+            if (points >= _weapons[i]._properties.RequiredScoreAmmount)
             {
                 _weaponsPointsToUnlockDeleteRange = i;
                 _isNewWeaponAvailable = true;
@@ -78,20 +80,25 @@ public class AmmoTabButtonNotification : MonoBehaviour
 
     private void OnNewAvailableWeaponNotification()
     {
-        _weaponsPointsToUnlock.RemoveRange(0, _weaponsPointsToUnlockDeleteRange + 1);
         OnNotificationIcon(true && !_isAmmoTabOpen);
         OnNewAwailableWeaponNotification?.Invoke();
+        _weapons.RemoveRange(0, _weaponsPointsToUnlockDeleteRange + 1);
     }
 
     private void OnNotificationIcon(bool isActive)
     {
         _notificationsIcon.SetActive(isActive);
+        OnDisplayAvailableWeapons?.Invoke(_weapons, isActive);
     }
 
     private void OnWeaponsTabActivity(bool isOpen)
     {
         _isAmmoTabOpen = isOpen;
 
-        if (_isAmmoTabOpen) OnNotificationIcon(false);
+        if (_isAmmoTabOpen)
+        {
+            OnNotificationIcon(false);
+            OnDisplayAvailableWeapons?.Invoke(_weapons, false);
+        }
     }
 }

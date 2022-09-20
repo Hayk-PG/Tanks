@@ -18,8 +18,9 @@ public class TankProperties : ScriptableObject
     [Header("Tank prefab movement parameters")]
     public float _rigidbodyMass;
     public float _normalSpeed;
-    public float _accelerated;
     public float _maxBrake;
+    public float _accelerated;
+    public int _damageFactor;
     public Vector3 _normalCenterOfMass;
 
     [Header("Tank prefab canon parameters")]
@@ -46,8 +47,9 @@ public class TankProperties : ScriptableObject
     {
         _rigidbodyMass = Get<Rigidbody>.From(_tank.gameObject).mass; 
         _normalSpeed = Get<BaseTankMovement>.From(_tank.gameObject)._normalSpeed;
-        _accelerated = Get<BaseTankMovement>.From(_tank.gameObject)._accelerated;
         _maxBrake = Get<BaseTankMovement>.From(_tank.gameObject)._maxBrake;
+        _accelerated = Get<BaseTankMovement>.From(_tank.gameObject)._accelerated;
+        _damageFactor = Get<BaseTankMovement>.From(_tank.gameObject)._damageFactor;
         _normalCenterOfMass = Get<BaseTankMovement>.From(_tank.gameObject)._normalCenterOfMass;
 
         _minEulerAngleX = Get<BaseShootController>.From(_tank.gameObject)._canon._minEulerAngleX;

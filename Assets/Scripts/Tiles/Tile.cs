@@ -5,6 +5,7 @@ public class Tile : MonoBehaviour, IDestruct
 {
     private Collider _collider;
     private ChangeTiles _changeTiles;
+    private TilesData _tilesData;
     private GroundSlam _groundSlam;
     private Sandbags _sandbags;
     private TileParticles _tileParticles;
@@ -27,6 +28,7 @@ public class Tile : MonoBehaviour, IDestruct
     {
         _collider = GetComponent<Collider>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
+        _tilesData = FindObjectOfType<TilesData>();
         _groundSlam = FindObjectOfType<GroundSlam>();
         _tileParticles = Get<TileParticles>.FromChild(gameObject);
         _tileSize = _collider.bounds.size;
@@ -82,13 +84,29 @@ public class Tile : MonoBehaviour, IDestruct
         }
     }
 
+    private void TileParticlesActivity(int tileParticleIndex)
+    {
+        if (_tileParticles != null)
+        {
+            Vector3 bottomTile = transform.position - new Vector3(0, 0.5f, 0);
+
+            if (_changeTiles.HasTile(bottomTile))
+            {
+                if (_tilesData.TilesDict[bottomTile].name != Names.LS || _tilesData.TilesDict[bottomTile].name != Names.RS)
+                {
+                    _tileParticles.TileParticlesActivity(tileParticleIndex, _tilesData, bottomTile, true);
+                }
+            }
+        }
+    }
+
     private void Destruction(int tileParticleIndex)
     {
         _collider.isTrigger = true;
         _explosion.SetActive(true);
         _explosion.transform.parent = null;
         _changeTiles.UpdateTiles(transform.position);
-        if(_tileParticles != null) _tileParticles.TileParticlesActivity(tileParticleIndex, true);
+        TileParticlesActivity(tileParticleIndex);
         Destroy(gameObject);
     }
 

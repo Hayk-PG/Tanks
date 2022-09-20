@@ -16,4 +16,9 @@ public class BaseTrajectory : MonoBehaviour
     {
 
     }
+
+    public virtual void PointsOverlapSphere()
+    {
+
+    }
 }

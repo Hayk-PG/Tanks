@@ -249,6 +249,7 @@ public class AIShootController : BaseShootController
             mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
             _currentTrajectoryTime = _defaultTrajectoryTime;
             OnShoot?.Invoke();
+            OnDash(_aiTankMovement.Direction);
             UsedActiveWeapon();
             ActivateRandomWeapon();
         }

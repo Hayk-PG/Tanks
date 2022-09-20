@@ -35,6 +35,7 @@ public class WoodenBoxSpawner : MonoBehaviour
     {
         ParachuteWithWoodBoxController parachute = Instantiate(_parachuteWithWoodBoxController, (Vector3)data[0], Quaternion.identity);
         parachute.RandomContent = (int)data[1];
+        parachute.RandomDestroyTime = (float)data[2];
         _woodenBoxSerializer.ParachuteWithWoodBoxController = parachute;
     }
 
