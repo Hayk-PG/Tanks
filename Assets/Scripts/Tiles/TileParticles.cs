@@ -9,6 +9,15 @@ public class TileParticles : MonoBehaviour
     private TileParticles _bottomTileParticles;
 
 
+    public void ResetTileParticles()
+    {
+        GlobalFunctions.Loop<GameObject>.Foreach(_tileParticles, 
+            particle => 
+            {
+                particle.SetActive(false);
+            });
+    }
+
     public void DirectActivationOfTileParticles(int index)
     {
         if (_tileParticles != null && index < _tileParticles.Length)

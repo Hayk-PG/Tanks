@@ -55,7 +55,7 @@ public class Tab_TileModify : MonoBehaviour
 
     public Prices[] NewPrices = new Prices[3]
     {
-        new Prices{Name = Names.ModifyGround, Price = 250},
+        new Prices{Name = Names.ModifyGround, Price = 0},
         new Prices{Name = Names.MetalCube, Price = 1000},
         new Prices{Name = Names.MetalGround, Price = 1000}
     };
@@ -109,21 +109,21 @@ public class Tab_TileModify : MonoBehaviour
     {
         SetPrice(NewPrices[0].Price);
         SetTileModifyType(TileModifyType.NewTile);
-        StartCoroutine(StartFindTilesAroundPlayer(false));
+        StartCoroutine(StartFindTilesAroundPlayer());
     }
 
     private void OnInstantiateMetalCube()
     {
         SetPrice(NewPrices[1].Price);
         SetTileModifyType(TileModifyType.ArmoredCube);
-        StartCoroutine(StartFindTilesAroundPlayer(false));
+        StartCoroutine(StartFindTilesAroundPlayer());
     }
 
     private void OnChangeToMetalGround()
     {
         SetPrice(NewPrices[2].Price);
         SetTileModifyType(TileModifyType.ArmoredTile);
-        StartCoroutine(StartFindTilesAroundPlayer(true));
+        StartCoroutine(StartFindTilesAroundPlayer());
     }
 
     private void OnTurnChanged(TurnState turnState)
@@ -154,7 +154,7 @@ public class Tab_TileModify : MonoBehaviour
         }
     }
 
-    public void FindTilesAroundPlayer(bool isArmoredGround)
+    public void FindTilesAroundPlayer()
     {
         if (IsLocalInitialized)
         {
@@ -168,7 +168,7 @@ public class Tab_TileModify : MonoBehaviour
 
                 foreach (var tile in _tilesData.TilesDict)
                 {
-                    if (!isArmoredGround)
+                    if (_tileModifyType != TileModifyType.ArmoredTile)
                     {
                         bool haveLeftTilesBeenFound = tile.Key.x <= _localPlayer._transform.position.x - _tilesData.Size && tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6);
                         bool haveRIghtTilesBeenFound = tile.Key.x >= _localPlayer._transform.position.x + _tilesData.Size && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
@@ -193,10 +193,10 @@ public class Tab_TileModify : MonoBehaviour
         }
     }
 
-    private IEnumerator StartFindTilesAroundPlayer(bool isArmoredGround)
+    private IEnumerator StartFindTilesAroundPlayer()
     {
         yield return new WaitForSeconds(0.01f);
-        FindTilesAroundPlayer(isArmoredGround);
+        FindTilesAroundPlayer();
     }
 
     public void OnClickToClose()

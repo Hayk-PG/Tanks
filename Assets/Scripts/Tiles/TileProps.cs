@@ -1,10 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public class TileProps : MonoBehaviour
 {
-    public enum PropsType { Sandbags, MetalCube, MetalGround}
+    public enum PropsType { Sandbags, MetalCube, MetalGround, All}
     public PropsType _propsType;
 
     private Tile _tile;
@@ -18,14 +17,34 @@ public class TileProps : MonoBehaviour
     public MetalTile MetalGround => _metalGround;
 
 
-    private void OnEnable()
+    private void Awake()
     {
         _tile = Get<Tile>.From(gameObject);
     }
 
     private void OnTileProtection(bool isProtected)
     {
-        _tile.IsProtected = isProtected;
+        if(_tile != null)
+            _tile.IsProtected = isProtected;
+    }
+
+    private void OnSandbags(bool isActive, bool? isPlayer1)
+    {
+        Sandbags.gameObject.SetActive(isActive);
+
+        if (isPlayer1 != null)
+            Sandbags.SandbagsDirection(isPlayer1.Value);
+    }
+
+    private void OnArmoredCube(bool isActive)
+    {
+        MetalCube.gameObject.SetActive(isActive);
+    }
+
+    private void OnArmoredTile(bool isActive)
+    {
+        transform.GetChild(0).gameObject.SetActive(!isActive);
+        MetalGround.gameObject.SetActive(isActive);
     }
 
     public void ActiveProps(PropsType propsType, bool isActive, bool? isPlayer1)
@@ -33,22 +52,25 @@ public class TileProps : MonoBehaviour
         switch (propsType)
         {
             case PropsType.Sandbags:
-                Sandbags.gameObject.SetActive(isActive);
-                if (isPlayer1 != null)
-                    Sandbags.SandbagsDirection(isPlayer1.Value);
+                OnSandbags(isActive, isPlayer1);
                 break;
 
             case PropsType.MetalCube:
-                MetalCube.gameObject.SetActive(isActive);
+                OnArmoredCube(isActive);
                 break;
 
             case PropsType.MetalGround:
-                transform.GetChild(0).gameObject.SetActive(!isActive);
-                MetalGround.gameObject.SetActive(isActive);
+                OnArmoredTile(isActive);
+                break;
+
+            case PropsType.All:
+                OnSandbags(isActive, isPlayer1);
+                OnArmoredCube(isActive);
+                OnArmoredTile(isActive);
                 break;
         }
 
-        OnTileProtection(true);
+        OnTileProtection(isActive);
     }
 }
 

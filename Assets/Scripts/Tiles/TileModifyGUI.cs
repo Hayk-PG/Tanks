@@ -14,9 +14,13 @@ public class TileModifyGUI : MonoBehaviour
     private GlobalTileController _globalTileController;
     private TilesData _tilesData;
     private ChangeTiles _changeTiles;
-    private Tab_TileModify _tabTileModify;
-    private Vector3 _currentTilePosition;
+    private Tab_TileModify _tabTileModify;   
     private delegate void CustomDelegate();
+
+    private Vector3 CurrentTilePosition
+    {
+        get => transform.parent.position;
+    }
     private CustomDelegate OnClickAction { get; set; }
 
     
@@ -29,7 +33,6 @@ public class TileModifyGUI : MonoBehaviour
         _changeTiles = FindObjectOfType<ChangeTiles>();
         _tabTileModify = FindObjectOfType<Tab_TileModify>();
         _canvas.worldCamera = Camera.main;
-        _currentTilePosition = transform.parent.position;
     }
 
     private void DefineOnClickAction(Tab_TileModify.TileModifyType tileModifyType)
@@ -39,7 +42,7 @@ public class TileModifyGUI : MonoBehaviour
             case Tab_TileModify.TileModifyType.NewTile:
                 OnClickAction = delegate
                 {
-                    Vector3 newTilePosition = _currentTilePosition + _tileModifyGUIElement._corespondentPosition;
+                    Vector3 newTilePosition = CurrentTilePosition + _tileModifyGUIElement._corespondentPosition;
                     _globalTileController.Modify(newTilePosition);
                 };
                 break;
@@ -47,14 +50,14 @@ public class TileModifyGUI : MonoBehaviour
             case Tab_TileModify.TileModifyType.ArmoredCube:
                 OnClickAction = delegate
                 {
-                    _globalTileController.Modify(_currentTilePosition, Tab_TileModify.TileModifyType.ArmoredCube);
+                    _globalTileController.Modify(CurrentTilePosition, Tab_TileModify.TileModifyType.ArmoredCube);
                 };
                 break;
 
             case Tab_TileModify.TileModifyType.ArmoredTile:
                 OnClickAction = delegate
                 {
-                    _globalTileController.Modify(_currentTilePosition, Tab_TileModify.TileModifyType.ArmoredTile);
+                    _globalTileController.Modify(CurrentTilePosition, Tab_TileModify.TileModifyType.ArmoredTile);
                 };
                 break;
         }
@@ -62,13 +65,13 @@ public class TileModifyGUI : MonoBehaviour
 
     private bool CanGUIElementBeActive(Tab_TileModify.TileModifyType tileModifyType)
     {
-        Vector3 top = _currentTilePosition + _tileModifyGUIElement._corespondentPosition;
+        Vector3 top = CurrentTilePosition + _tileModifyGUIElement._corespondentPosition;
         return tileModifyType == Tab_TileModify.TileModifyType.NewTile ?
                                  !_changeTiles.HasTile(top) && !_tilesData.TilesDict.ContainsKey(top) :
                                  tileModifyType == Tab_TileModify.TileModifyType.ArmoredCube ||
                                  tileModifyType == Tab_TileModify.TileModifyType.ArmoredTile ?
                                  !_changeTiles.HasTile(top) && !_tilesData.TilesDict.ContainsKey(top) &&
-                                 !_tilesData.TilesDict[_currentTilePosition].GetComponent<Tile>().IsProtected : false;
+                                 !_tilesData.TilesDict[CurrentTilePosition].GetComponent<Tile>().IsProtected : false;
     }
 
     public void EnableGUI(Tab_TileModify.TileModifyType tileModifyType)

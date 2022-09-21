@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class GlobalTileController : MonoBehaviourPun
 {
@@ -7,6 +8,8 @@ public class GlobalTileController : MonoBehaviourPun
     private TilesData _tilesData;
     private ChangeTiles _changeTiles;
     private Transform _parent;
+
+    public Action<Vector3> OnCreateNewTile { get; set; }
 
 
     private void Awake()
@@ -33,15 +36,7 @@ public class GlobalTileController : MonoBehaviourPun
     [PunRPC]
     private void CreateNewTile(Vector3 newTilePosition)
     {
-        GameObject tile = Instantiate(_prefab, newTilePosition, Quaternion.identity, _parent);
-
-        if (_tilesData.TilesDict.ContainsKey(newTilePosition))
-        {
-            Destroy(_tilesData.TilesDict[newTilePosition]);
-            _tilesData.TilesDict.Remove(newTilePosition);
-        }
-
-        _tilesData.TilesDict.Add(newTilePosition, tile);
+        OnCreateNewTile?.Invoke(newTilePosition);
         _changeTiles.UpdateTiles(newTilePosition);
     }
     #endregion

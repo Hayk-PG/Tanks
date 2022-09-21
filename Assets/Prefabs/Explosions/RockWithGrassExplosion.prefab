@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8156117658109314291}
   - component: {fileID: 8357935366598730765}
   - component: {fileID: 8356877296215174365}
-  - component: {fileID: 4505876564186067708}
   - component: {fileID: 710959286091314806}
   m_Layer: 0
   m_Name: RockWithGrassExplosion
@@ -4815,19 +4814,6 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &4505876564186067708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8159019766862073515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c996b2c7ffe8adc45880034a9c32f62f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  time: 4
 --- !u!82 &710959286091314806
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4852,7 +4838,7 @@ AudioSource:
   MaxDistance: 100
   Pan2D: 0
   rolloffMode: 2
-  BypassEffects: 0
+  BypassEffects: 1
   BypassListenerEffects: 0
   BypassReverbZones: 0
   rolloffCustomCurve:

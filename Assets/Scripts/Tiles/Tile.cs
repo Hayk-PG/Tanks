@@ -3,21 +3,32 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour, IDestruct
 {
+    [SerializeField]
+    private GameObject _explosion;
+
     private Collider _collider;
     private ChangeTiles _changeTiles;
     private TilesData _tilesData;
     private GroundSlam _groundSlam;
     private Sandbags _sandbags;
     private TileParticles _tileParticles;
+    private TileProps _tileProps;
 
     [SerializeField]
-    private GameObject _explosion;
-
-    private bool _isSuspended;
+    private bool _isSuspended, _isProtected;
     private Vector3 _desiredPosition;
     private Vector3 _tileSize;
 
-    public bool IsProtected { get; set; }
+    public bool IsSuspended
+    {
+        get => _isSuspended;
+        set => _isSuspended = value;
+    }
+    public bool IsProtected
+    {
+        get => _isProtected;
+        set => _isProtected = value;
+    }
     public float Health { get; set; } = 100;
 
     public Action<float> OnTileHealth { get; set; }
@@ -31,16 +42,18 @@ public class Tile : MonoBehaviour, IDestruct
         _tilesData = FindObjectOfType<TilesData>();
         _groundSlam = FindObjectOfType<GroundSlam>();
         _tileParticles = Get<TileParticles>.FromChild(gameObject);
+        _tileProps = Get<TileProps>.From(gameObject);
         _tileSize = _collider.bounds.size;
     }
 
     private void OnEnable()
     {
+        ResetTile();
         _changeTiles.OnTilesUpdated += OnTilesUpdated;
     }
 
     private void OnDisable()
-    {
+    {       
         _changeTiles.OnTilesUpdated -= OnTilesUpdated;
     }
 
@@ -49,9 +62,31 @@ public class Tile : MonoBehaviour, IDestruct
         MoveTheTileDown();
     }
 
+    public void ResetTile()
+    {
+        IsProtected = false;
+        IsSuspended = false;
+        Health = 100;
+        OnTileHealth?.Invoke(Health);
+
+        Trigger(false);
+        ExplosionActivity(false);
+        
+        _tileParticles?.ResetTileParticles();
+        _tileProps?.ActiveProps(TileProps.PropsType.All, false, null);
+    }
+
+    public void StoreForLaterUse()
+    {
+        _tilesData.TilesDict.Remove(transform.position);
+        _tilesData.StoredInactiveTiles.Find(tile => tile.TileName == name).Tiles.Add(this);
+        transform.SetParent(_tilesData.IntactiveTilesContainer);
+        gameObject.SetActive(false);
+    }
+
     private void MoveTheTileDown()
     {
-        if (_isSuspended && transform.position.y > _desiredPosition.y)
+        if (IsSuspended && transform.position.y > _desiredPosition.y)
         {
             transform.Translate(Vector3.down * 5 * Time.deltaTime);
 
@@ -66,7 +101,7 @@ public class Tile : MonoBehaviour, IDestruct
     {
         transform.position = _desiredPosition;
         _groundSlam.OnGroundSlam(new Vector3(transform.position.x, transform.position.y - (_tileSize.y / 2), transform.position.z));
-        _isSuspended = false;
+        IsSuspended = false;
         _changeTiles.UpdateTiles(transform.position);
     }
 
@@ -100,27 +135,37 @@ public class Tile : MonoBehaviour, IDestruct
         }
     }
 
+    private void Trigger(bool isTrigger)
+    {
+        _collider.isTrigger = isTrigger;
+    }
+
+    private void ExplosionActivity(bool isActive)
+    {
+        _explosion.SetActive(isActive);
+        _explosion.transform.parent = isActive ? null : transform;
+    }
+
     private void Destruction(int tileParticleIndex)
     {
-        _collider.isTrigger = true;
-        _explosion.SetActive(true);
-        _explosion.transform.parent = null;
-        _changeTiles.UpdateTiles(transform.position);
+        Trigger(true);
+        ExplosionActivity(true);
         TileParticlesActivity(tileParticleIndex);
-        Destroy(gameObject);
+        _changeTiles.UpdateTiles(transform.position);
+        StoreForLaterUse();
     }
 
     private void OnTilesUpdated(TilesData TilesGenerator)
     {
-        DestroyUncachedTile(TilesGenerator);
+        //DestroyUncachedTile(TilesGenerator);
 
-        if(!IsThereATileOnGivenPosition(transform.position - _changeTiles.Vertical))
+        if(!_changeTiles.HasTile(transform.position - _changeTiles.Vertical))
         {
             for (int i = 2; i < 6; i++)
             {
                 int step = i;
 
-                if (IsThereATileOnGivenPosition(transform.position - (_changeTiles.Vertical * step)))
+                if (_changeTiles.HasTile(transform.position - (_changeTiles.Vertical * step)))
                 {
                     PrepareToMoveTheTileDown(TilesGenerator, transform.position - (_changeTiles.Vertical * (step - 1)));
                     break;
@@ -129,15 +174,10 @@ public class Tile : MonoBehaviour, IDestruct
         }
     }
 
-    private bool IsThereATileOnGivenPosition(Vector3 pos)
-    {
-        return _changeTiles.HasTile(pos);
-    }
-
     private void PrepareToMoveTheTileDown(TilesData TilesGenerator, Vector3 desiredPosition)
     {
         TilesGenerator.TilesDict.Remove(transform.position);
-        _isSuspended = true;
+        IsSuspended = true;
         _desiredPosition = desiredPosition;
         ReplaceTheTile(TilesGenerator, _desiredPosition, gameObject);
     }
