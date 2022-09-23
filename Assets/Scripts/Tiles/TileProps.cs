@@ -43,7 +43,7 @@ public class TileProps : MonoBehaviour
 
     private void OnArmoredTile(bool isActive)
     {
-        transform.GetChild(0).gameObject.SetActive(!isActive);
+        //transform.GetChild(0).gameObject.SetActive(!isActive);
         MetalGround.gameObject.SetActive(isActive);
     }
 

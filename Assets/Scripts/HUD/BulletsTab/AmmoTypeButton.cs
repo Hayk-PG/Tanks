@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 
 public enum ButtonType { Weapon, Support, Props }
+public enum DisplayType { MainWeaponsList, AvailableWeapon}
 
 public class AmmoTypeButton : MonoBehaviour
 {
@@ -15,12 +16,14 @@ public class AmmoTypeButton : MonoBehaviour
     public struct Properties
     {
         public ButtonType _buttonType;
+        public DisplayType _displayType;
         [SerializeField] private Button _button;
         [SerializeField] private CanvasGroup _canvasGroupWeaponsTab;
         [SerializeField] private CanvasGroup _canvasGroupSupportTab;
         [SerializeField] private CanvasGroup _canvasGroupTabScoresToUnlock;
         [SerializeField] private CanvasGroup _canvasGroupTimer;
         [SerializeField] private CanvasGroup _canvasGroupAmmount;
+        [SerializeField] private CanvasGroup _canvasGroupIconInfinity;
         [SerializeField] private Image _imageWoodBoxIcon;
         [SerializeField] private Image _imageWalkieTalkieIcon;
         [SerializeField] private Image _imageWeaponsTabCheckBox;
@@ -34,6 +37,7 @@ public class AmmoTypeButton : MonoBehaviour
         [SerializeField] private TMP_Text[] _textStatsNames;
         [SerializeField] private Sprite[] _sprites;
 
+        
         public Button Button
         {
             get => _button;
@@ -79,7 +83,13 @@ public class AmmoTypeButton : MonoBehaviour
         public int Value
         {
             get => int.Parse(_textValue.text);
-            set => _textValue.text = value.ToString();
+            set 
+            {
+                _textValue.text = value.ToString();
+
+                GlobalFunctions.CanvasGroupActivity(_canvasGroupAmmount, value < 100);
+                GlobalFunctions.CanvasGroupActivity(_canvasGroupIconInfinity, value >= 100);
+            }
         }
         public int CurrentValue { get; set; }
         public int RequiredScoreAmmount
@@ -102,10 +112,21 @@ public class AmmoTypeButton : MonoBehaviour
             get => float.Parse(_textStatsValues[1].text);
             set => _textStatsValues[1].text = value.ToString();
         }
+
         public string WeaponType
         {
             get => _textStatsValues[2].text;
-            set => _textStatsValues[2].text = value;
+            set 
+            {
+                if (value.Length > 0 && _buttonType == ButtonType.Weapon && _displayType == DisplayType.MainWeaponsList)
+                {
+                    string w = value.Substring(0, value.Length - 3);                  
+                    string r = value.Substring(value.Length - 3);
+                    _textStatsValues[2].text = w + "<color=#FD0D3D>" + r + "</color>";
+                }
+                else
+                    _textStatsValues[2].text = value;
+            }
         }
         public string SupportOrPropsType
         {

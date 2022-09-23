@@ -56,20 +56,23 @@ public class AIShootController : BaseShootController
         AIShootBehaviour(Data.Manager.SingleGameDifficultyLevel);
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         _aiTankMovement.Shoot += ShootBullet;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         _aiTankMovement.Shoot -= ShootBullet;
         _aiCanonRaycast.OnAICanonRaycast -= OnAICanonRaycast;
     }
 
     private void Update()
     {
-        RotateCanon();
+        if(!_isStunned)
+            RotateCanon();
     }
 
     private void InitializeBulletsList(int length)
@@ -233,7 +236,8 @@ public class AIShootController : BaseShootController
 
     private void ShootBullet()
     {
-        StartCoroutine(ShootBulletCoroutine());
+        if(!_isStunned)
+            StartCoroutine(ShootBulletCoroutine());
     }
 
     private IEnumerator ShootBulletCoroutine()

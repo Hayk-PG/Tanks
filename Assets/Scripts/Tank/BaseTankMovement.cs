@@ -22,8 +22,9 @@ public class BaseTankMovement : MonoBehaviour
     protected WheelColliderController _wheelColliderController;   
     protected Raycasts _rayCasts;
     protected VehicleRigidbodyPosition _vehicleRigidbodyPosition;
-        
-    protected bool _isOnRightSlope, _isOnLeftSlope;
+    protected Stun _stun;
+
+    protected bool _isOnRightSlope, _isOnLeftSlope, _isStunned;
     protected string[] _slopesNames;
     protected Vector3 _vectorRight;
     protected Vector3 _vectorLeft;
@@ -59,6 +60,7 @@ public class BaseTankMovement : MonoBehaviour
         _wheelColliderController = Get<WheelColliderController>.FromChild(gameObject);
         _rayCasts = Get<Raycasts>.FromChild(gameObject);
         _vehicleRigidbodyPosition = Get<VehicleRigidbodyPosition>.From(gameObject);
+        _stun = Get<Stun>.FromChild(gameObject);
 
         Initialize();
     }
@@ -66,11 +68,17 @@ public class BaseTankMovement : MonoBehaviour
     protected virtual void OnEnable()
     {
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
+
+        if (_stun != null)
+            _stun.OnStunEffect += OnStunEffect;
     }
 
     protected virtual void OnDisable()
     {
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
+
+        if (_stun != null)
+            _stun.OnStunEffect -= OnStunEffect;
     }
 
     void Initialize()
@@ -88,5 +96,10 @@ public class BaseTankMovement : MonoBehaviour
     protected virtual void OnAllowingPlayerToMoveOnlyFromLeftToRight(bool? mustMoveFromLeftToRightOnly)
     {
 
+    }
+
+    protected virtual void OnStunEffect(bool isStunned)
+    {
+        _isStunned = isStunned;
     }
 }

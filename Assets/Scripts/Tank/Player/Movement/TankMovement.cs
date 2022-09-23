@@ -47,7 +47,7 @@ public class TankMovement : BaseTankMovement
 
     private void OnHorizontalJoystick(float horizontal)
     {
-        if (_playerTurn.IsMyTurn && _isEnoughFuel)
+        if (_playerTurn.IsMyTurn && _isEnoughFuel && !_isStunned)
             Direction = name == Names.Tank_FirstPlayer ? horizontal : -horizontal;
         else
             Direction = 0;

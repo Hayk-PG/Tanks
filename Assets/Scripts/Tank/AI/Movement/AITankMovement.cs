@@ -44,7 +44,8 @@ public class AITankMovement : BaseTankMovement
 
     private void FixedUpdate()
     {
-        Move();
+        if (!_isStunned)
+            Move();
     }
 
     private void OnGetDestination(Vector3 arg1, int arg2)

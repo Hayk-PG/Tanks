@@ -10,6 +10,9 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
     private GlobalTileController _globalTileController;
     private ChangeTiles _changeTiles;
     private TilesData _tilesData;
+
+    private TileProps _tileProps;
+    private Tile _tile;
     private bool _canUseAgain = true;
 
 
@@ -47,12 +50,12 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
                     {
                         if(tile.Key.x >= transform.position.x - 0.5f && tile.Key.x <= transform.position.x + 0.5f)
                         {
-                            TileProps tp = Get<TileProps>.From(tile.Value);
-                            Tile t = Get<Tile>.From(tile.Value);
+                            _tileProps = Get<TileProps>.From(tile.Value);
+                            _tile = Get<Tile>.From(tile.Value);
 
-                            if (tp != null && !t.IsProtected && !_changeTiles.HasTile(tile.Key - Vector3.up))
+                            if (_tileProps != null && !_tile.IsProtected && !_changeTiles.HasTile(tile.Key - Vector3.up))
                             {                               
-                                StartCoroutine(ActivateArmoredTile());
+                                StartCoroutine(ActivateArmoredTile(_tileProps));
                                 break;
                             }
                         }
@@ -62,8 +65,10 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
         }
     }
 
-    private IEnumerator ActivateArmoredTile()
+    private IEnumerator ActivateArmoredTile(TileProps tileProps)
     {
+        yield return new WaitForSeconds(0.3f);
+        tileProps.ActiveProps(TileProps.PropsType.MetalGround, true, null);
         _scoreController.Score -= _tab_TileModify.NewPrices[2].Price;
         _canUseAgain = false;
         yield return new WaitForSeconds(60);

@@ -130,9 +130,9 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
     private void DefineRangeType()
     {
-        string longRange = " (LR)";
-        string mediumRange = " (MR)";
-        string closeRange = " (CR)";
+        string longRange = " LR";
+        string mediumRange = " MR";
+        string closeRange = " CR";
 
         string range = _bulletMaxForce >= 16 ? longRange :
                        _bulletMaxForce >= 13 && _bulletMaxForce < 15 ? mediumRange :

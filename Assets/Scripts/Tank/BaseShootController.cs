@@ -9,8 +9,10 @@ public class BaseShootController: MonoBehaviour
     protected AICanonRaycast _aiCanonRaycast;
     protected PlayerTurn _playerTurn;
     protected ScoreController _scoreController;
+    protected Stun _stun;
     protected MainCameraController mainCameraController;
 
+    protected bool _isStunned;
     internal Transform CanonPivotPoint => _canonPivotPoint;
 
     [Serializable] public struct Canon
@@ -50,7 +52,20 @@ public class BaseShootController: MonoBehaviour
         _aiCanonRaycast = Get<AICanonRaycast>.From(_trajectory.gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
         _scoreController = Get<ScoreController>.From(gameObject);
+        _stun = Get<Stun>.FromChild(gameObject);
         mainCameraController = FindObjectOfType<MainCameraController>();
+    }
+
+    protected virtual void OnEnable()
+    {
+        if (_stun != null)
+            _stun.OnStunEffect += OnStunEffect;
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (_stun != null)
+            _stun.OnStunEffect -= OnStunEffect;
     }
 
     protected virtual void FindCanonPivotPoint()
@@ -62,4 +77,6 @@ public class BaseShootController: MonoBehaviour
         else
             _canonPivotPoint = transform.Find("Body").Find("Turret").Find("CanonPivotPoint");
     }
+
+    protected virtual void OnStunEffect(bool isStunned) => _isStunned = isStunned;
 }

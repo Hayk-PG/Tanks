@@ -74,16 +74,18 @@ public class ShootController : BaseShootController
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);        
     }
 
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         _tankController.OnInitialize += OnInitialize;
         _tankController.OnControllers += OnControllers;
         _tankController.OnShootButtonClick += OnShootButtonClick;
         _tankMovement.OnDirectionValue += OnMovementDirectionValue;
     }
 
-    protected virtual void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         _tankController.OnInitialize -= OnInitialize;
         _tankController.OnControllers -= OnControllers;
         _tankController.OnShootButtonClick -= OnShootButtonClick;
@@ -92,7 +94,7 @@ public class ShootController : BaseShootController
 
     protected virtual void FixedUpdate()
     {
-        if (_playerTurn.IsMyTurn)
+        if (_playerTurn.IsMyTurn && !_isStunned)
         {
             RotateCanon();
             ApplyForce();
@@ -149,7 +151,7 @@ public class ShootController : BaseShootController
 
     protected virtual void OnShootButtonClick(bool isTrue)
     {
-        if (_playerTurn.IsMyTurn)
+        if (_playerTurn.IsMyTurn && !_isStunned)
         {
             _iShoot?.Shoot(CurrentForce);           
             AmmoUpdate();
@@ -175,7 +177,7 @@ public class ShootController : BaseShootController
         if(HaveEnoughBullets())
         {
             InstantiateBullet(force);
-            AddForce(force);
+            AddForce(_tankMovement.Direction == 0 ? force: _tankMovement.Direction != 0 && force <= 5 ? _tankMovement.Direction * force : _tankMovement.Direction * 5);
             OnShoot?.Invoke();
             OnDash?.Invoke(_tankMovement.Direction);
         }
