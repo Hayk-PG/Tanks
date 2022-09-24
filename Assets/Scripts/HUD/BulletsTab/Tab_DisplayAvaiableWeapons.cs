@@ -82,6 +82,7 @@ public class Tab_DisplayAvaiableWeapons : MonoBehaviour
         {
             _chachedAmmoTypeButtons[i]._ammoTypeButton._ammoStars._ammoTypeStars = ammoTypeButton[i]._ammoStars._ammoTypeStars;
             _chachedAmmoTypeButtons[i]._ammoTypeButton._properties.Value = ammoTypeButton[i]._properties.Value;
+            _chachedAmmoTypeButtons[i]._ammoTypeButton._properties.Icon = ammoTypeButton[i]._properties.Icon;
             _chachedAmmoTypeButtons[i]._ammoTypeButton._properties.RequiredScoreAmmount = ammoTypeButton[i]._properties.RequiredScoreAmmount;
             _chachedAmmoTypeButtons[i]._ammoTypeButton._properties.DamageValue = ammoTypeButton[i]._properties.DamageValue;
             _chachedAmmoTypeButtons[i]._ammoTypeButton._properties.Radius = ammoTypeButton[i]._properties.Radius;
