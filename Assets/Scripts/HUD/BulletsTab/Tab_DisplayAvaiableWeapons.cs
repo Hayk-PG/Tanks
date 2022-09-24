@@ -80,7 +80,7 @@ public class Tab_DisplayAvaiableWeapons : MonoBehaviour
     {
         for (int i = 0; i < ammoTypeButton.Count; i++)
         {
-            _chachedAmmoTypeButtons[i]._ammoTypeButton._ammoStars._ammoTypeStars = ammoTypeButton[i]._ammoStars._ammoTypeStars;
+            _chachedAmmoTypeButtons[i]._ammoTypeButton._ammoStars.OnSetStars(ammoTypeButton[i]._ammoStars._ammoTypeStars);
             _chachedAmmoTypeButtons[i]._ammoTypeButton._properties.Value = ammoTypeButton[i]._properties.Value;
             _chachedAmmoTypeButtons[i]._ammoTypeButton._properties.Icon = ammoTypeButton[i]._properties.Icon;
             _chachedAmmoTypeButtons[i]._ammoTypeButton._properties.RequiredScoreAmmount = ammoTypeButton[i]._properties.RequiredScoreAmmount;

@@ -95,7 +95,15 @@ public class AmmoTypeButton : MonoBehaviour
         public int RequiredScoreAmmount
         {
             get => int.Parse(_textRequiredScoreAmmount.text);
-            set => _textRequiredScoreAmmount.text = value.ToString();
+            set
+            {
+                _textRequiredScoreAmmount.text = value.ToString();
+
+                if(value <= 0)
+                {
+                    GlobalFunctions.CanvasGroupActivity(_canvasGroupTabScoresToUnlock, false);
+                }
+            }
         }
         public int CurrentScoreAmmount { get; set; }
         public int DamageValue
@@ -112,7 +120,6 @@ public class AmmoTypeButton : MonoBehaviour
             get => float.Parse(_textStatsValues[1].text);
             set => _textStatsValues[1].text = value.ToString();
         }
-
         public string WeaponType
         {
             get => _textStatsValues[2].text;
@@ -131,7 +138,22 @@ public class AmmoTypeButton : MonoBehaviour
         public string SupportOrPropsType
         {
             get => _textSupportType.text;
-            set => _textSupportType.text = value;
+            set
+            {
+                int parentheses = value.IndexOf("(");
+
+                if(parentheses > 0)
+                {
+                    string a = value.Substring(0, parentheses);
+                    string b = value.Substring(parentheses);
+                    string c = a + "<color=#FD0D3D>" + b + "</color>";
+                    _textSupportType.text = c;
+                }
+                else
+                {
+                    _textSupportType.text = value;
+                }
+            }
         }
         public string Timer
         {
@@ -221,7 +243,8 @@ public class AmmoTypeButton : MonoBehaviour
             }
         }
 
-        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTabScoresToUnlock, !_properties.IsUnlocked);
+        if(_properties._buttonType == ButtonType.Weapon)
+            GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTabScoresToUnlock, !_properties.IsUnlocked);
     }
 
     public void StartTimerCoroutine()

@@ -23,10 +23,10 @@ public static class Names
 
     public static string AirSupport { get; private set; } = "Air Support";
     public static string Sandbags { get; private set; } = "Sandbags";
-    public static string MetalCube { get; private set; } = "Metal Cube";
-    public static string MetalGround { get; private set; } = "Metal Ground";
-    public static string Shield { get; private set; } = "Shield";
+    public static string MetalCube { get; private set; } = "Armored Block " + "<color=#FD0D3D>" + "(Add)" + "</color>";
+    public static string MetalGround { get; private set; } = "Armored Block " + "<color=#FD0D3D>" + "(Replace)" + "</color>";
+    public static string Shield { get; private set; } = "Bubble Shield";
     public static string LightMortarSupport { get; private set; } = "60mm Mortar Support";
-    public static string ModifyGround { get; private set; } = "Modify Ground";
+    public static string ModifyGround { get; private set; } = "Block " + "<color=#FD0D3D>" + "(Add)" + "</color>";
     public static string SkipTurn { get; private set; } = "Skip Turn";
 }
