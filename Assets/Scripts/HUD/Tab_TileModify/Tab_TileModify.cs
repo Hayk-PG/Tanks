@@ -5,7 +5,7 @@ using System.Collections;
 
 public class Tab_TileModify : MonoBehaviour
 {
-    public enum TileModifyType { NewTile, ArmoredCube, ArmoredTile }
+    public enum TileModifyType { NewTile, ArmoredCube, ArmoredTile, Bridge }
     internal class LocalPlayer
     {
         internal PlayerTurn _turn;
@@ -53,11 +53,12 @@ public class Tab_TileModify : MonoBehaviour
         public int Price { get; set; }
     }
 
-    public Prices[] NewPrices = new Prices[3]
+    public Prices[] NewPrices = new Prices[4]
     {
         new Prices{Name = Names.ModifyGround, Price = 250},
         new Prices{Name = Names.MetalCube, Price = 1000},
-        new Prices{Name = Names.MetalGround, Price = 1000}
+        new Prices{Name = Names.MetalGround, Price = 1000},
+        new Prices{Name = Names.MetalGround, Price = 0}
     };
 
 
@@ -78,6 +79,7 @@ public class Tab_TileModify : MonoBehaviour
         _propsTabCustomization.OnModifyGround += OnModifyGround;
         _propsTabCustomization.OnInstantiateMetalCube += OnInstantiateMetalCube;
         _propsTabCustomization.OnChangeToMetalGround += OnChangeToMetalGround;
+        _propsTabCustomization.OnBridge += OnBridge;
         _turnController.OnTurnChanged += OnTurnChanged;
     }
 
@@ -87,6 +89,7 @@ public class Tab_TileModify : MonoBehaviour
         _propsTabCustomization.OnModifyGround -= OnModifyGround;
         _propsTabCustomization.OnInstantiateMetalCube -= OnInstantiateMetalCube;
         _propsTabCustomization.OnChangeToMetalGround -= OnChangeToMetalGround;
+        _propsTabCustomization.OnBridge -= OnBridge;
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
@@ -123,6 +126,13 @@ public class Tab_TileModify : MonoBehaviour
     {
         SetPrice(NewPrices[2].Price);
         SetTileModifyType(TileModifyType.ArmoredTile);
+        StartCoroutine(StartFindTilesAroundPlayer());
+    }
+
+    private void OnBridge()
+    {
+        SetPrice(NewPrices[3].Price);
+        SetTileModifyType(TileModifyType.Bridge);
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
@@ -168,16 +178,17 @@ public class Tab_TileModify : MonoBehaviour
 
                 foreach (var tile in _tilesData.TilesDict)
                 {
-                    if (_tileModifyType != TileModifyType.ArmoredTile)
-                    {
-                        bool haveLeftTilesBeenFound = tile.Key.x <= _localPlayer._transform.position.x - _tilesData.Size && tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6);
-                        bool haveRIghtTilesBeenFound = tile.Key.x >= _localPlayer._transform.position.x + _tilesData.Size && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
+                    bool haveLeftTilesBeenFound = tile.Key.x <= _localPlayer._transform.position.x - _tilesData.Size && tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6);
+                    bool haveRIghtTilesBeenFound = tile.Key.x >= _localPlayer._transform.position.x + _tilesData.Size && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
+                    bool foundNearTiles = tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6) && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
+
+                    if (_tileModifyType == TileModifyType.ArmoredCube || _tileModifyType == TileModifyType.NewTile)
+                    {                        
                         StoreFoundTiles(haveLeftTilesBeenFound, tile.Value);
                         StoreFoundTiles(haveRIghtTilesBeenFound, tile.Value);
                     }
-                    else
-                    {
-                        bool foundNearTiles = tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6) && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
+                    if(_tileModifyType == TileModifyType.ArmoredTile || _tileModifyType == TileModifyType.Bridge)
+                    {                       
                         StoreFoundTiles(foundNearTiles, tile.Value);
                     }
                 }

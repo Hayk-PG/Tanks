@@ -177,7 +177,7 @@ public class ShootController : BaseShootController
         if(HaveEnoughBullets())
         {
             InstantiateBullet(force);
-            AddForce(_tankMovement.Direction == 0 ? force: _tankMovement.Direction != 0 && force <= 5 ? _tankMovement.Direction * force : _tankMovement.Direction * 5);
+            AddForce(_tankMovement.Direction == 0 ? force: _tankMovement.Direction != 0 && force <= 3 ? _tankMovement.Direction * force : _tankMovement.Direction * 3);
             OnShoot?.Invoke();
             OnDash?.Invoke(_tankMovement.Direction);
         }

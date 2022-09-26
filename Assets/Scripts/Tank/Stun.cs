@@ -50,7 +50,7 @@ public class Stun : MonoBehaviour
 
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
-        if (damage >= 35)
+        if (damage >= 30)
         {
             Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, ()=> OnStunned(Random.Range(10, 30)), () => _globalTankStun.OnStunned(_playerTurn.MyTurn, Random.Range(10,30)));
         }

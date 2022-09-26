@@ -66,6 +66,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _explosion: {fileID: 3748175522097911851}
+  _isSuspended: 0
+  _isProtected: 0
 --- !u!114 &6154418497805221475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,6 +359,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 313738170129289027}
     m_Modifications:
+    - target: {fileID: 67964736093564309, guid: 6a864d70fba545c41baad153e651c72b,
+        type: 3}
+      propertyPath: _bridgeModifyGUIElement._guiElement
+      value: 
+      objectReference: {fileID: 7703959982060395194}
+    - target: {fileID: 67964736093564309, guid: 6a864d70fba545c41baad153e651c72b,
+        type: 3}
+      propertyPath: _bridgeModifyGUIElement._corespondentPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 612916145545789858, guid: 6a864d70fba545c41baad153e651c72b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -472,6 +484,12 @@ PrefabInstance:
 --- !u!224 &6781423540718552554 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 612916145545789858, guid: 6a864d70fba545c41baad153e651c72b,
+    type: 3}
+  m_PrefabInstance: {fileID: 6241416492661572680}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7703959982060395194 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4356108878515232498, guid: 6a864d70fba545c41baad153e651c72b,
     type: 3}
   m_PrefabInstance: {fileID: 6241416492661572680}
   m_PrefabAsset: {fileID: 0}

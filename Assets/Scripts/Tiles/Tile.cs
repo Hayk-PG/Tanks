@@ -155,33 +155,6 @@ public class Tile : MonoBehaviour, IDestruct
         StoreForLaterUse();
     }
 
-    private void OnTilesUpdated(TilesData TilesGenerator)
-    {
-        //DestroyUncachedTile(TilesGenerator);
-
-        if(!_changeTiles.HasTile(transform.position - _changeTiles.Vertical))
-        {
-            for (int i = 2; i < 6; i++)
-            {
-                int step = i;
-
-                if (_changeTiles.HasTile(transform.position - (_changeTiles.Vertical * step)))
-                {
-                    PrepareToMoveTheTileDown(TilesGenerator, transform.position - (_changeTiles.Vertical * (step - 1)));
-                    break;
-                }
-            }
-        }
-    }
-
-    private void PrepareToMoveTheTileDown(TilesData TilesGenerator, Vector3 desiredPosition)
-    {
-        TilesGenerator.TilesDict.Remove(transform.position);
-        IsSuspended = true;
-        _desiredPosition = desiredPosition;
-        ReplaceTheTile(TilesGenerator, _desiredPosition, gameObject);
-    }
-
     private void ReplaceTheTile(TilesData TilesGenerator, Vector3 pos, GameObject currentTile)
     {
         if (TilesGenerator.TilesDict.ContainsKey(pos))
@@ -195,11 +168,30 @@ public class Tile : MonoBehaviour, IDestruct
         }
     }
 
-    private void DestroyUncachedTile(TilesData TilesGenerator)
+    private void PrepareToMoveTheTileDown(TilesData TilesGenerator, Vector3 desiredPosition)
     {
-        if(TilesGenerator.TilesDict.ContainsKey(transform.position) && TilesGenerator.TilesDict[transform.position] != gameObject)
+        TilesGenerator.TilesDict.Remove(transform.position);
+        IsSuspended = true;
+        _desiredPosition = desiredPosition;
+        ReplaceTheTile(TilesGenerator, _desiredPosition, gameObject);
+    }
+
+    private void OnTilesUpdated(TilesData TilesGenerator)
+    {
+        if(!_changeTiles.HasTile(transform.position - _changeTiles.Vertical))
         {
-            Destroy(gameObject);
+            for (int i = 2; i < 6; i++)
+            {
+                int step = i;
+
+                if (_changeTiles.HasTile(transform.position - (_changeTiles.Vertical * step)))
+                {
+                    if (!Get<Tile>.From(_tilesData.TilesDict[transform.position - (_changeTiles.Vertical * step)]).IsProtected)
+                        PrepareToMoveTheTileDown(TilesGenerator, transform.position - (_changeTiles.Vertical * (step - 1)));
+
+                    break;
+                }
+            }
         }
     }
 }
