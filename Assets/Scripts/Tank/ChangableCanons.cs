@@ -42,7 +42,7 @@ public class ChangableCanons : MonoBehaviour
 
     private void CanonsActivity(int index)
     {
-        if (_canons != null)
+        if (_canons != null && index < _canons.Length)
         {
             GlobalFunctions.Loop<MeshFilter>.Foreach(_canons, canon => { canon.gameObject.SetActive(false); });
             _canons[index].gameObject.SetActive(true);

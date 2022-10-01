@@ -2,12 +2,12 @@
 
 public class GlobalRigidbody : MonoBehaviour
 {
-    private Rigidbody _rigidbody;
+    public Rigidbody RigidBody { get; private set; }
 
 
     private void Awake()
     {
-        _rigidbody = Get<Rigidbody>.From(gameObject);
-        _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+        RigidBody = Get<Rigidbody>.From(gameObject);
+        RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
     }
 }

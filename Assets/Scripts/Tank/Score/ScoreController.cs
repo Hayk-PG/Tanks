@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using System;
 using UnityEngine;
 
 public class ScoreController : MonoBehaviour, IScore
@@ -10,6 +12,7 @@ public class ScoreController : MonoBehaviour, IScore
     private PropsTabCustomization _propsTabCustomization;
     private SupportsTabCustomization _supportTabCustomization;
     private GetScoreFromTerOccInd _getScoreFromTerOccInd;
+    private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
     private int _score;
 
@@ -33,6 +36,7 @@ public class ScoreController : MonoBehaviour, IScore
         _propsTabCustomization = FindObjectOfType<PropsTabCustomization>();
         _supportTabCustomization = FindObjectOfType<SupportsTabCustomization>();
         _getScoreFromTerOccInd = GetComponent<GetScoreFromTerOccInd>();
+        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
 
         Score = 0;
     }
@@ -40,6 +44,11 @@ public class ScoreController : MonoBehaviour, IScore
     private void OnEnable()
     {
         _tankController.OnInitialize += OnInitialize;
+
+        if (MyPhotonNetwork.IsOfflineMode)
+            _gameManagerBulletSerializer.OnTornado += OnTornado;
+        else
+            PhotonNetwork.NetworkingClient.EventReceived += OnTornado;
     }
 
     private void OnDisable()
@@ -51,6 +60,11 @@ public class ScoreController : MonoBehaviour, IScore
 
         if (_getScoreFromTerOccInd != null)
             _getScoreFromTerOccInd.OnGetScoreFromTerOccInd -= OnGetScoreFromTerOccInd;
+
+        if (MyPhotonNetwork.IsOfflineMode)
+            _gameManagerBulletSerializer.OnTornado -= OnTornado;
+        else
+            PhotonNetwork.NetworkingClient.EventReceived -= OnTornado;
     }
 
     private void OnInitialize()
@@ -61,6 +75,27 @@ public class ScoreController : MonoBehaviour, IScore
 
         if (_getScoreFromTerOccInd != null)
             _getScoreFromTerOccInd.OnGetScoreFromTerOccInd += OnGetScoreFromTerOccInd;
+    }
+
+    private void ReceiveTornadoScore(object[] data)
+    {
+        if((string)data[2] == name && (string)data[0] != name)
+        {
+            GetScore(50, null);
+        }
+    }
+
+    private void OnTornado(object[] data)
+    {
+        ReceiveTornadoScore(data);
+    }
+
+    private void OnTornado(EventData data)
+    {
+        if(data.Code == EventInfo.Code_TornadoDamage)
+        {
+            ReceiveTornadoScore((object[])data.CustomData);
+        }
     }
 
     private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)

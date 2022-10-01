@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using System;
 using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamage
@@ -6,6 +8,7 @@ public class HealthController : MonoBehaviour, IDamage
     private TankController _tankController;
     private VehiclePool _vehiclePool;
     private PlayerShields _playerShields;
+    private GameManagerBulletSerializer _gameManagerBulletSerializer;
   
     [SerializeField][Range(0, 100)] private int _armor;
     private int _currentHealth;
@@ -33,6 +36,44 @@ public class HealthController : MonoBehaviour, IDamage
         _tankController = Get<TankController>.From(gameObject);
         _vehiclePool = Get<VehiclePool>.FromChild(gameObject);
         _playerShields = Get<PlayerShields>.From(gameObject);
+        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
+    }
+
+    private void OnEnable()
+    {
+        if (MyPhotonNetwork.IsOfflineMode)
+            _gameManagerBulletSerializer.OnTornado += OnTornadoDamage;
+        else
+            PhotonNetwork.NetworkingClient.EventReceived += OnTornadoDamage;
+    }
+
+    private void OnDisable()
+    {
+        if (MyPhotonNetwork.IsOfflineMode)
+            _gameManagerBulletSerializer.OnTornado -= OnTornadoDamage;
+        else
+            PhotonNetwork.NetworkingClient.EventReceived -= OnTornadoDamage;
+    }
+
+    private void ReceiveTornadoDamage(object[] data)
+    {
+        if ((string)data[0] == name)
+        {           
+            Damage((int)data[1]);
+        }
+    }
+
+    private void OnTornadoDamage(object[] data)
+    {
+        ReceiveTornadoDamage(data);
+    }
+
+    private void OnTornadoDamage(EventData data)
+    {
+        if(data.Code == EventInfo.Code_TornadoDamage)
+        {
+            ReceiveTornadoDamage((object[])data.CustomData);
+        }
     }
 
     public void Damage(int damage)

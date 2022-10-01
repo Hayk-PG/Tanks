@@ -44,11 +44,13 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
     private void SetCollisionValues()
     {
         BulletCollision bulletCollision = Get<BulletCollision>.From(_prefab.gameObject);
-        bulletCollision.DestructDamage = _destructDamage;
-        bulletCollision.TileParticleIndex = _tileParticleIndex;        
+
+        if (bulletCollision != null)
+        {
+            bulletCollision.DestructDamage = _destructDamage;
+            bulletCollision.TileParticleIndex = _tileParticleIndex;
+        }
     }
-
-
 
     public void Randomize()
     {

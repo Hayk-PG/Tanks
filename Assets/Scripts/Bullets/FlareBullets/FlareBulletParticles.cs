@@ -25,13 +25,18 @@ public class FlareBulletParticles : BulletParticles
         _bulletRaycastReceiver2.OnCollision -= OnCollision;
     }
 
-    protected virtual void OnCollision(RaycastHit hit, IScore ownerScore, float distance)
+    protected virtual void ActivateExplosion(RaycastHit hit)
     {
-        PlayerTurn ownerTurn = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => Get<IScore>.From(turn.gameObject) == ownerScore);
         _explosion.gameObject.SetActive(true);
         _explosion.transform.parent = null;
         _explosion.transform.rotation = Quaternion.LookRotation(hit.normal);
         _explosion.transform.position = hit.point;
+    }
+
+    protected virtual void OnCollision(RaycastHit hit, IScore ownerScore, float distance)
+    {
+        PlayerTurn ownerTurn = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => Get<IScore>.From(turn.gameObject) == ownerScore);
+        ActivateExplosion(hit);
         OnFlareSignal?.Invoke(ownerScore, ownerTurn, _explosion.transform.position);
         Destroy(gameObject);
     }

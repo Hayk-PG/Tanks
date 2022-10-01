@@ -1,10 +1,16 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
+using System;
 using UnityEngine;
 
 public class GameManagerBulletSerializer : MonoBehaviourPun
 {
-    [SerializeField] BulletController _bulletController;
-    [SerializeField] BulletController[] _multipleBulletsController = new BulletController[10];
+    [SerializeField] 
+    BulletController _bulletController;
+    [SerializeField] 
+    BulletController[] _multipleBulletsController = new BulletController[10];
+
     public BulletController BulletController
     {
         get => _bulletController;
@@ -15,6 +21,8 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
         get => _multipleBulletsController;
         set => _multipleBulletsController = value;
     }
+
+    public Action<object[]> OnTornado { get; set; }
 
 
     #region Collison
@@ -79,6 +87,39 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
             if ((int)data[4] == 1)
                 iDamage.CameraChromaticAberrationFX();
         }
+    }
+    #endregion
+
+    #region Tornado
+    public void TornadoDamage(string damagableName, int damage, string iScoreName)
+    {       
+        if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        {
+            EventInfo.Content_TornadoDamage = new object[]
+            {
+                damagableName,
+                damage,
+                iScoreName
+            };
+
+            //OFFLINE
+            OnTornado?.Invoke(EventInfo.Content_TornadoDamage);
+            //ONLINE
+            PhotonNetwork.RaiseEvent(EventInfo.Code_TornadoDamage, EventInfo.Content_TornadoDamage, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendUnreliable);
+        }
+    }
+
+    public void DestroyTornado(string tornadoName)
+    {
+        if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
+            photonView.RPC("DestroyTornadoRPC", RpcTarget.AllViaServer, tornadoName);
+    }
+
+    [PunRPC]
+    private void DestroyTornadoRPC(string tornadoName)
+    {
+        Tornado tornado = GameObject.Find(tornadoName)?.GetComponent<Tornado>();
+        tornado?.DestroyTornado();
     }
     #endregion
 }
