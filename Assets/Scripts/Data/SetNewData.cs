@@ -14,6 +14,7 @@ public partial class Data
         public int? AutoSignIn { get; internal set; }
         public int? IsWindToggleOn { get; internal set; }
         public int? DifficultyLevel { get; internal set; }
+        public int? GameTime { get; internal set; }
     }
 
     public void OnDestroy()
@@ -31,6 +32,7 @@ public partial class Data
         if (newData.AutoSignIn != null) PlayerPrefs.SetInt(Keys.AutoSignIn, (int)newData.AutoSignIn);
         if (newData.IsWindToggleOn != null) PlayerPrefs.SetInt(Keys.MapWind, (int)newData.IsWindToggleOn);
         if (newData.DifficultyLevel != null) PlayerPrefs.SetInt(Keys.DifficultyLevel, (int)newData.DifficultyLevel);
+        if (newData.GameTime != null) PlayerPrefs.SetInt(Keys.GameTime, (int)newData.GameTime);
     }
 
     public void DeleteData(string key)

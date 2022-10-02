@@ -1,40 +1,32 @@
 ﻿using UnityEngine;
 
 
-public class Toggle_Wind : BaseToggleCheck
+public class Toggle_Wind : BaseSliderLevel<GameWind>
 {
-    private Tab_SelectMaps _tabSelectMaps;
-
-
-    protected override void Awake()
+    protected override string Title(string suffix)
     {
-        base.Awake();
-
-        _tabSelectMaps = FindObjectOfType<Tab_SelectMaps>();
+        return "Wind " + "[" + suffix + "]";
     }
 
-    private void OnEnable()
+    protected override void UpdateTitleText(GameWind gameWind)
     {
-        _tabSelectMaps.OnTabOpened += OnTabOpened;
+        switch (gameWind)
+        {
+            case GameWind.On: _title.text = Title("<color=#00F510>" + "On" + "</color>"); break;
+            case GameWind.Off: _title.text = Title("<color=#F51B01>" + "Off" + "</color>"); break;
+        }
     }
 
-    private void OnDisable()
+    protected override void OnTabOpened()
     {
-        _tabSelectMaps.OnTabOpened -= OnTabOpened;
+        _slider.value = PlayerPrefs.GetInt(Keys.MapWind, 0);
+        Data.Manager.SetWind(Mathf.FloorToInt(_slider.value));
+        UpdateTitleText(Data.Manager.GameWind);
     }
 
-    private void OnTabOpened()
+    public override void OnSliderValueChanged()
     {
-        SimulateToggle(PlayerPrefs.HasKey(Keys.MapWind) && PlayerPrefs.GetInt(Keys.MapWind) == 1);
-    }
-
-    public override void ToggleValueChanged(bool isOn)
-    {
-        if (isOn)
-            Data.Manager.IsWindOn = true;
-        else
-            Data.Manager.IsWindOn = false;
-
-        Data.Manager.SetData(new Data.NewData { IsWindToggleOn = isOn ? 1 : 0 });
+        Data.Manager.SetWind(Mathf.FloorToInt(_slider.value));
+        UpdateTitleText(Data.Manager.GameWind);
     }
 }

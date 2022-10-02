@@ -12,4 +12,5 @@
     public static string MapIndex { get; private set; } = "MapIndex";
     public static string MapWind { get; private set; } = "MapWind";
     public static string DifficultyLevel { get; private set; } = "DifficultyLevel";
+    public static string GameTime { get; private set; } = "GameTime";
 }

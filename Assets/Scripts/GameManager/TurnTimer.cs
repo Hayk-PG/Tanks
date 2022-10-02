@@ -6,9 +6,13 @@ using UnityEngine.UI;
 
 public class TurnTimer : MonoBehaviourPun
 {
-    [SerializeField] private Text _textTimer;
+    [SerializeField] 
+    private Text _textTimer;
+    private GameManager _gameManager;
     private TurnController _turnController;
     private MyPlugins _myPlugins;
+
+    private int _turnTime;
 
     public int Seconds { get; set; }
     public bool IsTurnChanged { get; internal set; }
@@ -17,19 +21,28 @@ public class TurnTimer : MonoBehaviourPun
 
     private void Awake()
     {
+        _gameManager = Get<GameManager>.From(gameObject);
         _turnController = Get<TurnController>.From(gameObject);
         _myPlugins = FindObjectOfType<MyPlugins>();
     }
 
     private void OnEnable()
     {
+        _gameManager.OnGameStarted += OnGameStarted;
         _turnController.OnTurnChanged += OnTurnChanged;
     }
 
     private void OnDisable()
     {
+        _gameManager.OnGameStarted -= OnGameStarted;
         _turnController.OnTurnChanged -= OnTurnChanged;
         UnsubscribeFromPluginService();
+    }
+
+    private void OnGameStarted()
+    {
+        _turnTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.GameTime : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.GameTime];
+        Seconds = _turnTime;
     }
 
     private void UnsubscribeFromPluginService()
@@ -44,7 +57,7 @@ public class TurnTimer : MonoBehaviourPun
 
     private void OnTurnChanged(TurnState currentState)
     {
-        Seconds = currentState == TurnState.Player1 || currentState == TurnState.Player2 ? 30 : 0;
+        Seconds = currentState == TurnState.Player1 || currentState == TurnState.Player2 ? _turnTime : 0;
         UnsubscribeFromPluginService();
 
         if (currentState == TurnState.Player1 || currentState == TurnState.Player2)
