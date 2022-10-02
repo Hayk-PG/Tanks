@@ -81,7 +81,7 @@ public class ScoreController : MonoBehaviour, IScore
     {
         if((string)data[2] == name && (string)data[0] != name)
         {
-            GetScore(50, null);
+            GetScore(150, null);
         }
     }
 
