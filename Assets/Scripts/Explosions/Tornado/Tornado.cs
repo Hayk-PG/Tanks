@@ -20,7 +20,6 @@ public class Tornado : MonoBehaviour
     private ExternalSoundSource _externalSoundSource;
     private Rigidbody _rigidBody;
     private GameObject _ownerGameObject;
-    private PlayerTurn _playerTurn;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
 
@@ -80,7 +79,6 @@ public class Tornado : MonoBehaviour
     {
         _ownerGameObject = GlobalFunctions.ObjectsOfType<ScoreController>.Find(score => Get<IScore>.From(score.gameObject) == _explosion.OwnerScore).gameObject;
         _iScoreName = _ownerGameObject.name;
-        _playerTurn = Get<PlayerTurn>.From(_ownerGameObject);
 
         while (true)
         {
