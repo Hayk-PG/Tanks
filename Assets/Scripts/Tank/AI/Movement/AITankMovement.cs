@@ -4,6 +4,7 @@ using UnityEngine;
 public class AITankMovement : BaseTankMovement
 {
     private AiMovementPlanner _aiMovementPlanner;
+    private TurnTimer _turnTimer;
     private Vector3 _destination;
     private float _stuckTime;
 
@@ -17,6 +18,7 @@ public class AITankMovement : BaseTankMovement
     {
         base.Awake();
         _aiMovementPlanner = Get<AiMovementPlanner>.From(gameObject);
+        _turnTimer = FindObjectOfType<TurnTimer>();
 
         RigidbodyCenterOfMass();
     }
@@ -172,5 +174,13 @@ public class AITankMovement : BaseTankMovement
             Direction = 0;
             Shoot?.Invoke();
         }
+    }
+
+    protected override void OnStunEffect(bool isStunned)
+    {
+        base.OnStunEffect(isStunned);
+
+        if(!isStunned && _playerTurn.IsMyTurn && _turnTimer.Seconds >= 2)
+            Shoot?.Invoke();
     }
 }

@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class FlareBulletParticles : BulletParticles
 {
-    private BulletRaycastReceiver2 _bulletRaycastReceiver2;
+    protected BulletRaycastReceiver2 _bulletRaycastReceiver2;
+    protected BulletControllerWithRaycast _bulletControllerWithRaycast;
     public Action<IScore, PlayerTurn, Vector3> OnFlareSignal { get; set; }
 
 
@@ -11,6 +12,7 @@ public class FlareBulletParticles : BulletParticles
     {
         base.Awake();
         _bulletRaycastReceiver2 = Get<BulletRaycastReceiver2>.From(gameObject);
+        _bulletControllerWithRaycast = Get<BulletControllerWithRaycast>.From(gameObject);
     }
 
     protected override void OnEnable()

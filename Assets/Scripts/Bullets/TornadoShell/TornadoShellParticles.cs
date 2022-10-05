@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TornadoShellParticles : FlareBulletParticles
 {
@@ -7,6 +6,7 @@ public class TornadoShellParticles : FlareBulletParticles
     {
         ActivateExplosion(hit);
         _explosion.OwnerScore = ownerScore;
+        _bulletControllerWithRaycast.TurnController.SetNextTurn(TurnState.Transition);
         Destroy(gameObject);
     }
 }

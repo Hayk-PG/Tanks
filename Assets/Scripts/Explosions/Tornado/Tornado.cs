@@ -21,7 +21,6 @@ public class Tornado : MonoBehaviour
     private Rigidbody _rigidBody;
     private GameObject _ownerGameObject;
     private PlayerTurn _playerTurn;
-    private TurnController _turnController;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
 
@@ -31,7 +30,6 @@ public class Tornado : MonoBehaviour
         _particles = Get<ParticleSystem>.FromChild(gameObject);
         _explosion = Get<Explosion>.From(gameObject);
         _externalSoundSource = Get<ExternalSoundSource>.FromChild(gameObject);
-        _turnController = FindObjectOfType<TurnController>();
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
     }
 
@@ -44,7 +42,12 @@ public class Tornado : MonoBehaviour
     {
         _colliders = Physics.OverlapBox(transform.position + new Vector3(0, _boxHeight, 0), new Vector3(3, _boxHeight, 3), Quaternion.identity);
 
-        GlobalFunctions.Loop<Collider>.Foreach(_colliders, collider => 
+        MoveGameobjectsTowardsTornado();
+    }
+
+    private void MoveGameobjectsTowardsTornado()
+    {
+        GlobalFunctions.Loop<Collider>.Foreach(_colliders, collider =>
         {
             if (Get<GlobalRigidbody>.From(collider.gameObject) != null)
             {
@@ -56,11 +59,21 @@ public class Tornado : MonoBehaviour
 
     public void DestroyTornado()
     {
-        _turnController.SetNextTurn(_playerTurn.MyTurn == TurnState.Player1 ? TurnState.Player2 : TurnState.Player2);
         _particles.Stop();
         _particles.transform.SetParent(null);
         _externalSoundSource?.Stop(true);
         Destroy(transform.parent.gameObject);
+    }
+
+    private void CallDestroyTornado()
+    {
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, DestroyTornado, () => _gameManagerBulletSerializer.DestroyTornado(name));
+    }
+
+    private void FakeExplosion()
+    {
+        _fakeExplosion.SetActive(true);
+        _fakeExplosion.transform.SetParent(null);
     }
 
     private IEnumerator Damage()
@@ -81,18 +94,17 @@ public class Tornado : MonoBehaviour
                     _colliderGameObject = Get<HealthController>.From(collider.gameObject).gameObject;
 
                     if (!_colliderNames.Contains(_colliderGameObject.name) && Vector3.Distance(transform.position, _colliderGameObject.transform.position) <= _explosion.RadiusValue)
-                    {
-                        _fakeExplosion.SetActive(true);
+                    {                       
                         _gameManagerBulletSerializer.TornadoDamage(_colliderGameObject.name, Mathf.RoundToInt(_explosion.DamageValue), _iScoreName);
                         _colliderNames.Add(_colliderGameObject.name);
+                        FakeExplosion();
+                        CallDestroyTornado();
                     }
                 }
             });
 
             if (_lifeTime >= 6)
-            {
-                Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, DestroyTornado, () => _gameManagerBulletSerializer.DestroyTornado(name));
-            }
+                CallDestroyTornado();
 
             yield return new WaitForSeconds(1.5f);
         }

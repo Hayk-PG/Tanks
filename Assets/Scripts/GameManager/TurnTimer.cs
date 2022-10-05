@@ -98,6 +98,14 @@ public class TurnTimer : MonoBehaviourPun
 
     private void SetNextTurn()
     {
+        if (IsTurnChanged)
+        {
+            if(_turnController._turnState == TurnState.Player1 || _turnController._turnState == TurnState.Player2)
+            {
+                _turnController.SetNextTurn(TurnState.Transition);
+            }
+        }
+
         if (!IsTurnChanged && _turnController._turnState == TurnState.Player1)
         {
             _turnController.SetNextTurn(TurnState.Player2);
