@@ -16,6 +16,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
     public Rigidbody RigidBody;
     public int RandomContent { get; set; }
+    public int RandomNewWeaponContent { get; set; }
     public float RandomDestroyTime { get; set; }
 
 
@@ -65,7 +66,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
     private void OnCollisionWithTank(Collision collision)
     {
         _tankController = Get<TankController>.From(collision.gameObject);
-        _woodBox.OnContent(RandomContent, _tankController);
+        _woodBox.OnContent(RandomContent, RandomNewWeaponContent, _tankController);
         _collisionCount++;
         DestroyGameobject();
     }

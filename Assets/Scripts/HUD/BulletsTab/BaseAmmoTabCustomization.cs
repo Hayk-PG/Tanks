@@ -5,12 +5,18 @@ using UnityEngine;
 
 public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAndAmmoDataFromPlayer where T : AmmoTypeButton
 {
-    [SerializeField] protected T _buttonPrefab;
-    [SerializeField] protected Sprite _clicked, _released;
-
-    public CanvasGroup _container;
+    [SerializeField] 
+    protected T _buttonPrefab;
+    [SerializeField] 
+    protected Sprite _clicked, _released;
+  
     protected AmmoTypeController _ammoTypeController;
-    protected List<T> _instantiatedButtons = new List<T>();
+    public CanvasGroup _container;
+    public List<T> _instantiatedButtons = new List<T>();
+
+    public T ButtonPrefab { get => _buttonPrefab; }
+    public Transform Container { get => _container.transform; }
+
     
     public Action<T> OnPlayerWeaponChanged { get; set; }
     public Action<T> OnSupportOrPropsChanged { get; set; }
@@ -68,7 +74,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnInformAboutTabActivityToTabsCustomization;
     }
 
-    protected virtual void AssignProperties(AmmoTypeButton button, Properties properties, AmmoTypeStars stars)
+    public virtual void AssignProperties(AmmoTypeButton button, Properties properties, AmmoTypeStars stars)
     {
         button._properties._buttonType = properties._buttonType;
 
@@ -90,7 +96,8 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
 
     protected virtual void OnInformAboutTabActivityToTabsCustomization(bool isOpen)
     {
-        if (isOpen) OnGetPointsAndAmmoDataFromPlayer?.Invoke(GetPointsAndAmmoDataFromPlayer);
+        if (isOpen) 
+            OnGetPointsAndAmmoDataFromPlayer?.Invoke(GetPointsAndAmmoDataFromPlayer);
     }
 
     public virtual void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount)

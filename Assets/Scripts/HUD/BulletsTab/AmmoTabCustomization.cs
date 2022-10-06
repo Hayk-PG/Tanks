@@ -13,11 +13,11 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         UnSubscribeFromAmmoTypeButtonEvents();
     }
 
-    public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, int loopIndex)
-    {
-        AmmoTypeButton button = Instantiate(_buttonPrefab, _container.transform);
-        GlobalFunctions.CanvasGroupActivity(button._properties.CanvasGroupWeaponsTab, true);
+    public void InstantiatedButton(out AmmoTypeButton button) => button = Instantiate(_buttonPrefab, _container.transform);
+    public void UnhideInstantiatedButtonWeaponsTab(AmmoTypeButton button) => GlobalFunctions.CanvasGroupActivity(button._properties.CanvasGroupWeaponsTab, true);
 
+    public void AssignProperties(AmmoTypeButton button, WeaponProperties weaponProperty)
+    {
         AssignProperties(button, new BaseAmmoTabCustomization<AmmoTypeButton>.Properties
         {
             _buttonType = weaponProperty._buttonType,
@@ -34,7 +34,13 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
             _supportType = weaponProperty._supportType,
             _icon = weaponProperty._icon
         }, weaponProperty._ammoTypeStars);
+    }
 
+    public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, int loopIndex)
+    {
+        InstantiatedButton(out AmmoTypeButton button);
+        UnhideInstantiatedButtonWeaponsTab(button);
+        AssignProperties(button, weaponProperty);
         OnSendWeaponPointsToUnlock?.Invoke(button);
         Conditions<bool>.Compare(loopIndex == 0, () => SetDefaultAmmo(button), null);
         CacheAmmoTypeButtons(button);
@@ -67,7 +73,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         }
     }
 
-    private void CacheAmmoTypeButtons(AmmoTypeButton button)
+    public void CacheAmmoTypeButtons(AmmoTypeButton button)
     {
         _instantiatedButtons.Add(button);
         SubscribeToAmmoTypeButtonEvents(button);

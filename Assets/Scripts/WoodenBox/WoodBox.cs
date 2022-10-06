@@ -1,12 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+
+public enum NewWeaponContent { TornadoShell }
 
 public class WoodBox : MonoBehaviour
 {
-    private enum Content { AddScore, AddHealth, AddWeapon, GiveTurn}
+    private enum Content { AddScore, AddHealth, AddWeapon, GiveTurn, NewWeapon}
+    
+    [SerializeField] 
+    private Content _content;
+    [SerializeField]
+    private NewWeaponContent _newWeaponContent;
+
+    [SerializeField]
+    private WeaponProperties[] _newWeapon;
+
     private Tab_WoodboxContent _tabWoodboxContent;
     private TurnController _turnController;
-    [SerializeField] private Content _content;
+    private NewWeaponFromWoodBox _newWeaponFromWoodBox;
+
     private int _contentIndex;
+    private int _newWeaponContentIndex;
+    private bool _isTornadoShellTanken;
+
+    public Action<WeaponProperties> OnNewWeaponTaken { get; set; }
 
 
 
@@ -14,11 +31,12 @@ public class WoodBox : MonoBehaviour
     {
         _tabWoodboxContent = FindObjectOfType<Tab_WoodboxContent>();
         _turnController = FindObjectOfType<TurnController>();
+        _newWeaponFromWoodBox = FindObjectOfType<NewWeaponFromWoodBox>();
     }
 
-    public void OnContent(int contentIndex, TankController tankController)
+    public void OnContent(int contentIndex, int newWeaponContentIndex, TankController tankController)
     {
-        _contentIndex = contentIndex < System.Enum.GetValues(typeof(Content)).Length ? contentIndex : System.Enum.GetValues(typeof(Content)).Length - 1;
+        _contentIndex = contentIndex < Enum.GetValues(typeof(Content)).Length ? contentIndex : Enum.GetValues(typeof(Content)).Length - 1;
         _content = (Content)_contentIndex;
 
         switch (_content)
@@ -27,6 +45,7 @@ public class WoodBox : MonoBehaviour
             case Content.AddHealth: AddPlayerHealth(tankController); break;
             case Content.AddWeapon: AddWeapon(tankController); break;
             case Content.GiveTurn: GiveTurn(tankController); break;
+            case Content.NewWeapon: NewWeapon(newWeaponContentIndex, tankController); break;
         }
     }
 
@@ -78,6 +97,28 @@ public class WoodBox : MonoBehaviour
             if (playerTurn.IsMyTurn)
             {
                 _turnController.SetNextTurn(playerTurn.MyTurn == TurnState.Player1 ? TurnState.Player2 : TurnState.Player1);
+            }
+        }
+    }
+
+    private void NewWeapon(int newWeaponContentIndex, TankController tankController)
+    {
+        _newWeaponContentIndex = _newWeaponContentIndex < Enum.GetValues(typeof(NewWeaponContent)).Length ? newWeaponContentIndex : Enum.GetValues(typeof(NewWeaponContent)).Length - 1;
+        _newWeaponContent = (NewWeaponContent)_newWeaponContentIndex;
+
+        if (tankController.BasePlayer != null)
+        {
+            _newWeaponFromWoodBox.SubscribeToWoodBoxEvent(this);
+
+            switch (_newWeaponContent)
+            {
+                case NewWeaponContent.TornadoShell:
+                    if (!_isTornadoShellTanken)
+                    {
+                        OnNewWeaponTaken?.Invoke(_newWeapon[_newWeaponContentIndex]);
+                        _isTornadoShellTanken = true;
+                    }
+                    break;
             }
         }
     }

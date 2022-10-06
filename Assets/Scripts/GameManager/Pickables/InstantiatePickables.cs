@@ -17,6 +17,7 @@ public class InstantiatePickables : MonoBehaviourPun
     public float RandomTime { get; set; }
     public float RandomDestroyTime { get; set; }
     public int RandomContent { get; set; }
+    public int RandomNewWeaponContent { get; set; }
 
     public System.Action<object[]> OnInstantiateWoodenBox { get; set; }
 
@@ -53,8 +54,9 @@ public class InstantiatePickables : MonoBehaviourPun
             yield return new WaitForSeconds(RandomTime);
 
             RandomSpawnPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);           
-            RandomContent = Random.Range(0, 4);
+            RandomContent = Random.Range(0, 5);
             RandomDestroyTime = Random.Range(60, 90);
+            RandomNewWeaponContent = Random.Range(0, System.Enum.GetValues(typeof(NewWeaponContent)).Length);
 
             if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
             {
@@ -64,7 +66,8 @@ public class InstantiatePickables : MonoBehaviourPun
                     {
                     RandomSpawnPosition,
                     RandomContent,
-                    RandomDestroyTime
+                    RandomDestroyTime,
+                    RandomNewWeaponContent
                     };
 
                     //ONLINE

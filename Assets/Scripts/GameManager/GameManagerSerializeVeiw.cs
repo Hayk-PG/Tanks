@@ -58,8 +58,9 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             stream.SendNext(_instantiatePickables.RandomSpawnPosition);
             stream.SendNext(_instantiatePickables.RandomTime);
             stream.SendNext(_instantiatePickables.RandomContent);
+            stream.SendNext(_instantiatePickables.RandomNewWeaponContent);
 
-            if(_woodenBoxSerializer.ParachuteWithWoodBoxController != null)
+            if (_woodenBoxSerializer.ParachuteWithWoodBoxController != null)
             {
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position);
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity);
@@ -106,6 +107,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             _instantiatePickables.RandomSpawnPosition = (Vector3)stream.ReceiveNext();
             _instantiatePickables.RandomTime = (int)stream.ReceiveNext();
             _instantiatePickables.RandomContent = (int)stream.ReceiveNext();
+            _instantiatePickables.RandomNewWeaponContent = (int)stream.ReceiveNext();
 
             if (_woodenBoxSerializer.ParachuteWithWoodBoxController != null)
             {
