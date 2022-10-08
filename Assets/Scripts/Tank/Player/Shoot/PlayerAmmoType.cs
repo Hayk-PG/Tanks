@@ -8,9 +8,11 @@ public class PlayerAmmoType : MonoBehaviour
     private TankController _tankController;
     private ShootController _shootController;
     private AmmoTabCustomization _ammoTabCustomization;
-
+    private NewWeaponFromWoodBox _newWeaponFromWoodBox;
+    
     [Header("Scriptable objects")]
     public WeaponProperties[] _weapons;
+    private WeaponProperties[] _tempWeaponsIncludedNewFromWoodBox;
 
     [Header("Cached bullets count from scriptable objects")]
     public List<int> _weaponsBulletsCount;
@@ -30,6 +32,7 @@ public class PlayerAmmoType : MonoBehaviour
         _tankController = Get<TankController>.From(gameObject);
         _shootController = Get<ShootController>.From(gameObject);
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
+        _newWeaponFromWoodBox = FindObjectOfType<NewWeaponFromWoodBox>();
     }
 
     private void OnEnable()
@@ -41,11 +44,14 @@ public class PlayerAmmoType : MonoBehaviour
     {
         _tankController.OnInitialize -= OnInitialize;
         _ammoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
+        _newWeaponFromWoodBox.OnAddNewWeaponFromWoodBox -= OnAddNewWeaponFromWoodBox;
     }
 
     private void OnInitialize()
     {
         _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
+        _newWeaponFromWoodBox.OnAddNewWeaponFromWoodBox += OnAddNewWeaponFromWoodBox;
+
         InitializeBulletsCountList();
         InstantiateAmmoTypeButton();       
     }
@@ -119,5 +125,19 @@ public class PlayerAmmoType : MonoBehaviour
             isDone = true;
             text = "+" + bulletsCount;
         }
+    }
+
+    private void OnAddNewWeaponFromWoodBox(WeaponProperties newWeaponProperty)
+    {
+        _tempWeaponsIncludedNewFromWoodBox = new WeaponProperties[_weapons.Length + 1];
+
+        for (int i = 0; i < _weapons.Length; i++)
+        {
+            _tempWeaponsIncludedNewFromWoodBox[i] = _weapons[i];
+        }
+        _tempWeaponsIncludedNewFromWoodBox[_weapons.Length] = newWeaponProperty;
+
+        _weapons = _tempWeaponsIncludedNewFromWoodBox;
+        _weaponsBulletsCount.Add(0);
     }
 }

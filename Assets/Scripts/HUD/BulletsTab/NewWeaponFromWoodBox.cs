@@ -10,7 +10,7 @@ public class NewWeaponFromWoodBox : MonoBehaviour
     private GameObject _localPlayerGameObject;
     private WoodBox _woodBox;
 
-    public Action<WeaponProperties> OnAddNewWeaponFromWeadBox { get; set; }
+    public Action<WeaponProperties> OnAddNewWeaponFromWoodBox { get; set; }
 
 
     private void Awake()
@@ -47,10 +47,7 @@ public class NewWeaponFromWoodBox : MonoBehaviour
         _woodBox.OnNewWeaponTaken += OnNewWeaponTaken;
     }
 
-    private void SetNewWeaponIndex(AmmoTypeButton ammoTypeButton)
-    {
-        ammoTypeButton._properties.Index = _ammoTabCustomization._instantiatedButtons.Count;
-    }
+    private void SetNewWeaponIndex(AmmoTypeButton ammoTypeButton) => ammoTypeButton._properties.Index = _ammoTabCustomization._instantiatedButtons.Count;
 
     public void InstantiateNewWeapon(WeaponProperties newWeapon)
     {
@@ -63,11 +60,8 @@ public class NewWeaponFromWoodBox : MonoBehaviour
         _ammoTabButtonNotification.CacheWeaponsPointsToUnlock(button);
         _ammoTabButtonNotification.PlayerGetsPoints(_localPlayerScoreController.Score);
 
-        OnAddNewWeaponFromWeadBox?.Invoke(newWeapon);
+        OnAddNewWeaponFromWoodBox?.Invoke(newWeapon);
     }
 
-    private void OnNewWeaponTaken(WeaponProperties newWeapon)
-    {
-        InstantiateNewWeapon(newWeapon);
-    } 
+    private void OnNewWeaponTaken(WeaponProperties newWeapon) => InstantiateNewWeapon(newWeapon);
 }
