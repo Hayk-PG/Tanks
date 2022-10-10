@@ -5,11 +5,14 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 {    
     [SerializeField] private GameObject _parachute;
     [SerializeField] private GameObject _sparkles;
-    [SerializeField] private GameObject _woodBoxExplosion;   
+    [SerializeField] private GameObject _woodBoxExplosion; 
+    
     private Animator _parachuteAnim;
     private WoodBox _woodBox;
+    private BoxTrigger _boxTrigger;
     private TankController _tankController;
-    private WoodenBoxSerializer _woodenBoxSerializer;
+    private WoodenBoxSerializer _woodenBoxSerializer;    
+
     private delegate float Value();
     private Value _gravity;
     private int _collisionCount = 0;
@@ -26,6 +29,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
         RigidBody = Get<Rigidbody>.From(gameObject);
         _parachuteAnim = Get<Animator>.From(gameObject);
         _woodBox = Get<WoodBox>.From(gameObject);
+        _boxTrigger = Get<BoxTrigger>.FromChild(gameObject);
         _gravity = delegate { return 30 * Time.fixedDeltaTime; };
         _woodenBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();
     }
@@ -33,6 +37,16 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(DestroyAfterTime());
+    }
+
+    private void OnEnable()
+    {
+        _boxTrigger.OnBoxTriggerEntered += OnBoxTriggerEntered;
+    }
+
+    private void OnDisable()
+    {
+        _boxTrigger.OnBoxTriggerEntered -= OnBoxTriggerEntered;
     }
 
     private void FixedUpdate()
@@ -55,6 +69,11 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
             if (isCollidedWithBullet)
                 OnCollisionWithBullet();
         }
+    }
+
+    private void OnBoxTriggerEntered()
+    {
+        DestroyGameobject();
     }
 
     private IEnumerator DestroyAfterTime()

@@ -9,4 +9,7 @@ public static class EventInfo
 
     public static byte Code_TornadoDamage { get; private set; } = 2;
     public static object[] Content_TornadoDamage { get; set; }
+
+    public static byte Code_WoodBoxTriggerEntered { get; private set; } = 3;
+    public static object[] Content_WoodBoxTriggerEntered { get; set; }
 }
