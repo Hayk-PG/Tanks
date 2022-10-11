@@ -103,7 +103,7 @@ public class PlayerShootTrajectory : BaseTrajectory
 
         for (int i = 0; i < points.Length; i++)
         {
-            _colliders = Physics.OverlapSphere(points[i].transform.position, 0.1f);
+            _colliders = Physics.OverlapSphere(points[i].transform.position, 0.1f, 1, QueryTriggerInteraction.Ignore);
 
             if(_colliders.Length > 0)
             {

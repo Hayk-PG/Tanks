@@ -10,6 +10,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
     private GlobalActivityTimer _globalActivtyTimer;
     private InstantiatePickables _instantiatePickables;
     private WoodenBoxSerializer _woodenBoxSerializer;
+    private PlatformSerializer _platformSerializer;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
         _globalActivtyTimer = Get<GlobalActivityTimer>.From(gameObject);
         _instantiatePickables = Get<InstantiatePickables>.From(gameObject);
         _woodenBoxSerializer = Get<WoodenBoxSerializer>.From(gameObject);
+        _platformSerializer = Get<PlatformSerializer>.From(gameObject);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -65,6 +67,18 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position);
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity);
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.rotation);
+            }
+
+            if (_platformSerializer.RigidbodyPlatformHor != null)
+            {
+                stream.SendNext(_platformSerializer.RigidbodyPlatformHor.velocity);
+                stream.SendNext(_platformSerializer.RigidbodyPlatformHor.position);
+            }
+
+            if (_platformSerializer.RigidbodyPlatformVert != null)
+            {
+                stream.SendNext(_platformSerializer.RigidbodyPlatformVert.velocity);
+                stream.SendNext(_platformSerializer.RigidbodyPlatformVert.position);
             }
         }
         else
@@ -117,6 +131,24 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
 
                 float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
                 _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position += (_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity * lag);
+            }
+
+            if(_platformSerializer.RigidbodyPlatformHor != null)
+            {
+                _platformSerializer.RigidbodyPlatformHor.position = (Vector3)stream.ReceiveNext();
+                _platformSerializer.RigidbodyPlatformHor.velocity = (Vector3)stream.ReceiveNext();
+
+                float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+                _platformSerializer.RigidbodyPlatformHor.position += (_platformSerializer.RigidbodyPlatformHor.velocity * lag);
+            }
+
+            if (_platformSerializer.RigidbodyPlatformVert != null)
+            {
+                _platformSerializer.RigidbodyPlatformVert.position = (Vector3)stream.ReceiveNext();
+                _platformSerializer.RigidbodyPlatformVert.velocity = (Vector3)stream.ReceiveNext();
+
+                float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+                _platformSerializer.RigidbodyPlatformVert.position += (_platformSerializer.RigidbodyPlatformVert.velocity * lag);
             }
         }
     }    

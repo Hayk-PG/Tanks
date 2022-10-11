@@ -44,7 +44,8 @@ public class BoxTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        _woodBoxSerializer.BoxTriggerEntered(other);
+        if (!other.CompareTag(Tags.AI) && !other.CompareTag(Tags.Player))
+            _woodBoxSerializer.BoxTriggerEntered(other);
     }
 
     private IEnumerator CompleteInteractions()
