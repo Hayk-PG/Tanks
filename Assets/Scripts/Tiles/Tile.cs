@@ -71,7 +71,8 @@ public class Tile : MonoBehaviour, IDestruct
 
         Trigger(false);
         ExplosionActivity(false);
-        
+
+        _tileParticles?.gameObject.SetActive(true);
         _tileParticles?.ResetTileParticles();
         _tileProps?.ActiveProps(TileProps.PropsType.All, false, null);
     }

@@ -1,6 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+internal struct WoodBoxCollisionData
+{
+    internal bool _isCollidedWithTank;
+    internal bool _isCollidedWithBullet;
+}
+
 public class ParachuteWithWoodBoxController : MonoBehaviour
 {    
     [SerializeField] private GameObject _parachute;
@@ -11,7 +17,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
     private WoodBox _woodBox;
     private BoxTrigger _boxTrigger;
     private TankController _tankController;
-    private WoodenBoxSerializer _woodenBoxSerializer;    
+    private WoodenBoxSerializer _woodenBoxSerializer;
 
     private delegate float Value();
     private Value _gravity;
@@ -22,6 +28,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
     public int RandomNewWeaponContent { get; set; }
     public float RandomDestroyTime { get; set; }
 
+    internal System.Action<WoodBoxCollisionData> OnCollision { get; set; }
 
 
     private void Awake()
@@ -69,6 +76,8 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
             if (isCollidedWithBullet)
                 OnCollisionWithBullet();
         }
+
+        OnCollision?.Invoke(new WoodBoxCollisionData { _isCollidedWithTank = isCollidedWithTank, _isCollidedWithBullet = isCollidedWithBullet});
     }
 
     private void OnBoxTriggerEntered()
@@ -108,7 +117,8 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
     private void OnLand()
     {
-        _parachuteAnim.Play("ParachuteCloseAnim", 0);
+        _parachuteAnim?.Play("ParachuteCloseAnim", 0);
+        OnAnimationEnd();
         _sparkles.SetActive(true);
     }
 

@@ -8,13 +8,17 @@ public class MainCameraController : MonoBehaviour
     private TurnController _turnController;
     private LevelGenerator _levelGenerator;
     private Transform _player1, _player2;
-    private Vector3 _currentVelocity;
+    
+    [SerializeField] 
+    private float _smoothTime, _maxTime;
     private float _currentVelocityfloat;
-    private float _ortographicSize;
-    [SerializeField] private float _smoothTime, _maxTime;
+    private float _ortographicSize;  
     private float _minPosX, _maxPosX, _newPosX;
     private float _yOffset = 2;
     private float _desiredHeightOffset = 0;
+
+    private Vector3 _currentVelocity;
+    private Vector3 _halfLength = new Vector3(0.5f, 0, 0);
 
     private bool PlayersInitialized
     {
@@ -22,7 +26,7 @@ public class MainCameraController : MonoBehaviour
     }
     private float SceneWidth
     {
-        get => Mathf.Abs(Target2.position.x) + Mathf.Abs(Target1.position.x) + 1;
+        get => Vector3.Distance(Target1.position - _halfLength, Target2.position + _halfLength);
     }
     private float UnitsPerPixel
     {
