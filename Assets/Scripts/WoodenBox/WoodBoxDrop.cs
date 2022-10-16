@@ -3,29 +3,31 @@ using UnityEngine;
 
 public class WoodBoxDrop : MonoBehaviour
 {
-    private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
+    private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
     private bool _isSoundPlayed;
 
 
     private void Awake()
     {
-        _parachuteWithWoodBoxController = Get<ParachuteWithWoodBoxController>.From(gameObject);
+        _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
     }
 
     private void OnEnable()
     {
-        _parachuteWithWoodBoxController.OnCollision += OnCollision;
+        _parachuteWithWoodBoxCollision.OnCollision += OnCollision;
     }
 
     private void OnDisable()
     {
-        _parachuteWithWoodBoxController.OnCollision -= OnCollision;
+        _parachuteWithWoodBoxCollision.OnCollision -= OnCollision;
     }
 
-    private void OnCollision(WoodBoxCollisionData woodBoxCollisionData)
+    private void OnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)
     {
-        if (!woodBoxCollisionData._isCollidedWithTank && !woodBoxCollisionData._isCollidedWithBullet && !_isSoundPlayed)
+        if (collisionData._tankController == null && collisionData._bulletController == null && !_isSoundPlayed)
+        {
             StartCoroutine(PlaySound());
+        }
     }
 
     private IEnumerator PlaySound()

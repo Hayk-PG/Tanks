@@ -1,25 +1,15 @@
-﻿using ExitGames.Client.Photon;
-using Photon.Pun;
-using Photon.Realtime;
+﻿using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
 public class InstantiatePickables : MonoBehaviourPun
 {
+    [SerializeField]
+    private ParachuteWithWoodBoxController _woodBoxControllerPrefab, _instantiatedWoodBoxController;
+
     private GameManager _gameManager;
     private Transform _player1, _player2;
-   
-    private bool IsThereOtherActiveParachute
-    {
-        get => FindObjectOfType<ParachuteWithWoodBoxController>();
-    }
-    public Vector3 RandomSpawnPosition { get; set; }    
-    public float RandomTime { get; set; }
-    public float RandomDestroyTime { get; set; }
-    public int RandomContent { get; set; }
-    public int RandomNewWeaponContent { get; set; }
-
-    public System.Action<object[]> OnInstantiateWoodenBox { get; set; }
+    private Vector3 _spawnPosition;
 
 
 
@@ -46,36 +36,37 @@ public class InstantiatePickables : MonoBehaviourPun
         StartCoroutine(InstantiateCoroutine());
     }
 
+    private void SpawnWoodBox(Vector3 position)
+    {
+        _instantiatedWoodBoxController = Instantiate(_woodBoxControllerPrefab, position, Quaternion.identity);
+    }
+
+    [PunRPC]
+    private void SpawnWoodBoxRPC(Vector3 position)
+    {
+        SpawnWoodBox(position);
+    }
+
     private IEnumerator InstantiateCoroutine()
     {
         while (true)
         {
-            RandomTime = Random.Range(30, 120);
-            yield return new WaitForSeconds(RandomTime);
+            yield return new WaitForSeconds(Random.Range(30, 120));
 
-            RandomSpawnPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);           
-            RandomContent = Random.Range(0, 5);
-            RandomDestroyTime = Random.Range(60, 90);
-            RandomNewWeaponContent = Random.Range(0, System.Enum.GetValues(typeof(NewWeaponContent)).Length);
-
-            if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
+            if (_instantiatedWoodBoxController == null)
             {
-                if (_player1 != null && _player2 != null && !IsThereOtherActiveParachute)
-                {
-                    EventInfo.Content_InstantiateWoodenBox = new object[]
-                    {
-                    RandomSpawnPosition,
-                    RandomContent,
-                    RandomDestroyTime,
-                    RandomNewWeaponContent
-                    };
+                _spawnPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
 
-                    //ONLINE
-                    PhotonNetwork.RaiseEvent(EventInfo.Code_InstantiateWoodenBox, EventInfo.Content_InstantiateWoodenBox, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
-                    //OFFLINE
-                    OnInstantiateWoodenBox?.Invoke(EventInfo.Content_InstantiateWoodenBox);
+                if (MyPhotonNetwork.IsOfflineMode)
+                {
+                    SpawnWoodBox(_spawnPosition);
                 }
-            }
+
+                if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
+                {
+                    photonView.RPC("SpawnWoodBoxRPC", RpcTarget.AllViaServer, _spawnPosition);
+                }
+            }            
         }
     }
 }

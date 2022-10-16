@@ -20059,7 +20059,7 @@ PrefabInstance:
     - target: {fileID: 6052541195068806553, guid: 98ba86d059d069241a6dc06a078ed3ee,
         type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6052541195068806553, guid: 98ba86d059d069241a6dc06a078ed3ee,
         type: 3}
@@ -45520,7 +45520,7 @@ PrefabInstance:
     - target: {fileID: 1542214995989888471, guid: ca4c2b861f427ac4fa737f31a204134d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1542214995989888471, guid: ca4c2b861f427ac4fa737f31a204134d,
         type: 3}
@@ -61871,51 +61871,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763681727}
   m_Mesh: {fileID: 2406888789581942802, guid: a48a361279c74664aaca6af3ef1817b3, type: 3}
---- !u!1 &1764015639
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1764015641}
-  - component: {fileID: 1764015640}
-  m_Layer: 0
-  m_Name: WoodenBoxSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1764015640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1764015639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92dd8bcfe0ccce04bb287ec7a05e1a20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _parachuteWithWoodBoxController: {fileID: 1071289493604564194, guid: 8a7e05fea83231349919f5a19aab34c3,
-    type: 3}
---- !u!4 &1764015641
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1764015639}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1767915516
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -63844,7 +63799,7 @@ Transform:
   - {fileID: 1217753897}
   - {fileID: 1292130030}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1873095743
 MonoBehaviour:
@@ -66281,7 +66236,7 @@ PrefabInstance:
     - target: {fileID: 6052541195068806553, guid: 98ba86d059d069241a6dc06a078ed3ee,
         type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 6052541195068806553, guid: 98ba86d059d069241a6dc06a078ed3ee,
         type: 3}
@@ -67178,6 +67133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1d957d040a96f4b970b10b6c24705b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _woodBoxControllerPrefab: {fileID: 1071289493604564194, guid: 8a7e05fea83231349919f5a19aab34c3,
+    type: 3}
+  _instantiatedWoodBoxController: {fileID: 0}
 --- !u!114 &2025759526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67191,6 +67149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parachuteWithWoodBoxController: {fileID: 0}
+  _woodBox: {fileID: 0}
 --- !u!114 &2025759527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69401,7 +69360,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1438573654, guid: 8bb47859066a5bf46b4be5e41db5feb7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.4999962
+      value: -0.49999237
       objectReference: {fileID: 0}
     - target: {fileID: 279360526606462008, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
@@ -69551,7 +69510,7 @@ PrefabInstance:
     - target: {fileID: 621948001206890173, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.4999962
+      value: -0.49999237
       objectReference: {fileID: 0}
     - target: {fileID: 1014616337775283149, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}

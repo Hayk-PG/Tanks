@@ -1,125 +1,91 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public enum NewWeaponContent { TornadoShell }
 
 public class WoodBox : MonoBehaviour
 {
-    private enum Content { AddScore, AddHealth, AddWeapon, GiveTurn, NewWeapon}
-    
-    [SerializeField] 
-    private Content _content;
-    [SerializeField]
-    private NewWeaponContent _newWeaponContent;
-
     [SerializeField]
     private WeaponProperties[] _newWeapon;
 
+    private ParachuteWithWoodBoxController _woodBoxController;
+    private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
     private Tab_WoodboxContent _tabWoodboxContent;
     private TurnController _turnController;
     private NewWeaponFromWoodBox _newWeaponFromWoodBox;
 
-    private int _contentIndex;
-    private int _newWeaponContentIndex;
-    private bool _isTornadoShellTanken;
-
-    public Action<WeaponProperties> OnNewWeaponTaken { get; set; }
-
+    private IWoodBoxContent[] _iWoodBoxContents;
+    private IWoodBoxContent[] _iWoodBoxWeapons;
+  
+    private int ContentsCount
+    {
+        get => _iWoodBoxContents.Length + _iWoodBoxWeapons.Length;
+    }
+    private int WeaponsCount
+    {
+        get => _iWoodBoxWeapons.Length;
+    }
+    public int ContentIndex { get; set; }
+    public int WeaponIndex { get; set; }
 
 
     private void Awake()
     {
+        _woodBoxController = Get<ParachuteWithWoodBoxController>.From(gameObject);
+        _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
         _tabWoodboxContent = FindObjectOfType<Tab_WoodboxContent>();
         _turnController = FindObjectOfType<TurnController>();
         _newWeaponFromWoodBox = FindObjectOfType<NewWeaponFromWoodBox>();
+
+        _iWoodBoxContents = new IWoodBoxContent[]
+        {
+            new AddScoreContent(),
+            new AddMoreHPContent(),
+            new AddMoreShellsContent(),
+            new GiveTurnContent(_turnController)
+        };
+
+        _iWoodBoxWeapons = new IWoodBoxContent[]
+        {
+            new AddNewWeaponContent(_newWeapon[0], _newWeaponFromWoodBox)
+        };
     }
 
-    public void OnContent(int contentIndex, int newWeaponContentIndex, TankController tankController)
+    private void OnEnable()
     {
-        _contentIndex = contentIndex < Enum.GetValues(typeof(Content)).Length ? contentIndex : Enum.GetValues(typeof(Content)).Length - 1;
-        _content = (Content)_contentIndex;
+        _woodBoxController.OnInitialized += OnWoodBoxControllerInitialized;
+        _parachuteWithWoodBoxCollision.OnCollision += OnCollision;
+    }
 
-        switch (_content)
+    private void OnDisable()
+    {
+        _woodBoxController.OnInitialized -= OnWoodBoxControllerInitialized;
+        _parachuteWithWoodBoxCollision.OnCollision -= OnCollision;
+    }
+
+    private void OnWoodBoxControllerInitialized(WoodenBoxSerializer woodBoxSerializer)
+    {
+        woodBoxSerializer.WoodBox = this;
+
+        ContentIndex = Random.Range(0, ContentsCount);
+        WeaponIndex = Random.Range(0, WeaponsCount);
+    }
+
+    private void OnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)
+    {
+        if (collisionData._tankController != null)
         {
-            case Content.AddScore: AddPlayerScore(tankController); break;
-            case Content.AddHealth: AddPlayerHealth(tankController); break;
-            case Content.AddWeapon: AddWeapon(tankController); break;
-            case Content.GiveTurn: GiveTurn(tankController); break;
-            case Content.NewWeapon: NewWeapon(newWeaponContentIndex, tankController); break;
+            OnContent(collisionData._tankController);
         }
     }
 
-    private void AddPlayerScore(TankController tankController)
-    {
-        ScoreController scoreController = Get<ScoreController>.From(tankController.gameObject);
-
-        if(scoreController != null)
+    public void OnContent(TankController tankController)
+    {      
+        if (ContentIndex < _iWoodBoxContents.Length)
         {
-            scoreController.GetScoreFromWoodBox(out bool isDone, out string text);
-
-            if (isDone)
-                _tabWoodboxContent.OnContent(Tab_WoodboxContent.Content.Score, text);
+            _iWoodBoxContents[ContentIndex].Use(tankController, _tabWoodboxContent);
         }
-    }
-
-    private void AddPlayerHealth(TankController tankController)
-    {
-        HealthController healthController = Get<HealthController>.From(tankController.gameObject);
-
-        if(healthController != null)
+        else
         {
-            healthController.GetHealthFromWoodBox(out bool isDone, out string text);
-
-            if (isDone)
-                _tabWoodboxContent.OnContent(Tab_WoodboxContent.Content.Health, text);
-        }
-    }
-
-    private void AddWeapon(TankController tankController)
-    {
-        PlayerAmmoType playerAmmoType = Get<PlayerAmmoType>.From(tankController.gameObject);
-
-        if(playerAmmoType != null)
-        {
-            playerAmmoType.GetMoreBulletsFromWoodBox(out bool isDone, out string text);
-
-            if (isDone)
-                _tabWoodboxContent.OnContent(Tab_WoodboxContent.Content.Bullet, text);
-        }
-    }
-
-    private void GiveTurn(TankController tankController)
-    {
-        PlayerTurn playerTurn = Get<PlayerTurn>.From(tankController.gameObject);
-
-        if(playerTurn != null)
-        {
-            if (playerTurn.IsMyTurn)
-            {
-                _turnController.SetNextTurn(playerTurn.MyTurn == TurnState.Player1 ? TurnState.Player2 : TurnState.Player1);
-            }
-        }
-    }
-
-    private void NewWeapon(int newWeaponContentIndex, TankController tankController)
-    {
-        _newWeaponContentIndex = _newWeaponContentIndex < Enum.GetValues(typeof(NewWeaponContent)).Length ? newWeaponContentIndex : Enum.GetValues(typeof(NewWeaponContent)).Length - 1;
-        _newWeaponContent = (NewWeaponContent)_newWeaponContentIndex;
-
-        if (tankController.BasePlayer != null)
-        {
-            _newWeaponFromWoodBox.SubscribeToWoodBoxEvent(this);
-
-            switch (_newWeaponContent)
-            {
-                case NewWeaponContent.TornadoShell:
-                    if (!_isTornadoShellTanken)
-                    {
-                        OnNewWeaponTaken?.Invoke(_newWeapon[_newWeaponContentIndex]);
-                        _isTornadoShellTanken = true;
-                    }
-                    break;
-            }
+            _iWoodBoxWeapons[WeaponIndex].Use(tankController, _tabWoodboxContent);
         }
     }
 }

@@ -6,9 +6,10 @@ public class NewWeaponFromWoodBox : MonoBehaviour
     private AmmoTabCustomization _ammoTabCustomization;
     private AmmoTabButtonNotification _ammoTabButtonNotification;
     private GameManager _gameManager;
+
     private ScoreController _localPlayerScoreController;
     private GameObject _localPlayerGameObject;
-    private WoodBox _woodBox;
+    private AddNewWeaponContent _addNewWeaponContent;
 
     public Action<WeaponProperties> OnAddNewWeaponFromWoodBox { get; set; }
 
@@ -29,8 +30,8 @@ public class NewWeaponFromWoodBox : MonoBehaviour
     {
         _gameManager.OnGameStarted -= OnGameStarted;
 
-        if(_woodBox != null)
-            _woodBox.OnNewWeaponTaken += OnNewWeaponTaken;
+        if (_addNewWeaponContent != null)
+            _addNewWeaponContent.OnNewWeaponTaken -= OnNewWeaponTaken;
     }
 
     private void OnGameStarted()
@@ -41,10 +42,10 @@ public class NewWeaponFromWoodBox : MonoBehaviour
             _localPlayerScoreController = Get<ScoreController>.From(_localPlayerGameObject);
     }
 
-    public void SubscribeToWoodBoxEvent(WoodBox woodBox)
+    public void SubscribeToWoodBoxEvent(AddNewWeaponContent addNewWeaponContent)
     {
-        _woodBox = woodBox;
-        _woodBox.OnNewWeaponTaken += OnNewWeaponTaken;
+        _addNewWeaponContent = addNewWeaponContent;
+        addNewWeaponContent.OnNewWeaponTaken += OnNewWeaponTaken;
     }
 
     private void SetNewWeaponIndex(AmmoTypeButton ammoTypeButton) => ammoTypeButton._properties.Index = _ammoTabCustomization._instantiatedButtons.Count;

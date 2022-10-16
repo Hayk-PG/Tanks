@@ -43747,8 +43747,8 @@ GameObject:
   - component: {fileID: 5490887437498366708}
   - component: {fileID: 7414720395435272863}
   - component: {fileID: 8376299238930612587}
-  - component: {fileID: 7375295780243406148}
   - component: {fileID: 1071289493604564194}
+  - component: {fileID: 2025484964959223026}
   - component: {fileID: 1476008232232418061}
   - component: {fileID: 1597267812639832941}
   m_Layer: 0
@@ -43816,25 +43816,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2179aa618d903744b92079e50222c106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &7375295780243406148
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5809277879255624628}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0f94aac313fc66742b4a8fed3c9cc58c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &1071289493604564194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43850,7 +43831,18 @@ MonoBehaviour:
   _parachute: {fileID: 2040652273279161861}
   _sparkles: {fileID: 518300410192078217}
   _woodBoxExplosion: {fileID: 3880855251564868490}
-  RigidBody: {fileID: 0}
+--- !u!114 &2025484964959223026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5809277879255624628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af5fbf6b014bacb479ea13d50e63d11e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1476008232232418061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43863,8 +43855,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc82571c86b6cb47a7fb04c028d6062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _content: 0
-  _newWeaponContent: 0
   _newWeapon:
   - {fileID: 11400000, guid: 721830588bc10d345993d05668bb87a6, type: 2}
 --- !u!114 &1597267812639832941
