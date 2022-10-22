@@ -47,7 +47,7 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
         else
         {
             if (!MyPhotonNetwork.IsInRoom)
-                MyPhoton.JoinLobby();
+                MyPhoton.JoinLobby("", Photon.Realtime.LobbyType.Default);
             if (MyPhotonNetwork.IsInRoom)
                 OnOnlineGameTankChanged?.Invoke(); ;
         }

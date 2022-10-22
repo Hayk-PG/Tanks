@@ -14,6 +14,9 @@ public partial class MyPlayfab : MonoBehaviour
             onSucces => 
             {
                 Data.Manager.PlayfabId = onSucces.PlayFabId;
+                Data.Manager.EntityID = onSucces.EntityToken.Entity.Id;
+                Data.Manager.EntityType = onSucces.EntityToken.Entity.Type;
+
                 MyPhoton.SetNickName(registrationData._userName);
                 OnGetReadOnlyData?.Invoke(onSucces.PlayFabId, GetUserReadOnlyData);                
             }, 

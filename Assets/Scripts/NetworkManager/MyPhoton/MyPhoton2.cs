@@ -27,8 +27,9 @@ public partial class MyPhoton : MonoBehaviour
         PhotonNetwork.JoinRoom(roomName);
     }
 
-    public static void JoinLobby()
+    public static void JoinLobby(string lobbyName, LobbyType lobbyType)
     {
-        PhotonNetwork.JoinLobby();
+        TypedLobby typedLobby = new TypedLobby(lobbyName, lobbyType);
+        PhotonNetwork.JoinLobby(typedLobby);
     }
 }

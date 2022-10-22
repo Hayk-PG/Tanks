@@ -21,6 +21,11 @@ public static class GlobalFunctions
         }
     }
 
+    public static void DebugLog(string message)
+    {
+        Debug.Log(message);
+    }
+
     public static bool LocalPlayerChecker(bool isLocalPlayer)
     {
         return isLocalPlayer;
@@ -57,5 +62,5 @@ public static class GlobalFunctions
         {
             return MonoBehaviour.FindObjectsOfType<T>().ToList().Find(p);
         }
-    }
+    }   
 }

@@ -1,4 +1,5 @@
 ﻿using Photon.Realtime;
+using System;
 using UnityEngine;
 
 public class Tab_Lobby : Tab_Base<MyPhotonCallbacks>
@@ -11,14 +12,20 @@ public class Tab_Lobby : Tab_Base<MyPhotonCallbacks>
 
     private void OnEnable()
     {
-        _object._OnJoinedLobby += base.OpenTab;
+        _object._OnJoinedLobby += OpenTab;
         _object._OnRoomListUpdate += OnUpdateRoomList;
     }
 
     private void OnDisable()
     {
-        _object._OnJoinedLobby -= base.OpenTab;
+        _object._OnJoinedLobby -= OpenTab;
         _object._OnRoomListUpdate -= OnUpdateRoomList;
+    }
+
+    public override void OpenTab()
+    {
+        if(String.IsNullOrEmpty(MyPhotonNetwork.CurrentLobby.Name))
+            base.OpenTab();
     }
 
     private void OnUpdateRoomList(RoomInfo roomInfo)

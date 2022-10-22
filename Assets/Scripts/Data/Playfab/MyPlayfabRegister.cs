@@ -25,13 +25,19 @@ public partial class MyPlayfab : MonoBehaviour
         rpfur.Username = registrationData._userName;
         rpfur.DisplayName = registrationData._userName;
         rpfur.Password = registrationData._password;
-        if (!String.IsNullOrEmpty(registrationData._email)) rpfur.Email = registrationData._email;
+
+        if (!String.IsNullOrEmpty(registrationData._email)) 
+            rpfur.Email = registrationData._email;
+
         rpfur.RequireBothUsernameAndEmail = false;
 
         PlayFabClientAPI.RegisterPlayFabUser(rpfur, 
             onSucces => 
             {
                 Data.Manager.PlayfabId = onSucces.PlayFabId;
+                Data.Manager.EntityID = onSucces.EntityToken.Entity.Id;
+                Data.Manager.EntityType = onSucces.EntityToken.Entity.Type;
+
                 MyPhoton.SetNickName(registrationData._userName);               
                 OnUpdateReadOnlyData?.Invoke(onSucces.PlayFabId, UpdateUserDataRequest);
             }, 
