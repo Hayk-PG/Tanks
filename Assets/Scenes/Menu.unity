@@ -4750,7 +4750,6 @@ GameObject:
   - component: {fileID: 716531058}
   - component: {fileID: 716531057}
   - component: {fileID: 716531059}
-  - component: {fileID: 716531060}
   m_Layer: 5
   m_Name: Tab_TournamentLobby
   m_TagString: Untagged
@@ -4816,20 +4815,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d29378b4cd49341b99956fc8900f1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &716531060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 716531055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e930673a7dee3c4390f2397ded3359f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefab: {fileID: -881004307496643090, guid: 98a2fb2281b440348ac62dc35a9c3e39, type: 3}
-  _cachedTournamentRooms: []
 --- !u!114 &721820581 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9095820719057074584, guid: f850a22bebc68654db1cbe9ef1112f2e,
@@ -9388,6 +9373,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1586172017}
+  - component: {fileID: 1586172018}
   m_Layer: 5
   m_Name: TournamentRoomsList
   m_TagString: Untagged
@@ -9419,6 +9405,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1586172018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586172016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e930673a7dee3c4390f2397ded3359f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1625424982 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6709060273018406002, guid: 92d290f7f34b3b048914a104662232f8,

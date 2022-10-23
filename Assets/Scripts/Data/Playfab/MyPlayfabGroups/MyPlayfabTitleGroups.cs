@@ -4,7 +4,11 @@ using System;
 
 public class MyPlayfabTitleGroups
 {
-    public void RequestToBecomeMember(TitleGroupProperties titleGroupProperties, Action<bool> onResult)
+    public string DefualtMemberRoleID { get; private set; } = "members";
+    public string DefaultMemberRoleName { get; private set; } = "Members";
+
+
+    public void RequestToBecomeMember(TitleProperties titleGroupProperties, Action<bool> onResult)
     {
         IsMemberRequest isMemberRequest = new IsMemberRequest();
         isMemberRequest.Entity = new EntityKey() { Id = titleGroupProperties.MemberID, Type = titleGroupProperties.MemberType };
@@ -21,7 +25,7 @@ public class MyPlayfabTitleGroups
             });
     }
 
-    public void Apply(TitleGroupProperties titleGroupProperties, Action<bool> onFinalResult)
+    public void Apply(TitleProperties titleGroupProperties, Action<bool> onFinalResult)
     {
         ApplyToGroupRequest applyToGroupRequest = new ApplyToGroupRequest();
         applyToGroupRequest.Entity = new EntityKey() { Id = titleGroupProperties.MemberID, Type = titleGroupProperties.MemberType };
@@ -38,7 +42,7 @@ public class MyPlayfabTitleGroups
             });
     }
 
-    public void Accept(TitleGroupProperties titleGroupProperties, Action<bool> onResult)
+    public void Accept(TitleProperties titleGroupProperties, Action<bool> onResult)
     {
         AcceptGroupApplicationRequest acceptGroupApplicationRequest = new AcceptGroupApplicationRequest();
         acceptGroupApplicationRequest.Entity = new EntityKey() { Id = titleGroupProperties.MemberID, Type = titleGroupProperties.MemberType };
@@ -56,7 +60,7 @@ public class MyPlayfabTitleGroups
             });
     } 
 
-    public void ListMembers(TitleGroupProperties titleGroupProperties, Action<ListGroupMembersResponse> onResult)
+    public void ListMembers(TitleProperties titleGroupProperties, Action<ListGroupMembersResponse> onResult)
     {
         ListGroupMembersRequest listGroupMembersRequest = new ListGroupMembersRequest();
         listGroupMembersRequest.Group = new EntityKey { Id = titleGroupProperties.GroupID, Type = titleGroupProperties.GroupType };

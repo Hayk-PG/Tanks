@@ -21,7 +21,7 @@ public static class GlobalFunctions
         }
     }
 
-    public static void DebugLog(string message)
+    public static void DebugLog(object message)
     {
         Debug.Log(message);
     }

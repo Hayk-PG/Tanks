@@ -8,7 +8,7 @@ public class TournamentMembers : MonoBehaviour
 
     private string _memberRoleId = "members";
 
-    public event Action<TitleGroupProperties, int> onShareProperties;
+    public event Action<TitleProperties> onShareProperties;
 
 
     private void Awake()
@@ -26,21 +26,23 @@ public class TournamentMembers : MonoBehaviour
         _tournamentLobby.onTournamentLobbyJoined -= ListTitleGroupMembers;
     }
 
-    private void ListTitleGroupMembers(TitleGroupProperties titleGroupProperties)
+    private void ListTitleGroupMembers(TitleProperties titleGroupProperties)
     {
-        print(MyPhotonNetwork.CurrentLobby.Name);
-        //ExternalData.TitleGroups.ListMembers(titleGroupProperties,
-        //    result =>
-        //    {
-        //        if (result != null)
-        //        {
-        //            GetTitleGroupMembers(result);
-        //        }
-        //        else
-        //        {
-        //            GlobalFunctions.DebugLog("No members");
-        //        }
-        //    });
+        if (titleGroupProperties == null)
+            return;
+
+        ExternalData.TitleGroups.ListMembers(titleGroupProperties,
+            result =>
+            {
+                if (result != null)
+                {
+                    GetTitleGroupMembers(result);
+                }
+                else
+                {
+                    GlobalFunctions.DebugLog("No members");
+                }
+            });
     }
 
     private void GetTitleGroupMembers(ListGroupMembersResponse listGroupMembersResponse)
@@ -57,9 +59,10 @@ public class TournamentMembers : MonoBehaviour
 
     private void GetTitleGroupMembersInfo(EntityMemberRole member)
     {
-        for (int i = 0; i < member.Members.Count; i++)
-        {
-            onShareProperties?.Invoke(new TitleGroupProperties(null, null, member.Members[i].Key.Id, member.Members[i].Key.Type), i);
-        }
+        GlobalFunctions.Loop<EntityWithLineage>.Foreach(member.Members,
+            memberInfo =>
+            {
+                onShareProperties?.Invoke(new TitleProperties(null, null, memberInfo.Key.Id, memberInfo.Key.Type));
+            });
     }
 }

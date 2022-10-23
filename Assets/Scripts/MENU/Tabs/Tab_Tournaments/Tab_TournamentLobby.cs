@@ -8,16 +8,14 @@ public class Tab_TournamentLobby : MonoBehaviourPun
     private CanvasGroup _canvasGroup;
     private TitleGroupTournament _titleGroupTournament;
     private MyPhotonCallbacks _myPhotonCallbacks;
-
-    private string _groupId = "empty"; // NAME OF THE CURRENT LOBBY
-    private string _groupType = "empty";
+    private TitleProperties _titleGroupProperties;
 
     private bool IsCorrectLobby
     {
-        get => MyPhotonNetwork.CurrentLobby.Name == _groupId;
+        get => _titleGroupProperties != null && !String.IsNullOrEmpty(_titleGroupProperties.GroupID) && MyPhotonNetwork.CurrentLobby.Name == _titleGroupProperties.GroupID;
     }
 
-    public event Action<TitleGroupProperties> onTournamentLobbyJoined;
+    public event Action<TitleProperties> onTournamentLobbyJoined;
 
 
     private void Awake()
@@ -41,14 +39,11 @@ public class Tab_TournamentLobby : MonoBehaviourPun
         _myPhotonCallbacks._OnLeftLobby -= OnLeftLobby;
     }
 
-    private void OnJoinTournamentLobbyAttempted(TitleGroupProperties titleGroupProperties)
+    private void OnJoinTournamentLobbyAttempted(TitleProperties titleGroupProperties)
     {
-        _groupId = titleGroupProperties.GroupID;
-        _groupType = titleGroupProperties.GroupType;
+        _titleGroupProperties = new TitleProperties(titleGroupProperties.GroupID, titleGroupProperties.GroupType, Data.Manager.EntityID, Data.Manager.EntityType);
 
-        TitleGroupProperties newTitleGroupProperties = new TitleGroupProperties(_groupId, _groupType, Data.Manager.EntityID, Data.Manager.EntityType);
-
-        ExternalData.TitleGroups.RequestToBecomeMember(newTitleGroupProperties,
+        ExternalData.TitleGroups.RequestToBecomeMember(_titleGroupProperties,
             isMemeber =>
             {
                 if (isMemeber)
@@ -58,7 +53,7 @@ public class Tab_TournamentLobby : MonoBehaviourPun
                 }
                 else
                 {
-                    ExternalData.TitleGroups.Apply(newTitleGroupProperties, onResult =>
+                    ExternalData.TitleGroups.Apply(_titleGroupProperties, onResult =>
                     {
                         if (onResult)
                         {
@@ -72,16 +67,21 @@ public class Tab_TournamentLobby : MonoBehaviourPun
     private void JoinTournamentLobby()
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
-        MyPhoton.JoinLobby(_groupId, LobbyType.Default);
+        MyPhoton.JoinLobby(_titleGroupProperties.GroupID, LobbyType.Default);
     }
 
     private void OnJoinedLobby()
     {
         if (IsCorrectLobby)
         {
-            onTournamentLobbyJoined?.Invoke(new TitleGroupProperties(_groupId, _groupType, null, null));
-            GlobalFunctions.DebugLog("Joined " + MyPhotonNetwork.CurrentLobby.Name + "/" + MyPhotonNetwork.IsInRoom);
+            onTournamentLobbyJoined?.Invoke(_titleGroupProperties);
         }
+        else
+        {
+            onTournamentLobbyJoined?.Invoke(null);
+        }
+
+        GlobalFunctions.DebugLog("Joined " + MyPhotonNetwork.CurrentLobby.Name + "/" + MyPhotonNetwork.IsInRoom);
     }
 
     private void OnLeftLobby()

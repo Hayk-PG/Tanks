@@ -8,7 +8,7 @@ public class TitleGroupTournament : MonoBehaviour
 
     private MyPlayfabTitleGroupsEntityKeys _myPlayfabTitleGroupsEntityKeys;
 
-    public event Action<TitleGroupProperties> onAttemptToJoinTournamentLobby;
+    public event Action<TitleProperties> onAttemptToJoinTournamentLobby;
 
 
     private void Awake()
@@ -40,11 +40,11 @@ public class TitleGroupTournament : MonoBehaviour
     {
         for (int i = 0; i < myPlayfabTitleGroupsEntityKeys.GroupsID.Length; i++)
         {
-            tournamentButton[i].Initialize(new TitleGroupProperties(myPlayfabTitleGroupsEntityKeys.GroupsID[i], myPlayfabTitleGroupsEntityKeys.GroupsType, null, null));
+            tournamentButton[i].Initialize(new TitleProperties(myPlayfabTitleGroupsEntityKeys.GroupsID[i], myPlayfabTitleGroupsEntityKeys.GroupsType, null, null));
         }
     }
 
-    private void OnTurnamentButtonPressed(TitleGroupProperties titleGroupProperties)
+    private void OnTurnamentButtonPressed(TitleProperties titleGroupProperties)
     {
         onAttemptToJoinTournamentLobby?.Invoke(titleGroupProperties);
     }

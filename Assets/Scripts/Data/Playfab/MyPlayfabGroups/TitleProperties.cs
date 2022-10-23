@@ -1,4 +1,4 @@
-public class TitleGroupProperties
+public class TitleProperties
 {
     public string GroupID { get; private set; }
     public string GroupType { get; private set; }
@@ -6,7 +6,7 @@ public class TitleGroupProperties
     public string MemberType { get; private set; }
 
 
-    public TitleGroupProperties(string groupId, string groupType, string memberId, string memberType)
+    public TitleProperties(string groupId, string groupType, string memberId, string memberType)
     {
         GroupID = groupId;
         GroupType = groupType;

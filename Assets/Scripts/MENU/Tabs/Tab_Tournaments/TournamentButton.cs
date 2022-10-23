@@ -5,9 +5,9 @@ using UnityEngine.UI;
 public class TournamentButton : MonoBehaviour
 {
     private Button _button;
-    private TitleGroupProperties _titleGroupProperties;
+    private TitleProperties _titleGroupProperties;
 
-    public event Action<TitleGroupProperties> onPressTurnamentButton;
+    public event Action<TitleProperties> onPressTurnamentButton;
 
 
     private void Awake()
@@ -26,7 +26,7 @@ public class TournamentButton : MonoBehaviour
         onPressTurnamentButton?.Invoke(_titleGroupProperties);
     }
 
-    public void Initialize(TitleGroupProperties titleGroupProperties)
+    public void Initialize(TitleProperties titleGroupProperties)
     {
         _titleGroupProperties = titleGroupProperties;
     }
