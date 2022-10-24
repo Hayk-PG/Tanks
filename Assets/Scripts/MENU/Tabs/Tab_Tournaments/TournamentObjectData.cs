@@ -1,36 +1,5 @@
 using System.Collections.Generic;
 
-public class TournamentObjectValues
-{
-    public string ValueTournamentStatus { get; private set; }
-    public string ValueTournamentName { get; private set; }
-    public string ValueRoomStatus { get; private set; }
-    public string ValueRoomName { get; private set; }
-    public string ValueGameStatus { get; private set; }
-
-
-    public TournamentObjectValues(string turnamentStatus, string tournamentName, string roomStatus, string roomName, string gameStatus)
-    {
-        ValueTournamentStatus = turnamentStatus;
-        ValueTournamentName = tournamentName;
-        ValueRoomStatus = roomStatus;
-        ValueRoomName = roomName;
-        ValueGameStatus = gameStatus;
-    }
-
-    public static object[] DataObjectValues(TournamentObjectValues tournamentObjectValues)
-    {
-        return new object[]
-        {
-            tournamentObjectValues.ValueTournamentStatus,
-            tournamentObjectValues.ValueTournamentName,
-            tournamentObjectValues.ValueRoomStatus,
-            tournamentObjectValues.ValueRoomName,
-            tournamentObjectValues.ValueGameStatus
-        };
-    }
-}
-
 public class TournamentObjectData 
 {
     public static string ObjectName { get; private set; } = "Status";

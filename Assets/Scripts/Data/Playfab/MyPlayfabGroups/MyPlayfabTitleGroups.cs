@@ -60,7 +60,7 @@ public class MyPlayfabTitleGroups
             });
     } 
 
-    public void ListMembers(TitleProperties titleGroupProperties, Action<ListGroupMembersResponse> onResult)
+    public void ListMembers(TitleProperties titleGroupProperties, Action<EntityMemberRole, EntityWithLineage> onResult)
     {
         ListGroupMembersRequest listGroupMembersRequest = new ListGroupMembersRequest();
         listGroupMembersRequest.Group = new EntityKey { Id = titleGroupProperties.GroupID, Type = titleGroupProperties.GroupType };
@@ -68,12 +68,35 @@ public class MyPlayfabTitleGroups
         PlayFabGroupsAPI.ListGroupMembers(listGroupMembersRequest, 
             onSuccess => 
             {
-                onResult?.Invoke(onSuccess);
+                GlobalFunctions.Loop<EntityMemberRole>.Foreach(onSuccess.Members, member => 
+                {
+                    GlobalFunctions.Loop<EntityWithLineage>.Foreach(member.Members, memberInfo =>
+                    {
+                        onResult?.Invoke(member, memberInfo);
+                    });
+                });
             }, 
             onError => 
             {
-                onResult?.Invoke(null);
+                onResult?.Invoke(null, null);
                 GlobalFunctions.DebugLog(onError.ErrorMessage);
+            });
+    }
+
+    public void Block(TitleProperties tileProperties)
+    {
+        BlockEntityRequest blockEntityRequest = new BlockEntityRequest();
+        blockEntityRequest.Entity = new EntityKey { Id = tileProperties.MemberID, Type = tileProperties.MemberType };
+        blockEntityRequest.Group = new EntityKey { Id = tileProperties.GroupID, Type = tileProperties.GroupType };
+
+        PlayFabGroupsAPI.BlockEntity(blockEntityRequest, 
+            onResult => 
+            { 
+
+            },
+            onError => 
+            { 
+
             });
     }
 }

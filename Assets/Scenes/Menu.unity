@@ -1201,6 +1201,7 @@ GameObject:
   - component: {fileID: 174753095}
   - component: {fileID: 174753094}
   - component: {fileID: 174753096}
+  - component: {fileID: 174753099}
   - component: {fileID: 174753097}
   - component: {fileID: 174753098}
   m_Layer: 0
@@ -1308,6 +1309,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd6670bcb9c0f8d468deeaf548048402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &174753099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174753091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd7a02ddcd10414693d8e1dd3417c97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _previousClientState: 0
+  _currentClientState: 0
 --- !u!1001 &176024645
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9374,8 +9389,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1586172017}
   - component: {fileID: 1586172018}
+  - component: {fileID: 1586172019}
   m_Layer: 5
-  m_Name: TournamentRoomsList
+  m_Name: Tab_TournamentRooms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9415,6 +9431,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e930673a7dee3c4390f2397ded3359f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1586172019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586172016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6f9904c3c9d2184cbc64333e1366225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &1625424982 stripped
