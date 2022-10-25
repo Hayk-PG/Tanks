@@ -1,17 +1,39 @@
-public class Tab_Tournaments : Tab_Base<MyPlayfabTitleGroupsEntityKeys>
+using System;
+
+public class Tab_Tournaments : Tab_Base<OnlineGameModeController>
 {
+    public string[] GroupsID { get; private set; }
+    public string GroupsType { get; private set; }
+
+
+    public event Action<string[], string> onShareTournamentsGroupsProperties;
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+        SetGroupsIDs();
+    }
+
     private void OnEnable()
     {
-        _object.onShareEntities += OnTitleGroupEntitiesShared;
+        _object.onSelectTournametMode += OnTournamentModeSelected;
     }
 
     private void OnDisable()
     {
-        _object.onShareEntities -= OnTitleGroupEntitiesShared;
+        _object.onSelectTournametMode -= OnTournamentModeSelected;
     }
 
-    private void OnTitleGroupEntitiesShared(MyPlayfabTitleGroupsEntityKeys myPlayfabTitleGroupsEntityKeys)
+    private void SetGroupsIDs()
+    {
+        GroupsID = new string[] { "CBE02DC5CDA093FF" };
+        GroupsType = "title_player_account";
+    }
+
+    private void OnTournamentModeSelected()
     {
         base.OpenTab();
+        onShareTournamentsGroupsProperties?.Invoke(GroupsID, GroupsType);
     }
 }

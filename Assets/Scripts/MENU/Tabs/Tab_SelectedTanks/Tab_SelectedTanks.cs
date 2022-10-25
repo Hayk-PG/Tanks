@@ -8,6 +8,7 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
 
     public ScrollRect _scrollRect;
     public Action OnSingleGameTankSelected { get; set; }
+    public event Action onOnlineModeTankSelected;
     public Action OnOnlineGameTankChanged { get; set; }
     
 
@@ -46,10 +47,12 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
         }
         else
         {
-            if (!MyPhotonNetwork.IsInRoom)
-                MyPhoton.JoinLobby("", Photon.Realtime.LobbyType.Default);
-            if (MyPhotonNetwork.IsInRoom)
-                OnOnlineGameTankChanged?.Invoke(); ;
+            Conditions<bool>.Compare(MyPhotonNetwork.IsInRoom, delegate { OnOnlineGameTankChanged?.Invoke(); }, delegate { onOnlineModeTankSelected?.Invoke(); });
+
+            //if (!MyPhotonNetwork.IsInRoom)
+            //    MyPhoton.JoinLobby("", Photon.Realtime.LobbyType.Default);
+            //if (MyPhotonNetwork.IsInRoom)
+            //    OnOnlineGameTankChanged?.Invoke(); ;
         }
     }
 }

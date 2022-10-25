@@ -5,47 +5,46 @@ public class TitleGroupTournament : MonoBehaviour
 {
     [SerializeField]
     private TournamentButton[] tournamentButton;
-
-    private MyPlayfabTitleGroupsEntityKeys _myPlayfabTitleGroupsEntityKeys;
+    private Tab_Tournaments _tabTournaments;
 
     public event Action<TitleProperties> onAttemptToJoinTournamentLobby;
 
 
     private void Awake()
     {
-        _myPlayfabTitleGroupsEntityKeys = FindObjectOfType<MyPlayfabTitleGroupsEntityKeys>();
+        _tabTournaments = Get<Tab_Tournaments>.From(gameObject);
     }
 
     private void OnEnable()
     {
-        _myPlayfabTitleGroupsEntityKeys.onShareEntities += OnTitleGroupEntitiesReceived;
-
         GlobalFunctions.Loop<TournamentButton>.Foreach(tournamentButton, button =>
         {
             button.onPressTurnamentButton += OnTurnamentButtonPressed;
         });
+
+        _tabTournaments.onShareTournamentsGroupsProperties += ReceiveSharedTournamentsGroupsProperties; 
     }
 
     private void OnDisable()
     {
-        _myPlayfabTitleGroupsEntityKeys.onShareEntities -= OnTitleGroupEntitiesReceived;
-
         GlobalFunctions.Loop<TournamentButton>.Foreach(tournamentButton, button =>
         {
             button.onPressTurnamentButton -= OnTurnamentButtonPressed;
         });
-    }
 
-    private void OnTitleGroupEntitiesReceived(MyPlayfabTitleGroupsEntityKeys myPlayfabTitleGroupsEntityKeys)
-    {
-        for (int i = 0; i < myPlayfabTitleGroupsEntityKeys.GroupsID.Length; i++)
-        {
-            tournamentButton[i].Initialize(new TitleProperties(myPlayfabTitleGroupsEntityKeys.GroupsID[i], myPlayfabTitleGroupsEntityKeys.GroupsType, null, null));
-        }
+        _tabTournaments.onShareTournamentsGroupsProperties -= ReceiveSharedTournamentsGroupsProperties;
     }
 
     private void OnTurnamentButtonPressed(TitleProperties titleGroupProperties)
     {
         onAttemptToJoinTournamentLobby?.Invoke(titleGroupProperties);
+    }
+
+    private void ReceiveSharedTournamentsGroupsProperties(string[] groupIds, string groupType)
+    {
+        for (int i = 0; i < groupIds.Length; i++)
+        {
+            tournamentButton[i].Initialize(new TitleProperties(groupIds[i], groupType, null, null));
+        }
     }
 }
