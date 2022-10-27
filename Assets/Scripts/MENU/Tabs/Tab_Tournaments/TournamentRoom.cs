@@ -16,8 +16,10 @@ public class TournamentRoom : MonoBehaviour
 
     public void SetData(TournamentRoomData tournamentRoomData)
     {
-        MasterOpponentName = tournamentRoomData.MasterOpponentName;
-        SecondOpponentName = tournamentRoomData.SecondOpponentName;
-        RoomName = tournamentRoomData.RoomName;
+        if (tournamentRoomData.MasterOpponentName != null)
+            MasterOpponentName = tournamentRoomData.MasterOpponentName;
+
+        if (tournamentRoomData.SecondOpponentName != null)
+            SecondOpponentName = tournamentRoomData.SecondOpponentName;
     }
 }

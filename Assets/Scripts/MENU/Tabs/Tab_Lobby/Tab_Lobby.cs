@@ -13,13 +13,13 @@ public class Tab_Lobby : Tab_Base<MyPhotonCallbacks>
     private void OnEnable()
     {
         _object._OnJoinedLobby += OpenTab;
-        _object._OnRoomListUpdate += OnUpdateRoomList;
+        _object.onRoomListUpdate += GetRoomsUpdatedList;
     }
 
     private void OnDisable()
     {
         _object._OnJoinedLobby -= OpenTab;
-        _object._OnRoomListUpdate -= OnUpdateRoomList;
+        _object.onRoomListUpdate -= GetRoomsUpdatedList;
     }
 
     public override void OpenTab()
@@ -28,7 +28,7 @@ public class Tab_Lobby : Tab_Base<MyPhotonCallbacks>
             base.OpenTab();
     }
 
-    private void OnUpdateRoomList(RoomInfo roomInfo)
+    private void GetRoomsUpdatedList(RoomInfo roomInfo)
     {
         if(_transform_Content.Find(roomInfo.Name) == null)
         {

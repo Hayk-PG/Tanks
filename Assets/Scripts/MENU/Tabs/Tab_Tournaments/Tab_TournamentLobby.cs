@@ -12,6 +12,7 @@ public class Tab_TournamentLobby : MonoBehaviourPun
 
     private TitleProperties _titleProperties;
 
+    private bool _isInTournamentLobby;
     private bool IsCorrectLobby
     {
         get => _titleProperties != null && !String.IsNullOrEmpty(_titleProperties.GroupID) && MyPhotonNetwork.CurrentLobby.Name == _titleProperties.GroupID;
@@ -40,17 +41,13 @@ public class Tab_TournamentLobby : MonoBehaviourPun
         _titleGroupTournament.onAttemptToJoinTournamentLobby -= OnJoinTournamentLobbyAttempted;
         _myPhotonCallbacks._OnJoinedLobby -= OnJoinedLobby;
         _preciseNetworkClientCallbacks.onNetworkClientState -= PreciseNetworkClientStateReceived;
+
+        ExitTournamentGroup(); // NOT RELIABLE, FIND ANOTHER WAY!!!
     }
 
     private void CanvasGroupActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive); 
-    }
-
-    private void DeleteTournamentDataFromObject(bool isTournamentClosed)
-    {
-        if (isTournamentClosed)
-            ExternalData.EntityObjects.Delete(new TitleProperties(null, null, Data.Manager.EntityID, Data.Manager.EntityType), TournamentObjectData.ObjectName, result => { });
     }
 
     private void OnJoinTournamentLobbyAttempted(TitleProperties titleProperties)
@@ -80,8 +77,9 @@ public class Tab_TournamentLobby : MonoBehaviourPun
 
     private void JoinTournamentLobby()
     {
-        MyPhoton.JoinLobby(_titleProperties.GroupID, LobbyType.Default);
+        MyPhoton.JoinLobby(_titleProperties.GroupID, LobbyType.SqlLobby);
         CanvasGroupActivity(false);
+        _isInTournamentLobby = true;
     }
 
     private void OnJoinedLobby()
@@ -92,14 +90,22 @@ public class Tab_TournamentLobby : MonoBehaviourPun
 
     private void PreciseNetworkClientStateReceived(ClientState previousState, ClientState currentState)
     {
-        bool wasJoinedPreviously = previousState == ClientState.Joined || previousState == ClientState.JoinedLobby || previousState == ClientState.Joining || previousState == ClientState.JoiningLobby || previousState == ClientState.Leaving;
-        bool hasLeft = currentState != ClientState.Joined && currentState != ClientState.JoinedLobby && currentState != ClientState.Joining && currentState != ClientState.JoiningLobby && currentState != ClientState.Leaving;
+        bool hasLeft = currentState != ClientState.Joined && currentState != ClientState.JoinedLobby && currentState != ClientState.Joining && currentState != ClientState.JoiningLobby;
 
-        if (wasJoinedPreviously && hasLeft)
+        if (hasLeft)
         {
-            CanvasGroupActivity(false);
-            DeleteTournamentDataFromObject(true);
-            GlobalFunctions.DebugLog(previousState + "/" + currentState);
+            ExitTournamentGroup();
+        }
+    }
+
+    private void ExitTournamentGroup()
+    {
+        if (_isInTournamentLobby)
+        {
+            ExternalData.TitleGroups.RemoveMember(new TitleProperties(_titleProperties.GroupID, _titleProperties.GroupType, Data.Manager.EntityID, Data.Manager.EntityType), null);
+            ExternalData.EntityObjects.Delete(new TitleProperties(null, null, Data.Manager.EntityID, Data.Manager.EntityType), TournamentObjectData.ObjectName, null);
+            GlobalFunctions.DebugLog("Exit tournament group");
+            _isInTournamentLobby = false;
         }
     }
 }

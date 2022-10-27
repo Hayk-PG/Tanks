@@ -99,4 +99,22 @@ public class MyPlayfabTitleGroups
 
             });
     }
+
+    public void RemoveMember(TitleProperties tileProperties, Action<EmptyResponse> onResult)
+    {
+        RemoveMembersRequest removeMembersRequest = new RemoveMembersRequest();
+        removeMembersRequest.Group = new EntityKey { Id = tileProperties.GroupID, Type = tileProperties.GroupType };
+        removeMembersRequest.Members = new System.Collections.Generic.List<EntityKey> { new EntityKey { Id = tileProperties.MemberID, Type = tileProperties.MemberType } };
+
+        PlayFabGroupsAPI.RemoveMembers(removeMembersRequest, 
+            onSuccess => 
+            {
+                onResult?.Invoke(onSuccess);
+            }, 
+            onError =>
+            {
+                onResult?.Invoke(null);
+                GlobalFunctions.DebugLog(onError.ErrorMessage);
+            });
+    }
 }

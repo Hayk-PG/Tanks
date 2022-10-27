@@ -6,12 +6,12 @@ using System.Collections.Generic;
 public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
 {
     public Action<Room> _OnCreatedRoom { get; set; }
-    public Action<short, string> _OnCreateRoomFailed { get; set; }
-    public Action<RoomInfo> _OnRoomListUpdate { get; set; }
+    public Action<short, string> _OnCreateRoomFailed { get; set; }   
     public Action<Room> _OnJoinedRoom { get; set; }
     public Action<Player> _OnPlayerEnteredRoom { get; set; }   
     public Action<short, string> _OnJoinRoomFailed { get; set; }
 
+    public event Action<RoomInfo> onRoomListUpdate;
 
 
     public override void OnCreatedRoom()
@@ -43,7 +43,7 @@ public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
     {
         for (int i = 0; i < roomList.Count; i++)
         {
-            _OnRoomListUpdate?.Invoke(roomList[i]);
+            onRoomListUpdate?.Invoke(roomList[i]);
         }
     }
 }

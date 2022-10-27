@@ -1,16 +1,18 @@
 using PlayFab.GroupsModels;
 using PlayFab.ProfilesModels;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DisplayTournamentRoomsMembers : MonoBehaviour
-{
-    [SerializeField] private TournamentRoom[] _tournamentRooms;
 
+public class TournamentRoomsMembers : MonoBehaviour
+{
     private Tab_TournamentLobby _tabTournamentLobby;
     private TitleProperties _titleProperties;
 
     private string _memberRoleId = "members";
+
+    public event Action<TournamentMemberPublicData> onShareTournamentRoomsMembers;
 
 
     private void Awake()
@@ -47,21 +49,21 @@ public class DisplayTournamentRoomsMembers : MonoBehaviour
     {
         if(objectData.ContainsKey(TournamentObjectData.KeyRoomName)/* && (string)objectData[TournamentObjectData.KeyRoomName] != TournamentObjectData.ValueNotSet*/)
         {
-            GetMembersPlayfabID(entityWithLineage);
-            print((string)objectData[TournamentObjectData.KeyRoomName]);
+            GetMembersPlayfabID(objectData, entityWithLineage);
         }
     }
 
-    private void GetMembersPlayfabID(EntityWithLineage entityWithLineage)
+    private void GetMembersPlayfabID(Dictionary<string, object> objectData, EntityWithLineage entityWithLineage)
     {
-        ExternalData.Entity.GetPlayerProfileFromEntity(entityWithLineage.Key.Id, entityWithLineage.Key.Type, GetMembersProfile);
+        ExternalData.Entity.GetPlayerProfileFromEntity(entityWithLineage.Key.Id, entityWithLineage.Key.Type, result => { GetMembersProfile(objectData, result); });
     }
 
-    private void GetMembersProfile(GetEntityProfileResponse getEntityProfileResponse)
+    private void GetMembersProfile(Dictionary<string, object> objectData, GetEntityProfileResponse getEntityProfileResponse)
     {
         ExternalData.Profile.Get(getEntityProfileResponse.Profile.Lineage.MasterPlayerAccountId, result =>
         {
-            print(result.PlayerProfile.DisplayName);
+            onShareTournamentRoomsMembers?.Invoke(new TournamentMemberPublicData { _memberName = result.PlayerProfile.DisplayName, _memberRoomName = (string)objectData[TournamentObjectData.KeyRoomName] });
+            GlobalFunctions.DebugLog(result.PlayerProfile.DisplayName + "/" + (string)objectData[TournamentObjectData.KeyRoomName]);
         });
     }
 }

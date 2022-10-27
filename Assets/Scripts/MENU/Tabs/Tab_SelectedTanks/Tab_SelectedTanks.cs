@@ -48,11 +48,6 @@ public class Tab_SelectedTanks : Tab_Base<MyPhotonCallbacks>
         else
         {
             Conditions<bool>.Compare(MyPhotonNetwork.IsInRoom, delegate { OnOnlineGameTankChanged?.Invoke(); }, delegate { onOnlineModeTankSelected?.Invoke(); });
-
-            //if (!MyPhotonNetwork.IsInRoom)
-            //    MyPhoton.JoinLobby("", Photon.Realtime.LobbyType.Default);
-            //if (MyPhotonNetwork.IsInRoom)
-            //    OnOnlineGameTankChanged?.Invoke(); ;
         }
     }
 }
