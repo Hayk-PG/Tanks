@@ -1,5 +1,6 @@
 public struct TournamentMemberPublicData 
 {
-    public string _memberName;
-    public string _memberRoomName;
+    public string MemberName { get; set; }
+    public string MemberPlayfabID { get; set; }
+    public string MemberRoomName { get; set; }
 }

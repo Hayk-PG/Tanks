@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
+public class Tab_SignUp : Tab_Base<Tab_StartGame>
 {
     protected Data _data;
 
@@ -36,14 +36,12 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
 
     protected virtual void OnEnable()
     {
-        _object._OnConnectedToMaster += OnPhotonConnectedToMaster;
-        MyPhoton.OnNickNameSet += SaveAccount;
+        _object.onPlayOnline += Authoirize;     
     }
 
     protected virtual void OnDisable()
     {
-        _object._OnConnectedToMaster += OnPhotonConnectedToMaster;
-        MyPhoton.OnNickNameSet -= SaveAccount;
+        _object.onPlayOnline -= Authoirize;
     }
 
     protected virtual void Update()
@@ -58,7 +56,7 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
         base.OpenTab();
     }
 
-    protected virtual void OnPhotonConnectedToMaster()
+    protected virtual void Authoirize()
     {
         if (!_data.IsAutoSignInChecked)
             OpenTab();
@@ -76,7 +74,8 @@ public class Tab_SignUp : Tab_Base<MyPhotonCallbacks>
 
     protected virtual void OnEnter()
     {
-        MyPlayfab.Manager.Register(new MyPlayfab.RegistrationData(Id, Password, Email));
+        ExternalData.MyPlayfabRegistrationForm.Register(new MyPlayfabRegistrationValues { ID = Id, Password = Password, EMail = Email });
+        SaveAccount();
     }
 
     protected virtual void SaveAccount()

@@ -62,7 +62,7 @@ public class TournamentRoomsMembers : MonoBehaviour
     {
         ExternalData.Profile.Get(getEntityProfileResponse.Profile.Lineage.MasterPlayerAccountId, result =>
         {
-            onShareTournamentRoomsMembers?.Invoke(new TournamentMemberPublicData { _memberName = result.PlayerProfile.DisplayName, _memberRoomName = (string)objectData[TournamentObjectData.KeyRoomName] });
+            onShareTournamentRoomsMembers?.Invoke(new TournamentMemberPublicData { MemberName = result.PlayerProfile.DisplayName, MemberPlayfabID = getEntityProfileResponse.Profile.Lineage.MasterPlayerAccountId, MemberRoomName = (string)objectData[TournamentObjectData.KeyRoomName] });
             GlobalFunctions.DebugLog(result.PlayerProfile.DisplayName + "/" + (string)objectData[TournamentObjectData.KeyRoomName]);
         });
     }

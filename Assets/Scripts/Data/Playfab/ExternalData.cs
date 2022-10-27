@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ExternalData : MonoBehaviour
 {
+    public static MyPlayfabRegistrationForm MyPlayfabRegistrationForm { get; private set; }
     public static MyPlayfabEntity Entity { get; private set; }
     public static MyPlayfabProfile Profile { get; private set; }
     public static MyPlayfabTitleGroups TitleGroups { get; private set; }
@@ -10,6 +11,7 @@ public class ExternalData : MonoBehaviour
 
     private void Awake()
     {
+        MyPlayfabRegistrationForm = new MyPlayfabRegistrationForm();
         Entity = new MyPlayfabEntity();
         Profile = new MyPlayfabProfile();
         TitleGroups = new MyPlayfabTitleGroups();

@@ -18,7 +18,7 @@ public class Tab_SignIn : Tab_SignUp
     }
 
 
-    protected override void OnPhotonConnectedToMaster()
+    protected override void Authoirize()
     {
         if (_data.IsAutoSignInChecked)
         {
@@ -37,7 +37,7 @@ public class Tab_SignIn : Tab_SignUp
 
     protected override void OnEnter()
     {
-        MyPlayfab.Manager.Login(new MyPlayfab.RegistrationData(Id, Password, null));
+        ExternalData.MyPlayfabRegistrationForm.Login(new MyPlayfabRegistrationValues { ID = Id, Password = Password, EMail = null });
     }
 
     private void OnAutoSignChecked()
@@ -50,7 +50,8 @@ public class Tab_SignIn : Tab_SignUp
 
     protected override void SaveAccount()
     {
-        if (IsAutoSignInChecked) base.SaveAccount();
+        if (IsAutoSignInChecked)
+            base.SaveAccount();
     }
 
     public void OnToggleShowPasswordValueChanged()

@@ -41,8 +41,6 @@ public class Tab_TournamentLobby : MonoBehaviourPun
         _titleGroupTournament.onAttemptToJoinTournamentLobby -= OnJoinTournamentLobbyAttempted;
         _myPhotonCallbacks._OnJoinedLobby -= OnJoinedLobby;
         _preciseNetworkClientCallbacks.onNetworkClientState -= PreciseNetworkClientStateReceived;
-
-        ExitTournamentGroup(); // NOT RELIABLE, FIND ANOTHER WAY!!!
     }
 
     private void CanvasGroupActivity(bool isActive)
@@ -100,12 +98,12 @@ public class Tab_TournamentLobby : MonoBehaviourPun
 
     private void ExitTournamentGroup()
     {
-        if (_isInTournamentLobby)
-        {
-            ExternalData.TitleGroups.RemoveMember(new TitleProperties(_titleProperties.GroupID, _titleProperties.GroupType, Data.Manager.EntityID, Data.Manager.EntityType), null);
-            ExternalData.EntityObjects.Delete(new TitleProperties(null, null, Data.Manager.EntityID, Data.Manager.EntityType), TournamentObjectData.ObjectName, null);
-            GlobalFunctions.DebugLog("Exit tournament group");
-            _isInTournamentLobby = false;
-        }
+        //if (_isInTournamentLobby)
+        //{
+        //    ExternalData.TitleGroups.RemoveMember(new TitleProperties(_titleProperties.GroupID, _titleProperties.GroupType, Data.Manager.EntityID, Data.Manager.EntityType), null);
+        //    ExternalData.EntityObjects.Delete(new TitleProperties(null, null, Data.Manager.EntityID, Data.Manager.EntityType), TournamentObjectData.ObjectName, null);
+        //    GlobalFunctions.DebugLog("Exit tournament group");
+        //    _isInTournamentLobby = false;
+        //}
     }
 }

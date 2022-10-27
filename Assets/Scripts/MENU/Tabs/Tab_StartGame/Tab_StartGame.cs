@@ -1,20 +1,21 @@
 ﻿using System;
-using UnityEngine;
 
 public class Tab_StartGame : Tab_Base<MyPhotonCallbacks>
 {
-    public Action OnStartPlayVsAi { get; set; }
-    public Action OnStartPlayVsOtherPlayer { get; set; }
+    public event Action onPlayOffline;
+    public event Action onPlayOnline; 
 
 
     public void OnClickVsAiButton()
     {
-        OnStartPlayVsAi?.Invoke();
+        MyPhotonNetwork.OfflineMode(true);
+        onPlayOffline?.Invoke();
     }
 
     public void OnClickVsPlayerButton()
     {
-        OnStartPlayVsOtherPlayer?.Invoke();
+        MyPhotonNetwork.OfflineMode(false);
+        onPlayOnline?.Invoke();
     }
 
     public override void OpenTab()
