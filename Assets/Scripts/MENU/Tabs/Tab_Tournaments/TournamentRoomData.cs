@@ -1,5 +1,5 @@
 public struct TournamentRoomData
 {
-    public string MasterOpponentName { get; set; }
-    public string SecondOpponentName { get; set; }
+    public string MasterPlayerID { get; set; }
+    public string SecondPlayerID { get; set; }
 }

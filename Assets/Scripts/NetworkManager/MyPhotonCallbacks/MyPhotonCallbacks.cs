@@ -5,6 +5,7 @@ using System;
 public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
 {
     public Action _OnConnectedToMaster { get; set; }
+    public event Action onDisconnect;
 
 
     public override void OnConnectedToMaster()
@@ -14,6 +15,7 @@ public partial class MyPhotonCallbacks : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        print("Disconnect");
+        onDisconnect?.Invoke();
+        GlobalFunctions.DebugLog("Disconnect");
     }
 }

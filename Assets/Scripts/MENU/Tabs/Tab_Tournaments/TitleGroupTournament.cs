@@ -7,7 +7,7 @@ public class TitleGroupTournament : MonoBehaviour
     private TournamentButton[] tournamentButton;
     private Tab_Tournaments _tabTournaments;
 
-    public event Action<TitleProperties> onAttemptToJoinTournamentLobby;
+    public event Action<TitleProperties> onClickTournamentLobbyButton;
 
 
     private void Awake()
@@ -17,27 +17,16 @@ public class TitleGroupTournament : MonoBehaviour
 
     private void OnEnable()
     {
-        GlobalFunctions.Loop<TournamentButton>.Foreach(tournamentButton, button =>
-        {
-            button.onPressTurnamentButton += OnTurnamentButtonPressed;
-        });
+        _tabTournaments.onShareTournamentsGroupsProperties += ReceiveSharedTournamentsGroupsProperties;
 
-        _tabTournaments.onShareTournamentsGroupsProperties += ReceiveSharedTournamentsGroupsProperties; 
+        GlobalFunctions.Loop<TournamentButton>.Foreach(tournamentButton, button => { button.onPressTurnamentButton += OnTurnamentButtonPressed; });
     }
 
     private void OnDisable()
     {
-        GlobalFunctions.Loop<TournamentButton>.Foreach(tournamentButton, button =>
-        {
-            button.onPressTurnamentButton -= OnTurnamentButtonPressed;
-        });
-
         _tabTournaments.onShareTournamentsGroupsProperties -= ReceiveSharedTournamentsGroupsProperties;
-    }
 
-    private void OnTurnamentButtonPressed(TitleProperties titleGroupProperties)
-    {
-        onAttemptToJoinTournamentLobby?.Invoke(titleGroupProperties);
+        GlobalFunctions.Loop<TournamentButton>.Foreach(tournamentButton, button => { button.onPressTurnamentButton -= OnTurnamentButtonPressed; });
     }
 
     private void ReceiveSharedTournamentsGroupsProperties(string[] groupIds, string groupType)
@@ -46,5 +35,10 @@ public class TitleGroupTournament : MonoBehaviour
         {
             tournamentButton[i].Initialize(new TitleProperties(groupIds[i], groupType, null, null));
         }
+    }
+
+    private void OnTurnamentButtonPressed(TitleProperties titleGroupProperties)
+    {
+        onClickTournamentLobbyButton?.Invoke(titleGroupProperties);
     }
 }

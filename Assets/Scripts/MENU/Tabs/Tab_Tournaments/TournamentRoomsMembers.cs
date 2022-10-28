@@ -1,6 +1,7 @@
 using PlayFab.GroupsModels;
 using PlayFab.ProfilesModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,11 @@ public class TournamentRoomsMembers : MonoBehaviour
     private TitleProperties _titleProperties;
 
     private string _memberRoleId = "members";
+
+    private bool _hasMemberProfileGotten;
+    private bool _isCoroutineRunning;
+
+    private IEnumerator _coroutine;
 
     public event Action<TournamentMemberPublicData> onShareTournamentRoomsMembers;
 
@@ -23,11 +29,13 @@ public class TournamentRoomsMembers : MonoBehaviour
     private void OnEnable()
     {
         _tabTournamentLobby.onTournamentLobbyJoined += JoinedTournamentLobby;
+        _tabTournamentLobby.onCloseTournamentLobby += StopEverything;
     }
 
     private void OnDisable()
     {
         _tabTournamentLobby.onTournamentLobbyJoined -= JoinedTournamentLobby;
+        _tabTournamentLobby.onCloseTournamentLobby -= StopEverything;
     }
 
     private void JoinedTournamentLobby(TitleProperties titleProperties)
@@ -37,7 +45,42 @@ public class TournamentRoomsMembers : MonoBehaviour
 
         _titleProperties = titleProperties;
 
-        ExternalData.TitleGroups.ListMembers(_titleProperties, GetMembers);
+        StartMembersListCoroutine();
+    }
+
+    private void StartMembersListCoroutine()
+    {
+        _isCoroutineRunning = false;
+
+        if (_coroutine == null)
+        {
+            _isCoroutineRunning = true;
+            _coroutine = RunMembersList();            
+            StartCoroutine(_coroutine);
+            GlobalFunctions.DebugLog("Coroutine is started");
+        }        
+    }
+
+    private void StopEverything()
+    {
+        if (_coroutine != null)
+        {
+            _isCoroutineRunning = false;
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+            GlobalFunctions.DebugLog("Coroutine has been stopped");
+        }
+    }
+
+    private IEnumerator RunMembersList()
+    {
+        while (_isCoroutineRunning)
+        {
+            _hasMemberProfileGotten = false;
+            ExternalData.TitleGroups.ListMembers(_titleProperties, GetMembers);
+            yield return new WaitUntil(()=> _hasMemberProfileGotten || !_isCoroutineRunning);
+            yield return new WaitForSeconds(1);
+        }
     }
 
     private void GetMembers(EntityMemberRole entityMemberRole, EntityWithLineage entityWithLineage)
@@ -62,8 +105,11 @@ public class TournamentRoomsMembers : MonoBehaviour
     {
         ExternalData.Profile.Get(getEntityProfileResponse.Profile.Lineage.MasterPlayerAccountId, result =>
         {
+            if (result == null)
+                return;
+
             onShareTournamentRoomsMembers?.Invoke(new TournamentMemberPublicData { MemberName = result.PlayerProfile.DisplayName, MemberPlayfabID = getEntityProfileResponse.Profile.Lineage.MasterPlayerAccountId, MemberRoomName = (string)objectData[TournamentObjectData.KeyRoomName] });
-            GlobalFunctions.DebugLog(result.PlayerProfile.DisplayName + "/" + (string)objectData[TournamentObjectData.KeyRoomName]);
+            _hasMemberProfileGotten = true;
         });
     }
 }

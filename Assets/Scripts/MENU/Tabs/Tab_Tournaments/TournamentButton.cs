@@ -21,13 +21,13 @@ public class TournamentButton : MonoBehaviour
         _button.onClick.AddListener(OnClick);
     }
 
-    private void OnClick()
-    {
-        onPressTurnamentButton?.Invoke(_titleGroupProperties);
-    }
-
     public void Initialize(TitleProperties titleGroupProperties)
     {
         _titleGroupProperties = titleGroupProperties;
     }
+
+    private void OnClick()
+    {
+        onPressTurnamentButton?.Invoke(_titleGroupProperties);
+    } 
 }

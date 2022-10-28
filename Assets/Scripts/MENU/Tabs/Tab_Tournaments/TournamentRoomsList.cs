@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class TournamentRoomsList : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private TournamentRoom[] _tournamentRooms;
-    [SerializeField] private bool _execute;
+    [SerializeField] private List<TournamentRoom> _tournamentRooms;
 
     private List<string> _friendsList = new List<string>();
+    private Dictionary<string, string> _membersInRoom = new Dictionary<string, string>();
 
     private TournamentRoomsMembers _tournamentRoomsMembers;
 
@@ -24,53 +24,45 @@ public class TournamentRoomsList : MonoBehaviourPunCallbacks
         _tournamentRoomsMembers.onShareTournamentRoomsMembers += GetTournamentRoomsMembers;    
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        if (_execute)
-        {
-            if (_friendsList.Find(userid => userid == "3E76577479D0A4D1") == null)
-            {
-                _friendsList.Add("3E76577479D0A4D1");
-            }
-
-            if (PhotonNetwork.FindFriends(_friendsList.ToArray()))
-            {
-                GlobalFunctions.DebugLog("Found friend");
-            }
-
-            _execute = false;
-        }
+        _tournamentRoomsMembers.onShareTournamentRoomsMembers -= GetTournamentRoomsMembers;
     }
-
-    //private void OnDisable()
-    //{
-    //    _tournamentRoomsMembers.onShareTournamentRoomsMembers -= GetTournamentRoomsMembers;
-    //}
 
     private void GetTournamentRoomsMembers(TournamentMemberPublicData tournamentMemberPublicData)
     {
-        GlobalFunctions.DebugLog(tournamentMemberPublicData.MemberName);
-
         if(_friendsList.Find(userid => userid == tournamentMemberPublicData.MemberPlayfabID) == null)
         {
             _friendsList.Add(tournamentMemberPublicData.MemberPlayfabID);
         }
 
-        if (PhotonNetwork.FindFriends(_friendsList.ToArray()))
+        PhotonNetwork.FindFriends(_friendsList.ToArray());
+    }
+
+    private void FixedUpdate()
+    {
+        foreach (var member in _membersInRoom)
         {
-            GlobalFunctions.DebugLog("Found friend");
+            TournamentRoom room = _tournamentRooms.Find(room => room.RoomName == member.Value);
+
+            if(room.MasterPlayerID == member.Key || room.SecondPlayerID == member.Key)
+            {
+                return;
+            }
+
+            SetPlayerName(room, member);
         }
     }
 
-    private void UpdateRoomsDisplay(TournamentRoom tournamentRoom, TournamentMemberPublicData tournamentMemberPublicData)
+    private void SetPlayerName(TournamentRoom room, KeyValuePair<string, string> member)
     {
-        if(tournamentRoom.RoomName == tournamentMemberPublicData.MemberRoomName)
+        if (String.IsNullOrEmpty(room.MasterPlayerID))
         {
-            if (String.IsNullOrEmpty(tournamentRoom.MasterOpponentName))
-                tournamentRoom.SetData(new TournamentRoomData { MasterOpponentName = tournamentMemberPublicData.MemberName });
-
-            else
-                tournamentRoom.SetData(new TournamentRoomData { SecondOpponentName = tournamentMemberPublicData.MemberName });
+            room.SetPlayerName(new TournamentRoomData { MasterPlayerID = member.Key });
+        }
+        else
+        {
+            room.SetPlayerName(new TournamentRoomData { SecondPlayerID = member.Key });
         }
     }
 
@@ -78,9 +70,43 @@ public class TournamentRoomsList : MonoBehaviourPunCallbacks
     {
         foreach (var friend in friendList)
         {
-            GlobalFunctions.DebugLog(friend.UserId + "/" + friend.IsOnline + "/" + friend.IsInRoom);
+            if (friend.IsInRoom)
+            {
+                AddMember(friend);
+            }
+            else
+            {
+                RemoveMember(friend);
+            }
         }
     }
 
-    //REMOVE NON MEMBER'S NAME FROM ROOMS
+    private void AddMember(FriendInfo friendInfo)
+    {
+        if (!_membersInRoom.ContainsKey(friendInfo.UserId))
+        {
+            _membersInRoom.Add(friendInfo.UserId, friendInfo.Room);
+        }
+        else
+        {
+            _membersInRoom[friendInfo.UserId] = friendInfo.Room;
+        }
+    }
+
+    private void RemoveMember(FriendInfo friendInfo)
+    {
+        if (_membersInRoom.ContainsKey(friendInfo.UserId))
+        {
+            _membersInRoom.Remove(friendInfo.UserId);
+
+            foreach (var room in _tournamentRooms)
+            {
+                if (room.MasterPlayerID == friendInfo.UserId)
+                    room.DeleteMasterPlayerName();
+
+                if (room.SecondPlayerID == friendInfo.UserId)
+                    room.DeleteSecondPlayerName();
+            }
+        }
+    }
 }

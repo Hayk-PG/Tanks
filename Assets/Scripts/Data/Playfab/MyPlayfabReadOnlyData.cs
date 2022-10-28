@@ -12,7 +12,6 @@ public partial class MyPlayfab : MonoBehaviour
 
     public void GetUserReadOnlyData(string playfabId, Action<Dictionary<string, UserDataRecord>> readOnlyData)
     {
-        print(playfabId);
         GetUserDataRequest gudr = new GetUserDataRequest();
         gudr.PlayFabId = playfabId;
 

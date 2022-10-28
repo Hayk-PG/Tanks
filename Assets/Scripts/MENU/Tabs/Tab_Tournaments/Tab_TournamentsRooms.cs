@@ -26,7 +26,7 @@ public class Tab_TournamentsRooms : MonoBehaviour
 
     private void OnEnable()
     {
-        _tabTournamentLobby.onTournamentLobbyJoined += JoinedTournamentLobby;
+        _tabTournamentLobby.onTournamentLobbyJoined += InitializeEntityObject;
         _myPhotonCallbacks._OnJoinedRoom += JoinedRoom;      
 
         GlobalFunctions.Loop<TournamentRoomButton>.Foreach(TournamentRoomButtons, tournamentRoomButton => 
@@ -37,7 +37,7 @@ public class Tab_TournamentsRooms : MonoBehaviour
 
     private void OnDisable()
     {
-        _tabTournamentLobby.onTournamentLobbyJoined -= JoinedTournamentLobby;
+        _tabTournamentLobby.onTournamentLobbyJoined -= InitializeEntityObject;
         _myPhotonCallbacks._OnJoinedRoom -= JoinedRoom;        
 
         GlobalFunctions.Loop<TournamentRoomButton>.Foreach(TournamentRoomButtons, tournamentRoomButton =>
@@ -46,24 +46,20 @@ public class Tab_TournamentsRooms : MonoBehaviour
         });
     }
 
-    private void JoinedTournamentLobby(TitleProperties titleProperties)
+    private void InitializeEntityObject(TitleProperties titleProperties)
     {
+        if (titleProperties == null)
+            return;
+
         _titleProperties = titleProperties;
 
-        if (_titleProperties != null)
-        {
-            _dataObject[0] = TournamentObjectData.ValueActive;
-            _dataObject[1] = titleProperties.GroupID;
-            _dataObject[2] = TournamentObjectData.ValuePassive;
-            _dataObject[3] = TournamentObjectData.ValueNotSet;
-            _dataObject[4] = TournamentObjectData.ValueNotSet;
+        _dataObject[0] = TournamentObjectData.ValueActive;
+        _dataObject[1] = titleProperties.GroupID;
+        _dataObject[2] = TournamentObjectData.ValuePassive;
+        _dataObject[3] = TournamentObjectData.ValueNotSet;
+        _dataObject[4] = TournamentObjectData.ValueNotSet;
 
-            ExternalData.EntityObjects.Set(_titleProperties, TournamentObjectData.ObjectName, TournamentObjectData.ObjectData(_dataObject), result => { });
-        }
-        else
-        {
-            GlobalFunctions.DebugLog("Joined unnamed lobby");
-        }
+        ExternalData.EntityObjects.Set(_titleProperties, TournamentObjectData.ObjectName, TournamentObjectData.ObjectData(_dataObject), result => { });
     }
 
     private void TournamentRoomButtonClicked(TournamentRoom tournamentRoom)
