@@ -1,5 +1,43 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1124979945872034061
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7070795234677207298}
+  m_Layer: 5
+  m_Name: Group_Icon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7070795234677207298
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124979945872034061}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8274910337736116172}
+  - {fileID: 5122119988863673720}
+  m_Father: {fileID: 4533814335651586504}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.013172655, y: 0.09615414}
+  m_AnchorMax: {x: 0.17609136, y: 0.90384644}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1382103675627771752
 GameObject:
   m_ObjectHideFlags: 0
@@ -30,13 +68,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4533814335651586504}
-  m_RootOrder: 1
+  m_Father: {fileID: 7070795234677207298}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.01316857, y: 0.09615444}
-  m_AnchorMax: {x: 0.12840238, y: 0.90384674}
+  m_AnchorMin: {x: -0.000025018011, y: 0.00000001461733}
+  m_AnchorMax: {x: 0.7072837, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0.0000038146973, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3370420672571225162
 CanvasRenderer:
@@ -87,8 +125,9 @@ GameObject:
   - component: {fileID: 4533814335651586504}
   - component: {fileID: 1396362095475934875}
   - component: {fileID: 4803953223681606638}
+  - component: {fileID: 7575321917927136199}
   m_Layer: 5
-  m_Name: StakeAmount_Inputs
+  m_Name: Rate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,8 +146,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4501047740937197266}
-  - {fileID: 8274910337736116172}
-  - {fileID: 5122119988863673720}
+  - {fileID: 7070795234677207298}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -155,6 +193,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7575321917927136199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2725691695084725050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed28208e4bd13b4996f14786b7cfcf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4050632584840491108
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,13 +235,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4533814335651586504}
-  m_RootOrder: 2
+  m_Father: {fileID: 7070795234677207298}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -312.30023, y: 0.000076293945}
-  m_SizeDelta: {x: 15, y: 15}
+  m_AnchorMin: {x: 0.90218985, y: 0.42857158}
+  m_AnchorMax: {x: 1.0000309, y: 0.5714287}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4338492725110772420
 CanvasRenderer:
@@ -242,7 +292,7 @@ GameObject:
   - component: {fileID: 4501047740937197266}
   - component: {fileID: 4517793810047654516}
   m_Layer: 5
-  m_Name: AmountSetter
+  m_Name: Group_Inputs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
