@@ -10,27 +10,38 @@ public abstract class BaseSliderLevel<T> : MonoBehaviour
     protected TMP_Text _title;
 
     protected CanvasGroup _canvasGroup;
-    protected Tab_SelectMaps _tabSelectMaps;
+    protected SubTab _subTab;
 
 
     protected virtual void Awake()
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _tabSelectMaps = FindObjectOfType<Tab_SelectMaps>();
+        _subTab = Get<SubTab>.From(gameObject);
     }
 
     protected virtual void OnEnable()
     {
-        _tabSelectMaps.OnTabOpened += OnTabOpened;
+        if (_subTab == null)
+            return;
+
+        _subTab._onActivity += GetTabActivity;
     }
 
     protected virtual void OnDisable()
     {
-        _tabSelectMaps.OnTabOpened -= OnTabOpened;
+        if (_subTab == null)
+            return;
+
+        _subTab._onActivity -= GetTabActivity;
     }
 
+    protected virtual void GetTabActivity(bool isActive)
+    {
+        Conditions<bool>.Compare(isActive, Activate, null);
+    }
+
+    protected abstract void Activate();
     protected abstract string Title(string suffix);
-    protected abstract void UpdateTitleText(T t);
-    protected abstract void OnTabOpened();
+    protected abstract void UpdateTitleText(T t);  
     public abstract void OnSliderValueChanged();
 }
