@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SubTab : MonoBehaviour
@@ -5,6 +6,7 @@ public class SubTab : MonoBehaviour
     [SerializeField] private SubTabsButton _subTabsButton;
     private CanvasGroup _canvasGroup;
 
+    public event Action<bool> _onActivity;
 
 
     private void Awake()
@@ -33,17 +35,16 @@ public class SubTab : MonoBehaviour
     private void SubTabActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+        _onActivity?.Invoke(isActive);
     }
 
     public void Open()
     {
-        SubTabActivity(true);
-        GlobalFunctions.DebugLog("Open");
+        SubTabActivity(true);      
     }
 
     public void Close()
     {
         SubTabActivity(false);
-        GlobalFunctions.DebugLog("Close");
     }
 }
