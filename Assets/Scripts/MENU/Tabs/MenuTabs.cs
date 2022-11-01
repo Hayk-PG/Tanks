@@ -15,6 +15,7 @@ public class MenuTabs : MonoBehaviour
     public static Tab_Tournaments Tab_Tournaments { get; private set; }
     public static Tab_TournamentLobby Tab_TournamentLobby { get; private set; }
     public static Tab_OnlineGameMode Tab_OnlineGameMode { get; private set; }
+    public static Tab_Matchmake Tab_Matchmake { get; private set; }
 
 
     private void Awake()
@@ -32,6 +33,7 @@ public class MenuTabs : MonoBehaviour
         Tab_Tournaments = Get<Tab_Tournaments>.FromChild(gameObject);
         Tab_TournamentLobby = Get<Tab_TournamentLobby>.FromChild(gameObject);
         Tab_OnlineGameMode = Get<Tab_OnlineGameMode>.FromChild(gameObject);
+        Tab_Matchmake = Get<Tab_Matchmake>.FromChild(gameObject);
     }
 
     public static void Activity(CanvasGroup activeCanvasGroup)
@@ -49,6 +51,7 @@ public class MenuTabs : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(Tab_Tournaments.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_TournamentLobby.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_OnlineGameMode.CanvasGroup, false);
+        GlobalFunctions.CanvasGroupActivity(Tab_Matchmake.CanvasGroup, false);
 
         if (activeCanvasGroup != null) GlobalFunctions.CanvasGroupActivity(activeCanvasGroup, true);
     }

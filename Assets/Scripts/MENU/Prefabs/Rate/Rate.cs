@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class Rate : MonoBehaviour
+public class Rate : MonoBehaviour, IReset
 {
     [SerializeField] private TMP_InputField _inputField;
 
@@ -37,5 +37,10 @@ public class Rate : MonoBehaviour
     {
         Number += obj;
         _inputField.text = Number.ToString();
+    }
+
+    public void SetDefault()
+    {
+        Number = 0;
     }
 }

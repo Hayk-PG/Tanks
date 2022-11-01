@@ -6,19 +6,14 @@ public enum GameWind { On, Off}
 public partial class Data : MonoBehaviour
 {
     [Header("Difficulty Level")]
-    [SerializeField] 
-    private SingleGameDifficultyLevel _singleGameDifficultyLevel;
+    [SerializeField]  private SingleGameDifficultyLevel _singleGameDifficultyLevel;
     [Header("Game Wind")]
-    [SerializeField]
-    private GameWind _gameWind;
-    [SerializeField]
-    private bool _isWindOn;
+    [SerializeField] private GameWind _gameWind;
+    [SerializeField] private bool _isWindOn;
     [Header("Game Time")]
-    [SerializeField]
-    private int _gameTime;
+    [SerializeField] private int _gameTime;
     [Header("Map Index")]
-    [SerializeField]
-    private int _mapIndex;
+    [SerializeField] private int _mapIndex;
 
     public SingleGameDifficultyLevel SingleGameDifficultyLevel
     {

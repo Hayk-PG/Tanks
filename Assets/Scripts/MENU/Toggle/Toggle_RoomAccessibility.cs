@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class Toggle_RoomAccessibility : BaseSliderLevel<int>
+public class Toggle_RoomAccessibility : BaseSliderLevel<int>, IReset
 {
     [SerializeField] private TMP_InputField _passwordInputField;
 
@@ -29,5 +29,14 @@ public class Toggle_RoomAccessibility : BaseSliderLevel<int>
     private void SetPasswordInputFieldInteractability(int index)
     {
         _passwordInputField.interactable = index == 0 ? false : true;
+    }
+
+    public void SetDefault()
+    {
+        int defaultSliderValue = 0;
+
+        _slider.value = defaultSliderValue;
+        SetPasswordInputFieldInteractability(defaultSliderValue);
+        UpdateTitleText(defaultSliderValue);
     }
 }

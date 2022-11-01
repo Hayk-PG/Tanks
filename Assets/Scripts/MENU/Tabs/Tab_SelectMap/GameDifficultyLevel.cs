@@ -12,7 +12,7 @@ public class GameDifficultyLevel : BaseSliderLevel<SingleGameDifficultyLevel>
 
     protected override string Title(string suffix)
     {
-        return "Difficulty Level " + "[" + suffix + "]";
+        return suffix;
     }
 
     protected override void UpdateTitleText(SingleGameDifficultyLevel singleGameDifficultyLevel)

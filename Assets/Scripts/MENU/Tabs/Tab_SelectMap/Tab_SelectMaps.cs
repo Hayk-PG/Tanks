@@ -18,13 +18,13 @@ public class Tab_SelectMaps : Tab_Base<MyPhotonCallbacks>
 
     private void OnEnable()
     {
-        _tabSelectedAiTanks.OnAITankSelected += base.OpenTab;
+        //_tabSelectedAiTanks.OnAITankSelected += base.OpenTab;
         _tabCreateRoom.OnOpenTab_SelectMap += OpenTabThroughRoomCreation;
     }
 
     private void OnDisable()
     {
-        _tabSelectedAiTanks.OnAITankSelected -= base.OpenTab;
+        //_tabSelectedAiTanks.OnAITankSelected -= base.OpenTab;
         _tabCreateRoom.OnOpenTab_SelectMap -= OpenTabThroughRoomCreation;
     }
 

@@ -5,6 +5,7 @@ using System;
 
 public class SubTabsButton : MonoBehaviour
 {
+    private Button _button;
     private Image _buttonImage;
     private TMP_Text _buttonText;
 
@@ -15,6 +16,7 @@ public class SubTabsButton : MonoBehaviour
     private Sprite _releasedSprite;
 
     public bool IsSelected { get; private set; }
+    public bool IsInteractable { get => _button.interactable; set => _button.interactable = value; }
 
     public event Action onSelect;
     public event Action onDeselect;
@@ -22,6 +24,7 @@ public class SubTabsButton : MonoBehaviour
 
     private void Awake()
     {
+        _button = Get<Button>.From(gameObject);
         _buttonImage = Get<Image>.From(gameObject);
         _buttonText = Get<TMP_Text>.FromChild(gameObject);
 
