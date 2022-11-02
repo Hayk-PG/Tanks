@@ -1,30 +1,44 @@
 using UnityEngine;
 
-public class Rounds : BaseSliderLevel<int>
+public class Rounds : BaseSliderLevel<int>, IMatchmakeTextResult
 {
-    protected override void Awake()
-    {
-        UpdateTitleText(0);
-    }
-
-    public override void OnSliderValueChanged()
-    {
-        UpdateTitleText(Mathf.FloorToInt(_slider.value));
-    }
-
-    protected override void Activate()
-    {
-        
-    }
-
     protected override string Title(string suffix)
     {
         return "Rounds " + "[" + suffix + "]";
     }
 
+    protected override string Result(int rounds)
+    {
+        return GlobalFunctions.BlueColorText(rounds.ToString());
+    }
+
+    private int RoundsCount(int index)
+    {
+        return index == 0 ? 1 : index == 1 ? 3 : 5;
+    }
+
     protected override void UpdateTitleText(int index)
     {
-        int rounds = index == 0 ? 1 : index == 1 ? 3 : 5;
-        _title.text = Title("<color=#C25700>" + rounds + "</color>");
+        _title.text = Title(Result(RoundsCount(index)));
+    }
+
+    public override void OnSliderValueChanged()
+    {
+        UpdateTitleText(SliderValue);
+    }
+
+    public override void SetDefault()
+    {
+        UpdateTitleText(SliderValue = 0);
+    }
+
+    public string TextResultOnline()
+    {
+        return Keys.GameRounds + GlobalFunctions.BlueColorText(RoundsCount(SliderValue).ToString()) + "\n";
+    }
+
+    public string TextResultOffline()
+    {
+        return "\n";
     }
 }

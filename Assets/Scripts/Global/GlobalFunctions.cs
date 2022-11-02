@@ -26,6 +26,26 @@ public static class GlobalFunctions
         Debug.Log(message);
     }
 
+    public static string TextWithColorCode(string colorCode, string text)
+    {
+        return "<color=" + colorCode + ">" + text + "</color>";
+    }
+
+    public static string RedColorText(string text)
+    {
+        return "<color=#F51B01>" + text + "</color>";
+    }
+
+    public static string BlueColorText(string text)
+    {
+        return "<color=#80BBF7>" + text + "</color>";
+    }
+
+    public static string GreenColorText(string text)
+    {
+        return "<color=#00F510>" + text + "</color>";
+    }
+
     public static bool LocalPlayerChecker(bool isLocalPlayer)
     {
         return isLocalPlayer;

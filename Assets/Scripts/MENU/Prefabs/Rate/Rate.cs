@@ -1,12 +1,13 @@
 using UnityEngine;
 using TMPro;
 
-public class Rate : MonoBehaviour, IReset
+public class Rate : MonoBehaviour, IReset, IMatchmakeTextResult
 {
     [SerializeField] private TMP_InputField _inputField;
-
     [SerializeField] private RateButton _decrementButton;
     [SerializeField] private RateButton _incrementButton;
+
+    [SerializeField] private Item _item;
 
     public int Number
     {
@@ -42,5 +43,16 @@ public class Rate : MonoBehaviour, IReset
     public void SetDefault()
     {
         Number = 0;
+    }
+
+    public string TextResultOnline()
+    {
+        string number = Number <= 0 ? GlobalFunctions.RedColorText(Number.ToString()) : GlobalFunctions.BlueColorText(Number.ToString());
+        return _item.Name + number + "\n";
+    }
+
+    public string TextResultOffline()
+    {
+        return "\n";
     }
 }
