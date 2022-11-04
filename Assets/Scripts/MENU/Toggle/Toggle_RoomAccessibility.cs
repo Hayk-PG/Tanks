@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class Toggle_RoomAccessibility : BaseSliderLevel<int>, IMatchmakeTextResult
+public class Toggle_RoomAccessibility : BaseSliderLevel<int>, IMatchmakeTextResult, IMatchmakeData
 {
     [SerializeField] private TMP_InputField _passwordInputField;
 
@@ -46,5 +46,10 @@ public class Toggle_RoomAccessibility : BaseSliderLevel<int>, IMatchmakeTextResu
     public string TextResultOffline()
     {
         return "\n";
+    }
+
+    public void StoreData(MatchmakeData matchmakeData)
+    {
+        matchmakeData.IsRoomPublic = !_passwordInputField.interactable;
     }
 }

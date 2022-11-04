@@ -1,7 +1,7 @@
 using System;
 
 
-public class MatchmakeRoomPassword : MatchmakeRoomInfo
+public class MatchmakeRoomPassword : MatchmakeRoomInfo, IMatchmakeData
 {
     public override string TextResultOffline()
     {
@@ -12,5 +12,12 @@ public class MatchmakeRoomPassword : MatchmakeRoomInfo
     {
         string password = String.IsNullOrEmpty(_customInputField.Text) ? GlobalFunctions.RedColorText("N/A") : GlobalFunctions.BlueColorText(_customInputField.Text);
         return Keys.RoomPassword + password + "\n";
+    }
+
+    public void StoreData(MatchmakeData matchmakeData)
+    {
+        string password = _customInputField.Text;
+        matchmakeData.IsRoomPasswordSet = !String.IsNullOrEmpty(password);
+        matchmakeData.RoomPassword = password;
     }
 }

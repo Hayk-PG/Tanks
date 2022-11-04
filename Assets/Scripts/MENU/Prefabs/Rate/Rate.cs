@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class Rate : MonoBehaviour, IReset, IMatchmakeTextResult
+public class Rate : MonoBehaviour, IReset, IMatchmakeTextResult, IMatchmakeData
 {
     [SerializeField] private TMP_InputField _inputField;
     [SerializeField] private RateButton _decrementButton;
@@ -54,5 +54,23 @@ public class Rate : MonoBehaviour, IReset, IMatchmakeTextResult
     public string TextResultOffline()
     {
         return "\n";
+    }
+
+    public void StoreData(MatchmakeData matchmakeData)
+    {
+        if(_item.Name == Keys.Gold)
+            matchmakeData.Gold = Number;
+
+        if (_item.Name == Keys.AmmoBox)
+            matchmakeData.AmmoBox = Number;
+
+        if (_item.Name == Keys.BasicBox)
+            matchmakeData.BasicBox = Number;
+
+        if (_item.Name == Keys.WoodBox)
+            matchmakeData.WoodBox = Number;
+
+        if (_item.Name == Keys.RewardChest)
+            matchmakeData.RewardChest = Number;
     }
 }

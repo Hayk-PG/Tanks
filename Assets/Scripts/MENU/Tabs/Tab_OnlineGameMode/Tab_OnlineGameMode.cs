@@ -12,13 +12,25 @@ public class Tab_OnlineGameMode : Tab_Base<Tab_SelectedTanks>
 
     private void OnEnable()
     {
-        _object.onOnlineModeTankSelected += base.OpenTab;
-        _myPhotonCallbacks._OnLeftRoom += base.OpenTab;
+        _object.onOnlineModeTankSelected += OpenTab;
+        _myPhotonCallbacks._OnLeftRoom += OpenTab;
+        _myPhotonCallbacks._OnLeftLobby += OpenTab;
     }
 
     private void OnDisable()
     {
-        _object.onOnlineModeTankSelected -= base.OpenTab;
-        _myPhotonCallbacks._OnLeftRoom -= base.OpenTab;
+        _object.onOnlineModeTankSelected -= OpenTab;
+        _myPhotonCallbacks._OnLeftRoom -= OpenTab;
+        _myPhotonCallbacks._OnLeftLobby -= OpenTab;
+    }
+
+    public override void OpenTab()
+    {
+        base.OpenTab();
+
+        if (MyPhotonNetwork.IsInLobby)
+        {
+            MyPhoton.LeaveLobby();
+        }
     }
 }

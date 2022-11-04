@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using System;
 
 public class MatchmakeLastSubTab : MonoBehaviour, IReset
@@ -11,10 +10,10 @@ public class MatchmakeLastSubTab : MonoBehaviour, IReset
     private SubTab _subTab;
     private IMatchmakeTextResult[] _iMatchmakeTextResult;
 
-    private string _dataInOnlineMode;
-    private string _dataInOfflineMode;
-    private string _combinedText;
-    private string textPiece;
+    private string _textOnlineResult;
+    private string _textOfflineResult;
+    private string _textFinalResult;
+    private string _textLine;
     private char _newLine = '\n';
     private bool _isActive;
     private float _time;
@@ -42,55 +41,77 @@ public class MatchmakeLastSubTab : MonoBehaviour, IReset
 
     private void Update()
     {
-        if (_isActive && _charIndex < _combinedText.Length)
+        ReadTextFinalResult();
+    }
+
+    private void ReadTextFinalResult()
+    {
+        if (_isActive && _charIndex < _textFinalResult.Length)
         {
-            _time += 2 * Time.deltaTime;
+            _time += 10 * Time.deltaTime;
 
-            if (_time >= 0.1f)
-            {
-                textPiece += _combinedText[_charIndex];
+            bool isNextCharReady = _time >= 0.1f;
+            bool isReadyToPrint = _textFinalResult[_charIndex] == _newLine;
 
-                if(_combinedText[_charIndex] == _newLine)
-                {
-                    _text.text += textPiece;
-                    textPiece = "";
-                }
-            
-                _time = 0;
-                _charIndex++;
-            }
-
-            if(_charIndex >= _combinedText.Length)
-            {
-                _onConfirmReady?.Invoke();
-            }
+            AssembleTextLine(isNextCharReady, isReadyToPrint);
+            Finish();
         }
     }
 
-    private void GetMessage()
+    private void AssembleTextLine(bool isNextCharReady, bool isReadyToPrint)
+    {
+        if (isNextCharReady)
+        {
+            _textLine += _textFinalResult[_charIndex];
+
+            PrintAndGoNextLine(isReadyToPrint);
+        }
+    }
+
+    private void PrintAndGoNextLine(bool isReadyToPrint)
+    {
+        if (isReadyToPrint)
+        {
+            _text.text += _textLine;
+            _textLine = "";
+        }
+
+        _time = 0;
+        _charIndex++;
+    }
+
+    private void Finish()
+    {
+        if (_charIndex >= _textFinalResult.Length)
+        {
+            _onConfirmReady?.Invoke();
+        }
+    }
+
+    private void GetTextResult()
     {
         foreach (var storedData in _iMatchmakeTextResult)
         {
-            _dataInOnlineMode += storedData.TextResultOnline();
-            _dataInOfflineMode += storedData.TextResultOffline();
+            _textOnlineResult += storedData.TextResultOnline();
+            _textOfflineResult += storedData.TextResultOffline();
         }
 
-        _combinedText = MyPhotonNetwork.IsOfflineMode ? _dataInOfflineMode : _dataInOnlineMode;
+        _textFinalResult = MyPhotonNetwork.IsOfflineMode ? _textOfflineResult : _textOnlineResult;
     }
 
     private void GetSubTabActivity(bool isActive)
     {
         _isActive = isActive;
 
-        Conditions<bool>.Compare(_isActive, GetMessage, SetDefault);
+        Conditions<bool>.Compare(_isActive, GetTextResult, SetDefault);
     }
 
     public void SetDefault()
     {
         _text.text = "";
-        textPiece = "";
-        _dataInOnlineMode = "";
-        _dataInOfflineMode = "";
+        _textLine = "";
+        _textOnlineResult = "";
+        _textOfflineResult = "";
         _isActive = false;
         _time = 0;
         _charIndex = 0;

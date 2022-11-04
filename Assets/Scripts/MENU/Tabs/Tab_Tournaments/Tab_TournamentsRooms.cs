@@ -72,8 +72,8 @@ public class Tab_TournamentsRooms : MonoBehaviour
 
     private void CreateRoom(Dictionary<string, object> dataObject, TournamentRoom tournamentRoom)
     {
-        if (dataObject.ContainsKey(TournamentObjectData.KeyTournamentName) && (string)dataObject[TournamentObjectData.KeyTournamentName] == _titleProperties.GroupID)
-            MyPhoton.CreateRoom(LobbyType.Default, _titleProperties.GroupID, tournamentRoom.RoomName, null, false, 0, 30, false);
+        //if (dataObject.ContainsKey(TournamentObjectData.KeyTournamentName) && (string)dataObject[TournamentObjectData.KeyTournamentName] == _titleProperties.GroupID)
+        //    MyPhoton.CreateRoom(LobbyType.Default, _titleProperties.GroupID, tournamentRoom.RoomName, null, false, 0, 30, false);
     }
 
     private void JoinedRoom(Room room)

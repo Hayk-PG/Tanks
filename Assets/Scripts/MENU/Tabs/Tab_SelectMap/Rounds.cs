@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Rounds : BaseSliderLevel<int>, IMatchmakeTextResult
+public class Rounds : BaseSliderLevel<int>, IMatchmakeTextResult, IMatchmakeData
 {
     protected override string Title(string suffix)
     {
@@ -40,5 +40,10 @@ public class Rounds : BaseSliderLevel<int>, IMatchmakeTextResult
     public string TextResultOffline()
     {
         return "\n";
+    }
+
+    public void StoreData(MatchmakeData matchmakeData)
+    {
+        matchmakeData.Rounds = RoundsCount(SliderValue);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public partial class MyPhoton : MonoBehaviour
 {
@@ -9,11 +10,11 @@ public partial class MyPhoton : MonoBehaviour
         return new TypedLobby(lobbyName, lobbyType);
     }
 
-    public static void CreateRoom(LobbyType lobbyType, string lobbyName, string roomName, string password, bool isPasswordSet, int mapIndex, int gameTime, bool isWindOn)
+    public static void CreateRoom(LobbyType lobbyType, string lobbyName, MatchmakeData matchmakeData)
     {
         DefineRoomOptions(out RoomOptions roomOptions);
-        SetRoomCustomProperties(roomOptions, new object[] { mapIndex, gameTime , isWindOn });
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, LobbyType(lobbyName, lobbyType));
+        SetRoomCustomProperties(roomOptions, matchmakeData);
+        PhotonNetwork.JoinOrCreateRoom(matchmakeData.RoomName, roomOptions, LobbyType(lobbyName, lobbyType));
     }
 
     private static void DefineRoomOptions(out RoomOptions roomOptions)
@@ -25,14 +26,14 @@ public partial class MyPhoton : MonoBehaviour
         roomOptions.IsOpen = true;
     }
 
-    private static void SetRoomCustomProperties(RoomOptions roomOptions, object[] roomCustomProperties)
+    private static void SetRoomCustomProperties(RoomOptions roomOptions, MatchmakeData matchmakeData)
     {
-        ExitGames.Client.Photon.Hashtable _customProperties = new ExitGames.Client.Photon.Hashtable();
+        Hashtable _customProperties = new Hashtable();
         roomOptions.CustomRoomPropertiesForLobby = new string[3] { Keys.MapIndex, Keys.GameTime, Keys.MapWind };
 
-        _customProperties.Add(Keys.MapIndex, roomCustomProperties[0]);
-        _customProperties.Add(Keys.GameTime, roomCustomProperties[1]);
-        _customProperties.Add(Keys.MapWind, roomCustomProperties[2]);
+        _customProperties.Add(Keys.MapIndex, matchmakeData.MapIndex);
+        _customProperties.Add(Keys.GameTime, matchmakeData.Time);
+        _customProperties.Add(Keys.MapWind, matchmakeData.IsWindOn);
 
         roomOptions.CustomRoomProperties = _customProperties;
     }

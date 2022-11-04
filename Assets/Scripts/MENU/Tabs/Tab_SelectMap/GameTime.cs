@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GameTime : BaseSliderLevel<int>, IMatchmakeTextResult
+public class GameTime : BaseSliderLevel<int>, IMatchmakeTextResult, IMatchmakeData
 {
     protected override string Title(string suffix)
     {
@@ -38,5 +38,10 @@ public class GameTime : BaseSliderLevel<int>, IMatchmakeTextResult
     public string TextResultOffline()
     {
         return TextResultOnline();
+    }
+
+    public void StoreData(MatchmakeData matchmakeData)
+    {
+        matchmakeData.Time = Data.Manager.GameTime;
     }
 }

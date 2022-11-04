@@ -42,7 +42,7 @@ public class Tab_SelectMaps : Tab_Base<MyPhotonCallbacks>
         }
         else
         {
-            MyPhoton.CreateRoom( Photon.Realtime.LobbyType.Default, "", _tabSelectMapOnline._roomProperties._roomName, _tabSelectMapOnline._roomProperties._password, _tabSelectMapOnline._roomProperties._isPasswordSet, Data.Manager.MapIndex, Data.Manager.GameTime, Data.Manager.IsWindOn);
+            //MyPhoton.CreateRoom( Photon.Realtime.LobbyType.Default, "", _tabSelectMapOnline._roomProperties._roomName, _tabSelectMapOnline._roomProperties._password, _tabSelectMapOnline._roomProperties._isPasswordSet, Data.Manager.MapIndex, Data.Manager.GameTime, Data.Manager.IsWindOn);
         }
 
         Loading.Activity(true);
