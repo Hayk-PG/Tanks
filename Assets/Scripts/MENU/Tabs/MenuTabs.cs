@@ -5,6 +5,7 @@ public class MenuTabs : MonoBehaviour
     public static Tab_StartGame Tab_StartGame { get; private set; }
     public static Tab_SignUp Tab_SignUp { get; private set; }
     public static Tab_SignIn Tab_SignIn { get; private set; }
+    public static Tab_HomeOnline Tab_HomeOnline { get; private set; }
     public static Tab_SelectedTanks Tab_SelectedTanks { get; private set; }
     public static Tab_SelectedAITanks Tab_SelectedAITanks { get; private set; }
     public static Tab_SelectMaps Tab_SelectMap { get; private set; }
@@ -14,7 +15,6 @@ public class MenuTabs : MonoBehaviour
     public static Tab_Profile Tab_Profile { get; private set; }
     public static Tab_Tournaments Tab_Tournaments { get; private set; }
     public static Tab_TournamentLobby Tab_TournamentLobby { get; private set; }
-    public static Tab_OnlineGameMode Tab_OnlineGameMode { get; private set; }
     public static Tab_Matchmake Tab_Matchmake { get; private set; }
 
 
@@ -23,6 +23,7 @@ public class MenuTabs : MonoBehaviour
         Tab_StartGame = Get<Tab_StartGame>.FromChild(gameObject);
         Tab_SignUp = Get<Tab_SignUp>.FromChild(gameObject);
         Tab_SignIn = Get<Tab_SignIn>.FromChild(gameObject);
+        Tab_HomeOnline = Get<Tab_HomeOnline>.FromChild(gameObject);
         Tab_SelectedTanks = Get<Tab_SelectedTanks>.FromChild(gameObject);
         Tab_SelectedAITanks = Get<Tab_SelectedAITanks>.FromChild(gameObject);
         Tab_SelectMap = Get<Tab_SelectMaps>.FromChild(gameObject);
@@ -32,7 +33,6 @@ public class MenuTabs : MonoBehaviour
         Tab_Profile = Get<Tab_Profile>.FromChild(gameObject);
         Tab_Tournaments = Get<Tab_Tournaments>.FromChild(gameObject);
         Tab_TournamentLobby = Get<Tab_TournamentLobby>.FromChild(gameObject);
-        Tab_OnlineGameMode = Get<Tab_OnlineGameMode>.FromChild(gameObject);
         Tab_Matchmake = Get<Tab_Matchmake>.FromChild(gameObject);
     }
 
@@ -41,6 +41,7 @@ public class MenuTabs : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(Tab_StartGame.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SignUp.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SignIn.CanvasGroup, false);
+        GlobalFunctions.CanvasGroupActivity(Tab_HomeOnline.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SelectedTanks.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SelectedAITanks.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SelectMap.CanvasGroup, false);
@@ -50,7 +51,6 @@ public class MenuTabs : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(Tab_Profile.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_Tournaments.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_TournamentLobby.CanvasGroup, false);
-        GlobalFunctions.CanvasGroupActivity(Tab_OnlineGameMode.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_Matchmake.CanvasGroup, false);
 
         if (activeCanvasGroup != null) GlobalFunctions.CanvasGroupActivity(activeCanvasGroup, true);

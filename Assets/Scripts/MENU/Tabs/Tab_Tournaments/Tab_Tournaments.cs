@@ -1,6 +1,6 @@
 using System;
 
-public class Tab_Tournaments : Tab_Base<OnlineGameModeController>
+public class Tab_Tournaments : Tab_Base<MyPhotonCallbacks>
 {
     public string[] GroupsID { get; private set; }
     public string GroupsType { get; private set; }
@@ -17,12 +17,12 @@ public class Tab_Tournaments : Tab_Base<OnlineGameModeController>
 
     private void OnEnable()
     {
-        _object.onSelectTournametMode += OnTournamentModeSelected;
+        //_object.onSelectTournametMode += OnTournamentModeSelected;
     }
 
     private void OnDisable()
     {
-        _object.onSelectTournametMode -= OnTournamentModeSelected;
+        //_object.onSelectTournametMode -= OnTournamentModeSelected;
     }
 
     private void SetGroupsIDs()

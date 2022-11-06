@@ -3,8 +3,7 @@ using UnityEngine;
 public class SubTabButtonsList : MonoBehaviour, IReset
 {
     [SerializeField] private SubTabsButton _firsSubTabButton;
-    [SerializeField] private SubTabsButton _generalSubTabButton;
-    [SerializeField] private SubTabsButton _rateSubTabButton;
+    [SerializeField] private SubTabsButton[] _modeDependentButtons;
   
 
     public void SetDefault()
@@ -16,7 +15,6 @@ public class SubTabButtonsList : MonoBehaviour, IReset
 
     private void ButtonsInteractability(bool isInteractable)
     {
-        _generalSubTabButton.IsInteractable = isInteractable;
-        _rateSubTabButton.IsInteractable = isInteractable;
+        GlobalFunctions.Loop<SubTabsButton>.Foreach(_modeDependentButtons, dependentButton => { dependentButton.IsInteractable = isInteractable; });
     }
 }

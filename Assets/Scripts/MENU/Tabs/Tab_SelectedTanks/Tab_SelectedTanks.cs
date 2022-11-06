@@ -22,13 +22,13 @@ public class Tab_SelectedTanks : Tab_Base<Tab_StartGame>
     private void OnEnable()
     {
         _object.onPlayOffline += OpenTab;
-        ExternalData.MyPlayfabRegistrationForm.onLogin += OpenTab;
+        //ExternalData.MyPlayfabRegistrationForm.onLogin += OpenTab;
     }
 
     private void OnDisable()
     {
         _object.onPlayOffline -= OpenTab;
-        ExternalData.MyPlayfabRegistrationForm.onLogin -= OpenTab;
+        //ExternalData.MyPlayfabRegistrationForm.onLogin -= OpenTab;
     }
 
     public override void OpenTab()

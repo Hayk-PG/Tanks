@@ -26,8 +26,11 @@ public class Tab_Matchmake : Tab_Base<MyPhotonCallbacks>
 
     public override void OpenTab()
     {
-        base.OpenTab();
-        ResetSubElements();
+        if(!MyPhotonNetwork.IsInLobby || MyPhotonNetwork.IsDesiredLobby(Photon.Realtime.LobbyType.Default, Names.LobbyDefault))
+        {
+            base.OpenTab();
+            ResetSubElements();
+        }
     }
 
     private void ResetSubElements()
