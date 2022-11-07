@@ -1,3 +1,5 @@
+
+
 public class Tab_Matchmake : Tab_Base<MyPhotonCallbacks>
 {
     private IReset[] _iResets;
@@ -26,7 +28,7 @@ public class Tab_Matchmake : Tab_Base<MyPhotonCallbacks>
 
     public override void OpenTab()
     {
-        if(!MyPhotonNetwork.IsInLobby || MyPhotonNetwork.IsDesiredLobby(Photon.Realtime.LobbyType.Default, Names.LobbyDefault))
+        if (!MyPhotonNetwork.IsInLobby || MyPhotonNetwork.IsDesiredLobby(Photon.Realtime.LobbyType.Default, Names.LobbyDefault))
         {
             base.OpenTab();
             ResetSubElements();
@@ -38,3 +40,4 @@ public class Tab_Matchmake : Tab_Base<MyPhotonCallbacks>
         GlobalFunctions.Loop<IReset>.Foreach(_iResets, iReset => { iReset.SetDefault(); });
     }
 }
+

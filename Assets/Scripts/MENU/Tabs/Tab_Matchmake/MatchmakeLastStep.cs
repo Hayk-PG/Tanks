@@ -1,15 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MatchmakeLastStep : MonoBehaviour, IReset
 {
-    [SerializeField] private Button _confirmButton;
     private SubTab _subTab;
     private MatchmakeLastSubTab _lastSubTab;
     private Tab_Matchmake _tabMatchmake;
+    private LockScreen _lockScreen;
 
     private IMatchmakeData[] _iMatchmakeDatas;
     private MatchmakeData _matchmakeData;
+
+    private int _readedFilesCount;
 
 
     private void Awake()
@@ -17,6 +18,7 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
         _lastSubTab = Get<MatchmakeLastSubTab>.From(gameObject);
         _subTab = Get<SubTab>.From(gameObject);
         _tabMatchmake = Get<Tab_Matchmake>.From(gameObject);
+        _lockScreen = Get<LockScreen>.FromChild(_tabMatchmake.gameObject);
         _iMatchmakeDatas = _tabMatchmake.GetComponentsInChildren<IMatchmakeData>();
     }
 
@@ -32,35 +34,32 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
         _subTab._onActivity -= GetSubTabActivity;
     }
 
-    private void Update()
-    {
-        _confirmButton.onClick.RemoveAllListeners();
-        _confirmButton.onClick.AddListener(Click);
-    }
-
     private void SetEverythingUp()
     {
         GetStoredData();
-        _confirmButton.interactable = true;
+        CreateGame();
     }
 
     private void GetStoredData()
     {
-        _matchmakeData = new MatchmakeData();
-        GlobalFunctions.Loop<IMatchmakeData>.Foreach(_iMatchmakeDatas, iMatchmakeData => { iMatchmakeData.StoreData(_matchmakeData); });
+        _matchmakeData = new MatchmakeData();       
+
+        GlobalFunctions.Loop<IMatchmakeData>.Foreach(_iMatchmakeDatas, iMatchmakeData =>
+        {
+            iMatchmakeData.StoreData(_matchmakeData);
+
+            _readedFilesCount--;
+        });
     }
 
-    private void GetSubTabActivity(bool isActive)
+    private void CreateGame()
     {
-        if (!isActive)
+        if (_readedFilesCount <= 0)
         {
-            SetDefault();
+            _lockScreen.Lock();
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, MatchmakeOffline, MatchmakeOnline);
         }
     }
-
-    public void SetDefault() => _confirmButton.interactable = false;
-
-    public void Click() => Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, MatchmakeOffline, MatchmakeOnline);
 
     private void MatchmakeOffline() => MyScene.Manager.LoadScene(MyScene.SceneName.Game);
 
@@ -70,5 +69,18 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
         {
             MyPhoton.CreateRoom(Photon.Realtime.LobbyType.Default, "Default", _matchmakeData);
         }
+    }  
+
+    private void GetSubTabActivity(bool isActive)
+    {
+        if (!isActive)
+        {
+            SetDefault();
+        }
     }
+
+    public void SetDefault()
+    {
+        _readedFilesCount = _iMatchmakeDatas.Length;
+    } 
 }
