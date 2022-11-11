@@ -593,7 +593,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
+  m_fontSize: 34.8
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1025,6 +1025,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8345369626515287257}
   - component: {fileID: 8353575722462842989}
+  - component: {fileID: 159871709261283377}
+  - component: {fileID: 2051519751895531952}
+  - component: {fileID: 364487090816075735}
   m_Layer: 5
   m_Name: Btn_Tank
   m_TagString: Untagged
@@ -1055,7 +1058,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -602, y: 144}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 307.69232, y: 248.58461}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8353575722462842989
@@ -1102,6 +1105,49 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &159871709261283377
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3913003462251597948}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &2051519751895531952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3913003462251597948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3c3a7f4d95c4e86bdf6b395a51bb59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 159871709261283377}
+  _btnTankLogic: {fileID: 364487090816075735}
+  _imgTank: {fileID: 6712628202455686175}
+  _imgLock: {fileID: 6056729438982396238}
+  _txtName: {fileID: 8599793794977261921}
+  _txtLevel: {fileID: 8619923457896591606}
+  _stars: {fileID: 62718786813282807}
+--- !u!114 &364487090816075735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3913003462251597948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06a598d9bbe9c42fe8462569f45be3bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5090974524264929019
 GameObject:
   m_ObjectHideFlags: 0
@@ -1272,7 +1318,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.6
+  m_fontSize: 34.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
