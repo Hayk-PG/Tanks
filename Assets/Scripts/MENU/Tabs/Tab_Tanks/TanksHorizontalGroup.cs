@@ -6,23 +6,38 @@ public class TanksHorizontalGroup : MonoBehaviour
 {
     [SerializeField] private Btn_Tank[] _btnTanks;
 
-
-    public void Initialize(TankProperties[] horizontalGroupTanksList, TankProperties[] dataTanksList)
+    public struct Parameters
     {
-        for (int i = 0; i < horizontalGroupTanksList.Length; i++)
+        public int _index;
+        public int _horizontalGroupTanksLength;
+        public TankProperties _btnTankProperty;
+        public TankProperties[] _dataTanksList;
+    }
+
+    public void Initialize(int horizontalGroupsLength, TankProperties[] tankProperties, TankProperties[] dataTanksList)
+    {
+        for (int i = 0; i < tankProperties.Length; i++)
         {
-            DefineBtnTankPropeties(i, horizontalGroupTanksList[i], dataTanksList);
+            Parameters parameters = new Parameters
+            {
+                _index = i,
+                _horizontalGroupTanksLength = horizontalGroupsLength,
+                _btnTankProperty = tankProperties[i],
+                _dataTanksList = dataTanksList
+            };
+
+            DefineBtnTankPropeties(parameters);
         }
     }
 
-    private void DefineBtnTankPropeties(int index, TankProperties btnTankProperty, TankProperties[] dataTanksList)
+    private void DefineBtnTankPropeties(Parameters parameters)
     {
-        _btnTanks[index].SetActivity(true);
-        _btnTanks[index].SetPicture(btnTankProperty._iconTank);
-        _btnTanks[index].SetName(btnTankProperty._tankName);
-        _btnTanks[index].SetStars(btnTankProperty._starsCount);
-        _btnTanks[index].SetRelatedTankIndex((dataTanksList.ToList().IndexOf(btnTankProperty)));
-        _btnTanks[index].SetLevel(btnTankProperty._availableInLevel);
-        _btnTanks[index].AutoSelect(Data.Manager.SelectedTankIndex);
+        _btnTanks[parameters._index].SetActivity(true);
+        _btnTanks[parameters._index].SetPicture(parameters._btnTankProperty._iconTank);
+        _btnTanks[parameters._index].SetName(parameters._btnTankProperty._tankName);
+        _btnTanks[parameters._index].SetStars(parameters._btnTankProperty._starsCount);
+        _btnTanks[parameters._index].SetRelatedTankIndex((parameters._dataTanksList.ToList().IndexOf(parameters._btnTankProperty)));
+        _btnTanks[parameters._index].SetLevel(parameters._btnTankProperty._availableInLevel);
+        _btnTanks[parameters._index].AutoSelect(Data.Manager.SelectedTankIndex, parameters._horizontalGroupTanksLength);
     }
 }

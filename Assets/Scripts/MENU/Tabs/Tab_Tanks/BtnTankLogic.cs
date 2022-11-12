@@ -19,23 +19,32 @@ public class BtnTankLogic : MonoBehaviour, IReset
 
     private void OnEnable()
     {
-        _btnTank._onAutoSelect += delegate { Select(); };
+        _btnTank._onAutoSelect += AutoSelect;
+        _btnTank._onClick += Select;
     }
 
     private void OnDisable()
     {
-        _btnTank._onAutoSelect -= delegate { Select(); };
+        _btnTank._onAutoSelect -= AutoSelect;
+        _btnTank._onClick -= Select;
     }
 
-    private void Update()
+    private void SetScrollRectPosition(int horizontalGroupsLength)
     {
-        _btnTank.Button.onClick.RemoveAllListeners();
-        _btnTank.Button.onClick.AddListener(Click);
+        int horizontalGroupIndex = transform.parent.GetSiblingIndex() + 1;
+        float value = Mathf.InverseLerp(horizontalGroupsLength, 1, horizontalGroupIndex);
+        _tabTanks.CustomScrollRect.SetNormalizedPosition(value);
     }
 
-    public void Select()
+    private void AutoSelect(int relatedTankIndex, int horizontalGroupsLength)
     {
-        Data.Manager.SetData(new Data.NewData { SelectedTankIndex = _btnTank.RelaedTankIndex });
+        Select(relatedTankIndex);
+        SetScrollRectPosition(horizontalGroupsLength);
+    }
+
+    private void Select(int relatedTankIndex)
+    {
+        Data.Manager.SetData(new Data.NewData { SelectedTankIndex = relatedTankIndex });
         GlobalFunctions.Loop<IReset>.Foreach(_tabTanks.GetComponentsInChildren<IReset>(true), iReset => { iReset.SetDefault(); });
 
         _btnTank.SpriteButton = _sprtButtonPressed;
@@ -47,12 +56,7 @@ public class BtnTankLogic : MonoBehaviour, IReset
         _btnTank.SpriteButton = _sprtButtonReleased;
         _btnTank.ImageTank.color = _clrTankReleased;
     }
-
-    public void Click()
-    {
-        Select();
-    }
-
+   
     public void SetDefault()
     {
         Deselect();

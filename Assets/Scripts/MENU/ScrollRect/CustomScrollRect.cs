@@ -1,16 +1,17 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(ScrollRect))]
 
-public class ScrollRectLimiter : MonoBehaviour
+public class CustomScrollRect : MonoBehaviour
 {
-    private ScrollRect _scrollRect;
+    public ScrollRect _scrollRect;
 
 
     private void Awake()
     {
-        _scrollRect = Get<ScrollRect>.From(gameObject);    
+        _scrollRect = Get<ScrollRect>.From(gameObject);
     }
 
     private void Update()
@@ -26,5 +27,16 @@ public class ScrollRectLimiter : MonoBehaviour
 
         if (position.y < 0)
             _scrollRect.verticalNormalizedPosition = 0;
+    }
+
+    public void SetNormalizedPosition(float position)
+    {
+        StartCoroutine(Test(position));
+    }
+
+    private IEnumerator Test(float position)
+    {
+        yield return null;
+        _scrollRect.verticalNormalizedPosition = position;
     }
 }

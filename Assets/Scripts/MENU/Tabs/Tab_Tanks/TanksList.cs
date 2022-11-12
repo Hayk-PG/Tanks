@@ -5,7 +5,13 @@ public class TanksList : MonoBehaviour
     [SerializeField] private TanksHorizontalGroup[] _horizontalGroups;
     private Tab_Tanks _tabTanks;
 
-
+    public struct Parameters
+    {
+        public int _index;
+        public int _horizontalGroupsLength;
+        public TankProperties[] _tankProperties;
+        public TankProperties[] _dataTanksList;
+    }
 
     private void Awake()
     {
@@ -42,13 +48,21 @@ public class TanksList : MonoBehaviour
                 }
             }
 
-            InitializeHorizontalGroup(i, horizontalGroupTanksList, dataTanksList);
+            Parameters parameters = new Parameters
+            {
+                _index = i,
+                _horizontalGroupsLength = horizGroupsCount,
+                _tankProperties = horizontalGroupTanksList,
+                _dataTanksList = dataTanksList
+            };
+
+            InitializeHorizontalGroup(parameters);
         }
     }
 
-    private void InitializeHorizontalGroup(int i, TankProperties[] horizontalGroupTankProperties, TankProperties[] collecionTankProperties)
+    private void InitializeHorizontalGroup(Parameters parameters)
     {
-        _horizontalGroups[i].gameObject.SetActive(true);
-        _horizontalGroups[i].Initialize(horizontalGroupTankProperties, collecionTankProperties);
+        _horizontalGroups[parameters._index].gameObject.SetActive(true);
+        _horizontalGroups[parameters._index].Initialize(parameters._horizontalGroupsLength, parameters._tankProperties, parameters._dataTanksList);
     }
 }

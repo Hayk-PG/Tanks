@@ -14,15 +14,20 @@ public class Btn_Tank : MonoBehaviour
     [SerializeField] private Stars _stars;
 
     private int _relatedTankIndex;
-
     public Button Button { get => _button; }
     public Image ImageTank { get => _imgTank; }
     public Sprite SpriteButton { get => _button.image.sprite; internal set => _button.image.sprite = value; }
-    public int RelaedTankIndex { get => _relatedTankIndex; internal set => _relatedTankIndex = value; }
-
-    public event Action _onAutoSelect;
 
 
+    public event Action<int, int> _onAutoSelect;
+    public event Action<int> _onClick;
+
+
+    private void Update()
+    {
+        _button.onClick.RemoveAllListeners();
+        _button.onClick.AddListener(()=> _onClick?.Invoke(_relatedTankIndex));
+    }
 
     public void SetActivity(bool isActive)
     {
@@ -54,9 +59,9 @@ public class Btn_Tank : MonoBehaviour
         _txtLevel.text = level.ToString();
     }
 
-    public void AutoSelect(int relatedTankIndex)
+    public void AutoSelect(int relatedTankIndex, int horizontalGroupsLength)
     {
         if (_relatedTankIndex == relatedTankIndex)
-            _onAutoSelect?.Invoke();
+            _onAutoSelect?.Invoke(relatedTankIndex, horizontalGroupsLength);
     }
 }
