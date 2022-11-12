@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class Btn_Tank : MonoBehaviour
 {
     [SerializeField] private CanvasGroup _canvasGroup;
-    [SerializeField] private BtnTankLogic _btnTankLogic;
+    [SerializeField] private Button _button;
     [SerializeField] private Image _imgTank;
     [SerializeField] private Image _imgLock;
     [SerializeField] private TMP_Text _txtName;
@@ -14,7 +15,12 @@ public class Btn_Tank : MonoBehaviour
 
     private int _relatedTankIndex;
 
-    public int RelaedTankIndex { get => _relatedTankIndex; private set => _relatedTankIndex = value; }
+    public Button Button { get => _button; }
+    public Image ImageTank { get => _imgTank; }
+    public Sprite SpriteButton { get => _button.image.sprite; internal set => _button.image.sprite = value; }
+    public int RelaedTankIndex { get => _relatedTankIndex; internal set => _relatedTankIndex = value; }
+
+    public event Action _onAutoSelect;
 
 
 
@@ -48,8 +54,9 @@ public class Btn_Tank : MonoBehaviour
         _txtLevel.text = level.ToString();
     }
 
-    public void AutoSelect()
+    public void AutoSelect(int relatedTankIndex)
     {
-        _btnTankLogic.Select(this);
+        if (_relatedTankIndex == relatedTankIndex)
+            _onAutoSelect?.Invoke();
     }
 }

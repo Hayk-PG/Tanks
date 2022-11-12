@@ -3,12 +3,23 @@ using UnityEngine;
 public class TanksList : MonoBehaviour
 {
     [SerializeField] private TanksHorizontalGroup[] _horizontalGroups;
+    private Tab_Tanks _tabTanks;
 
 
 
-    private void Start()
+    private void Awake()
     {
-        SetTanksList(Data.Manager.AvailableTanks);
+        _tabTanks = Get<Tab_Tanks>.From(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        _tabTanks.OnTabOpened += delegate { SetTanksList(Data.Manager.AvailableTanks); };
+    }
+
+    private void OnDisable()
+    {
+        _tabTanks.OnTabOpened -= delegate { SetTanksList(Data.Manager.AvailableTanks); };
     }
 
     private void SetTanksList(TankProperties[] dataTanksList)

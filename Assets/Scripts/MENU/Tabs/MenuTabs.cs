@@ -6,6 +6,7 @@ public class MenuTabs : MonoBehaviour
     public static Tab_SignUp Tab_SignUp { get; private set; }
     public static Tab_SignIn Tab_SignIn { get; private set; }
     public static Tab_HomeOnline Tab_HomeOnline { get; private set; }
+    public static Tab_Tanks Tab_Tanks { get; private set; }
     public static Tab_SelectedTanks Tab_SelectedTanks { get; private set; }
     public static Tab_SelectedAITanks Tab_SelectedAITanks { get; private set; }
     public static Tab_SelectMaps Tab_SelectMap { get; private set; }
@@ -24,6 +25,7 @@ public class MenuTabs : MonoBehaviour
         Tab_SignUp = Get<Tab_SignUp>.FromChild(gameObject);
         Tab_SignIn = Get<Tab_SignIn>.FromChild(gameObject);
         Tab_HomeOnline = Get<Tab_HomeOnline>.FromChild(gameObject);
+        Tab_Tanks = Get<Tab_Tanks>.FromChild(gameObject);
         Tab_SelectedTanks = Get<Tab_SelectedTanks>.FromChild(gameObject);
         Tab_SelectedAITanks = Get<Tab_SelectedAITanks>.FromChild(gameObject);
         Tab_SelectMap = Get<Tab_SelectMaps>.FromChild(gameObject);
@@ -42,6 +44,7 @@ public class MenuTabs : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(Tab_SignUp.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SignIn.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_HomeOnline.CanvasGroup, false);
+        GlobalFunctions.CanvasGroupActivity(Tab_Tanks.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SelectedTanks.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SelectedAITanks.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_SelectMap.CanvasGroup, false);

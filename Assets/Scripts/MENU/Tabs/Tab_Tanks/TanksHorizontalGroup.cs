@@ -23,6 +23,6 @@ public class TanksHorizontalGroup : MonoBehaviour
         _btnTanks[index].SetStars(btnTankProperty._starsCount);
         _btnTanks[index].SetRelatedTankIndex((dataTanksList.ToList().IndexOf(btnTankProperty)));
         _btnTanks[index].SetLevel(btnTankProperty._availableInLevel);
-        _btnTanks[index].AutoSelect();
+        _btnTanks[index].AutoSelect(Data.Manager.SelectedTankIndex);
     }
 }
