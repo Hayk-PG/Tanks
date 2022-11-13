@@ -15,12 +15,12 @@ public class SelectTankButton : BaseSelectTankButton
 
     private void OnEnable()
     {
-        _tab_SelectedTanks.OnTabOpened += OnTabSelectedTanksOpen;
+        _tab_SelectedTanks.onTabOpen += OnTabSelectedTanksOpen;
     }
 
     private void OnDisable()
     {
-        _tab_SelectedTanks.OnTabOpened -= OnTabSelectedTanksOpen;
+        _tab_SelectedTanks.onTabOpen -= OnTabSelectedTanksOpen;
     }
 
     protected override bool IsIndexCorrect()

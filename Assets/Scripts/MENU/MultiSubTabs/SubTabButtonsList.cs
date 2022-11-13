@@ -15,6 +15,6 @@ public class SubTabButtonsList : MonoBehaviour, IReset
 
     private void ButtonsInteractability(bool isInteractable)
     {
-        GlobalFunctions.Loop<SubTabsButton>.Foreach(_modeDependentButtons, dependentButton => { dependentButton.IsInteractable = isInteractable; });
+        GlobalFunctions.Loop<SubTabsButton>.Foreach(_modeDependentButtons, dependentButton => { dependentButton.gameObject.SetActive(false); });
     }
 }

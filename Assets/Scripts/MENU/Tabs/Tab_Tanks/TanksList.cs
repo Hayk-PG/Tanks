@@ -20,12 +20,12 @@ public class TanksList : MonoBehaviour
 
     private void OnEnable()
     {
-        _tabTanks.OnTabOpened += delegate { SetTanksList(Data.Manager.AvailableTanks); };
+        _tabTanks.onTabOpen += delegate { SetTanksList(Data.Manager.AvailableTanks); };
     }
 
     private void OnDisable()
     {
-        _tabTanks.OnTabOpened -= delegate { SetTanksList(Data.Manager.AvailableTanks); };
+        _tabTanks.onTabOpen -= delegate { SetTanksList(Data.Manager.AvailableTanks); };
     }
 
     private void SetTanksList(TankProperties[] dataTanksList)

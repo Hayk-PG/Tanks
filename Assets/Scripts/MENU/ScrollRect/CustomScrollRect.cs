@@ -31,10 +31,10 @@ public class CustomScrollRect : MonoBehaviour
 
     public void SetNormalizedPosition(float position)
     {
-        StartCoroutine(Test(position));
+        StartCoroutine(SetNormalizedPositionCoroutine(position));
     }
 
-    private IEnumerator Test(float position)
+    private IEnumerator SetNormalizedPositionCoroutine(float position)
     {
         yield return null;
         _scrollRect.verticalNormalizedPosition = position;

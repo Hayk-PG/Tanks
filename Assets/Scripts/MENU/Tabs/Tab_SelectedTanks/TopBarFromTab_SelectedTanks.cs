@@ -17,12 +17,12 @@ public class TopBarFromTab_SelectedTanks : MonoBehaviour
 
     private void OnEnable()
     {
-        _tabSelectedTanks.OnTabOpened += OnTabSelectedTanksOpen;
+        _tabSelectedTanks.onTabOpen += OnTabSelectedTanksOpen;
     }
 
     private void OnDisable()
     {
-        _tabSelectedTanks.OnTabOpened -= OnTabSelectedTanksOpen;
+        _tabSelectedTanks.onTabOpen -= OnTabSelectedTanksOpen;
     }
 
     private void OnTabSelectedTanksOpen()

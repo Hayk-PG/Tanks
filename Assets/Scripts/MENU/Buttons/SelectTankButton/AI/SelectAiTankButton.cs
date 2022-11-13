@@ -16,12 +16,12 @@ public class SelectAiTankButton : BaseSelectTankButton
 
     private void OnEnable()
     {
-        _tab_SelectedAITanks.OnTabOpened += SimulateButtonClick;
+        _tab_SelectedAITanks.onTabOpen += SimulateButtonClick;
     }
 
     private void OnDisable()
     {
-        _tab_SelectedAITanks.OnTabOpened -= SimulateButtonClick;
+        _tab_SelectedAITanks.onTabOpen -= SimulateButtonClick;
     }
 
     protected override bool IsIndexCorrect()

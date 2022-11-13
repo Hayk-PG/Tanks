@@ -35,12 +35,12 @@ public class SelectMapButton : MonoBehaviour
 
     private void OnEnable()
     {
-        _tabSelectMap.OnTabOpened += OnTabSelectedTabOpen;
+        _tabSelectMap.onTabOpen += OnTabSelectedTabOpen;
     }
 
     private void OnDisable()
     {
-        _tabSelectMap.OnTabOpened -= OnTabSelectedTabOpen;
+        _tabSelectMap.onTabOpen -= OnTabSelectedTabOpen;
     }
 
     private void Update()

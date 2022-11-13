@@ -4,7 +4,7 @@ using UnityEngine;
 public class Tab_Base<T> : MonoBehaviour where T: MonoBehaviour
 {
     public CanvasGroup CanvasGroup { get; private set; }
-    public Action OnTabOpened { get; set; }
+    public event Action onTabOpen;
     protected T _object;
 
 
@@ -17,6 +17,6 @@ public class Tab_Base<T> : MonoBehaviour where T: MonoBehaviour
     public virtual void OpenTab()
     {
         MenuTabs.Activity(CanvasGroup);
-        OnTabOpened?.Invoke();
+        onTabOpen?.Invoke();
     }
 }
