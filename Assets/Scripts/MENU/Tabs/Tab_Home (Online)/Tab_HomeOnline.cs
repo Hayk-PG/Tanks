@@ -2,7 +2,7 @@ public class Tab_HomeOnline : Tab_Base<MyPhotonCallbacks>
 {
     private IReset[] _iResets;
 
-    private TabTankConfirmButton _confirmTankButton;
+    private ConfirmTankBtn _confirmTankBtn;
 
 
     protected override void Awake()
@@ -10,19 +10,19 @@ public class Tab_HomeOnline : Tab_Base<MyPhotonCallbacks>
         base.Awake();
 
         _iResets = GetComponentsInChildren<IReset>();
-        _confirmTankButton = FindObjectOfType<TabTankConfirmButton>();
+        _confirmTankBtn = FindObjectOfType<ConfirmTankBtn>();
     }
 
     private void OnEnable()
     {
         ExternalData.MyPlayfabRegistrationForm.onLogin += OpenTab;
-        _confirmTankButton.onConfirmTankOnline += OpenTab;
+        _confirmTankBtn.onConfirmTankOnline += OpenTab;
     }
 
     private void OnDisable()
     {
         ExternalData.MyPlayfabRegistrationForm.onLogin -= OpenTab;
-        _confirmTankButton.onConfirmTankOnline -= OpenTab;
+        _confirmTankBtn.onConfirmTankOnline -= OpenTab;
     }
 
     public override void OpenTab()

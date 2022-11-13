@@ -14,7 +14,7 @@ public partial class MyPhoton : MonoBehaviour
     {
         DefineRoomOptions(out RoomOptions roomOptions);
         SetRoomCustomProperties(roomOptions, matchmakeData);
-        PhotonNetwork.JoinOrCreateRoom(matchmakeData.RoomName, roomOptions, LobbyType(lobbyName, lobbyType));
+        PhotonNetwork.CreateRoom(matchmakeData.RoomName, roomOptions, LobbyType(lobbyName, lobbyType));
     }
 
     private static void DefineRoomOptions(out RoomOptions roomOptions)

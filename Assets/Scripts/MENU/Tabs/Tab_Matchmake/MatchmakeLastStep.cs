@@ -6,6 +6,8 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
     private MatchmakeLastSubTab _lastSubTab;
     private Tab_Matchmake _tabMatchmake;
     private LockScreen _lockScreen;
+    private MyPhotonCallbacks _myPhotonCallbacks;
+    [SerializeField] private SubTabsButton _roomCredentialsBtn;
 
     private IMatchmakeData[] _iMatchmakeDatas;
     private MatchmakeData _matchmakeData;
@@ -17,6 +19,7 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
     {
         _lastSubTab = Get<MatchmakeLastSubTab>.From(gameObject);
         _subTab = Get<SubTab>.From(gameObject);
+        _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
         _tabMatchmake = Get<Tab_Matchmake>.From(gameObject);
         _lockScreen = Get<LockScreen>.FromChild(_tabMatchmake.gameObject);
         _iMatchmakeDatas = _tabMatchmake.GetComponentsInChildren<IMatchmakeData>();
@@ -26,18 +29,20 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
     {
         _lastSubTab._onConfirmReady += SetEverythingUp;
         _subTab._onActivity += GetSubTabActivity;
+        _myPhotonCallbacks._OnCreateRoomFailed += FailedCreateRoom;
     }
 
     private void OnDisable()
     {
         _lastSubTab._onConfirmReady -= SetEverythingUp;
         _subTab._onActivity -= GetSubTabActivity;
+        _myPhotonCallbacks._OnCreateRoomFailed -= FailedCreateRoom;
     }
 
     private void SetEverythingUp()
     {
         GetStoredData();
-        CreateGame();
+        Execute();
     }
 
     private void GetStoredData()
@@ -47,29 +52,41 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
         GlobalFunctions.Loop<IMatchmakeData>.Foreach(_iMatchmakeDatas, iMatchmakeData =>
         {
             iMatchmakeData.StoreData(_matchmakeData);
-
             _readedFilesCount--;
         });
     }
 
-    private void CreateGame()
+    private void Execute()
     {
         if (_readedFilesCount <= 0)
         {
             _lockScreen.Lock();
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, MatchmakeOffline, MatchmakeOnline);
+            CreateRoom();
         }
     }
 
-    private void MatchmakeOffline() => MyScene.Manager.LoadScene(MyScene.SceneName.Game);
-
-    private void MatchmakeOnline()
+    private void CreateRoom()
     {
         if (_matchmakeData.IsRoomNameSet)
         {
             MyPhoton.CreateRoom(Photon.Realtime.LobbyType.Default, "Default", _matchmakeData);
         }
+        else
+        {
+            ReturnToRoomCredentialsTab();
+        }
     }  
+
+    private void FailedCreateRoom(short code, string message)
+    {
+        ReturnToRoomCredentialsTab();
+    }
+
+    private void ReturnToRoomCredentialsTab()
+    {
+        _roomCredentialsBtn.Click();
+        _lockScreen.SetDefault();
+    }
 
     private void GetSubTabActivity(bool isActive)
     {

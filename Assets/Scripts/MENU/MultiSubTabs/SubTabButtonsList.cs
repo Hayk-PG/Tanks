@@ -10,10 +10,10 @@ public class SubTabButtonsList : MonoBehaviour, IReset
     {
         _firsSubTabButton.Click();
 
-        ButtonsInteractability(!MyPhotonNetwork.IsOfflineMode);
+        ButtonsActivity(!MyPhotonNetwork.IsOfflineMode);
     }
 
-    private void ButtonsInteractability(bool isInteractable)
+    private void ButtonsActivity(bool isInteractable)
     {
         GlobalFunctions.Loop<SubTabsButton>.Foreach(_modeDependentButtons, dependentButton => { dependentButton.gameObject.SetActive(false); });
     }

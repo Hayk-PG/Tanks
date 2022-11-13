@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TabTankConfirmButton : MonoBehaviour
+public class ConfirmTankBtn : MonoBehaviour
 {
     [SerializeField] private Button _btnConfirm;
 
