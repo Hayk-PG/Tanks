@@ -10,7 +10,7 @@ public class MenuTabs : MonoBehaviour
     public static Tab_Lobby Tab_Lobby { get; private set; }
     public static Tab_InRoom Tab_InRoom { get; private set; }
     public static Tab_Message Tab_Message { get; private set; }
-    public static Tab_Matchmake Tab_Matchmake { get; private set; }
+    //public static Tab_Matchmake Tab_Matchmake { get; private set; }
 
 
     private void Awake()
@@ -23,7 +23,7 @@ public class MenuTabs : MonoBehaviour
         Tab_Lobby = Get<Tab_Lobby>.FromChild(gameObject);
         Tab_InRoom = Get<Tab_InRoom>.FromChild(gameObject);
         Tab_Message = Get<Tab_Message>.FromChild(gameObject);
-        Tab_Matchmake = Get<Tab_Matchmake>.FromChild(gameObject);
+        //Tab_Matchmake = Get<Tab_Matchmake>.FromChild(gameObject);
     }
 
     public static void Activity(CanvasGroup activeCanvasGroup)
@@ -36,7 +36,7 @@ public class MenuTabs : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(Tab_Lobby.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_InRoom.CanvasGroup, false);
         GlobalFunctions.CanvasGroupActivity(Tab_Message.CanvasGroup, false);
-        GlobalFunctions.CanvasGroupActivity(Tab_Matchmake.CanvasGroup, false);
+        //GlobalFunctions.CanvasGroupActivity(Tab_Matchmake.CanvasGroup, false);
 
         if (activeCanvasGroup != null) GlobalFunctions.CanvasGroupActivity(activeCanvasGroup, true);
     }
