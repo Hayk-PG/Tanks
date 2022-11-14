@@ -6,7 +6,7 @@ public class MatchmakeLastSubTab : MonoBehaviour, IReset
 {
     [SerializeField] private TMP_Text _text;
 
-    //private Tab_Matchmake _tabMatchmake;
+    private Tab_Matchmake _tabMatchmake;
     private SubTab _subTab;
     private IMatchmakeTextResult[] _iMatchmakeTextResult;
 
@@ -24,9 +24,9 @@ public class MatchmakeLastSubTab : MonoBehaviour, IReset
 
     private void Awake()
     {
-        //_tabMatchmake = FindObjectOfType<Tab_Matchmake>();
+        _tabMatchmake = FindObjectOfType<Tab_Matchmake>();
         _subTab = Get<SubTab>.From(gameObject);
-        //_iMatchmakeTextResult = _tabMatchmake.GetComponentsInChildren<IMatchmakeTextResult>();  
+        _iMatchmakeTextResult = _tabMatchmake.GetComponentsInChildren<IMatchmakeTextResult>();  
     }
 
     private void OnEnable()

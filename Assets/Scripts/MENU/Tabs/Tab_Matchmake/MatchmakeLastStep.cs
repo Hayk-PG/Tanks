@@ -4,7 +4,7 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
 {
     private SubTab _subTab;
     private MatchmakeLastSubTab _lastSubTab;
-    //private Tab_Matchmake _tabMatchmake;
+    private Tab_Matchmake _tabMatchmake;
     private LockScreen _lockScreen;
     private MyPhotonCallbacks _myPhotonCallbacks;
     [SerializeField] private SubTabsButton _roomCredentialsBtn;
@@ -20,9 +20,9 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
         _lastSubTab = Get<MatchmakeLastSubTab>.From(gameObject);
         _subTab = Get<SubTab>.From(gameObject);
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
-        //_tabMatchmake = Get<Tab_Matchmake>.From(gameObject);
-        //_lockScreen = Get<LockScreen>.FromChild(_tabMatchmake.gameObject);
-        //_iMatchmakeDatas = _tabMatchmake.GetComponentsInChildren<IMatchmakeData>();
+        _tabMatchmake = Get<Tab_Matchmake>.From(gameObject);
+        _lockScreen = Get<LockScreen>.FromChild(_tabMatchmake.gameObject);
+        _iMatchmakeDatas = _tabMatchmake.GetComponentsInChildren<IMatchmakeData>();
     }
 
     private void OnEnable()
