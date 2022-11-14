@@ -31,23 +31,23 @@ public class CustomScrollRectArrows : MonoBehaviour
         {
             if (_arrowType == ArrowType.Bottom)
             {
-                if (value >= 1)
+                if (value >= .9f)
                     GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
 
-                if (value <= 0)
+                if (value <= .1f)
                     GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
             }
 
             if(_arrowType == ArrowType.Top)
             {
-                if (value <= 0)
+                if (value <= .1f)
                     GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
 
-                if (value >= 1)
+                if (value >= .9f)
                     GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
             }
 
-            if (value <= 0.9f && value >= 0.1f)
+            if (value < 0.9f && value > 0.1f)
                 GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
         }       
     }

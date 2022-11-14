@@ -46,6 +46,8 @@ public class CustomScrollRect : MonoBehaviour, IReset
             _scrollRect.verticalNormalizedPosition = 0;
 
         onValueChanged?.Invoke(IsContentOutside, position.y);
+
+        print(_scrollRect.verticalNormalizedPosition);
     }
 
     public void SetNormalizedPosition(float position)
