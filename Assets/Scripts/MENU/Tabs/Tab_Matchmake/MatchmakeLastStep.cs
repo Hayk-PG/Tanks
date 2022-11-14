@@ -84,7 +84,7 @@ public class MatchmakeLastStep : MonoBehaviour, IReset
 
     private void ReturnToRoomCredentialsTab()
     {
-        _roomCredentialsBtn.Click();
+        _roomCredentialsBtn.Select();
         _lockScreen.SetDefault();
     }
 

@@ -2,13 +2,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
 [RequireComponent(typeof(Button))]
-public class Btn : MonoBehaviour, IReset
+
+public class Btn : MonoBehaviour
 {
     private enum ButtonClickType { ChangeSprite, ChangeColor, Both}
-
     [SerializeField] private ButtonClickType _buttonClickType;
+
+    private Btn[] _siblings;
 
     [SerializeField] private Sprite _sprtPressed;
     private Sprite _sprtReleased;
@@ -27,14 +28,28 @@ public class Btn : MonoBehaviour, IReset
         get => Button.image.color;
         set => Button.image.color = value;
     }  
+    public bool IsSelected { get; private set; }
 
-    public event Action _onClick;
+
+    public event Action onSelect;
+    public event Action onDeselect;
 
 
     private void Awake()
     {
         GetButton();
         CacheButtonDefaultLook();
+    }
+
+    private void Start()
+    {
+        GetSiblings();
+    }
+
+    private void Update()
+    {
+        Button.onClick.RemoveAllListeners();
+        Button.onClick.AddListener(Select);
     }
 
     private void GetButton()
@@ -48,15 +63,53 @@ public class Btn : MonoBehaviour, IReset
         _clrReleased = Button.image.color;
     }
 
-    public void Click()
+    private void GetSiblings()
     {
-        _onClick?.Invoke();
+        _siblings = new Btn[transform.parent.childCount - 1];
 
-        switch (_buttonClickType)
+        for (int i = 0, j = 0; i < transform.parent.childCount; i++)
         {
-            case ButtonClickType.ChangeSprite: ChangeSprite(); break;
-            case ButtonClickType.ChangeColor: ChangeColor(); break;
-            case ButtonClickType.Both: ChangeBoth(); break;
+            if (Get<Btn>.From(transform.parent.GetChild(i).gameObject) != this)
+            {
+                _siblings[j] = Get<Btn>.From(transform.parent.GetChild(i).gameObject);
+                j++;
+            }
+        }
+    }
+
+    public void Select()
+    {
+        if (!IsSelected)
+        {
+            IsSelected = true;
+            onSelect?.Invoke();
+
+            switch (_buttonClickType)
+            {
+                case ButtonClickType.ChangeSprite: ChangeSprite(); break;
+                case ButtonClickType.ChangeColor: ChangeColor(); break;
+                case ButtonClickType.Both: ChangeBoth(); break;
+            }
+
+            GlobalFunctions.Loop<Btn>.Foreach(_siblings, sibling => 
+            {
+                sibling.Deselect();
+            });
+        }
+    }
+
+    public void Deselect()
+    {
+        if (IsSelected)
+        {
+            IsSelected = false;
+            onDeselect?.Invoke();
+
+            if (_sprtReleased == null)
+                return;
+
+            ButtonSprite = _sprtReleased;
+            ButtonColor = _clrReleased;
         }
     }
 
@@ -80,14 +133,5 @@ public class Btn : MonoBehaviour, IReset
 
         ButtonSprite = _sprtPressed;
         ButtonColor = _clrPressed;
-    }
-
-    public void SetDefault()
-    {
-        if (_sprtReleased == null)
-            return;
-
-        ButtonSprite = _sprtReleased;
-        ButtonColor = _clrReleased;
     }
 }

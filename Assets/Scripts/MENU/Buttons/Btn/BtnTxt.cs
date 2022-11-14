@@ -5,7 +5,7 @@ using System;
 
 [RequireComponent(typeof(Btn))]
 
-public class BtnTxt : MonoBehaviour, IReset
+public class BtnTxt : MonoBehaviour
 {
     private TMP_Text _txt;
     private Btn _btn;
@@ -25,12 +25,14 @@ public class BtnTxt : MonoBehaviour, IReset
 
     private void OnEnable()
     {
-        _btn._onClick += delegate { ChangeTextColor(_clrPressed); };
+        _btn.onSelect += delegate { ChangeTextColor(_clrPressed); };
+        _btn.onDeselect += delegate { ChangeTextColor(_clrReleased); };
     }
 
     private void OnDisable()
     {
-        _btn._onClick -= delegate { ChangeTextColor(_clrPressed); };
+        _btn.onSelect -= delegate { ChangeTextColor(_clrPressed); };
+        _btn.onDeselect -= delegate { ChangeTextColor(_clrReleased); };
     }
 
     private void SetButtonTitle()
@@ -46,10 +48,5 @@ public class BtnTxt : MonoBehaviour, IReset
     private void ChangeTextColor(Color color)
     {
         _txt.color = color;
-    }
-
-    public void SetDefault()
-    {
-        ChangeTextColor(_clrReleased);
     }
 }

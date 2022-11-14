@@ -51,13 +51,13 @@ public class BtnTankLogic : MonoBehaviour, IReset
         _btnTank.ImageTank.color = _clrTankPressed;
     }
 
-    public void Deselect()
+    public void SetDefault()
     { 
         _btnTank.SpriteButton = _sprtButtonReleased;
         _btnTank.ImageTank.color = _clrTankReleased;
     }
    
-    public void SetDefault()
+    public void Deselect()
     {
         Deselect();
     }

@@ -68,6 +68,6 @@ public class Button_Long : MonoBehaviour, IReset
     {
         ChangeLeftImageSprite(_imageLeftSpriteDefault);
         ChangeRightImageSprite(_imageRightSpriteDefault);
-        _subTabButton.SetActivity(false);
+        _subTabButton.Deselect();
     }
 }
