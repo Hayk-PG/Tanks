@@ -46,25 +46,6 @@ public class CustomScrollRect : MonoBehaviour, IReset
             _scrollRect.verticalNormalizedPosition = 0;
 
         onValueChanged?.Invoke(IsContentOutside, position.y);
-
-        //if (IsContentOutside && _test)
-        //{
-        //    if(position.y >= 1)
-        //    {
-        //        print("There are objects below");
-        //    }
-
-        //    if(position.y <= 0)
-        //    {
-        //        print("There are objects above");
-        //    }
-
-        //    if(position.y <= 0.9f && position.y >= 0.1f)
-        //    {
-        //        print("There are objects both sides");
-        //    }
-        //}
-
     }
 
     public void SetNormalizedPosition(float position)

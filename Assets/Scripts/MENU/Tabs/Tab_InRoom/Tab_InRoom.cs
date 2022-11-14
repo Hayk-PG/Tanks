@@ -4,8 +4,6 @@ using Photon.Realtime;
 
 public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
 {
-    private Tab_SelectedTanks _tab_SelectedTanks;
-
     [SerializeField] private Text _text_Title;
     [SerializeField] private PlayerInRoom[] _playersInRoom;
 
@@ -18,7 +16,6 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
     protected override void Awake()
     {
         base.Awake();
-        _tab_SelectedTanks = FindObjectOfType<Tab_SelectedTanks>();
     }
 
     private void OnEnable()
@@ -27,7 +24,6 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
         _object._OnPlayerEnteredRoom += OnPlayerEnteredRoom;
         _object._OnPlayerLeftRoom += OnPlayerLeftRoom;
         _object._OnLeftRoom += OnLeftRoom;
-        _tab_SelectedTanks.OnOnlineGameTankChanged += base.OpenTab;
     }
 
     private void OnDisable()
@@ -36,7 +32,6 @@ public class Tab_InRoom : Tab_Base<MyPhotonCallbacks>
         _object._OnPlayerEnteredRoom -= OnPlayerEnteredRoom;
         _object._OnPlayerLeftRoom -= OnPlayerLeftRoom;
         _object._OnLeftRoom -= OnLeftRoom;
-        _tab_SelectedTanks.OnOnlineGameTankChanged -= base.OpenTab;
     }
 
     private void OnJoinedRoom(Room room)

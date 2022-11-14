@@ -11,7 +11,6 @@ public class BtnTankLogic : MonoBehaviour, IReset
     [SerializeField] private Color _clrTankPressed;
 
 
-
     private void Awake()
     {
         _tabTanks = FindObjectOfType<Tab_Tanks>();
@@ -45,7 +44,11 @@ public class BtnTankLogic : MonoBehaviour, IReset
     private void Select(int relatedTankIndex)
     {
         Data.Manager.SetData(new Data.NewData { SelectedTankIndex = relatedTankIndex });
-        GlobalFunctions.Loop<IReset>.Foreach(_tabTanks.GetComponentsInChildren<IReset>(true), iReset => { iReset.SetDefault(); });
+        GlobalFunctions.Loop<IReset>.Foreach(_tabTanks.GetComponentsInChildren<IReset>(true), iReset => 
+        {
+            if (iReset.GetType() != typeof(CustomScrollRect))
+                iReset.SetDefault();
+        });
 
         _btnTank.SpriteButton = _sprtButtonPressed;
         _btnTank.ImageTank.color = _clrTankPressed;
@@ -55,10 +58,5 @@ public class BtnTankLogic : MonoBehaviour, IReset
     { 
         _btnTank.SpriteButton = _sprtButtonReleased;
         _btnTank.ImageTank.color = _clrTankReleased;
-    }
-   
-    public void Deselect()
-    {
-        
     }
 }

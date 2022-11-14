@@ -6,7 +6,6 @@ public class SubTabButtonsList : MonoBehaviour, IReset
     [SerializeField] private SubTabsButton[] _subTabsButtonsOfflineMode;
     [SerializeField] private SubTabsButton[] _subTabsButtonOnlineMode;
     
- 
 
     public void SetDefault()
     {

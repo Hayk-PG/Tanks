@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Btn : MonoBehaviour
 {
-    private enum ButtonClickType { ChangeSprite, ChangeColor, Both}
+    private enum ButtonClickType { ChangeSprite, ChangeColor, Both, None}
     [SerializeField] private ButtonClickType _buttonClickType;
 
     private Btn[] _siblings;
@@ -79,6 +79,9 @@ public class Btn : MonoBehaviour
 
     public void Select()
     {
+        if (_buttonClickType == ButtonClickType.None)
+            return;
+
         if (!IsSelected)
         {
             IsSelected = true;
