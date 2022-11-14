@@ -59,6 +59,6 @@ public class BtnTankLogic : MonoBehaviour, IReset
    
     public void Deselect()
     {
-        Deselect();
+        
     }
 }
