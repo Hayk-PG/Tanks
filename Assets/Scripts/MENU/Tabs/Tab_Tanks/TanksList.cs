@@ -1,68 +1,8 @@
-using UnityEngine;
 
-public class TanksList : MonoBehaviour
+public class TanksList : BaseTanksList<Tab_StartGame>
 {
-    [SerializeField] private TanksHorizontalGroup[] _horizontalGroups;
-    private Tab_Tanks _tabTanks;
-
-    public struct Parameters
+    protected override TankProperties[] DataTanks()
     {
-        public int _index;
-        public int _horizontalGroupsLength;
-        public TankProperties[] _tankProperties;
-        public TankProperties[] _dataTanksList;
-    }
-
-    private void Awake()
-    {
-        _tabTanks = Get<Tab_Tanks>.From(gameObject);
-    }
-
-    private void OnEnable()
-    {
-        _tabTanks.onTabOpen += delegate { SetTanksList(Data.Manager.AvailableTanks); };
-    }
-
-    private void OnDisable()
-    {
-        _tabTanks.onTabOpen -= delegate { SetTanksList(Data.Manager.AvailableTanks); };
-    }
-
-    private void SetTanksList(TankProperties[] dataTanksList)
-    {
-        int horizGroupsCount = dataTanksList.Length % 3 == 0 ? dataTanksList.Length / 3 : dataTanksList.Length / 3 + 1;
-        int row = 0;
-        int length = 0;
-
-        for (int i = 0; i < horizGroupsCount; i++)
-        {
-            row += 3;
-            length = row - dataTanksList.Length > 0 ? 3 - (row - dataTanksList.Length) : 3;
-            TankProperties[] horizontalGroupTanksList = new TankProperties[length];
-            
-            for (int x = row - 3, p = 0; x < row; x++, p++)
-            {
-                if (x < dataTanksList.Length)
-                {
-                    horizontalGroupTanksList[p] = dataTanksList[x];
-                }
-            }
-
-            Parameters parameters = new Parameters
-            {
-                _index = i,
-                _horizontalGroupsLength = horizGroupsCount,
-                _tankProperties = horizontalGroupTanksList,
-                _dataTanksList = dataTanksList
-            };
-
-            InitializeHorizontalGroup(parameters);
-        }
-    }
-
-    private void InitializeHorizontalGroup(Parameters parameters)
-    {
-        _horizontalGroups[parameters._index].gameObject.SetActive(true);
-        _horizontalGroups[parameters._index].Initialize(parameters._horizontalGroupsLength, parameters._tankProperties, parameters._dataTanksList);
+        return Data.Manager.AvailableTanks;
     }
 }

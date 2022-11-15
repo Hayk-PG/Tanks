@@ -1,13 +1,12 @@
-public class Tab_Tanks : Tab_Base<Tab_StartGame>
+public class Tab_Tanks : BaseTab_Tanks<Tab_StartGame>
 {
-    public CustomScrollRect CustomScrollRect { get; private set; }
     private SubTabTanksButton _subTabTanksButton;
 
 
     protected override void Awake()
     {
         base.Awake();
-        CustomScrollRect = Get<CustomScrollRect>.FromChild(gameObject);
+
         _subTabTanksButton = FindObjectOfType<SubTabTanksButton>();
     }
 
