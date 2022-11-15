@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Btn))]
+
 public class PlayOfflineBtn : MonoBehaviour
 {
     private Btn _btn;

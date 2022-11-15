@@ -87,17 +87,26 @@ public class Btn : MonoBehaviour
             IsSelected = true;
             onSelect?.Invoke();
 
-            switch (_buttonClickType)
-            {
-                case ButtonClickType.ChangeSprite: ChangeSprite(); break;
-                case ButtonClickType.ChangeColor: ChangeColor(); break;
-                case ButtonClickType.Both: ChangeBoth(); break;
-            }
+            ChangeBuutonLook();
+            DeselectAllSiblings();
+        }
 
-            GlobalFunctions.Loop<Btn>.Foreach(_siblings, sibling => 
-            {
-                sibling.Deselect();
-            });
+        DeselectOnlyThis();
+    }
+
+    private void DeselectAllSiblings()
+    {
+        GlobalFunctions.Loop<Btn>.Foreach(_siblings, sibling =>
+        {
+            sibling.Deselect();
+        });
+    }
+
+    private void DeselectOnlyThis()
+    {
+        if (_buttonClickType == ButtonClickType.OnlyInvokeEvent)
+        {
+            Deselect();
         }
     }
 
@@ -116,7 +125,17 @@ public class Btn : MonoBehaviour
         }
     }
 
-    public void ChangeSprite()
+    private void ChangeBuutonLook()
+    {
+        switch (_buttonClickType)
+        {
+            case ButtonClickType.ChangeSprite: ChangeSprite(); break;
+            case ButtonClickType.ChangeColor: ChangeColor(); break;
+            case ButtonClickType.Both: ChangeBoth(); break;
+        }
+    }
+
+    private void ChangeSprite()
     {
         if (_sprtPressed == null)
             return;
@@ -124,12 +143,12 @@ public class Btn : MonoBehaviour
         ButtonSprite = _sprtPressed;
     }
 
-    public void ChangeColor()
+    private void ChangeColor()
     {
         ButtonColor = _clrPressed;
     }
 
-    public void ChangeBoth()
+    private void ChangeBoth()
     {
         if (_sprtPressed == null)
             return;
