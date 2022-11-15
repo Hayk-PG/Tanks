@@ -1,23 +1,32 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
+
+[RequireComponent(typeof(Btn))]
 
 public class ConfirmTankBtn : MonoBehaviour
 {
-    [SerializeField] private Button _btnConfirm;
+    private Btn _btn;
 
     public event Action onConfirmTankOffline;
     public event Action onConfirmTankOnline;
     public event Action onChangeTankInRoom;
 
-
-    private void Update()
+    private void Awake()
     {
-        _btnConfirm.onClick.RemoveAllListeners();
-        _btnConfirm.onClick.AddListener(Click);
+        _btn = Get<Btn>.From(gameObject);
     }
 
-    private void Click()
+    private void OnEnable()
+    {
+        _btn.onSelect += Select;
+    }
+
+    private void OnDisable()
+    {
+        _btn.onSelect -= Select;
+    }
+
+    private void Select()
     {
         if (MyPhotonNetwork.IsOfflineMode)
         {

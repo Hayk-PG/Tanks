@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BaseTanksList<T> : MonoBehaviour where T: MonoBehaviour
+public abstract class BaseTanksList<T> : MonoBehaviour where T: MonoBehaviour
 {
     [SerializeField] protected TanksHorizontalGroup[] _horizontalGroups;
     protected BaseTab_Tanks<T> _tabTanks;
@@ -28,10 +28,7 @@ public class BaseTanksList<T> : MonoBehaviour where T: MonoBehaviour
         _tabTanks.onTabOpen -= delegate { SetTanksList(DataTanks()); };
     }
 
-    protected virtual TankProperties[] DataTanks()
-    {
-        return null;
-    }
+    protected abstract TankProperties[] DataTanks();
 
     protected virtual void SetTanksList(TankProperties[] dataTanksList)
     {
