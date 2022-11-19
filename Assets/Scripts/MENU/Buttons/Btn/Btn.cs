@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class Btn : MonoBehaviour
 {
-    private enum ButtonClickType { ChangeSprite, ChangeColor, Both, None, OnlyInvokeEvent}
-    [SerializeField] private ButtonClickType _buttonClickType;
+    public enum ButtonClickType { ChangeSprite, ChangeColor, Both, None, OnlyInvokeEvent}
+    public ButtonClickType _buttonClickType;
 
     private Btn[] _siblings;
 
@@ -88,10 +88,8 @@ public class Btn : MonoBehaviour
             onSelect?.Invoke();
 
             ChangeBuutonLook();
-            DeselectAllSiblings();
+            Conditions<bool>.Compare(_buttonClickType == ButtonClickType.OnlyInvokeEvent, Deselect, DeselectAllSiblings);
         }
-
-        DeselectOnlyThis();
     }
 
     private void DeselectAllSiblings()
@@ -100,14 +98,6 @@ public class Btn : MonoBehaviour
         {
             sibling.Deselect();
         });
-    }
-
-    private void DeselectOnlyThis()
-    {
-        if (_buttonClickType == ButtonClickType.OnlyInvokeEvent)
-        {
-            Deselect();
-        }
     }
 
     public void Deselect()

@@ -3,8 +3,6 @@ using TMPro;
 using System;
 
 
-[RequireComponent(typeof(Btn))]
-
 public class BtnTxt : MonoBehaviour
 {
     private TMP_Text _txt;
@@ -17,7 +15,7 @@ public class BtnTxt : MonoBehaviour
 
     private void Awake()
     {
-        _txt = Get<TMP_Text>.FromChild(gameObject);
+        _txt = Get<TMP_Text>.From(gameObject);
         _btn = Get<Btn>.From(gameObject);
         SetButtonTitle();
         CacheTextDefaultLook();
