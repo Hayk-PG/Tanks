@@ -16,13 +16,13 @@ public class Tab_HomeOnline : Tab_Base<MyPhotonCallbacks>
     private void OnEnable()
     {
         ExternalData.MyPlayfabRegistrationForm.onLogin += OpenTab;
-        _confirmTankBtn.onConfirmTankOnline += OpenTab;
+        //_confirmTankBtn.onConfirmTankOnline += OpenTab;
     }
 
     private void OnDisable()
     {
         ExternalData.MyPlayfabRegistrationForm.onLogin -= OpenTab;
-        _confirmTankBtn.onConfirmTankOnline -= OpenTab;
+        //_confirmTankBtn.onConfirmTankOnline -= OpenTab;
     }
 
     public override void OpenTab()

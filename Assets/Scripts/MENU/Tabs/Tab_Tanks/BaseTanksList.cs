@@ -18,14 +18,19 @@ public abstract class BaseTanksList<T> : MonoBehaviour where T: MonoBehaviour
         _tabTanks = Get<BaseTab_Tanks<T>>.From(gameObject);
     }
 
+    protected virtual void Start()
+    {
+        SetTanksList(DataTanks()); //Test purpose
+    }
+
     protected virtual void OnEnable()
     {
-        _tabTanks.onTabOpen += delegate { SetTanksList(DataTanks()); };
+        //_tabTanks.onTabOpen += delegate { SetTanksList(DataTanks()); };
     }
 
     protected virtual void OnDisable()
     {
-        _tabTanks.onTabOpen -= delegate { SetTanksList(DataTanks()); };
+        //_tabTanks.onTabOpen -= delegate { SetTanksList(DataTanks()); };
     }
 
     protected abstract TankProperties[] DataTanks();
