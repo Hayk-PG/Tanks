@@ -4,40 +4,41 @@ using UnityEngine.UI;
 public class Tab_SignIn : Tab_SignUp
 {
     [SerializeField] private Toggle _toggleAutioSignIn;
-    [SerializeField] private Toggle _toggleShowPassword; 
 
     public bool IsAutoSignInChecked
     {
         get => _toggleAutioSignIn.isOn;
         set => _toggleAutioSignIn.isOn = value;
     }
-    public bool IsPasswordVisible
-    {
-        get => _toggleShowPassword.isOn;
-        set => _toggleShowPassword.isOn = value;
-    }
+
+    protected override CustomInputField CustomInputFieldID => _customInputFields[0];
+    protected override CustomInputField CustomInputFieldPassword => _customInputFields[1];
 
 
     protected override void Authoirize()
     {
         if (_data.IsAutoSignInChecked)
         {
-            Id = _data.Id;
-            Password = _data.Password;
+            CustomInputFieldID.Text = _data.Id;
+            CustomInputFieldPassword.Text = _data.Password;
             IsAutoSignInChecked = true;
             base.OpenTab();
         }          
     }
 
-    public override void OnClickConfirmButton()
+    public override void Confirm()
     {
-        OnAutoSignChecked();
-        base.OnClickConfirmButton();
-    }
+        MyPlayfabRegistrationValues myPlayfabRegistrationValues = new MyPlayfabRegistrationValues
+        {
+            ID = CustomInputFieldID.Text,
+            Password = CustomInputFieldPassword.Text
+        };
 
-    protected override void OnEnter()
-    {
-        ExternalData.MyPlayfabRegistrationForm.Login(new MyPlayfabRegistrationValues { ID = Id, Password = Password, EMail = null });
+        ExternalData.MyPlayfabRegistrationForm.Login(myPlayfabRegistrationValues, result =>
+        {
+            OnAutoSignChecked();
+            SaveData(NewData(myPlayfabRegistrationValues));
+        });
     }
 
     private void OnAutoSignChecked()
@@ -48,17 +49,9 @@ public class Tab_SignIn : Tab_SignUp
             _data.DeleteData(Keys.AutoSignIn);
     }
 
-    protected override void SaveAccount()
+    protected override void SaveData(Data.NewData newData)
     {
         if (IsAutoSignInChecked)
-            base.SaveAccount();
-    }
-
-    public void OnToggleShowPasswordValueChanged()
-    {
-        if (IsPasswordVisible) _inputFieldPassword.contentType = InputField.ContentType.Standard;
-        if (!IsPasswordVisible) _inputFieldPassword.contentType = InputField.ContentType.Password;
-
-        _inputFieldPassword.Select();
+            base.SaveData(newData);
     }
 }

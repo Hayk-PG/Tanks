@@ -27,7 +27,13 @@ public class Btn : MonoBehaviour
     {
         get => Button.image.color;
         set => Button.image.color = value;
-    }  
+    }
+
+    public bool IsInteractable
+    {
+        get => Button.interactable;
+        set => Button.interactable = value;
+    }
     public bool IsSelected { get; private set; }
 
 

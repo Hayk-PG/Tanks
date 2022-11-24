@@ -3,29 +3,13 @@ using UnityEngine.UI;
 
 public class Tab_SignUp : Tab_Base<Tab_StartGame>
 {
+    [SerializeField] protected CustomInputField[] _customInputFields;
+    [SerializeField] protected Btn _btn;
     protected Data _data;
 
-    [SerializeField] private InputField _inputFieldEmail;
-    [SerializeField] protected InputField _inputFieldId;
-    [SerializeField] protected InputField _inputFieldPassword;
-
-    [SerializeField] private Button _confirmButton;
-
-    private string Email
-    {
-        get => _inputFieldEmail.text;
-        set => _inputFieldEmail.text = value;
-    }
-    protected string Id
-    {
-        get => _inputFieldId.text;
-        set => _inputFieldId.text = value;
-    }
-    protected string Password
-    {
-        get => _inputFieldPassword.text;
-        set => _inputFieldPassword.text = value;
-    }
+    protected virtual CustomInputField CustomInputFieldEmail => _customInputFields[0];
+    protected virtual CustomInputField CustomInputFieldID => _customInputFields[1];
+    protected virtual CustomInputField CustomInputFieldPassword => _customInputFields[2];
 
 
     protected override void Awake()
@@ -34,19 +18,21 @@ public class Tab_SignUp : Tab_Base<Tab_StartGame>
         _data = FindObjectOfType<Data>();
     }
 
+    protected virtual void Update()
+    {
+        SetInteractability();
+    }
+
     protected virtual void OnEnable()
     {
-        _object.onPlayOnline += Authoirize;     
+        _object.onPlayOnline += Authoirize;
+        _btn.onSelect += Confirm;
     }
 
     protected virtual void OnDisable()
     {
         _object.onPlayOnline -= Authoirize;
-    }
-
-    protected virtual void Update()
-    {
-        ButtonSignUpInteractability();
+        _btn.onSelect -= Confirm;
     }
 
     public override void OpenTab()
@@ -62,24 +48,33 @@ public class Tab_SignUp : Tab_Base<Tab_StartGame>
             OpenTab();
     }
 
-    protected virtual void ButtonSignUpInteractability()
+    public virtual void Confirm()
     {
-        _confirmButton.interactable = Id.Length > 6 && Password.Length > 4 ? true : false;
+        MyPlayfabRegistrationValues myPlayfabRegistrationValues = new MyPlayfabRegistrationValues
+        {
+            EMail = CustomInputFieldEmail.Text,
+            ID = CustomInputFieldID.Text,
+            Password = CustomInputFieldPassword.Text
+        };
+
+        ExternalData.MyPlayfabRegistrationForm.Register(myPlayfabRegistrationValues, result =>
+        {
+            SaveData(NewData(myPlayfabRegistrationValues));
+        });
     }
 
-    public virtual void OnClickConfirmButton()
+    protected virtual Data.NewData NewData(MyPlayfabRegistrationValues myPlayfabRegistrationValues)
     {
-        OnEnter();
+        return new Data.NewData { Id = myPlayfabRegistrationValues.ID, Password = myPlayfabRegistrationValues.Password };
     }
 
-    protected virtual void OnEnter()
+    protected virtual void SaveData(Data.NewData newData)
     {
-        ExternalData.MyPlayfabRegistrationForm.Register(new MyPlayfabRegistrationValues { ID = Id, Password = Password, EMail = Email });
-        SaveAccount();
+        _data.SetData(newData);
     }
 
-    protected virtual void SaveAccount()
+    protected virtual void SetInteractability()
     {
-        _data.SetData(new Data.NewData { Id = Id, Password = Password });
+        _btn.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4? true : false;
     }
 }

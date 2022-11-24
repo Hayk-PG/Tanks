@@ -20,7 +20,7 @@ public class MyPlayfabRegistrationForm
 
     public event Action onLogin;
 
-    public void Register(MyPlayfabRegistrationValues authValues)
+    public void Register(MyPlayfabRegistrationValues authValues, Action<bool> onResult)
     {
         RegisterPlayFabUserRequest rpfur = new RegisterPlayFabUserRequest();
         rpfur.Username = authValues.ID;
@@ -37,15 +37,17 @@ public class MyPlayfabRegistrationForm
             {
                 StorePlayerIds(new Result { PlayfabID = onSucces.PlayFabId, EntityID = onSucces.EntityToken.Entity.Id, EntityType = onSucces.EntityToken.Entity.Type });
                 MyPhoton.Connect(new MyPhotonAuthValues { Nickname = authValues.ID, UserID = onSucces.PlayFabId });
+                onResult?.Invoke(true);
                 onLogin.Invoke();
             },
             onError =>
             {
                 GlobalFunctions.DebugLog(onError.ErrorMessage);
+                onResult?.Invoke(false);
             });
     }
 
-    public void Login(MyPlayfabRegistrationValues authValues)
+    public void Login(MyPlayfabRegistrationValues authValues, Action<bool> onResult)
     {
         LoginWithPlayFabRequest lwpr = new LoginWithPlayFabRequest();
         lwpr.Username = authValues.ID;
@@ -56,11 +58,13 @@ public class MyPlayfabRegistrationForm
             {
                 StorePlayerIds(new Result { PlayfabID = onSucces.PlayFabId, EntityID = onSucces.EntityToken.Entity.Id, EntityType = onSucces.EntityToken.Entity.Type });
                 MyPhoton.Connect(new MyPhotonAuthValues { Nickname = authValues.ID, UserID = onSucces.PlayFabId });
+                onResult?.Invoke(true);
                 onLogin.Invoke();
             },
             onError =>
             {
                 GlobalFunctions.DebugLog(onError.ErrorMessage);
+                onResult?.Invoke(false);
             });
     }
 
