@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Tab_SignIn : Tab_BaseSignUp<Tab_StartGame>
+public class Tab_SignIn : Tab_BaseSignUp
 {
     [SerializeField] private Toggle _toggleAutioSignIn;
     [SerializeField] private Btn _btnSignUp;
@@ -16,30 +16,26 @@ public class Tab_SignIn : Tab_BaseSignUp<Tab_StartGame>
     protected override CustomInputField CustomInputFieldID => _customInputFields[0];
     protected override CustomInputField CustomInputFieldPassword => _customInputFields[1];
 
-    public event Action onSignUp;
+    public event Action onOpenTabSignUp;
 
 
     protected override void Awake()
     {
         base.Awake();
-
-        _tabSignUp = FindObjectOfType<Tab_SignUp>();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        _object.onPlayOnline += Authoirize;
-        _tabSignUp.onOpenTabSignIn += OpenTab;
-        _btnSignUp.onSelect += delegate { onSignUp?.Invoke(); };
+        MenuTabs.Tab_SignUp.onOpenTabSignIn += OpenTab;
+        _btnSignUp.onSelect += delegate { onOpenTabSignUp?.Invoke(); };
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        _object.onPlayOnline -= Authoirize;
-        _tabSignUp.onOpenTabSignIn -= OpenTab;
-        _btnSignUp.onSelect -= delegate { onSignUp?.Invoke(); };
+        MenuTabs.Tab_SignUp.onOpenTabSignIn -= OpenTab;
+        _btnSignUp.onSelect -= delegate { onOpenTabSignUp?.Invoke(); };
     }
 
     protected override void Authoirize()

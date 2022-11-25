@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class Tab_SignUp : Tab_BaseSignUp<Tab_StartGame>
+public class Tab_SignUp : Tab_BaseSignUp
 {
     [SerializeField] private Btn _btnSignIn;
 
@@ -15,16 +15,14 @@ public class Tab_SignUp : Tab_BaseSignUp<Tab_StartGame>
     protected override void OnEnable()
     {
         base.OnEnable();
-        _object.onPlayOnline += Authoirize;
-        _tabSignIn.onSignUp += OpenTab;
+        MenuTabs.Tab_SignIn.onOpenTabSignUp += OpenTab;
         _btnSignIn.onSelect += delegate { onOpenTabSignIn?.Invoke(); };      
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        _object.onPlayOnline -= Authoirize;
-        _tabSignIn.onSignUp -= OpenTab;
+        MenuTabs.Tab_SignIn.onOpenTabSignUp -= OpenTab;
         _btnSignIn.onSelect -= delegate { onOpenTabSignIn?.Invoke(); };      
     }
 

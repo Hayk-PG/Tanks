@@ -27,7 +27,6 @@ public class Tab_StartGame : Tab_Base<MyPhotonCallbacks>
         MyPhoton.LeaveRoom();
         MyPhoton.LeaveLobby();
         MyPhoton.Disconnect();
-
         base.OpenTab();
     }
 
