@@ -1,8 +1,12 @@
-
-public class AITanksList : BaseTanksList<ConfirmTankBtn>
+public class AITanksList : BaseTanksList
 {
-    protected override TankProperties[] DataTanks()
+    protected override void OnEnable()
     {
-        return Data.Manager.AvailableAITanks;
+        
+    }
+
+    protected override void OnDisable()
+    {
+        
     }
 }

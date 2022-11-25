@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-public class Toggle_Wind : BaseSliderLevel<GameWind>, IMatchmakeTextResult, IMatchmakeData
+public class Toggle_Wind : BaseSliderLevel<GameWind>
 {
     protected override string Title(string suffix)
     {
@@ -41,10 +41,5 @@ public class Toggle_Wind : BaseSliderLevel<GameWind>, IMatchmakeTextResult, IMat
     public string TextResultOffline()
     {
         return TextResultOnline();
-    }
-
-    public void StoreData(MatchmakeData matchmakeData)
-    {
-        matchmakeData.IsWindOn = Data.Manager.GameWind == GameWind.On ? true : false;
     }
 }

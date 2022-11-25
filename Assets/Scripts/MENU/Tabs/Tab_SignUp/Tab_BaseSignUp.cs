@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Tab_BaseSignUp : Tab_Base<MonoBehaviour> 
+public abstract class Tab_BaseSignUp : Tab_Base
 {
     [SerializeField] protected CustomInputField[] _customInputFields;
     protected Data _data;

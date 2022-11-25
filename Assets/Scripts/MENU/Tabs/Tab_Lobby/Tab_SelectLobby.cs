@@ -1,6 +1,6 @@
 using System;
 
-public class Tab_SelectLobby : Tab_Base<Tab_HomeOnline>, ITab_Base
+public class Tab_SelectLobby : Tab_Base, ITab_Base
 {
     private ITab_Base _itabBase;
 
@@ -17,14 +17,14 @@ public class Tab_SelectLobby : Tab_Base<Tab_HomeOnline>, ITab_Base
     protected override void OnEnable()
     {
         base.OnEnable();
-        _object.onGoForward += OpenTab;
+        MenuTabs.Tab_HomeOnline.onGoForward += OpenTab;
         MenuTabs.Tab_Tanks.onSendTab += OpenTab;
     }
 
     protected override void OnDisable()
     {
         base.OnEnable();
-        _object.onGoForward -= OpenTab;
+        MenuTabs.Tab_HomeOnline.onGoForward -= OpenTab;
         MenuTabs.Tab_Tanks.onSendTab -= OpenTab;
     }
 

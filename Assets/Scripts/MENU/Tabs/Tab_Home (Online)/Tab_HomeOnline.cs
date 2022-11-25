@@ -1,4 +1,4 @@
-public class Tab_HomeOnline : Tab_Base<MyPhotonCallbacks>
+public class Tab_HomeOnline : Tab_Base
 {
     protected override void OnEnable()
     {

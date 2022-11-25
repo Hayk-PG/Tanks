@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class Tab_StartGame : Tab_Base<MyPhotonCallbacks>
+public class Tab_StartGame : Tab_Base
 {
     [SerializeField] private Btn _btnOffline;
     [SerializeField] private Btn _btnOnline;

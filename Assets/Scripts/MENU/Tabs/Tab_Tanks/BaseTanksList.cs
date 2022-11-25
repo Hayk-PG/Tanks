@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public abstract class BaseTanksList<T> : MonoBehaviour where T: MonoBehaviour
+public abstract class BaseTanksList : MonoBehaviour 
 {
     [SerializeField] protected TanksHorizontalGroup[] _horizontalGroups;
-    protected BaseTab_Tanks<T> _tabTanks;
 
     public struct Parameters
     {
@@ -13,27 +12,9 @@ public abstract class BaseTanksList<T> : MonoBehaviour where T: MonoBehaviour
         public TankProperties[] _dataTanksList;
     }
 
-    protected virtual void Awake()
-    {
-        _tabTanks = Get<BaseTab_Tanks<T>>.From(gameObject);
-    }
+    protected abstract void OnEnable();
 
-    protected virtual void Start()
-    {
-        SetTanksList(DataTanks()); //Test purpose
-    }
-
-    protected virtual void OnEnable()
-    {
-        //_tabTanks.onTabOpen += delegate { SetTanksList(DataTanks()); };
-    }
-
-    protected virtual void OnDisable()
-    {
-        //_tabTanks.onTabOpen -= delegate { SetTanksList(DataTanks()); };
-    }
-
-    protected abstract TankProperties[] DataTanks();
+    protected abstract void OnDisable();
 
     protected virtual void SetTanksList(TankProperties[] dataTanksList)
     {

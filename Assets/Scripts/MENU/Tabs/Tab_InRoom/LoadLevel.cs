@@ -73,7 +73,7 @@ public class LoadLevel : MonoBehaviour
 
         foreach (var p in MyPhotonNetwork.PlayersList)
         {
-            if (_tabInRoom.IsPlayerReady(p)) readyPlayersCount++;
+            //if (_tabInRoom.IsPlayerReady(p)) readyPlayersCount++;
         }
 
         if (readyPlayersCount == MyPhotonNetwork.PlayersList.Length)

@@ -1,10 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-public class Tab_Base<T> : MonoBehaviour where T: MonoBehaviour
+public class Tab_Base: MonoBehaviour 
 {
     public CanvasGroup CanvasGroup { get; private set; }
-    protected T _object;
     protected Transform _subTabUpper, _subTabBottom;
     protected Btn _btnBack, _btnForward;
     protected IReset[] _iResets;
@@ -17,7 +16,6 @@ public class Tab_Base<T> : MonoBehaviour where T: MonoBehaviour
     protected virtual void Awake()
     {
         CanvasGroup = Get<CanvasGroup>.From(gameObject);
-        _object = FindObjectOfType<T>();
         _subTabUpper = transform.Find("SubTab_Upper");
         _subTabBottom = transform.Find("SubTab_Bottom");
         _btnBack = _subTabUpper != null ? _btnBack = Get<Btn>.From(_subTabUpper.Find("Btn_Back").gameObject) : null;

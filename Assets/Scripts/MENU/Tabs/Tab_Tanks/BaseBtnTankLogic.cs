@@ -2,21 +2,18 @@ using UnityEngine;
 
 [RequireComponent(typeof(Btn_Tank))]
 
-public abstract class BaseBtnTankLogic<T> : MonoBehaviour, IReset where T: MonoBehaviour
+public abstract class BaseBtnTankLogic : MonoBehaviour, IReset 
 {
-    protected BaseTab_Tanks<T> _tabTanks;
+    protected BaseTab_Tanks _tabTanks;
     [SerializeField] protected Btn_Tank _btnTank;
-    [SerializeField] Sprite _sprtButtonReleased;
+    [SerializeField] protected Sprite _sprtButtonReleased;
     [SerializeField] protected Sprite _sprtButtonPressed;
     [SerializeField] protected Color _clrTankReleased;  
     [SerializeField] protected Color _clrTankPressed;
-    
 
 
-    protected virtual void Awake()
-    {
-        _tabTanks = FindObjectOfType<BaseTab_Tanks<T>>();
-    }
+
+    protected abstract void Awake();
 
     protected virtual void OnEnable()
     {

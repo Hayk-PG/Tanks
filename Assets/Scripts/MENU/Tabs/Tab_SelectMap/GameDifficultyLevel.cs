@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GameDifficultyLevel : BaseSliderLevel<SingleGameDifficultyLevel>, IMatchmakeTextResult, IMatchmakeData
+public class GameDifficultyLevel : BaseSliderLevel<SingleGameDifficultyLevel>
 {
     protected override string Title(string suffix)
     {
@@ -42,10 +42,5 @@ public class GameDifficultyLevel : BaseSliderLevel<SingleGameDifficultyLevel>, I
     public string TextResultOffline()
     {
         return Keys.DifficultyLevel + Result(Data.Manager.SingleGameDifficultyLevel) + "\n";
-    }
-
-    public void StoreData(MatchmakeData matchmakeData)
-    {
-        matchmakeData.DifficultyLevel = (int)Data.Manager.SingleGameDifficultyLevel;
     }
 }

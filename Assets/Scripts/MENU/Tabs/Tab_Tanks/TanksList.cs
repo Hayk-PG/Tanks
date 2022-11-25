@@ -1,8 +1,12 @@
-
-public class TanksList : BaseTanksList<Tab_StartGame>
+public class TanksList : BaseTanksList
 {
-    protected override TankProperties[] DataTanks()
+    protected override void OnEnable()
     {
-        return Data.Manager.AvailableTanks;
+        MenuTabs.Tab_Tanks.onTabOpen += delegate { SetTanksList(Data.Manager.AvailableTanks); };
     }
+
+    protected override void OnDisable()
+    {
+        MenuTabs.Tab_Tanks.onTabOpen -= delegate { SetTanksList(Data.Manager.AvailableTanks); };
+    }   
 }

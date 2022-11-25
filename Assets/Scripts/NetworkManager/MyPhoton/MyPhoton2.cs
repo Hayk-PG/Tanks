@@ -10,11 +10,11 @@ public partial class MyPhoton : MonoBehaviour
         return new TypedLobby(lobbyName, lobbyType);
     }
 
-    public static void CreateRoom(LobbyType lobbyType, string lobbyName, MatchmakeData matchmakeData)
+    public static void CreateRoom(LobbyType lobbyType, string lobbyName)
     {
-        DefineRoomOptions(out RoomOptions roomOptions);
-        SetRoomCustomProperties(roomOptions, matchmakeData);
-        PhotonNetwork.CreateRoom(matchmakeData.RoomName, roomOptions, LobbyType(lobbyName, lobbyType));
+        //DefineRoomOptions(out RoomOptions roomOptions);
+        //SetRoomCustomProperties(roomOptions, matchmakeData);
+        //PhotonNetwork.CreateRoom(matchmakeData.RoomName, roomOptions, LobbyType(lobbyName, lobbyType));
     }
 
     private static void DefineRoomOptions(out RoomOptions roomOptions)
@@ -26,14 +26,14 @@ public partial class MyPhoton : MonoBehaviour
         roomOptions.IsOpen = true;
     }
 
-    private static void SetRoomCustomProperties(RoomOptions roomOptions, MatchmakeData matchmakeData)
+    private static void SetRoomCustomProperties(RoomOptions roomOptions)
     {
         Hashtable _customProperties = new Hashtable();
         roomOptions.CustomRoomPropertiesForLobby = new string[3] { Keys.MapIndex, Keys.GameTime, Keys.MapWind };
 
-        _customProperties.Add(Keys.MapIndex, matchmakeData.MapIndex);
-        _customProperties.Add(Keys.GameTime, matchmakeData.Time);
-        _customProperties.Add(Keys.MapWind, matchmakeData.IsWindOn);
+        //_customProperties.Add(Keys.MapIndex, matchmakeData.MapIndex);
+        //_customProperties.Add(Keys.GameTime, matchmakeData.Time);
+        //_customProperties.Add(Keys.MapWind, matchmakeData.IsWindOn);
 
         roomOptions.CustomRoomProperties = _customProperties;
     }
