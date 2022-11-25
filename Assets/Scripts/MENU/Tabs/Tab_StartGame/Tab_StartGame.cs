@@ -1,23 +1,27 @@
 ﻿using System;
+using UnityEngine;
 
 public class Tab_StartGame : Tab_Base<MyPhotonCallbacks>
 {
+    [SerializeField] private Btn _btnOffline;
+    [SerializeField] private Btn _btnOnline;
+
     public event Action onPlayOffline;
-    public event Action onPlayOnline; 
+    public event Action onPlayOnline;
 
 
-    public void OnClickVsAiButton()
+    protected override void OnEnable()
     {
-        MyPhotonNetwork.OfflineMode(true);
-        onPlayOffline?.Invoke();
+        _btnOffline.onSelect += SelectOffline;
+        _btnOnline.onSelect += SelectOnline;
     }
 
-    public void OnClickVsPlayerButton()
+    protected override void OnDisable()
     {
-        MyPhotonNetwork.OfflineMode(false);
-        onPlayOnline?.Invoke();
+        _btnOffline.onSelect -= SelectOffline;
+        _btnOnline.onSelect -= SelectOnline;
     }
-
+   
     public override void OpenTab()
     {
         MyPhoton.LeaveRoom();
@@ -25,5 +29,17 @@ public class Tab_StartGame : Tab_Base<MyPhotonCallbacks>
         MyPhoton.Disconnect();
 
         base.OpenTab();
+    }
+
+    public void SelectOffline()
+    {
+        MyPhotonNetwork.OfflineMode(true);
+        onPlayOffline?.Invoke();
+    }
+
+    public void SelectOnline()
+    {
+        MyPhotonNetwork.OfflineMode(false);
+        onPlayOnline?.Invoke();
     }
 }

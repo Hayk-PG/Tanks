@@ -1,54 +1,40 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using UnityEngine;
 
-public class Tab_SignUp : Tab_Base<Tab_StartGame>
+public class Tab_SignUp : Tab_BaseSignUp<Tab_StartGame>
 {
-    [SerializeField] protected CustomInputField[] _customInputFields;
-    [SerializeField] protected Btn _btn;
-    protected Data _data;
+    [SerializeField] private Btn _btnSignIn;
 
-    protected virtual CustomInputField CustomInputFieldEmail => _customInputFields[0];
-    protected virtual CustomInputField CustomInputFieldID => _customInputFields[1];
-    protected virtual CustomInputField CustomInputFieldPassword => _customInputFields[2];
+    protected override CustomInputField CustomInputFieldEmail => _customInputFields[0];
+    protected override CustomInputField CustomInputFieldID => _customInputFields[1];
+    protected override CustomInputField CustomInputFieldPassword => _customInputFields[2];
+
+    public event Action onOpenTabSignIn;
 
 
-    protected override void Awake()
+    protected override void OnEnable()
     {
-        base.Awake();
-        _data = FindObjectOfType<Data>();
-    }
-
-    protected virtual void Update()
-    {
-        SetInteractability();
-    }
-
-    protected virtual void OnEnable()
-    {
+        base.OnEnable();
         _object.onPlayOnline += Authoirize;
-        _btn.onSelect += Confirm;
+        _tabSignIn.onSignUp += OpenTab;
+        _btnSignIn.onSelect += delegate { onOpenTabSignIn?.Invoke(); };      
     }
 
-    protected virtual void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         _object.onPlayOnline -= Authoirize;
-        _btn.onSelect -= Confirm;
+        _tabSignIn.onSignUp -= OpenTab;
+        _btnSignIn.onSelect -= delegate { onOpenTabSignIn?.Invoke(); };      
     }
 
-    public override void OpenTab()
-    {
-        MyPhoton.LeaveRoom();
-        MyPhoton.LeaveLobby();
-        base.OpenTab();
-    }
-
-    protected virtual void Authoirize()
+    protected override void Authoirize()
     {
         if (!_data.IsAutoSignInChecked)
             OpenTab();
     }
 
-    public virtual void Confirm()
+    protected override void Confirm()
     {
         MyPlayfabRegistrationValues myPlayfabRegistrationValues = new MyPlayfabRegistrationValues
         {
@@ -61,20 +47,5 @@ public class Tab_SignUp : Tab_Base<Tab_StartGame>
         {
             SaveData(NewData(myPlayfabRegistrationValues));
         });
-    }
-
-    protected virtual Data.NewData NewData(MyPlayfabRegistrationValues myPlayfabRegistrationValues)
-    {
-        return new Data.NewData { Id = myPlayfabRegistrationValues.ID, Password = myPlayfabRegistrationValues.Password };
-    }
-
-    protected virtual void SaveData(Data.NewData newData)
-    {
-        _data.SetData(newData);
-    }
-
-    protected virtual void SetInteractability()
-    {
-        _btn.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4? true : false;
     }
 }

@@ -102,7 +102,7 @@ public class Btn : MonoBehaviour
     {
         GlobalFunctions.Loop<Btn>.Foreach(_siblings, sibling =>
         {
-            sibling.Deselect();
+            sibling?.Deselect();
         });
     }
 

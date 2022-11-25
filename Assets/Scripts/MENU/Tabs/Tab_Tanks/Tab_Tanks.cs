@@ -1,29 +1,29 @@
 public class Tab_Tanks : BaseTab_Tanks<Tab_StartGame>
 {
-    private SubTabTanksButton _subTabTanksButton;
+    private Tab_SelectLobby _tabSelectLobby;
+
 
 
     protected override void Awake()
     {
         base.Awake();
 
-        _subTabTanksButton = FindObjectOfType<SubTabTanksButton>();
+        _tabSelectLobby = FindObjectOfType<Tab_SelectLobby>();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         _object.onPlayOffline += OpenTab;
-        _subTabTanksButton.onOpenTanksTab += OpenTab;
+        _tabSelectLobby.onGoForward += OpenTab;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         _object.onPlayOffline -= OpenTab;
-        _subTabTanksButton.onOpenTanksTab -= OpenTab;
-    }
-
-    public override void OpenTab()
-    {
-        base.OpenTab();
+        _tabSelectLobby.onGoForward -= OpenTab;
     }
 }
