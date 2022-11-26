@@ -1,17 +1,21 @@
-public class Tab_AITanks : BaseTab_Tanks
+using System;
+
+public class Tab_AITanks : BaseTab_Tanks, ITab_Base
 {
-    private void OnEnable()
+    public event Action<ITab_Base> onSendTab;
+
+
+    protected override void OnEnable()
     {
-        //_object.onConfirmTankOffline += OpenTab;
+        base.OnEnable();
+        MenuTabs.Tab_HomeOffline.onOpenTabAITanks += CachePreviousTab;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        //_object.onConfirmTankOffline -= OpenTab;
+        base.OnDisable();
+        MenuTabs.Tab_HomeOffline.onOpenTabAITanks -= CachePreviousTab;
     }
 
-    //public override void OpenTab()
-    //{
-    //    //base.OpenTab();
-    //}
+    protected override void GoForward() => onSendTab?.Invoke(_previousTab);
 }

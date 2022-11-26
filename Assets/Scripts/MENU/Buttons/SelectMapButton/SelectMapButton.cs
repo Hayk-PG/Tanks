@@ -101,7 +101,7 @@ public class SelectMapButton : MonoBehaviour
 
     private void SetMapIndex()
     {
-        Data.Manager.MapIndex = _mapIndex;
+        //Data.Manager.MapIndex = _mapIndex;
     }
 
     public bool IsLocked()

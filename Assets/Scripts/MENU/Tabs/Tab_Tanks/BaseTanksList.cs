@@ -12,6 +12,10 @@ public abstract class BaseTanksList : MonoBehaviour
         public TankProperties[] _dataTanksList;
     }
 
+    protected abstract int SelectedTankIndex { get; }
+
+
+
     protected abstract void OnEnable();
 
     protected abstract void OnDisable();
@@ -51,6 +55,6 @@ public abstract class BaseTanksList : MonoBehaviour
     protected virtual void InitializeHorizontalGroup(Parameters parameters)
     {
         _horizontalGroups[parameters._index].gameObject.SetActive(true);
-        _horizontalGroups[parameters._index].Initialize(parameters._horizontalGroupsLength, parameters._tankProperties, parameters._dataTanksList);
+        _horizontalGroups[parameters._index].Initialize(parameters, SelectedTankIndex);
     }
 }

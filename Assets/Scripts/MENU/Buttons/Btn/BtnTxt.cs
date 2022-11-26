@@ -33,11 +33,6 @@ public class BtnTxt : MonoBehaviour
         _btn.onDeselect -= delegate { ChangeTextColor(_clrReleased); };
     }
 
-    private void SetButtonTitle()
-    {
-        _txt.text = String.IsNullOrEmpty(_btnTitle) ? "button" : _btnTitle;
-    }
-
     private void CacheTextDefaultLook()
     {
         _clrReleased = _txt.color;
@@ -46,5 +41,15 @@ public class BtnTxt : MonoBehaviour
     private void ChangeTextColor(Color color)
     {
         _txt.color = color;
+    }
+
+    private void SetButtonTitle()
+    {
+        _txt.text = String.IsNullOrEmpty(_btnTitle) ? "" : _btnTitle;
+    }
+
+    public void SetButtonTitle(string title)
+    {
+        _txt.text = title;
     }
 }

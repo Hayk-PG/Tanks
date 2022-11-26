@@ -39,7 +39,7 @@ public partial class Data : MonoBehaviour
     public int MapIndex
     {
         get => _mapIndex;
-        set => _mapIndex = value;
+        private set => _mapIndex = value;
     }
 
 
@@ -62,5 +62,10 @@ public partial class Data : MonoBehaviour
             GameTime = GameTimeVariations[gameTime];
 
         SetData(new NewData { GameTime = gameTime });
+    }
+
+    public void SetMap(int index)
+    {
+        MapIndex = index;
     }
 }
