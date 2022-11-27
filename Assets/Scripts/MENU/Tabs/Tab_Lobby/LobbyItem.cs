@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class LobbyItem : MonoBehaviour
 {
     public enum ItemType { Coin, Master, Strength, None}
+    private CanvasGroup _canvasGroup;
     [SerializeField] private ItemType _itemType;
     [SerializeField] private TMP_Text _txt;
     [SerializeField] private Image _img;
@@ -17,15 +18,16 @@ public class LobbyItem : MonoBehaviour
 
     private void Awake()
     {
-        DeactivateItemOnNullAmount();
+        _canvasGroup = Get<CanvasGroup>.From(gameObject);
+        HideItemOnNullAmount();
         GetItemTypeAndAmount();
         SetItemIcon();
     }
 
-    private void DeactivateItemOnNullAmount()
+    private void HideItemOnNullAmount()
     {
         if (_amount == 0)
-            gameObject.SetActive(false);
+            GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
     }
 
     private void GetItemTypeAndAmount()

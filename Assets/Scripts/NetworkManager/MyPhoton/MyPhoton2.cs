@@ -10,11 +10,16 @@ public partial class MyPhoton : MonoBehaviour
         return new TypedLobby(lobbyName, lobbyType);
     }
 
+    public static void JoinLobby(string lobbyName, LobbyType lobbyType)
+    {
+        PhotonNetwork.JoinLobby(LobbyType(lobbyName, lobbyType));
+    }
+
     public static void CreateRoom(LobbyType lobbyType, string lobbyName)
     {
-        //DefineRoomOptions(out RoomOptions roomOptions);
-        //SetRoomCustomProperties(roomOptions, matchmakeData);
-        //PhotonNetwork.CreateRoom(matchmakeData.RoomName, roomOptions, LobbyType(lobbyName, lobbyType));
+        DefineRoomOptions(out RoomOptions roomOptions);
+        //etRoomCustomProperties(roomOptions, matchmakeData);
+        PhotonNetwork.CreateRoom("aaaaa", roomOptions, LobbyType(lobbyName, lobbyType));
     }
 
     private static void DefineRoomOptions(out RoomOptions roomOptions)
@@ -43,8 +48,20 @@ public partial class MyPhoton : MonoBehaviour
         PhotonNetwork.JoinRoom(roomName);
     }
 
-    public static void JoinLobby(string lobbyName, LobbyType lobbyType)
+    public struct JoinRandomOrCreateRoomParameters
     {
-        PhotonNetwork.JoinLobby(LobbyType(lobbyName, lobbyType));
+        public Hashtable ExpectedCustomRoomProperties { get; set; }
+        public TypedLobby TypedLobby { get; set; }
+        public RoomOptions RoomOptions { get; set; }
+        public MatchmakingMode MatchmakingMode { get; set; }
+        public string SqlLobbyFilter { get; set; }
+        public string ExpectedUsers { get; set; }
+        public string RoomName { get; set; }
+        public int ExpectedMaxPlayers { get; set; }
+    }
+
+    public static void JoinRandomOrCreateRoom(JoinRandomOrCreateRoomParameters joinRandomOrCreateRoomParameters)
+    {
+        PhotonNetwork.JoinRandomOrCreateRoom();
     }
 }

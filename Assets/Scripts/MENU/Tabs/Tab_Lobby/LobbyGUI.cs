@@ -8,10 +8,9 @@ public class LobbyGUI : MonoBehaviour
     [SerializeField] private Image _imgBackgroundEffect;
 
     [SerializeField] private string cntntTitle;
-
     [SerializeField] private Color _clrTitle;
 
-    public Color TitleColor
+    private Color TitleColor
     {
         get
         {
@@ -23,7 +22,10 @@ public class LobbyGUI : MonoBehaviour
             _imgBackgroundEffect.color = value;
         }
     }
-
+    public string LobbyName
+    {
+        get => cntntTitle;
+    }
 
 
     private void Awake()
