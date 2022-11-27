@@ -29,7 +29,6 @@ public class LobbyGUI : MonoBehaviour
     private void Awake()
     {
         SetTitleColor(_clrTitle);
-
         SetText(_txtTitle.text, cntntTitle);
     }
 
