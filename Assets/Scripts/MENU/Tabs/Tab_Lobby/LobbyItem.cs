@@ -31,7 +31,7 @@ public class LobbyItem : MonoBehaviour
 
     private void SetItemTypeAndAmount()
     {
-        Type = _itemType == ItemType.Coin ? Keys.ItemCoin : _itemType == ItemType.Master ? Keys.ItemMaster : Keys.ItemStrength;       
+        Type = _itemType == ItemType.Coin ? Keys.ItemCoins : _itemType == ItemType.Master ? Keys.ItemMaster : Keys.ItemStrength;       
         Amount = _amount;
         _img.sprite = _itemType == ItemType.Coin ? _sprtCoin : _itemType == ItemType.Master ? _sprtMaster : _sprtStrength;
         _txt.text = Mathf.Abs(_amount).ToString();

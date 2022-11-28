@@ -20,7 +20,7 @@
     public static string GameRounds { get; private set; } = "Rounds";
     public static string ItemName { get; private set; } = "Item name";
     public static string ItemAmount { get; private set; } = "Item amount";
-    public static string ItemCoin { get; private set; } = "Coin";
+    public static string ItemCoins { get; private set; } = "Coins";
     public static string ItemMaster { get; private set; } = "Master";
     public static string ItemStrength { get; private set; } = "Strength";
     public static string Gold { get; private set; } = "Gold";

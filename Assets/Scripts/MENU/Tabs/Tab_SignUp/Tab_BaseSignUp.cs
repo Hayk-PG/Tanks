@@ -53,5 +53,6 @@ public abstract class Tab_BaseSignUp : Tab_Base
     }
 
     protected virtual void SaveData(Data.NewData newData) => _data.SetData(newData);
+    protected virtual void CreateUserItemsData(string playfabId) => UserData.UpdateItems(playfabId, 0, 0, 0);
     protected virtual void SetInteractability() => _btnForward.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4 ? true : false;
 }

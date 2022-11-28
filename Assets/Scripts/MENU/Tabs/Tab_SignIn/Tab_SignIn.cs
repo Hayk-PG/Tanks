@@ -61,6 +61,7 @@ public class Tab_SignIn : Tab_BaseSignUp
         {
             OnAutoSignChecked();
             SaveData(NewData(myPlayfabRegistrationValues));
+            CreateUserItemsData(Data.Manager.PlayfabId);// For test purpose
         });
     }
 

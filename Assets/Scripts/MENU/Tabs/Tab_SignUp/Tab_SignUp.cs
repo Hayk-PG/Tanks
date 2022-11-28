@@ -44,6 +44,7 @@ public class Tab_SignUp : Tab_BaseSignUp
         ExternalData.MyPlayfabRegistrationForm.Register(myPlayfabRegistrationValues, result =>
         {
             SaveData(NewData(myPlayfabRegistrationValues));
+            CreateUserItemsData(Data.Manager.PlayfabId);
         });
     }
 }
