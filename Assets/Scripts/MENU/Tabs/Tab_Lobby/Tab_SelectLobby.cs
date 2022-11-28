@@ -3,6 +3,7 @@ using System;
 public class Tab_SelectLobby : Tab_Base, ITab_Base
 {
     private ITab_Base _itabBase;
+    private MyPhotonCallbacks _myPhotonCallbacks;
 
     public event Action<ITab_Base> onSendTab;
     
@@ -12,6 +13,7 @@ public class Tab_SelectLobby : Tab_Base, ITab_Base
     {
         base.Awake();
         _itabBase = Get<ITab_Base>.From(gameObject);
+        _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
     }
 
     protected override void OnEnable()
@@ -19,6 +21,7 @@ public class Tab_SelectLobby : Tab_Base, ITab_Base
         base.OnEnable();
         MenuTabs.Tab_HomeOnline.onGoForward += OpenTab;
         MenuTabs.Tab_Tanks.onSendTab += OpenTab;
+        _myPhotonCallbacks._OnLeftRoom += OpenTab;
     }
 
     protected override void OnDisable()
@@ -26,6 +29,7 @@ public class Tab_SelectLobby : Tab_Base, ITab_Base
         base.OnEnable();
         MenuTabs.Tab_HomeOnline.onGoForward -= OpenTab;
         MenuTabs.Tab_Tanks.onSendTab -= OpenTab;
+        _myPhotonCallbacks._OnLeftRoom -= OpenTab;
     }
 
     protected override void GoForward() => onSendTab?.Invoke(_itabBase);

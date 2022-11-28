@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LoadLevel : MonoBehaviour
 {
-    private Tab_InRoom _tabInRoom;   
+    private Tab_Room _tabInRoom;   
     private MyPlugins _myPlugins;
     private Network _network;
     private MyPhotonCallbacks _myPhotonCallbacks;
@@ -11,7 +11,7 @@ public class LoadLevel : MonoBehaviour
 
     private void Awake()
     {
-        _tabInRoom = FindObjectOfType<Tab_InRoom>();
+        _tabInRoom = FindObjectOfType<Tab_Room>();
         _myPlugins = FindObjectOfType<MyPlugins>();
         _network = FindObjectOfType<Network>();
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();

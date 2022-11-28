@@ -14,8 +14,8 @@ public class GameTime : BaseSliderLevel<int>
 
     protected override void ListenSliderValueChange()
     {
-        Data.Manager.SetGameTime(SliderValue);
-        UpdateTitleText(Data.Manager.GameTime);
+        Data.Manager.SaveRoundDuration((RoundDuration)SliderValue);
+        UpdateTitleText(Data.Manager.RoundDuration);
     }
 
     protected override string Title(string suffix)
@@ -31,7 +31,7 @@ public class GameTime : BaseSliderLevel<int>
     public override void SetDefault()
     {
         SliderValue = PlayerPrefs.GetInt(Keys.GameTime, 0);
-        Data.Manager.SetGameTime(SliderValue);
-        UpdateTitleText(Data.Manager.GameTime);
+        Data.Manager.SaveRoundDuration((RoundDuration)SliderValue);
+        UpdateTitleText(Data.Manager.RoundDuration);
     }
 }

@@ -12,6 +12,12 @@ public class BtnTxt : MonoBehaviour
     [SerializeField] private Color _clrPressed;
     private Color _clrReleased;
 
+    public string BtnTitle
+    {
+        get => _txt.text;
+        private set => _txt.text = value;
+    }
+
 
     private void Awake()
     {
@@ -45,11 +51,11 @@ public class BtnTxt : MonoBehaviour
 
     private void SetButtonTitle()
     {
-        _txt.text = String.IsNullOrEmpty(_btnTitle) ? "" : _btnTitle;
+        BtnTitle = String.IsNullOrEmpty(_btnTitle) ? "" : _btnTitle;
     }
 
     public void SetButtonTitle(string title)
     {
-        _txt.text = title;
+        BtnTitle = title;
     }
 }

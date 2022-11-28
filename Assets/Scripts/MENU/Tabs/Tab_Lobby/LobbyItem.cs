@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class LobbyItem : MonoBehaviour
 {
-    public enum ItemType { Coin, Master, Strength, None}
+    public enum ItemType { Coin, Master, Strength}
     private CanvasGroup _canvasGroup;
     [SerializeField] private ItemType _itemType;
     [SerializeField] private TMP_Text _txt;
@@ -12,7 +12,7 @@ public class LobbyItem : MonoBehaviour
     [SerializeField] private Sprite _sprtCoin, _sprtStrength, _sprtMaster;
     [SerializeField] private int _amount;
 
-    public ItemType Type { get; private set; }
+    public string Type { get; private set; }
     public int Amount { get; private set; }
 
 
@@ -20,8 +20,7 @@ public class LobbyItem : MonoBehaviour
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
         HideItemOnNullAmount();
-        GetItemTypeAndAmount();
-        SetItemIcon();
+        SetItemTypeAndAmount();
     }
 
     private void HideItemOnNullAmount()
@@ -30,20 +29,11 @@ public class LobbyItem : MonoBehaviour
             GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
     }
 
-    private void GetItemTypeAndAmount()
+    private void SetItemTypeAndAmount()
     {
-        Type = _itemType;
+        Type = _itemType == ItemType.Coin ? Keys.ItemCoin : _itemType == ItemType.Master ? Keys.ItemMaster : Keys.ItemStrength;       
         Amount = _amount;
-        _txt.text = _amount.ToString();
-    }
-
-    private void SetItemIcon()
-    {
-        switch (_itemType)
-        {
-            case ItemType.Coin: _img.sprite = _sprtCoin; break;
-            case ItemType.Strength: _img.sprite = _sprtStrength; break;
-            case ItemType.Master: _img.sprite = _sprtMaster; break;
-        }
+        _img.sprite = _itemType == ItemType.Coin ? _sprtCoin : _itemType == ItemType.Master ? _sprtMaster : _sprtStrength;
+        _txt.text = Mathf.Abs(_amount).ToString();
     }
 }

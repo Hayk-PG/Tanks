@@ -55,13 +55,22 @@ public partial class MyPhoton : MonoBehaviour
         public RoomOptions RoomOptions { get; set; }
         public MatchmakingMode MatchmakingMode { get; set; }
         public string SqlLobbyFilter { get; set; }
-        public string ExpectedUsers { get; set; }
         public string RoomName { get; set; }
-        public int ExpectedMaxPlayers { get; set; }
+        public string[] ExpectedUsers { get; set; }
+        public byte ExpectedMaxPlayers { get; set; }
     }
 
     public static void JoinRandomOrCreateRoom(JoinRandomOrCreateRoomParameters joinRandomOrCreateRoomParameters)
     {
-        PhotonNetwork.JoinRandomOrCreateRoom();
+        PhotonNetwork.JoinRandomOrCreateRoom(
+            joinRandomOrCreateRoomParameters.ExpectedCustomRoomProperties, 
+            joinRandomOrCreateRoomParameters.ExpectedMaxPlayers, 
+            joinRandomOrCreateRoomParameters.MatchmakingMode,
+            joinRandomOrCreateRoomParameters.TypedLobby,
+            joinRandomOrCreateRoomParameters.SqlLobbyFilter,
+            joinRandomOrCreateRoomParameters.RoomName,
+            joinRandomOrCreateRoomParameters.RoomOptions,
+            joinRandomOrCreateRoomParameters.ExpectedUsers
+            );
     }
 }

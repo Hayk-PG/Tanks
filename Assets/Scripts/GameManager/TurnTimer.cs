@@ -41,7 +41,7 @@ public class TurnTimer : MonoBehaviourPun
 
     private void OnGameStarted()
     {
-        _turnTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.GameTime : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.GameTime];
+        _turnTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.RoundDuration : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.GameTime];
         Seconds = _turnTime;
     }
 

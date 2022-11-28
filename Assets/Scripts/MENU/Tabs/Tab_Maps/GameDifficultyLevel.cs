@@ -9,7 +9,7 @@ public class GameDifficultyLevel : BaseSliderLevel<SingleGameDifficultyLevel>
 
     protected override void ListenSliderValueChange()
     {
-        Data.Manager.SetDifficultyLevel(SliderValue);
+        Data.Manager.SaveGameDifficultyLevel(SliderValue);
         UpdateTitleText(Data.Manager.SingleGameDifficultyLevel);
     }
 
@@ -35,7 +35,7 @@ public class GameDifficultyLevel : BaseSliderLevel<SingleGameDifficultyLevel>
     public override void SetDefault()
     {
         SliderValue = PlayerPrefs.GetInt(Keys.DifficultyLevel, 0);
-        Data.Manager.SetDifficultyLevel(SliderValue);
+        Data.Manager.SaveGameDifficultyLevel(SliderValue);
         UpdateTitleText(Data.Manager.SingleGameDifficultyLevel);
     }
 }

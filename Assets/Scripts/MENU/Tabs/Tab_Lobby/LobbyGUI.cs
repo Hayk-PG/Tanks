@@ -5,36 +5,32 @@ using TMPro;
 public class LobbyGUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text _txtTitle;
+    [SerializeField] private TMP_Text _txtRoundDuration;
     [SerializeField] private Image _imgBackgroundEffect;
+    [SerializeField] private Image _imgBtn;
+    [SerializeField] private Image _imgWind;
+    [SerializeField] private Image _imbWindBlock;
 
-    [SerializeField] private string cntntTitle;
-    [SerializeField] private Color _clrTitle;
 
-    private Color TitleColor
+    public void PrintLobbyName(string lobbyName)
     {
-        get
-        {
-            return _txtTitle.color;
-        }
-        set
-        {
-            _txtTitle.color = value;
-            _imgBackgroundEffect.color = value;
-        }
+        _txtTitle.text = lobbyName;
     }
-    public string LobbyName
+    public void PrintRoundDuration(int roundDuration)
     {
-        get => cntntTitle;
+        _txtRoundDuration.text = roundDuration.ToString();
     }
 
-
-    private void Awake()
+    public void SetColor(Color color)
     {
-        SetTitleColor(_clrTitle);
-        SetText(_txtTitle.text, cntntTitle);
+        _txtTitle.color = color;
+        _imgBackgroundEffect.color = color;
+        _imgBtn.color = color;
     }
 
-    private void SetTitleColor(Color color) => TitleColor = color;
-
-    private void SetText(string txt, string content) => _txtTitle.text = content;
+    public void SetWindBlockActivity(bool isWindOn)
+    {
+        _imgWind.gameObject.SetActive(isWindOn);
+        _imbWindBlock.gameObject.SetActive(!isWindOn);
+    }
 }

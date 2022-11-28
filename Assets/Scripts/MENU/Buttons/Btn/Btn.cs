@@ -93,7 +93,7 @@ public class Btn : MonoBehaviour
             IsSelected = true;
             onSelect?.Invoke();
 
-            ChangeBuutonLook();
+            ChangeBuutonLook(_sprtPressed, _clrPressed);
             Conditions<bool>.Compare(_buttonClickType == ButtonClickType.OnlyInvokeEvent, Deselect, DeselectAllSiblings);
         }
     }
@@ -116,40 +116,39 @@ public class Btn : MonoBehaviour
             if (_sprtReleased == null)
                 return;
 
-            ButtonSprite = _sprtReleased;
-            ButtonColor = _clrReleased;
+            ChangeBuutonLook(_sprtReleased, _clrReleased);
         }
     }
 
-    private void ChangeBuutonLook()
+    private void ChangeBuutonLook(Sprite sprite, Color color)
     {
         switch (_buttonClickType)
         {
-            case ButtonClickType.ChangeSprite: ChangeSprite(); break;
-            case ButtonClickType.ChangeColor: ChangeColor(); break;
-            case ButtonClickType.Both: ChangeBoth(); break;
+            case ButtonClickType.ChangeSprite: ChangeSprite(sprite); break;
+            case ButtonClickType.ChangeColor: ChangeColor(color); break;
+            case ButtonClickType.Both: ChangeBoth(sprite, color); break;
         }
     }
 
-    private void ChangeSprite()
+    private void ChangeSprite(Sprite sprite)
     {
         if (_sprtPressed == null)
             return;
 
-        ButtonSprite = _sprtPressed;
+        ButtonSprite = sprite;
     }
 
-    private void ChangeColor()
+    private void ChangeColor(Color color)
     {
-        ButtonColor = _clrPressed;
+        ButtonColor = color;
     }
 
-    private void ChangeBoth()
+    private void ChangeBoth(Sprite sprite, Color color)
     {
         if (_sprtPressed == null)
             return;
 
-        ButtonSprite = _sprtPressed;
-        ButtonColor = _clrPressed;
+        ButtonSprite = sprite;
+        ButtonColor = color;
     }
 }

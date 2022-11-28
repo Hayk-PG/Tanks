@@ -9,8 +9,8 @@ public class Toggle_Wind : BaseSliderLevel<GameWind>
 
     protected override void ListenSliderValueChange()
     {
-        Data.Manager.SetWind(SliderValue);
-        UpdateTitleText(Data.Manager.GameWind);
+        Data.Manager.SaveWind((GameWind)SliderValue);
+        UpdateTitleText((GameWind)SliderValue);
     }
 
     protected override void UpdateTitleText(GameWind gameWind)
@@ -33,7 +33,7 @@ public class Toggle_Wind : BaseSliderLevel<GameWind>
     public override void SetDefault()
     {
         SliderValue = PlayerPrefs.GetInt(Keys.MapWind, 0);
-        Data.Manager.SetWind(SliderValue);
-        UpdateTitleText(Data.Manager.GameWind);
+        Data.Manager.SaveWind((GameWind)SliderValue);
+        UpdateTitleText((GameWind)SliderValue);
     }
 }
