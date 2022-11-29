@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using PlayFab;
-using PlayFab.ClientModels;
-using PlayFab.ServerModels;
-using System;
 
-public class MyPlayfabUserData
+public class UserData 
 {
-    public void Get(string playfabId, Action<Dictionary<string, PlayFab.ClientModels.UserDataRecord>> onResult)
+    /// <summary>
+    /// Get
+    /// </summary>
+    /// <param name="playfabId"></param>
+    /// <param name="onResult"></param>
+    public UserData(string playfabId, Action<Dictionary<string, PlayFab.ClientModels.UserDataRecord>> onResult)
     {
         PlayFab.ClientModels.GetUserDataRequest getUserDataRequest = new PlayFab.ClientModels.GetUserDataRequest
         {
@@ -25,7 +28,14 @@ public class MyPlayfabUserData
             });
     }
 
-    public void Update(string playfabId, PlayFab.ServerModels.UserDataPermission permission, Dictionary<string,  string> newData, List<string> keysToRemove)
+    /// <summary>
+    /// Update
+    /// </summary>
+    /// <param name="playfabId"></param>
+    /// <param name="permission"></param>
+    /// <param name="newData"></param>
+    /// <param name="keysToRemove"></param>
+    public UserData(string playfabId, PlayFab.ServerModels.UserDataPermission permission, Dictionary<string, string> newData, List<string> keysToRemove)
     {
         PlayFab.ServerModels.UpdateUserDataRequest updateUserDataRequest = new PlayFab.ServerModels.UpdateUserDataRequest
         {
@@ -38,7 +48,7 @@ public class MyPlayfabUserData
         PlayFabServerAPI.UpdateUserData(updateUserDataRequest,
             onSuccess =>
             {
-                GlobalFunctions.DebugLog("User data has been updated");
+                
             },
             onError =>
             {
@@ -46,4 +56,3 @@ public class MyPlayfabUserData
             });
     }
 }
-

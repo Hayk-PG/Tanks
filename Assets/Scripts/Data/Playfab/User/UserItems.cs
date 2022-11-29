@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class UserItems 
 {
     /// <summary>
-    /// 0: Coins, 1: Master, 2: Strength
+    /// Get
     /// </summary>
     /// <param name="playfabId"></param>
     /// <param name="onResult"></param>
@@ -14,7 +14,7 @@ public class UserItems
         int masterInit = 0;
         int strengthInit = 0;
 
-        ExternalData.MyPlayfabUserData.Get(playfabId, result =>
+        new UserData(playfabId, result =>
         {
             if (result != null && result.ContainsKey(Keys.ItemCoins) && result.ContainsKey(Keys.ItemMaster) && result.ContainsKey(Keys.ItemStrength))
             {
@@ -32,6 +32,13 @@ public class UserItems
         });
     }
 
+    /// <summary>
+    /// Update
+    /// </summary>
+    /// <param name="playfabId"></param>
+    /// <param name="coins"></param>
+    /// <param name="master"></param>
+    /// <param name="strength"></param>
     public UserItems(string playfabId, int coins, int master, int strength)
     {
         new UserItems(playfabId, result =>
@@ -43,7 +50,7 @@ public class UserItems
                 { Keys.ItemStrength, (result[2] + strength).ToString() }
             };
 
-            ExternalData.MyPlayfabUserData.Update(playfabId, PlayFab.ServerModels.UserDataPermission.Public, items, null);
+            new UserData(playfabId, PlayFab.ServerModels.UserDataPermission.Public, items, null);
         });
     }
 }

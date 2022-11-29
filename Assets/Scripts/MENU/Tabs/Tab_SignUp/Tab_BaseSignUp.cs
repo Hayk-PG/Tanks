@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class Tab_BaseSignUp : Tab_Base
@@ -47,12 +48,26 @@ public abstract class Tab_BaseSignUp : Tab_Base
 
     protected abstract void Confirm();
 
-    protected virtual Data.NewData NewData(MyPlayfabRegistrationValues myPlayfabRegistrationValues)
+    protected virtual Data.NewData NewData(string userId, string userPassword)
     {
-        return new Data.NewData { Id = myPlayfabRegistrationValues.ID, Password = myPlayfabRegistrationValues.Password };
+        return new Data.NewData { Id = userId, Password = userPassword };
     }
 
-    protected virtual void SaveData(Data.NewData newData) => _data.SetData(newData);
-    protected virtual void CreateUserItemsData(string playfabId) => UserData.UpdateItems(playfabId, 0, 0, 0);
+    protected virtual void SaveUserCredentials(Data.NewData newData) => _data.SetData(newData);
+
+    protected virtual void CacheUserIds(string playfabId, string entityId, string entityType)
+    {
+        Data.Manager.PlayfabId = playfabId;
+        Data.Manager.EntityID = entityId;
+        Data.Manager.EntityType = entityType;
+    }
+
+    protected virtual void CreateUserItemsData(string playfabId) => User.UpdateItems(playfabId, 0, 0, 0);
+
+    protected virtual void ConnectToPhoton(string photonNetworkNickname, string photonNetworkUserId)
+    {
+        MyPhoton.Connect(photonNetworkNickname, photonNetworkUserId);
+    }
+
     protected virtual void SetInteractability() => _btnForward.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4 ? true : false;
 }

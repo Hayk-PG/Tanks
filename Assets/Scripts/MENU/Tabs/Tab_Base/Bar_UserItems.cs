@@ -38,7 +38,7 @@ public class Bar_UserItems : MonoBehaviour
 
     private void PrintUserItemsNumbers()
     {
-        UserData.GetItems(Data.Manager.PlayfabId, items =>
+        User.GetItems(Data.Manager.PlayfabId, items =>
         {
             for (int i = 0; i < items.Length; i++)
             {

@@ -51,17 +51,16 @@ public class Tab_SignIn : Tab_BaseSignUp
 
     protected override void Confirm()
     {
-        MyPlayfabRegistrationValues myPlayfabRegistrationValues = new MyPlayfabRegistrationValues
+        User.Login(CustomInputFieldID.Text, CustomInputFieldPassword.Text, result =>
         {
-            ID = CustomInputFieldID.Text,
-            Password = CustomInputFieldPassword.Text
-        };
-
-        ExternalData.MyPlayfabRegistrationForm.Login(myPlayfabRegistrationValues, result =>
-        {
-            OnAutoSignChecked();
-            SaveData(NewData(myPlayfabRegistrationValues));
-            CreateUserItemsData(Data.Manager.PlayfabId);// For test purpose
+            if (result != null)
+            {
+                OnAutoSignChecked();
+                SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
+                CacheUserIds(result.PlayFabId, result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
+                CreateUserItemsData(result.PlayFabId);
+                ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
+            }
         });
     }
 
@@ -73,9 +72,9 @@ public class Tab_SignIn : Tab_BaseSignUp
             _data.DeleteData(Keys.AutoSignIn);
     }
 
-    protected override void SaveData(Data.NewData newData)
+    protected override void SaveUserCredentials(Data.NewData newData)
     {
         if (IsAutoSignInChecked)
-            base.SaveData(newData);
+            base.SaveUserCredentials(newData);
     }
 }

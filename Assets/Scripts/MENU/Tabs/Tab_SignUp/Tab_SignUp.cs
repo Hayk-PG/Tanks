@@ -34,17 +34,15 @@ public class Tab_SignUp : Tab_BaseSignUp
 
     protected override void Confirm()
     {
-        MyPlayfabRegistrationValues myPlayfabRegistrationValues = new MyPlayfabRegistrationValues
+        User.Register(CustomInputFieldID.Text, CustomInputFieldPassword.Text, CustomInputFieldEmail.Text, result =>
         {
-            EMail = CustomInputFieldEmail.Text,
-            ID = CustomInputFieldID.Text,
-            Password = CustomInputFieldPassword.Text
-        };
-
-        ExternalData.MyPlayfabRegistrationForm.Register(myPlayfabRegistrationValues, result =>
-        {
-            SaveData(NewData(myPlayfabRegistrationValues));
-            CreateUserItemsData(Data.Manager.PlayfabId);
+            if (result != null)
+            {
+                SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
+                CacheUserIds(result.PlayFabId, result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
+                CreateUserItemsData(result.PlayFabId);
+                ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
+            }
         });
     }
 }
