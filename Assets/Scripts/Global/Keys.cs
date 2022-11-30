@@ -2,6 +2,12 @@
 {
     public static string Points { get; private set; } = "Points";
     public static string Level { get; private set; } = "Level";
+    public static string Wins { get; private set; } = "Wins";
+    public static string Losses { get; private set; } = "Losses";
+    public static string Kills { get; private set; } = "Kills";
+    public static string KD { get; private set; } = "KD";
+    public static string TimePlayed { get; private set; } = "TimePlayed";
+    public static string Quits { get; private set; } = "Quits";
     public static string SelectedTankIndex { get; private set; } = "SelectedTankIndex";
     public static string Id { get; private set; } = "Id";
     public static string Password { get; private set; } = "Password";

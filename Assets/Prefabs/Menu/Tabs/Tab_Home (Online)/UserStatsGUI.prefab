@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 8216804809301486239}
   - component: {fileID: 1764081735807555371}
   m_Layer: 5
-  m_Name: Bar
+  m_Name: BarKD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -459,7 +459,7 @@ GameObject:
   - component: {fileID: 7513160502029749730}
   - component: {fileID: 160063763306262614}
   m_Layer: 5
-  m_Name: Bar
+  m_Name: BarWins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -749,7 +749,7 @@ GameObject:
   - component: {fileID: 7216755232376335671}
   - component: {fileID: 1034598846556606595}
   m_Layer: 5
-  m_Name: Bar
+  m_Name: BarKills
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1009,8 +1009,9 @@ GameObject:
   - component: {fileID: 3669470162823181810}
   - component: {fileID: 494990053833371769}
   - component: {fileID: 7460464334129622613}
+  - component: {fileID: 5120292200779199270}
   m_Layer: 5
-  m_Name: SubTab_Player
+  m_Name: UserStatsGUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1077,6 +1078,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 5
+--- !u!114 &5120292200779199270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3077495007493784044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12236fad975e14f40a330b56b4c5eeca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _txtLevel: {fileID: 44861978020721173}
+  _txtPoints: {fileID: 2152306483568166727}
+  _txtWins: {fileID: 2796582505607514561}
+  _txtLoses: {fileID: 5204106460622342329}
+  _txtKills: {fileID: 3074973342685456660}
+  _txtKdRatio: {fileID: 4363032716981481148}
+  _txtTimePlayed: {fileID: 8843183730636906627}
+  _txtQuits: {fileID: 7467719867962632087}
 --- !u!1 &3301552288090234887
 GameObject:
   m_ObjectHideFlags: 0
@@ -2412,7 +2433,7 @@ GameObject:
   - component: {fileID: 3761108138348258464}
   - component: {fileID: 6795528738691258644}
   m_Layer: 5
-  m_Name: Bar Variant
+  m_Name: Bar_TimePlayed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2528,7 +2549,7 @@ GameObject:
   - component: {fileID: 2966118382861968308}
   - component: {fileID: 4851914443049459200}
   m_Layer: 5
-  m_Name: Bar Variant
+  m_Name: Bar_Quits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3166,7 +3187,7 @@ GameObject:
   - component: {fileID: 482971561880554650}
   - component: {fileID: 7840607097270251822}
   m_Layer: 5
-  m_Name: Bar
+  m_Name: BarLosses
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

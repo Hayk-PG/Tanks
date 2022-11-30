@@ -3,11 +3,6 @@ using System.Collections.Generic;
 
 public class UserItems 
 {
-    /// <summary>
-    /// Get
-    /// </summary>
-    /// <param name="playfabId"></param>
-    /// <param name="onResult"></param>
     public UserItems(string playfabId, Action<int[]> onResult)
     {
         int coinsInit = 0;
@@ -32,13 +27,6 @@ public class UserItems
         });
     }
 
-    /// <summary>
-    /// Update
-    /// </summary>
-    /// <param name="playfabId"></param>
-    /// <param name="coins"></param>
-    /// <param name="master"></param>
-    /// <param name="strength"></param>
     public UserItems(string playfabId, int coins, int master, int strength)
     {
         new UserItems(playfabId, result =>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class User : MonoBehaviour
@@ -11,6 +12,16 @@ public class User : MonoBehaviour
     public static void Login(string userId, string userPassword, Action<PlayFab.ClientModels.LoginResult> onResult)
     {
         new UserLogin(userId, userPassword, result => { onResult?.Invoke(result); });
+    }
+
+    public static void GetStats(string playfabId, Action<Dictionary<string, int>> onResult)
+    {
+        new UserStats(playfabId, result => { onResult?.Invoke(result); });
+    }
+
+    public static void UpdateStats(string playfabId, Dictionary<string, int> newStatistics, Action<bool> onResult)
+    {
+        new UserStats(playfabId, newStatistics, result => { onResult?.Invoke(result); });
     }
 
     public static void GetItems(string playfabId, Action<int[]> items)
