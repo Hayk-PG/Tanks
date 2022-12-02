@@ -5,6 +5,7 @@ public abstract class Tab_BaseSignUp : Tab_Base
 {
     [SerializeField] protected CustomInputField[] _customInputFields;
     protected Data _data;
+    protected OptionsGameMode _optionsGameMode;
 
     protected virtual CustomInputField CustomInputFieldEmail { get; }
     protected virtual CustomInputField CustomInputFieldID { get; }
@@ -15,18 +16,21 @@ public abstract class Tab_BaseSignUp : Tab_Base
     {
         base.Awake();
         _data = FindObjectOfType<Data>();
+        _optionsGameMode = FindObjectOfType<OptionsGameMode>();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
         MenuTabs.Tab_StartGame.onPlayOnline += Authoirize;
+        _optionsGameMode.onSelectOnlineMode += Authoirize;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         MenuTabs.Tab_StartGame.onPlayOnline -= Authoirize;
+        _optionsGameMode.onSelectOnlineMode += Authoirize;
     }
 
     protected virtual void Update() => SetInteractability();

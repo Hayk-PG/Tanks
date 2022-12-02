@@ -10,6 +10,7 @@ public class TabTransition : MonoBehaviour
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
         _tabBase = Get<Tab_Base>.From(gameObject);
+        transform.SetAsLastSibling();
     }
 
     private void OnEnable()

@@ -22,4 +22,12 @@ public class Tab_HomeOnline : Tab_Base
         _myPhotonCallbacks._OnConnectedToMaster -= OpenTab;
         MenuTabs.Tab_SelectLobby.onGoBack -= OpenTab;
     }
+
+    public override void OpenTab()
+    {
+        if (MyPhotonNetwork.IsOfflineMode)
+            return;
+
+        base.OpenTab();
+    }
 }
