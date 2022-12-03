@@ -25,14 +25,14 @@ public class Btn_Icon : MonoBehaviour
 
     private void OnEnable()
     {
-        _btn.onSelect += delegate { ChangeIconLook(_btn._buttonClickType); };
-        _btn.onDeselect += delegate { ChangeIconSprite(_sprtReleased); ChangeIconColor(_clrReleased); };
+        _btn.onSelect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
+        _btn.onDeselect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
     }
 
     private void OnDisable()
     {
-        _btn.onSelect -= delegate { ChangeIconLook(_btn._buttonClickType); };
-        _btn.onDeselect -= delegate { ChangeIconSprite(_sprtReleased); ChangeIconColor(_clrReleased); };
+        _btn.onSelect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
+        _btn.onDeselect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
     }
 
     private void CacheIconDefaultLook()
@@ -41,7 +41,7 @@ public class Btn_Icon : MonoBehaviour
         _clrReleased = _imgIcon.color;
     }
 
-    private void ChangeIconLook(Btn.ButtonClickType buttonClickType)
+    private void ChangeIconLook(Btn.ButtonClickType buttonClickType, Sprite sprite, Color color)
     {
         switch (buttonClickType)
         {
