@@ -14,12 +14,14 @@ public class Tab_StartGame : Tab_Base
 
     protected override void OnEnable()
     {
+        MenuTabs.Tab_Initialize.onOpenTabStartGame += OpenTab;
         _btnOffline.onSelect += SelectOffline;
         _btnOnline.onSelect += SelectOnline;
     }
 
     protected override void OnDisable()
     {
+        MenuTabs.Tab_Initialize.onOpenTabStartGame -= OpenTab;
         _btnOffline.onSelect -= SelectOffline;
         _btnOnline.onSelect -= SelectOnline;
     }

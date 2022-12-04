@@ -22,6 +22,7 @@ public abstract class Tab_BaseSignUp : Tab_Base
     protected override void OnEnable()
     {
         base.OnEnable();
+        MenuTabs.Tab_Initialize.onJumpTabSignUp += Authoirize;
         MenuTabs.Tab_StartGame.onPlayOnline += Authoirize;
         _optionsGameMode.onSelectOnlineMode += Authoirize;
     }
@@ -29,8 +30,9 @@ public abstract class Tab_BaseSignUp : Tab_Base
     protected override void OnDisable()
     {
         base.OnDisable();
+        MenuTabs.Tab_Initialize.onJumpTabSignUp -= Authoirize;
         MenuTabs.Tab_StartGame.onPlayOnline -= Authoirize;
-        _optionsGameMode.onSelectOnlineMode += Authoirize;
+        _optionsGameMode.onSelectOnlineMode -= Authoirize;
     }
 
     protected virtual void Update() => SetInteractability();

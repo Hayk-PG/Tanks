@@ -24,6 +24,7 @@ public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
     {
         base.OnEnable();
         _myPhotonCallbacks._OnConnectedToMaster += OpenTab;
+        MenuTabs.Tab_Initialize.onJumpTabOffline += OpenTab;
         MenuTabs.Tab_Tanks.onSendTab += OpenTab;
         MenuTabs.Tab_AITanks.onSendTab += OpenTab;
         _btnTank.onSelect += delegate { onOpenTabTanks?.Invoke(_iTabBase); };
@@ -33,7 +34,8 @@ public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
     protected override void OnDisable()
     {
         base.OnDisable();
-        _myPhotonCallbacks._OnConnectedToMaster += OpenTab;
+        _myPhotonCallbacks._OnConnectedToMaster -= OpenTab;
+        MenuTabs.Tab_Initialize.onJumpTabOffline -= OpenTab;
         MenuTabs.Tab_Tanks.onSendTab -= OpenTab;
         MenuTabs.Tab_AITanks.onSendTab -= OpenTab;
         _btnTank.onSelect -= delegate { onOpenTabTanks?.Invoke(_iTabBase); };
@@ -46,6 +48,7 @@ public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
             return;
 
         base.OpenTab();
+        MyPhoton.GameModeRegistered = MyPhoton.RegisteredGameMode.Offline;
     }
 
     private void OpenTab(ITab_Base iTabBase)

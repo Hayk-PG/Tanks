@@ -2,6 +2,7 @@
 
 public class MenuTabs : MonoBehaviour
 {
+    public static Tab_Initialize Tab_Initialize { get; private set; }
     public static Tab_StartGame Tab_StartGame { get; private set; }
     public static Tab_SignUp Tab_SignUp { get; private set; }
     public static Tab_SignIn Tab_SignIn { get; private set; }
@@ -16,6 +17,7 @@ public class MenuTabs : MonoBehaviour
 
     private void Awake()
     {
+        Tab_Initialize = Get<Tab_Initialize>.FromChild(gameObject);
         Tab_StartGame = Get<Tab_StartGame>.FromChild(gameObject);
         Tab_SignUp = Get<Tab_SignUp>.FromChild(gameObject);
         Tab_SignIn = Get<Tab_SignIn>.FromChild(gameObject);
@@ -29,6 +31,7 @@ public class MenuTabs : MonoBehaviour
 
     public static void Activity(CanvasGroup activeCanvasGroup)
     {
+        Tab_Initialize.CloseTab();
         Tab_StartGame.CloseTab();
         Tab_SignUp.CloseTab();
         Tab_SignIn.CloseTab();

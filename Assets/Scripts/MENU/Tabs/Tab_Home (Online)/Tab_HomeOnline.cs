@@ -29,5 +29,6 @@ public class Tab_HomeOnline : Tab_Base
             return;
 
         base.OpenTab();
+        MyPhoton.GameModeRegistered = MyPhoton.RegisteredGameMode.Online;
     }
 }
