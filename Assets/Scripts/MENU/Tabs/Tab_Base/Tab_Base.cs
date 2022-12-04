@@ -11,6 +11,7 @@ public class Tab_Base: MonoBehaviour
     public event Action onGoBack;
     public event Action onGoForward;
     public event Action onTabOpen;
+    public event Action onTabClose;
 
 
     protected virtual void Awake()
@@ -46,6 +47,12 @@ public class Tab_Base: MonoBehaviour
         ResetTab();
         MenuTabs.Activity(CanvasGroup);
         onTabOpen?.Invoke();
+    }
+
+    public virtual void CloseTab()
+    {
+        GlobalFunctions.CanvasGroupActivity(CanvasGroup, false);
+        onTabClose?.Invoke();
     }
 
     protected virtual void GoBack()

@@ -2,26 +2,32 @@ using UnityEngine;
 
 public class TabTransition : MonoBehaviour
 {
-    private CanvasGroup _canvasGroup;
-    private Tab_Base _tabBase;
+    protected CanvasGroup _canvasGroup;
+    protected Tab_Base _tabBase;
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
         _tabBase = Get<Tab_Base>.From(gameObject);
         transform.SetAsLastSibling();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
+        if (_tabBase == null)
+            return;
+
         _tabBase.onGoBack += Open;
         _tabBase.onGoForward += Open;
         _tabBase.onTabOpen += Open;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
+        if (_tabBase == null)
+            return;
+
         _tabBase.onGoBack -= Open;
         _tabBase.onGoForward -= Open;
         _tabBase.onTabOpen -= Open;

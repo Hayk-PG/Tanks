@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using Photon.Realtime;
-using System.Collections.Generic;
+using TMPro;
 
 public class Tab_Room : Tab_Base
 {
     [SerializeField] private PlayerInRoom[] _playersInRoom;
-    [SerializeField] private BtnTxt _btnTxt;
+    [SerializeField] private TMP_Text _txtRoomName;
     private MyPhotonCallbacks _myPhotonCallbacks;
 
     public string RoomName
     {
-        get => _btnTxt.BtnTitle;
-        private set => _btnTxt.SetButtonTitle(value);
+        get => _txtRoomName.text;
+        private set => _txtRoomName.text = value;
     }
 
     protected override void Awake()
