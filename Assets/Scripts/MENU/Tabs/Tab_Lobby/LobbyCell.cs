@@ -64,10 +64,7 @@ public class LobbyCell : MonoBehaviour
         _myPhotonCallbacks._OnJoinedRoom -= TriggerJoinedRoom;
     }
 
-    private void JoinLobby()
-    {
-        MyPhoton.JoinLobby(LobbyName, Photon.Realtime.LobbyType.AsyncRandomLobby);
-    }
+    private void JoinLobby() => MyPhoton.JoinLobby(LobbyName, Photon.Realtime.LobbyType.AsyncRandomLobby);
 
     private void JoinRandomOrCreateRoom()
     {
@@ -93,21 +90,21 @@ public class LobbyCell : MonoBehaviour
             };
             int[] entryFeeAmount = new int[]
             {
-                _lobbyItemsEntryFee[0].Amount,
-                _lobbyItemsEntryFee[1].Amount,
-                _lobbyItemsEntryFee[2].Amount,
+                _lobbyItemsEntryFee[0].Quantity,
+                _lobbyItemsEntryFee[1].Quantity,
+                _lobbyItemsEntryFee[2].Quantity,
             };
             int[] winAmount = new int[]
             {
-                _lobbyItemsWin[0].Amount,
-                _lobbyItemsWin[1].Amount,
-                _lobbyItemsWin[2].Amount,
+                _lobbyItemsWin[0].Quantity,
+                _lobbyItemsWin[1].Quantity,
+                _lobbyItemsWin[2].Quantity,
             };
             int[] loseAmount = new int[]
             {
-                _lobbyItemsLose[0].Amount,
-                _lobbyItemsLose[1].Amount,
-                _lobbyItemsLose[2].Amount
+                _lobbyItemsLose[0].Quantity,
+                _lobbyItemsLose[1].Quantity,
+                _lobbyItemsLose[2].Quantity
             };
             string[][] itemsName = new string[][] { entryFee, win, lose };
             int[][] itemsAmount = new int[][] { entryFeeAmount, winAmount, loseAmount };
@@ -135,10 +132,7 @@ public class LobbyCell : MonoBehaviour
         }
     }
 
-    private void TriggerJoinedLobby()
-    {
-        JoinRandomOrCreateRoom();
-    }
+    private void TriggerJoinedLobby() => JoinRandomOrCreateRoom();
 
     private void TriggerJoinedRoom(Photon.Realtime.Room room)
     {

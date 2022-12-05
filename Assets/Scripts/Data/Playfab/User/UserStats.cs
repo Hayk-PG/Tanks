@@ -46,20 +46,23 @@ public class UserStats
             });
     }
 
-    public UserStats(string playfabId, Dictionary<string, int> newStatistics, Action<bool> onResult)
+    public UserStats(string playfabId, Dictionary<string, int> newStatistics, Action<Dictionary<string, int>> onUpdatedStatisticsOutput)
     {
         new UserStats(playfabId, result =>
         {
             List<PlayFab.ServerModels.StatisticUpdate> statistics = new List<PlayFab.ServerModels.StatisticUpdate>();
+            Dictionary<string, int> updatedStatisticsOutput = new Dictionary<string, int>();
 
             foreach (var item in result)
             {
+                string key = item.Key;
                 int value = item.Value;
 
                 if (newStatistics != null && newStatistics.ContainsKey(item.Key))
                     value += newStatistics[item.Key];
 
-                statistics.Add(new PlayFab.ServerModels.StatisticUpdate { StatisticName = item.Key, Value = item.Value });
+                statistics.Add(new PlayFab.ServerModels.StatisticUpdate { StatisticName = key, Value = value });
+                updatedStatisticsOutput.Add(key, value);
             }
 
             PlayFab.ServerModels.UpdatePlayerStatisticsRequest updatePlayerStatisticsRequest = new PlayFab.ServerModels.UpdatePlayerStatisticsRequest
@@ -71,12 +74,12 @@ public class UserStats
             PlayFabServerAPI.UpdatePlayerStatistics(updatePlayerStatisticsRequest,
                 onSuccess =>
                 {
-                    onResult?.Invoke(true);
+                    onUpdatedStatisticsOutput?.Invoke(updatedStatisticsOutput);
                 },
                 onError =>
                 {
                     GlobalFunctions.DebugLog("Failed to update stats");
-                    onResult?.Invoke(false);
+                    onUpdatedStatisticsOutput?.Invoke(null);
                 });
         });
     }

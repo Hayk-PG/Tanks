@@ -19,9 +19,9 @@ public class User : MonoBehaviour
         new UserStats(playfabId, result => { onResult?.Invoke(result); });
     }
 
-    public static void UpdateStats(string playfabId, Dictionary<string, int> newStatistics, Action<bool> onResult)
+    public static void UpdateStats(string playfabId, Dictionary<string, int> newStatistics, Action<Dictionary<string, int>> onUpdatedStatisticsOutput)
     {
-        new UserStats(playfabId, newStatistics, result => { onResult?.Invoke(result); });
+        new UserStats(playfabId, newStatistics, result => { onUpdatedStatisticsOutput?.Invoke(result); });
     }
 
     public static void GetItems(string playfabId, Action<int[]> items)

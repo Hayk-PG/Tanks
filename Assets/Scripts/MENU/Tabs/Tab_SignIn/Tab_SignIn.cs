@@ -56,6 +56,8 @@ public class Tab_SignIn : Tab_BaseSignUp
                 DeleteOrEnableAutoSignInData(); 
                 SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
                 CacheUserIds(result.PlayFabId, result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
+                CacheUserItemsData(result.PlayFabId);
+                CacheUserStatisticsData(result.PlayFabId);
                 ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
             }
             else
@@ -78,4 +80,16 @@ public class Tab_SignIn : Tab_BaseSignUp
         if (IsAutoSignInChecked)
             base.SaveUserCredentials(newData);
     }
+
+    protected override void CacheUserItemsData(string playfabId)
+    {
+        User.GetItems(playfabId, items => 
+        {
+            Data.Manager.Coins = items[0];
+            Data.Manager.Masters = items[1];
+            Data.Manager.Strengths = items[2];
+        });
+    }
+
+    protected override void CacheUserStatisticsData(string playfabId) => User.GetStats(playfabId, result => { Data.Manager.Statistics = result; });
 }

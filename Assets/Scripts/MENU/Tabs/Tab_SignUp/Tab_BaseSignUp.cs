@@ -73,12 +73,9 @@ public abstract class Tab_BaseSignUp : Tab_Base
         Data.Manager.EntityType = entityType;
     }
 
-    protected virtual void CreateUserItemsData(string playfabId) => User.UpdateItems(playfabId, 0, 0, 0);
+    protected virtual void CacheUserItemsData(string playfabId) => User.UpdateItems(playfabId, 0, 0, 0);
 
-    protected virtual void CreateUserStatistics(string playfabId)
-    {
-        User.UpdateStats(playfabId, null, null);
-    }
+    protected virtual void CacheUserStatisticsData(string playfabId) => User.UpdateStats(playfabId, null, createdStatisticsOutput => { Data.Manager.Statistics = createdStatisticsOutput; });
 
     protected virtual void ConnectToPhoton(string photonNetworkNickname, string photonNetworkUserId)
     {

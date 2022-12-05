@@ -13,7 +13,7 @@ public class LobbyItem : MonoBehaviour
     [SerializeField] private int _amount;
 
     public string Type { get; private set; }
-    public int Amount { get; private set; }
+    public int Quantity { get; private set; }
 
 
     private void Awake()
@@ -32,7 +32,7 @@ public class LobbyItem : MonoBehaviour
     private void SetItemTypeAndAmount()
     {
         Type = _itemType == ItemType.Coin ? Keys.ItemCoins : _itemType == ItemType.Master ? Keys.ItemMaster : Keys.ItemStrength;       
-        Amount = _amount;
+        Quantity = _amount;
         _img.sprite = _itemType == ItemType.Coin ? _sprtCoin : _itemType == ItemType.Master ? _sprtMaster : _sprtStrength;
         _txt.text = Mathf.Abs(_amount).ToString();
     }
