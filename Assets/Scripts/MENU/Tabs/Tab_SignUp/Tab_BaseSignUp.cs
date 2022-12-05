@@ -75,6 +75,11 @@ public abstract class Tab_BaseSignUp : Tab_Base
 
     protected virtual void CreateUserItemsData(string playfabId) => User.UpdateItems(playfabId, 0, 0, 0);
 
+    protected virtual void CreateUserStatistics(string playfabId)
+    {
+        User.UpdateStats(playfabId, null, null);
+    }
+
     protected virtual void ConnectToPhoton(string photonNetworkNickname, string photonNetworkUserId)
     {
         MyPhoton.Connect(photonNetworkNickname, photonNetworkUserId);

@@ -43,6 +43,7 @@ public class Tab_SignUp : Tab_BaseSignUp
                 SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
                 CacheUserIds(result.PlayFabId, result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
                 CreateUserItemsData(result.PlayFabId);
+                CreateUserStatistics(result.PlayFabId);
                 ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
             }
             else

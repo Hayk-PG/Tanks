@@ -59,6 +59,7 @@ public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
 
     protected override void GoForward()
     {
+        OpenLoadingTab();
         MyScene.Manager.LoadScene(MyScene.SceneName.Game);
     }
 

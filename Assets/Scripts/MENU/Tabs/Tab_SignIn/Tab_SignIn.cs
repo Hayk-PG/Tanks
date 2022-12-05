@@ -56,7 +56,6 @@ public class Tab_SignIn : Tab_BaseSignUp
                 DeleteOrEnableAutoSignInData(); 
                 SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
                 CacheUserIds(result.PlayFabId, result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
-                CreateUserItemsData(result.PlayFabId);
                 ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
             }
             else

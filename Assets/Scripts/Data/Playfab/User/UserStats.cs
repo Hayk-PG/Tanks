@@ -56,7 +56,7 @@ public class UserStats
             {
                 int value = item.Value;
 
-                if (newStatistics.ContainsKey(item.Key))
+                if (newStatistics != null && newStatistics.ContainsKey(item.Key))
                     value += newStatistics[item.Key];
 
                 statistics.Add(new PlayFab.ServerModels.StatisticUpdate { StatisticName = item.Key, Value = item.Value });
