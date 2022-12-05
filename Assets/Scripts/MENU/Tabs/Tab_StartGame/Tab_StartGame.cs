@@ -6,7 +6,6 @@ public class Tab_StartGame : Tab_Base
 {
     [SerializeField] private Btn _btnOffline;
     [SerializeField] private Btn _btnOnline;
-    [SerializeField] private TabLoading _tabLoading;
 
     public event Action onPlayOffline;
     public event Action onPlayOnline;
@@ -37,20 +36,19 @@ public class Tab_StartGame : Tab_Base
     public void SelectOffline()
     {
         _tabLoading.Open();
-        StartCoroutine(OfflineCoroutine());
+        StartCoroutine(Execute(true, onPlayOffline));
     }
 
     public void SelectOnline()
     {
         _tabLoading.Open();
-        MyPhotonNetwork.OfflineMode(false);
-        onPlayOnline?.Invoke();
+        StartCoroutine(Execute(false, onPlayOnline));
     }
 
-    private IEnumerator OfflineCoroutine()
+    private IEnumerator Execute(bool isOfflineMode, Action onPlay)
     {
         yield return new WaitForSeconds(0.5f);
-        MyPhotonNetwork.OfflineMode(true);
-        onPlayOffline?.Invoke();
+        MyPhotonNetwork.OfflineMode(isOfflineMode);
+        onPlay?.Invoke();
     }
 }

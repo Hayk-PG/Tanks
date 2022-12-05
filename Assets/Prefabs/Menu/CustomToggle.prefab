@@ -150,8 +150,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7238279380611558405}
+  - component: {fileID: 3218908926373118670}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: CustomToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,6 +180,18 @@ RectTransform:
   m_AnchoredPosition: {x: 2, y: -120}
   m_SizeDelta: {x: 404, y: 94}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3218908926373118670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7238279380611558404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d23aa1e0eff18949af48d859d5259da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7238279381142326282
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +280,7 @@ GameObject:
   - component: {fileID: 7238279381912769238}
   - component: {fileID: 1139375535}
   m_Layer: 5
-  m_Name: Text_Auto sign in
+  m_Name: Txt_Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -321,7 +334,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Auto Sign in
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 38aecd77a18d544bfb836befe83883b7, type: 2}
   m_sharedMaterial: {fileID: 6434564289584660316, guid: 38aecd77a18d544bfb836befe83883b7,
@@ -356,7 +369,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 35
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -365,9 +378,9 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TabLoading : TabTransition
+public class TabLoading : TabTransition, IReset
 {
     [SerializeField] private GameObject _loading;
 
@@ -35,4 +35,6 @@ public class TabLoading : TabTransition
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
         _loading.SetActive(isActive);
     }
+
+    public void SetDefault() => Close();
 }

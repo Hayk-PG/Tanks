@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
 
-public abstract class Tab_BaseSignUp : Tab_Base
+public abstract class Tab_BaseSignUp : Tab_Base, IReset
 {
     [SerializeField] protected CustomInputField[] _customInputFields;
-    protected Data _data;
     protected OptionsGameMode _optionsGameMode;
+    protected OptionsLogOut _optionsLogOut;
+    protected MyPhotonCallbacks _myPhotonCallbacks;
 
     protected virtual CustomInputField CustomInputFieldEmail { get; }
     protected virtual CustomInputField CustomInputFieldID { get; }
@@ -15,16 +16,19 @@ public abstract class Tab_BaseSignUp : Tab_Base
     protected override void Awake()
     {
         base.Awake();
-        _data = FindObjectOfType<Data>();
         _optionsGameMode = FindObjectOfType<OptionsGameMode>();
+        _optionsLogOut = FindObjectOfType<OptionsLogOut>();
+        _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
+
         MenuTabs.Tab_Initialize.onJumpTabSignUp += Authoirize;
         MenuTabs.Tab_StartGame.onPlayOnline += Authoirize;
-        _optionsGameMode.onSelectOnlineMode += Authoirize;
+        _optionsGameMode.onJumpTabSignUp += Authoirize;
+        _optionsLogOut.onJumpTabSignUp += Authoirize;
     }
 
     protected override void OnDisable()
@@ -32,7 +36,8 @@ public abstract class Tab_BaseSignUp : Tab_Base
         base.OnDisable();
         MenuTabs.Tab_Initialize.onJumpTabSignUp -= Authoirize;
         MenuTabs.Tab_StartGame.onPlayOnline -= Authoirize;
-        _optionsGameMode.onSelectOnlineMode -= Authoirize;
+        _optionsGameMode.onJumpTabSignUp -= Authoirize;
+        _optionsLogOut.onJumpTabSignUp -= Authoirize;
     }
 
     protected virtual void Update() => SetInteractability();
@@ -52,14 +57,14 @@ public abstract class Tab_BaseSignUp : Tab_Base
 
     protected abstract void Authoirize();
 
-    protected abstract void Confirm();
+    protected virtual void Confirm() => OpenLoadingTab();
 
     protected virtual Data.NewData NewData(string userId, string userPassword)
     {
         return new Data.NewData { Id = userId, Password = userPassword };
     }
 
-    protected virtual void SaveUserCredentials(Data.NewData newData) => _data.SetData(newData);
+    protected virtual void SaveUserCredentials(Data.NewData newData) => Data.Manager.SetData(newData);
 
     protected virtual void CacheUserIds(string playfabId, string entityId, string entityType)
     {
@@ -76,4 +81,9 @@ public abstract class Tab_BaseSignUp : Tab_Base
     }
 
     protected virtual void SetInteractability() => _btnForward.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4 ? true : false;
+
+    public virtual void SetDefault()
+    {
+        
+    }
 }

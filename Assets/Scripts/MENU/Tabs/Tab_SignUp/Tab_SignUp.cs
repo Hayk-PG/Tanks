@@ -28,12 +28,14 @@ public class Tab_SignUp : Tab_BaseSignUp
 
     protected override void Authoirize()
     {
-        if (!_data.IsAutoSignInChecked)
+        if (!Data.Manager.IsAutoSignInChecked)
             OpenTab();
     }
 
     protected override void Confirm()
     {
+        base.Confirm();
+
         User.Register(CustomInputFieldID.Text, CustomInputFieldPassword.Text, CustomInputFieldEmail.Text, result =>
         {
             if (result != null)

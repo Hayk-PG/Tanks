@@ -1,31 +1,32 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public abstract class BaseToggleCheck : MonoBehaviour
 {
     protected Toggle _toggle;
 
+    public bool IsOn
+    {
+        get => _toggle.isOn;
+        set => _toggle.isOn = value;
+    }
+
+    public event Action<bool> onToggleValueChange;
+
+
 
     protected virtual void Awake()
     {
-        _toggle = Get<Toggle>.From(gameObject);
+        _toggle = Get<Toggle>.FromChild(gameObject);
     }
 
-    private void Update()
+    protected void Update()
     {
         _toggle.onValueChanged.RemoveAllListeners();
-        _toggle.onValueChanged.AddListener(ToggleValueChanged);
+        _toggle.onValueChanged.AddListener(GetValue);
     }
 
-    public abstract void ToggleValueChanged(bool isOn);
-
-    protected virtual void SimulateToggle(bool isOn)
-    {
-        if (isOn)
-        {
-            PointerEventData ped = new PointerEventData(EventSystem.current);
-            _toggle.OnPointerClick(ped);
-        }
-    }
+    protected virtual void GetValue(bool isOn) => onToggleValueChange?.Invoke(isOn);
 }

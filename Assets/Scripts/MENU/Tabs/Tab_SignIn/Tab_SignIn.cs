@@ -1,27 +1,23 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Tab_SignIn : Tab_BaseSignUp
 {
-    [SerializeField] private Toggle _toggleAutioSignIn;
     [SerializeField] private Btn _btnSignUp;
-
-    public bool IsAutoSignInChecked
-    {
-        get => _toggleAutioSignIn.isOn;
-        set => _toggleAutioSignIn.isOn = value;
-    }
+    private CustomToggle _customToggleAutoSignIn;
 
     protected override CustomInputField CustomInputFieldID => _customInputFields[0];
     protected override CustomInputField CustomInputFieldPassword => _customInputFields[1];
+    public bool IsAutoSignInChecked { get => _customToggleAutoSignIn.IsOn; set => _customToggleAutoSignIn.IsOn = value; }
 
     public event Action onOpenTabSignUp;
+
 
 
     protected override void Awake()
     {
         base.Awake();
+        _customToggleAutoSignIn = Get<CustomToggle>.FromChild(gameObject);
     }
 
     protected override void OnEnable()
@@ -40,10 +36,10 @@ public class Tab_SignIn : Tab_BaseSignUp
 
     protected override void Authoirize()
     {
-        if (_data.IsAutoSignInChecked)
+        if (Data.Manager.IsAutoSignInChecked)
         {
-            CustomInputFieldID.Text = _data.Id;
-            CustomInputFieldPassword.Text = _data.Password;
+            CustomInputFieldID.Text = Data.Manager.Id;
+            CustomInputFieldPassword.Text = Data.Manager.Password;
             IsAutoSignInChecked = true;
             Confirm();
         }
@@ -51,11 +47,13 @@ public class Tab_SignIn : Tab_BaseSignUp
 
     protected override void Confirm()
     {
+        base.Confirm();
+
         User.Login(CustomInputFieldID.Text, CustomInputFieldPassword.Text, result =>
         {
             if (result != null)
             {
-                OnAutoSignChecked();
+                DeleteOrEnableAutoSignInData(); 
                 SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
                 CacheUserIds(result.PlayFabId, result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
                 CreateUserItemsData(result.PlayFabId);
@@ -64,12 +62,12 @@ public class Tab_SignIn : Tab_BaseSignUp
         });
     }
 
-    private void OnAutoSignChecked()
+    private void DeleteOrEnableAutoSignInData()
     {
         if (IsAutoSignInChecked)
-            _data.SetData(new Data.NewData { AutoSignIn = 1 });
+            Data.Manager.SetData(new Data.NewData { AutoSignIn = 1 });
         else
-            _data.DeleteData(Keys.AutoSignIn);
+            Data.Manager.DeleteData(Keys.AutoSignIn);
     }
 
     protected override void SaveUserCredentials(Data.NewData newData)

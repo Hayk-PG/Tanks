@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Tab_Initialize : Tab_Base
 {
-    [SerializeField] private TabLoading _tabLoading;
-
     public event Action onOpenTabStartGame;
     public event Action onJumpTabSignUp;
     public event Action onJumpTabOffline;

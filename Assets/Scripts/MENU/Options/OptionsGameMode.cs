@@ -3,17 +3,10 @@ using UnityEngine;
 
 public class OptionsGameMode : OptionsController
 {
-    private MyPhotonCallbacks _myPhotonCallbacks;
     [SerializeField] private Sprite _sprtOffline, _sprtOnline;
 
-    public event Action onSelectOnlineMode;
+    public event Action onJumpTabSignUp;
 
-
-    protected override void Awake()
-    {
-        base.Awake();
-        _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
-    }
 
     protected override void Select()
     {
@@ -23,42 +16,38 @@ public class OptionsGameMode : OptionsController
     protected override void GetOptionsActivity(bool isActive)
     {
         _myPhotonCallbacks.onDisconnect -= GoOffline;
-        _myPhotonCallbacks._OnConnectedToMaster -= GoOnline;
+        _myPhotonCallbacks._OnConnectedToMaster -= FinishGoingOnline;
     }
 
     private void Disconnect()
-    {
+    {      
         MyPhoton.Disconnect();
+        OpenTabLoad();
         _myPhotonCallbacks.onDisconnect += GoOffline;
     }
 
     private void GoOffline()
     {
-        ChangeIcon(true);
         MyPhotonNetwork.OfflineMode(true);
-        _options.Activity(false);
+        ChangeIcon(true);
+        SetOptionsActivity(false);
     }
 
     private void GoThroughSignUpTab()
-    {
+    {       
         MyPhotonNetwork.OfflineMode(false);
-        onSelectOnlineMode?.Invoke();
-        _myPhotonCallbacks._OnConnectedToMaster += GoOnline;       
+        OpenTabLoad();
+        onJumpTabSignUp?.Invoke();
+        _myPhotonCallbacks._OnConnectedToMaster += FinishGoingOnline;       
     }
 
-    private void GoOnline()
+    private void FinishGoingOnline()
     {
         ChangeIcon(false);
-        _options.Activity(false);
+        SetOptionsActivity(false);
     }
 
-    private void ChangeIcon(bool isOffline)
-    {
-        _icon.sprite = isOffline ? _sprtOnline : _sprtOffline;
-    }
+    private void ChangeIcon(bool isOffline) => _icon.sprite = isOffline ? _sprtOnline : _sprtOffline;
 
-    public override void SetDefault()
-    {
-        ChangeIcon(MyPhotonNetwork.IsOfflineMode);
-    }
+    public override void SetDefault() => ChangeIcon(MyPhotonNetwork.IsOfflineMode);
 }
