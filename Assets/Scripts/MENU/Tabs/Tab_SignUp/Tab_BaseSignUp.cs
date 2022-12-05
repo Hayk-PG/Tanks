@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class Tab_BaseSignUp : Tab_Base, IReset
+public abstract class Tab_BaseSignUp : Tab_Base
 {
     [SerializeField] protected CustomInputField[] _customInputFields;
     protected OptionsGameMode _optionsGameMode;
@@ -81,9 +81,4 @@ public abstract class Tab_BaseSignUp : Tab_Base, IReset
     }
 
     protected virtual void SetInteractability() => _btnForward.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4 ? true : false;
-
-    public virtual void SetDefault()
-    {
-        
-    }
 }

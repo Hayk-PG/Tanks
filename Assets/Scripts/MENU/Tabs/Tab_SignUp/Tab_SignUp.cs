@@ -45,6 +45,10 @@ public class Tab_SignUp : Tab_BaseSignUp
                 CreateUserItemsData(result.PlayFabId);
                 ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
             }
+            else
+            {
+                ResetTab();
+            }
         });
     }
 }

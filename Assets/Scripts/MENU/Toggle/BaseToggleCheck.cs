@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System;
 
-public abstract class BaseToggleCheck : MonoBehaviour
+public abstract class BaseToggleCheck : MonoBehaviour, IReset
 {
     protected Toggle _toggle;
 
@@ -29,4 +28,6 @@ public abstract class BaseToggleCheck : MonoBehaviour
     }
 
     protected virtual void GetValue(bool isOn) => onToggleValueChange?.Invoke(isOn);
+
+    public void SetDefault() => IsOn = false;
 }
