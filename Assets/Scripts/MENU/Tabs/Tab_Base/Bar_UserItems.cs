@@ -2,9 +2,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class Bar_UserItems : MonoBehaviour
+public class Bar_UserItems : MonoBehaviour, IReset
 {
-    private Tab_Base _tabBase;
     private CanvasGroup _canvasGroups;
 
     [SerializeField] private Item[] _items;
@@ -14,22 +13,8 @@ public class Bar_UserItems : MonoBehaviour
 
     private void Awake()
     {
-        _tabBase = Get<Tab_Base>.From(gameObject);
         _canvasGroups = Get<CanvasGroup>.From(gameObject);
-
         SetItemsIcons();
-    }
-
-    private void OnEnable()
-    {
-        _tabBase.onTabOpen += Open;
-        _tabBase.onTabClose += delegate { SetActivity(false); };
-    }
-
-    private void OnDisable()
-    {
-        _tabBase.onTabOpen -= Open;
-        _tabBase.onTabClose -= delegate { SetActivity(false); };
     }
 
     private void SetItemsIcons()
@@ -40,25 +25,20 @@ public class Bar_UserItems : MonoBehaviour
         }
     }
 
-    private void Open()
+    private void PrintUserItems()
     {
+        _txtItems[0].text = Data.Manager.Coins.ToString();
+        _txtItems[1].text = Data.Manager.Masters.ToString();
+        _txtItems[2].text = Data.Manager.Strengths.ToString();
+    }
+
+    public void SetDefault()
+    {
+        GlobalFunctions.CanvasGroupActivity(_canvasGroups, !MyPhotonNetwork.IsOfflineMode);
+
         if (MyPhotonNetwork.IsOfflineMode)
             return;
 
-        SetActivity(true);
-        PrintUserItemsNumbers();
-    }
-
-    private void SetActivity(bool isActive) => GlobalFunctions.CanvasGroupActivity(_canvasGroups, isActive);
-
-    private void PrintUserItemsNumbers()
-    {
-        User.GetItems(Data.Manager.PlayfabId, items =>
-        {
-            for (int i = 0; i < items.Length; i++)
-            {
-                _txtItems[i].text = items[i].ToString();
-            }
-        });
+        PrintUserItems();
     }
 }

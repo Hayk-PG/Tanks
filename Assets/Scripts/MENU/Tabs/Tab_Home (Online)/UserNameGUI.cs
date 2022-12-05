@@ -8,18 +8,9 @@ public class UserNameGUI : MonoBehaviour
     private MyPhotonCallbacks _myPhotonCallbacks;
 
 
-    private void Awake()
-    {
-        _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
-    }
+    private void Awake() => _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
 
-    private void OnEnable()
-    {
-        _myPhotonCallbacks._OnConnectedToMaster += delegate { _txtUserName.text = Data.Manager.Id; };
-    }
+    private void OnEnable() => _myPhotonCallbacks._OnConnectedToMaster += delegate { _txtUserName.text = Data.Manager.Id; };
 
-    private void OnDisable()
-    {
-        _myPhotonCallbacks._OnConnectedToMaster -= delegate { _txtUserName.text = Data.Manager.Id; };
-    }
+    private void OnDisable() => _myPhotonCallbacks._OnConnectedToMaster -= delegate { _txtUserName.text = Data.Manager.Id; };
 }
