@@ -17,6 +17,7 @@ public class LobbyCell : MonoBehaviour
     [SerializeField] private Color _color;
 
     private MyPhotonCallbacks _myPhotonCallbacks;
+    private TabLoading _tabLoading;
 
     private string LobbyName
     {
@@ -40,6 +41,7 @@ public class LobbyCell : MonoBehaviour
     private void Awake()
     {
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
+        _tabLoading = Get<TabLoading>.FromChild(MenuTabs.Tab_SelectLobby.gameObject);
     }
 
     private void Start()
@@ -53,18 +55,20 @@ public class LobbyCell : MonoBehaviour
     private void OnEnable()
     {
         _btnJoinLobby.onSelect += JoinLobby;
-        _myPhotonCallbacks._OnJoinedLobby += TriggerJoinedLobby;
-        _myPhotonCallbacks._OnJoinedRoom += TriggerJoinedRoom;
+        _myPhotonCallbacks._OnJoinedLobby += CompleteJoinRoom;
     }
 
     private void OnDisable()
     {
         _btnJoinLobby.onSelect -= JoinLobby;
-        _myPhotonCallbacks._OnJoinedLobby -= TriggerJoinedLobby;
-        _myPhotonCallbacks._OnJoinedRoom -= TriggerJoinedRoom;
+        _myPhotonCallbacks._OnJoinedLobby -= CompleteJoinRoom;
     }
 
-    private void JoinLobby() => MyPhoton.JoinLobby(LobbyName, Photon.Realtime.LobbyType.AsyncRandomLobby);
+    private void JoinLobby()
+    {
+        MyPhoton.JoinLobby(LobbyName, Photon.Realtime.LobbyType.AsyncRandomLobby);
+        _tabLoading.Open();
+    }
 
     private void JoinRandomOrCreateRoom()
     {
@@ -132,10 +136,5 @@ public class LobbyCell : MonoBehaviour
         }
     }
 
-    private void TriggerJoinedLobby() => JoinRandomOrCreateRoom();
-
-    private void TriggerJoinedRoom(Photon.Realtime.Room room)
-    {
-        
-    }
+    private void CompleteJoinRoom() => JoinRandomOrCreateRoom();
 }
