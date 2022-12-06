@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LobbyCell : MonoBehaviour
 {
-    [SerializeField] private RoundDuration _roundDuration;
+    [SerializeField] private RoundTimeStates _roundTimeStates;
     [SerializeField] private GameWind _gameWind;
 
     [SerializeField] private LobbyItem[] _lobbyItemsEntryFee;
@@ -29,7 +29,7 @@ public class LobbyCell : MonoBehaviour
     }
     private int RoundDuration
     {
-        get => Data.Manager.ConvertRoundDuration(_roundDuration);
+        get => Data.Manager.ConvertRoundTimeStates(_roundTimeStates);
     }
     private bool IsWindOn
     {

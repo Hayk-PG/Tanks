@@ -2,20 +2,12 @@
 
 public class GameTime : BaseSliderLevel<int>
 {
-    private void Start()
-    {
-        SetDefault();
-    }
-
-    protected override void UpdateTitleText(int t)
-    {
-        _title.text = Title(Result(t));
-    }
+    protected override void UpdateTitleText(int t) => _title.text = Title(Result(t));
 
     protected override void ListenSliderValueChange()
     {
-        Data.Manager.SaveRoundDuration((RoundDuration)SliderValue);
-        UpdateTitleText(Data.Manager.RoundDuration);
+        Data.Manager.SaveRoundTime((RoundTimeStates)SliderValue);
+        UpdateTitleText(Data.Manager.RoundTime);
     }
 
     protected override string Title(string suffix)
@@ -30,8 +22,9 @@ public class GameTime : BaseSliderLevel<int>
 
     public override void SetDefault()
     {
-        SliderValue = PlayerPrefs.GetInt(Keys.GameTime, 0);
-        Data.Manager.SaveRoundDuration((RoundDuration)SliderValue);
-        UpdateTitleText(Data.Manager.RoundDuration);
+        int roundTime = PlayerPrefs.GetInt(Keys.RoundTime, Data.Manager.ConvertRoundTimeStates(RoundTimeStates.s30));
+        SliderValue = (int)Data.Manager.ConvertRoundTimeStates(roundTime);
+        Data.Manager.SaveRoundTime(Data.Manager.ConvertRoundTimeStates(roundTime)); 
+        UpdateTitleText(roundTime);
     }
 }

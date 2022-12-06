@@ -34,7 +34,7 @@ public partial class MyPhoton : MonoBehaviour
     private static void SetRoomCustomProperties(RoomOptions roomOptions)
     {
         Hashtable _customProperties = new Hashtable();
-        roomOptions.CustomRoomPropertiesForLobby = new string[3] { Keys.MapIndex, Keys.GameTime, Keys.MapWind };
+        roomOptions.CustomRoomPropertiesForLobby = new string[3] { Keys.MapIndex, Keys.RoundTime, Keys.MapWind };
 
         //_customProperties.Add(Keys.MapIndex, matchmakeData.MapIndex);
         //_customProperties.Add(Keys.GameTime, matchmakeData.Time);

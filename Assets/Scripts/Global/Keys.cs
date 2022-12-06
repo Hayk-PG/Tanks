@@ -22,7 +22,7 @@
     public static string MapIndex { get; private set; } = "MapIndex";
     public static string MapWind { get; private set; } = "Wind";
     public static string DifficultyLevel { get; private set; } = "Difficulty level";
-    public static string GameTime { get; private set; } = "GameTime";
+    public static string RoundTime { get; private set; } = "RoundTime";
     public static string GameRounds { get; private set; } = "Rounds";
     public static string ItemName { get; private set; } = "Item name";
     public static string ItemAmount { get; private set; } = "Item amount";
