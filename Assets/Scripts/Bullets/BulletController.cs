@@ -94,7 +94,7 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
  
     protected virtual void ExplodeOnLimit()
     {
-        OnExplodeOnLimit?.Invoke(RigidBody.position.y < -5);
+        OnExplodeOnLimit?.Invoke(RigidBody.position.y < -3f);
     }
 
     protected virtual void BulletVelocity()

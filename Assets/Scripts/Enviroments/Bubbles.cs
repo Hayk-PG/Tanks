@@ -24,7 +24,7 @@ public class Bubbles : MonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(0, 10));
 
-            foreach (var bubbles in _customParticles)
+            for (int i = 0; i < _customParticles.Length; i++)
             {
                 int randomParticle = Random.Range(0, _customParticles.Length);
                 int randomSeconds = Random.Range(0, 2);
