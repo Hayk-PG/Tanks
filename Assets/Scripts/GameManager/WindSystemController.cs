@@ -8,10 +8,8 @@ public class WindSystemController : MonoBehaviourPun
     private IEnumerator _windCoroutine;
     private GameManager _gameManager;
 
-    [SerializeField]
-    private int _minWindForce, _maxWindForce;
-    [SerializeField]
-    private int _minInterval, _maxInterval;
+    [SerializeField] private int _minWindForce, _maxWindForce;
+    [SerializeField] private int _minInterval, _maxInterval;
 
     public int CurrentWindForce { get; set; }
     public int CurrentInternval { get; set; }
