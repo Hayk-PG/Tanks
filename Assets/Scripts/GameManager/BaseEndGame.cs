@@ -90,12 +90,12 @@ public class BaseEndGame : MonoBehaviourPun
 
     protected bool FirstPlayerWon()
     {
-        return _healthTank2.Health <= 0 || _healthTank2.transform.position.y <= -5;
+        return _healthTank2.Health <= 0;
     }
 
     protected bool SecondPlayerWon()
     {
-        return _healthTank1.Health <= 0 || _healthTank1.transform.position.y <= -5;
+        return _healthTank1.Health <= 0;
     }
 
     protected virtual void OnGameEnded(string successedPlayerName, string defeatedPlayerName)

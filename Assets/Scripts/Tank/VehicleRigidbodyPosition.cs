@@ -50,12 +50,14 @@ public class VehicleRigidbodyPosition : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_baseTankMovement != null) _baseTankMovement.OnRigidbodyPosition += OnRigidbodyPosition;
+        if (_baseTankMovement != null)
+            _baseTankMovement.OnRigidbodyPosition += OnRigidbodyPosition;
     }
 
     private void OnDisable()
     {
-        if (_baseTankMovement != null) _baseTankMovement.OnRigidbodyPosition -= OnRigidbodyPosition;
+        if (_baseTankMovement != null)
+            _baseTankMovement.OnRigidbodyPosition -= OnRigidbodyPosition; ;
     }
 
     private void OnRigidbodyPosition(Rigidbody rigidBody)
