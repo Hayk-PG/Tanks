@@ -70,7 +70,7 @@ public class BaseChangeTiles : MonoBehaviour
     {
         if (!_tileData.TilesDict[pos].GetComponent<Tile>().IsProtected)
         {
-            if (_tileCreationMode == TileCreationMode.Instantiate/* || _tileCreationMode == TileCreationMode.Pool*/)
+            if (_tileCreationMode == TileCreationMode.Instantiate)
             {
                 InstantiateNewTile(pos, tile);
             }

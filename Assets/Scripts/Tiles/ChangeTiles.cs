@@ -41,56 +41,6 @@ public class ChangeTiles : BaseChangeTiles
             _coroutine = null;
         }
     }
-   
-    private void CreateTopTile()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[0]);
-    }
-
-    private void CreateTopRightTile()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[5]);
-    }
-
-    private void CreateTopLeftTile()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[4]);
-    }
-
-    private void CreateRightTile()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[3]);
-    }
-
-    private void CreateLeftTile()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[2]);
-    }
-
-    private void CreateRightTopLeftTile()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[8]);
-    }
-
-    private void CreateLeftRightTile()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[9]);
-    }
-
-    private void CreateRightSlope()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[7]);
-    }
-
-    private void CreateLeftSlope()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[6]);
-    }
-
-    private void CreateMiddleTile()
-    {
-        SetTile(_thisTilePos, _tileData.TilesPrefabs[1]);
-    }
 
     private void CreateTile(Vector3 position)
     {
@@ -100,38 +50,44 @@ public class ChangeTiles : BaseChangeTiles
 
             if (!HasTile(_thisTilePos + Vertical))
             {
-                if (HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal))
+                if (HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical))
                 {
                     CreateTopTile();
                 }
 
-                if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical + Horizontal))
+                if (HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical))
                 {
-                    if (position.x != _mapPoints.HorizontalMax)
-                        CreateTopRightTile();
-                    else
-                        CreateTopTile();                   
+                    CreateTopBottomTile();
                 }
 
-                if (HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos - Vertical - Horizontal))
+                if (!HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical))
                 {
-                    if (position.x != _mapPoints.HorizontalMin)
-                        CreateTopLeftTile();
-                    else
-                        CreateTopTile(); 
-
+                    CreateTopLeftBottomTile();
                 }
 
-                if (!HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal))
+                if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical))
                 {
-                    if (position.x != _mapPoints.HorizontalMin && position.x != _mapPoints.HorizontalMax)
-                        CreateRightTopLeftTile();
+                    CreateTopRightBottomTile();
+                }
 
-                    if (position.x == _mapPoints.HorizontalMin)
-                        CreateTopRightTile();
+                if (!HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical))
+                {
+                    CreateRrightTopLeftBottomTile();
+                }
 
-                    if (position.x == _mapPoints.HorizontalMax)
-                        CreateTopLeftTile();
+                if (!HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical))
+                {
+                    CreateRightTopLeftTile();
+                }
+
+                if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical) && !HasTile(_thisTilePos - Vertical + Horizontal))
+                {
+                    CreateTopRightTile();
+                }
+
+                if (HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos - Vertical) && !HasTile(_thisTilePos - Vertical - Horizontal))
+                {
+                    CreateTopLeftTile();
                 }
 
                 if (!HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical) && HasTile(_thisTilePos - Vertical - Horizontal))
@@ -143,31 +99,47 @@ public class ChangeTiles : BaseChangeTiles
                 {
                     CreateLeftSlope();
                 }
+
+                
             }
             else
             {
-                if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal))
-                {
-                    if (position.x != _mapPoints.HorizontalMax)
-                        CreateRightTile();
-                    else
-                        CreateMiddleTile();                   
-                }
-
-                if (!HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal))
-                {
-                    if (position.x != _mapPoints.HorizontalMin)
-                        CreateLeftTile();
-                    else
-                        CreateMiddleTile();                   
-                }
-
-                if (!HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal))
+                if (!HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical))
                 {
                     CreateLeftRightTile();
                 }
 
-                if (HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal))
+                if (!HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical))
+                {
+                    CreateRightBottomLeftTile();
+                }
+
+                if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical))
+                {
+                    CreateBottomRightTile();
+                }
+
+                if (!HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical))
+                {
+                    CreateBottomLeftTile();
+                }
+
+                if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical))
+                {
+                    CreateRightTile();
+                }
+
+                if (!HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical))
+                {
+                    CreateLeftTile();
+                }
+
+                if (HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical))
+                {
+                    CreateBottomTile();
+                }
+
+                if (HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical))
                 {
                     CreateMiddleTile();
                 }
@@ -224,5 +196,95 @@ public class ChangeTiles : BaseChangeTiles
         }
 
         OnTilesUpdated?.Invoke(_tileData);
+    }
+
+    private void CreateTopTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[0]);
+    }
+
+    private void CreateTopRightTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[5]);
+    }
+
+    private void CreateTopLeftTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[4]);
+    }
+
+    private void CreateRightTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[3]);
+    }
+
+    private void CreateLeftTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[2]);
+    }
+
+    private void CreateRightTopLeftTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[8]);
+    }
+
+    private void CreateLeftRightTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[9]);
+    }
+
+    private void CreateRightSlope()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[7]);
+    }
+
+    private void CreateLeftSlope()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[6]);
+    }
+
+    private void CreateMiddleTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[1]);
+    }
+
+    private void CreateBottomTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[10]);
+    }
+
+    private void CreateBottomLeftTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[11]);
+    }
+
+    private void CreateBottomRightTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[12]);
+    }
+
+    private void CreateRightBottomLeftTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[13]);
+    }
+
+    private void CreateTopLeftBottomTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[14]);
+    }
+
+    private void CreateTopRightBottomTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[15]);
+    }
+
+    private void CreateTopBottomTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[16]);
+    }
+
+    private void CreateRrightTopLeftBottomTile()
+    {
+        SetTile(_thisTilePos, _tileData.TilesPrefabs[17]);
     }
 }
