@@ -6,7 +6,7 @@ public class MainCameraController : MonoBehaviour
     private Camera _hudCamera;
     private GameManager _gameManager;
     private TurnController _turnController;
-    private LevelGenerator _levelGenerator;
+    private MapPoints _mapPoints;
     private Transform _player1, _player2;
     
     [SerializeField] 
@@ -51,7 +51,7 @@ public class MainCameraController : MonoBehaviour
         _hudCamera = Get<Camera>.From(transform.Find("HUDCamera").gameObject);
         _gameManager = FindObjectOfType<GameManager>();
         _turnController = FindObjectOfType<TurnController>();
-        _levelGenerator = FindObjectOfType<LevelGenerator>();
+        _mapPoints = FindObjectOfType<MapPoints>();
     }
 
     private void OnEnable()
@@ -81,8 +81,8 @@ public class MainCameraController : MonoBehaviour
 
     private Vector3 ClampPosition(Vector3 position)
     {
-        _minPosX = _levelGenerator.MapHorizontalStartPoint + CameraWidth - 3;
-        _maxPosX = _levelGenerator.MapHorizontalEndPoint - CameraWidth + 3;
+        _minPosX = _mapPoints.HorizontalMin + CameraWidth - 3;
+        _maxPosX = _mapPoints.HorizontalMax - CameraWidth + 3;
         _newPosX = Mathf.Clamp(position.x, _minPosX, _maxPosX);
         return new Vector3(_newPosX, position.y, position.z);
     }

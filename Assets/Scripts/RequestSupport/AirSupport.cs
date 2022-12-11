@@ -5,20 +5,20 @@ public class AirSupport : MonoBehaviour, ITurnController
 {
     [SerializeField] private Bomber _bomber;
 
-    private LevelGenerator _levelGenerator;
+    private MapPoints _mapPoints;
     private MainCameraController _mainCameraController;
     private float StartPointX
     {
         get
         {
-            return _levelGenerator.MapHorizontalStartPoint - 2;
+            return _mapPoints.HorizontalMin - 2;
         }
     }
     private float EndPointX
     {
         get
         {
-            return _levelGenerator.MapHorizontalEndPoint + 2;
+            return _mapPoints.HorizontalMax + 2;
         }
     }
     public TurnController TurnController { get; set; }
@@ -26,7 +26,7 @@ public class AirSupport : MonoBehaviour, ITurnController
 
     private void Awake()
     {
-        _levelGenerator = FindObjectOfType<LevelGenerator>();
+        _mapPoints = FindObjectOfType<MapPoints>();
         _mainCameraController = FindObjectOfType<MainCameraController>();
         TurnController = FindObjectOfType<TurnController>();
     }

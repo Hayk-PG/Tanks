@@ -8,11 +8,13 @@ public class PlatformSerializer : MonoBehaviour
     {
         get => _rigidbodyPlatformHorizontal;
         set => _rigidbodyPlatformHorizontal = value;
-    } 
-       
+    }       
     public Rigidbody RigidbodyPlatformVert
     {
         get => _rigidbodyPlatformVertical;
         set => _rigidbodyPlatformVertical = value;
     }
+
+
+
 }

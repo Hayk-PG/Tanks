@@ -7,7 +7,7 @@ public class BaseChangeTiles : MonoBehaviour
 
     protected Tile _newTile;
     protected TilesData _tileData;
-    protected LevelGenerator _levelGenerator;
+    protected MapPoints _mapPoints;
     protected GlobalTileController _globalTileController;
     protected Vector3 _thisTilePos;
 
@@ -18,7 +18,7 @@ public class BaseChangeTiles : MonoBehaviour
     protected virtual void Awake()
     {
         _tileData = Get<TilesData>.From(gameObject);
-        _levelGenerator = Get<LevelGenerator>.From(gameObject);
+        _mapPoints = Get<MapPoints>.From(gameObject);
         _globalTileController = FindObjectOfType<GlobalTileController>();
     }
 

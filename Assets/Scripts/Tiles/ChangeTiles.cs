@@ -107,7 +107,7 @@ public class ChangeTiles : BaseChangeTiles
 
                 if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Vertical + Horizontal))
                 {
-                    if (position.x != _levelGenerator.MapHorizontalEndPoint)
+                    if (position.x != _mapPoints.HorizontalMax)
                         CreateTopRightTile();
                     else
                         CreateTopTile();                   
@@ -115,7 +115,7 @@ public class ChangeTiles : BaseChangeTiles
 
                 if (HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos - Vertical - Horizontal))
                 {
-                    if (position.x != _levelGenerator.MapHorizontalStartPoint)
+                    if (position.x != _mapPoints.HorizontalMin)
                         CreateTopLeftTile();
                     else
                         CreateTopTile(); 
@@ -124,13 +124,13 @@ public class ChangeTiles : BaseChangeTiles
 
                 if (!HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal))
                 {
-                    if (position.x != _levelGenerator.MapHorizontalStartPoint && position.x != _levelGenerator.MapHorizontalEndPoint)
+                    if (position.x != _mapPoints.HorizontalMin && position.x != _mapPoints.HorizontalMax)
                         CreateRightTopLeftTile();
 
-                    if (position.x == _levelGenerator.MapHorizontalStartPoint)
+                    if (position.x == _mapPoints.HorizontalMin)
                         CreateTopRightTile();
 
-                    if (position.x == _levelGenerator.MapHorizontalEndPoint)
+                    if (position.x == _mapPoints.HorizontalMax)
                         CreateTopLeftTile();
                 }
 
@@ -148,7 +148,7 @@ public class ChangeTiles : BaseChangeTiles
             {
                 if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal))
                 {
-                    if (position.x != _levelGenerator.MapHorizontalEndPoint)
+                    if (position.x != _mapPoints.HorizontalMax)
                         CreateRightTile();
                     else
                         CreateMiddleTile();                   
@@ -156,7 +156,7 @@ public class ChangeTiles : BaseChangeTiles
 
                 if (!HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal))
                 {
-                    if (position.x != _levelGenerator.MapHorizontalStartPoint)
+                    if (position.x != _mapPoints.HorizontalMin)
                         CreateLeftTile();
                     else
                         CreateMiddleTile();                   
