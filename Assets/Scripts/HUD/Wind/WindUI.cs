@@ -10,9 +10,9 @@ public class WindUI : MonoBehaviour
 
     private void Awake() => _windSystemController = FindObjectOfType<WindSystemController>();
 
-    private void OnEnable() => _windSystemController.OnWindForce += OnWindForce;
+    private void OnEnable() => _windSystemController.onWindForce += OnWindForce;
 
-    private void OnDisable() => _windSystemController.OnWindForce -= OnWindForce;
+    private void OnDisable() => _windSystemController.onWindForce -= OnWindForce;
 
     private void OnWindForce(int windForce)
     {

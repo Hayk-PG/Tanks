@@ -97,7 +97,7 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     protected virtual void BulletVelocity()
     {
         OnBulletVelocity?.Invoke(new VelocityData(RigidBody, Quaternion.LookRotation(RigidBody.velocity),
-                                 new Vector3(_windSystemController.WindForce * Time.fixedDeltaTime, 0, 0),
+                                 new Vector3(_windSystemController.CurrentWindForce * Time.fixedDeltaTime, 0, 0),
                                  _isWindActivated));
     } 
 
