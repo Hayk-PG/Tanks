@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class BulletExplosion : GetBulletController, IBulletExplosion
 {
     protected CameraShake _cameraShake;
+    protected LavaSplash _lavaSplash;
 
     public Action<IScore, float> OnBulletExplosion { get; set; }
     public Action OnBulletExplosionWithoutHitting { get; set; }
@@ -18,6 +19,7 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
         base.Awake();
 
         _cameraShake = FindObjectOfType<CameraShake>();
+        _lavaSplash = FindObjectOfType<LavaSplash>();
     }
 
     protected virtual void OnEnable()
@@ -48,7 +50,8 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
     {
         if (isTrue)
         {
-            OnBulletExplosionWithoutHitting?.Invoke();
+            //OnBulletExplosionWithoutHitting?.Invoke();
+            _lavaSplash.ActivateSmallSplash(transform.position);
             DestroyBullet();
         }
     }

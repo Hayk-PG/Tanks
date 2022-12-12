@@ -8,6 +8,12 @@ public partial class MyPhotonNetwork
     public static bool IsInRoom => PhotonNetwork.InRoom;
     public static bool IsInLobby => PhotonNetwork.InLobby;
 
+
+    public static bool IsDesiredLobby(LobbyType lobbyType, string lobbyName)
+    {
+        return CurrentLobby.Type == lobbyType && CurrentLobby.Name == lobbyName;
+    }
+
     public static void LoadLevel()
     {
         PhotonNetwork.LoadLevel(MyScene.Manager.GameSceneName);

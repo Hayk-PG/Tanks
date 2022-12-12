@@ -1,45 +1,33 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class WindUI : MonoBehaviour
 {
+    [SerializeField] private Image[] _arrows;
+    [SerializeField] private Color[] _clrs;
     private WindSystemController _windSystemController;
 
-    [SerializeField]
-    private GameObject[] _arrows;
 
-    [SerializeField]
-    private GameObject _windIcon;
+    private void Awake() => _windSystemController = FindObjectOfType<WindSystemController>();
 
+    private void OnEnable() => _windSystemController.onWindForce += OnWindForce;
 
-    private void Awake()
-    {
-        _windSystemController = FindObjectOfType<WindSystemController>();
-    }
-
-    private void OnEnable()
-    {
-        _windSystemController.OnWindForce += OnWindForce;
-    }
-
-    private void OnDisable()
-    {
-        _windSystemController.OnWindForce -= OnWindForce;
-    }
+    private void OnDisable() => _windSystemController.onWindForce -= OnWindForce;
 
     private void OnWindForce(int windForce)
     {
-        IconsActivity(_arrows.Length, windForce, false);
-        IconsActivity(Mathf.Abs(windForce), windForce, true);
+        transform.rotation = Quaternion.Euler(0, windForce > 0 ? -180 : 0, 0);
+        IconsActivity(_arrows.Length, _clrs[1]);
+        IconsActivity(Mathf.Abs(windForce), _clrs[0]);
     }
 
-    private void IconsActivity(int count, int windForce, bool isActive)
+    private void IconsActivity(int count, Color color)
     {
-        for (int i = 0; i < count; i++)
-        {
-            _arrows[i].SetActive(isActive);
-            _arrows[i].transform.rotation = Quaternion.Euler(0, windForce > 0 ? -180: 0, 0); 
-        }
+        int c = count > _arrows.Length ? _arrows.Length : count;
 
-        _windIcon.SetActive(isActive);
+        for (int i = 0; i < c; i++)
+        {
+            _arrows[i].color = color;
+        }
     }
 }

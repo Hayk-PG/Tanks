@@ -6,7 +6,7 @@ public class VehicleRigidbodyPosition : MonoBehaviour
     private BaseTankMovement _baseTankMovement;
     private TankController _tankController;
     private PlayerTurn _playerTurn;
-    private LevelGenerator _levelGenerator;
+    private MapPoints _mapPoints;
     private GameManager _gameManager;
 
     public delegate bool Checker(Rigidbody rigidBody);
@@ -37,11 +37,11 @@ public class VehicleRigidbodyPosition : MonoBehaviour
         _baseTankMovement = Get<BaseTankMovement>.From(gameObject);
         _tankController = Get<TankController>.From(gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);      
-        _levelGenerator = FindObjectOfType<LevelGenerator>();
+        _mapPoints = FindObjectOfType<MapPoints>();
         _gameManager = FindObjectOfType<GameManager>();
 
-        _xPositionMinLimit = _levelGenerator.MapHorizontalStartPoint;
-        _xPositionMaxLimit = _levelGenerator.MapHorizontalEndPoint;
+        _xPositionMinLimit = _mapPoints.HorizontalMin;
+        _xPositionMaxLimit = _mapPoints.HorizontalMax;
 
         IsPositionOutsideOfMinBoundaries = delegate (Rigidbody rb) { return rb.position.x <= _xPositionMinLimit; };
         IsPositionOutsideOfMaxBoundaries = delegate (Rigidbody rb) { return rb.position.x >= _xPositionMaxLimit; };
@@ -50,12 +50,14 @@ public class VehicleRigidbodyPosition : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_baseTankMovement != null) _baseTankMovement.OnRigidbodyPosition += OnRigidbodyPosition;
+        if (_baseTankMovement != null)
+            _baseTankMovement.OnRigidbodyPosition += OnRigidbodyPosition;
     }
 
     private void OnDisable()
     {
-        if (_baseTankMovement != null) _baseTankMovement.OnRigidbodyPosition -= OnRigidbodyPosition;
+        if (_baseTankMovement != null)
+            _baseTankMovement.OnRigidbodyPosition -= OnRigidbodyPosition; ;
     }
 
     private void OnRigidbodyPosition(Rigidbody rigidBody)
@@ -76,7 +78,7 @@ public class VehicleRigidbodyPosition : MonoBehaviour
     {
         if (_gameManager.Tank1 == this._tankController)
         {
-            if (_playerTurn.IsMyTurn) MaxX = _isNewPositionLimitSet ? _newPositionMaxLimit : _levelGenerator.MapHorizontalEndPoint;
+            if (_playerTurn.IsMyTurn) MaxX = _isNewPositionLimitSet ? _newPositionMaxLimit : _mapPoints.HorizontalMax;
             if (!_playerTurn.IsMyTurn)
             {
                 if (rigidBody.position.x >= _gameManager.Tank2.transform.position.x - value) _newPositionMaxLimit = rigidBody.position.x;
@@ -91,7 +93,7 @@ public class VehicleRigidbodyPosition : MonoBehaviour
     {
         if (_gameManager.Tank2 == this._tankController)
         {
-            if (_playerTurn.IsMyTurn) MinX = _isNewPositionLimitSet ? _newPositionMinLimit : _levelGenerator.MapHorizontalStartPoint;
+            if (_playerTurn.IsMyTurn) MinX = _isNewPositionLimitSet ? _newPositionMinLimit : _mapPoints.HorizontalMin;
             if (!_playerTurn.IsMyTurn)
             {
                 if (rigidBody.position.x <= _gameManager.Tank1.transform.position.x + value) _newPositionMinLimit = rigidBody.position.x;

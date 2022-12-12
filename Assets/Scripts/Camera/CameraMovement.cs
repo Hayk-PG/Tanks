@@ -4,7 +4,7 @@ public class CameraMovement : MonoBehaviour
 {
     private Camera _mainCamera;
     private CameraTouchMovement _cameraTouchMovement;
-    private LevelGenerator _levelGenerator;
+    private MapPoints _mapPoints;
 
     [Header("Second Camera")]
     [SerializeField]
@@ -47,14 +47,14 @@ public class CameraMovement : MonoBehaviour
     {
         _mainCamera = GetComponent<Camera>();
         _cameraTouchMovement = GetComponent<CameraTouchMovement>();
-        _levelGenerator = FindObjectOfType<LevelGenerator>();
+        _mapPoints = FindObjectOfType<MapPoints>();
     }
 
     private void Start()
     {
         _isTargetNull = delegate { return _target == null; };
         _isCameraSizeSet = delegate { return _mainCamera.orthographicSize == _currentSize; };
-        _canZoom = delegate { return CameraWidth < Vector2.Distance(new Vector2(_levelGenerator.MapHorizontalStartPoint, 0), new Vector2(_levelGenerator.MapHorizontalEndPoint, 0)) / 2; };
+        _canZoom = delegate { return CameraWidth < Vector2.Distance(new Vector2(_mapPoints.HorizontalMin, 0), new Vector2(_mapPoints.HorizontalMax, 0)) / 2; };
     }
 
     private void FixedUpdate()
@@ -115,8 +115,8 @@ public class CameraMovement : MonoBehaviour
 
     private Vector3 ClampPosition(Vector3 position)
     {
-        _minPosX = _levelGenerator.MapHorizontalStartPoint + CameraWidth;
-        _maxPosX = _levelGenerator.MapHorizontalEndPoint - CameraWidth;
+        _minPosX = _mapPoints.HorizontalMin + CameraWidth;
+        _maxPosX = _mapPoints.HorizontalMax - CameraWidth;
         _newPosX = Mathf.Clamp(position.x, _minPosX, _maxPosX);
         return new Vector3(_newPosX, position.y, position.z);
     }

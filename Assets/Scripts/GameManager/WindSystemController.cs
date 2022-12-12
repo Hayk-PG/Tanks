@@ -1,67 +1,52 @@
 ﻿using Photon.Pun;
 using System;
-using System.Collections;
-using UnityEngine;
 
 public class WindSystemController : MonoBehaviourPun
 {
-    private IEnumerator _windCoroutine;
     private GameManager _gameManager;
+    private TurnController _turnController;
 
-    [SerializeField]
-    private int _minWindForce, _maxWindForce;
-    [SerializeField]
-    private int _minInterval, _maxInterval;
+    private int _minWindForce = -5;
+    private int _maxWindForce = 5;
+    private bool _isWindEnabled;
 
     public int CurrentWindForce { get; set; }
-    public int CurrentInternval { get; set; }
-    public int WindForce => CurrentWindForce;
 
-    public Action<int> OnWindForce { get; set; }
+    public event Action<int> onWindForce;
+
+
 
 
     private void Awake()
     {
         _gameManager = GetComponent<GameManager>();
+        _turnController = Get<TurnController>.From(gameObject);
     }
 
     private void OnEnable()
     {
-        _gameManager.OnGameStarted += StartWindCoroutine;
+        _gameManager.OnGameStarted += WindActivity;
+        _turnController.OnTurnChanged += GetTurnChanges;
     }
    
     private void OnDisable()
     {
-        _gameManager.OnGameStarted -= StartWindCoroutine;
+        _gameManager.OnGameStarted -= WindActivity;
+        _turnController.OnTurnChanged -= GetTurnChanges;
     }
 
-    public void StartWindCoroutine()
+    public void WindActivity()
     {
         if (MyPhotonNetwork.IsOfflineMode && Data.Manager.IsWindOn || !MyPhotonNetwork.IsOfflineMode && (bool)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.MapWind])
+            _isWindEnabled = true;
+    }
+
+    private void GetTurnChanges(TurnState turnState)
+    {
+        if (turnState == TurnState.Player1 || turnState == TurnState.Player2)
         {
-            EnableWind();
-        }
-    }
-
-    public void EnableWind()
-    {
-        print("Wind is on");
-        StopWindCoroutine();
-        _windCoroutine = WindCoroutine(!_gameManager.IsGameEnded);
-        StartCoroutine(_windCoroutine);
-    }
-
-    public void StopWindCoroutine()
-    {
-        if (_windCoroutine != null) StopCoroutine(_windCoroutine);
-    }
-
-    private IEnumerator WindCoroutine(bool isGameRunning)
-    {
-        while (isGameRunning)
-        {
-            AssignWindValues();          
-            yield return new WaitForSeconds(CurrentInternval);
+            if (_isWindEnabled)
+                AssignWindValues();
         }
     }
 
@@ -80,15 +65,11 @@ public class WindSystemController : MonoBehaviourPun
         }           
     }
 
-    private void WindValues()
-    {
-        CurrentWindForce = UnityEngine.Random.Range(_minWindForce, _maxWindForce);
-        CurrentInternval = UnityEngine.Random.Range(_minInterval, _maxInterval);
-    }
+    private void WindValues() => CurrentWindForce = UnityEngine.Random.Range(_minWindForce, _maxWindForce);
 
     [PunRPC]
     private void ShareWindForceValue(int currentWindForce)
     {
-        OnWindForce?.Invoke(currentWindForce);
+        onWindForce?.Invoke(currentWindForce);
     }
 }

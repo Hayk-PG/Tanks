@@ -1,8 +1,23 @@
 ﻿using UnityEngine;
 
-
-public class Toggle_Wind : BaseSliderLevel<GameWind>, IMatchmakeTextResult, IMatchmakeData
+public class Toggle_Wind : BaseSliderLevel<GameWind>
 {
+    private void Start()
+    {
+        SetDefault();
+    }
+
+    protected override void ListenSliderValueChange()
+    {
+        Data.Manager.SaveWind((GameWind)SliderValue);
+        UpdateTitleText((GameWind)SliderValue);
+    }
+
+    protected override void UpdateTitleText(GameWind gameWind)
+    {
+        _title.text = Title(Result(gameWind));
+    }
+
     protected override string Title(string suffix)
     {
         return "Wind " + "[" + suffix + "]";
@@ -15,36 +30,10 @@ public class Toggle_Wind : BaseSliderLevel<GameWind>, IMatchmakeTextResult, IMat
                GlobalFunctions.RedColorText("Off");
     }
 
-    protected override void UpdateTitleText(GameWind gameWind)
-    {
-        _title.text = Title(Result(gameWind));
-    }
-
-    public override void OnSliderValueChanged()
-    {
-        Data.Manager.SetWind(SliderValue);
-        UpdateTitleText(Data.Manager.GameWind);
-    }
-
     public override void SetDefault()
     {
         SliderValue = PlayerPrefs.GetInt(Keys.MapWind, 0);
-        Data.Manager.SetWind(SliderValue);
-        UpdateTitleText(Data.Manager.GameWind);
-    }
-
-    public string TextResultOnline()
-    {
-        return Keys.MapWind + Result(Data.Manager.GameWind) + "\n";
-    }
-
-    public string TextResultOffline()
-    {
-        return TextResultOnline();
-    }
-
-    public void StoreData(MatchmakeData matchmakeData)
-    {
-        matchmakeData.IsWindOn = Data.Manager.GameWind == GameWind.On ? true : false;
+        Data.Manager.SaveWind((GameWind)SliderValue);
+        UpdateTitleText((GameWind)SliderValue);
     }
 }

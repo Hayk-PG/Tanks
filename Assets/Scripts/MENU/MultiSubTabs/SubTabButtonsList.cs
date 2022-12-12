@@ -2,21 +2,33 @@ using UnityEngine;
 
 public class SubTabButtonsList : MonoBehaviour, IReset
 {
-    [SerializeField] private SubTabsButton _firsSubTabButton;
-    [SerializeField] private SubTabsButton _generalSubTabButton;
-    [SerializeField] private SubTabsButton _rateSubTabButton;
-  
+    [SerializeField] private SubTabsButton subTabButtonFirst;
+    [SerializeField] private SubTabsButton[] _subTabsButtonsOfflineMode;
+    [SerializeField] private SubTabsButton[] _subTabsButtonOnlineMode;
+    
 
     public void SetDefault()
     {
-        _firsSubTabButton.Click();
-
-        ButtonsInteractability(!MyPhotonNetwork.IsOfflineMode);
+        subTabButtonFirst.Select();
+        SetSubTabsButtonActivityInOfflineMode();
+        SetSubTabsButtonActivityInOnlineMode();
     }
 
-    private void ButtonsInteractability(bool isInteractable)
+    private void SetSubTabsButtonActivityInOfflineMode()
     {
-        _generalSubTabButton.IsInteractable = isInteractable;
-        _rateSubTabButton.IsInteractable = isInteractable;
+        if (_subTabsButtonsOfflineMode == null)
+            return;
+
+        if (MyPhotonNetwork.IsOfflineMode)
+            GlobalFunctions.Loop<SubTabsButton>.Foreach(_subTabsButtonsOfflineMode, subTabButton => { subTabButton.gameObject.SetActive(false); });
+    }
+
+    private void SetSubTabsButtonActivityInOnlineMode()
+    {
+        if (_subTabsButtonOnlineMode == null)
+            return;
+
+        if (!MyPhotonNetwork.IsOfflineMode)
+            GlobalFunctions.Loop<SubTabsButton>.Foreach(_subTabsButtonOnlineMode, subTabButton => { subTabButton.gameObject.SetActive(false); });
     }
 }

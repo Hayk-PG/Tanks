@@ -92,15 +92,12 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
         OnExitCollision?.Invoke();
     }
  
-    protected virtual void ExplodeOnLimit()
-    {
-        OnExplodeOnLimit?.Invoke(RigidBody.position.y < -5);
-    }
+    protected virtual void ExplodeOnLimit() => OnExplodeOnLimit?.Invoke(RigidBody.position.y <= VerticalLimit.Min);
 
     protected virtual void BulletVelocity()
     {
         OnBulletVelocity?.Invoke(new VelocityData(RigidBody, Quaternion.LookRotation(RigidBody.velocity),
-                                 new Vector3(_windSystemController.WindForce * Time.fixedDeltaTime, 0, 0),
+                                 new Vector3(_windSystemController.CurrentWindForce * Time.fixedDeltaTime, 0, 0),
                                  _isWindActivated));
     } 
 

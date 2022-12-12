@@ -36,7 +36,7 @@ public class Trees : MonoBehaviour
         if(_activeTreeMaterial != null)
         {
             _amplitude = _activeTreeMaterial.GetFloat("_MBAmplitude");
-            _desiredAmplitude = Mathf.Abs(_windSystemController.WindForce) * 5;
+            _desiredAmplitude = Mathf.Abs(_windSystemController.CurrentWindForce) * 5;
 
             _activeTreeMaterial.SetFloat("_MBAmplitude", Mathf.Lerp(_amplitude, _desiredAmplitude, 2.5f * Time.deltaTime));
         }

@@ -19,12 +19,14 @@ public class PlayerInRoomOnClickReadyButton : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_netWork != null) _netWork.OnInvokeRPCMethode += OnPlayerReady;
+        if (_netWork != null)
+            _netWork.OnInvokeRPCMethode += OnPlayerReady;
     }
 
     private void OnDisable()
     {
-        if (_netWork != null) _netWork.OnInvokeRPCMethode -= OnPlayerReady;
+        if (_netWork != null)
+            _netWork.OnInvokeRPCMethode -= OnPlayerReady;
     }
 
     public void OnClickReadyButton()

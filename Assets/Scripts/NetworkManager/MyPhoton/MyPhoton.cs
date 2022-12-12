@@ -5,13 +5,17 @@ using Photon.Realtime;
 
 public partial class MyPhoton : MonoBehaviour
 {
-    public static void Connect(MyPhotonAuthValues myPhotonAuthValues)
+    public enum RegisteredGameMode { None, Offline, Online }
+    public static RegisteredGameMode GameModeRegistered { get; set; }
+
+
+    public static void Connect(string nickName, string userId)
     {
         if (!PhotonNetwork.IsConnected)
         {
             PhotonNetwork.ConnectUsingSettings();
-            PhotonNetwork.NickName = myPhotonAuthValues.Nickname;
-            PhotonNetwork.AuthValues = new AuthenticationValues { UserId = myPhotonAuthValues.UserID };
+            PhotonNetwork.NickName = nickName;
+            PhotonNetwork.AuthValues = new AuthenticationValues { UserId = userId };
         }
     }
 

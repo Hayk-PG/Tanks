@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public enum MessageType { Error, Neutral, Success}
 
-public class Tab_Message : Tab_Base<MyPhotonCallbacks>
+public class Tab_Message : Tab_Base
 {
     [SerializeField] private MessageType _messageType;
     [SerializeField] private MessageTitle[] _messageTitles;

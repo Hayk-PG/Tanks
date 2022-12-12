@@ -30,4 +30,6 @@ public static class Names
     public static string ModifyGround { get; private set; } = "Block " + "<color=#FD0D3D>" + "(Add)" + "</color>";
     public static string Bridge { get; private set; } = "Bridge";
     public static string SkipTurn { get; private set; } = "Skip Turn";
+
+    public static string LobbyDefault { get; private set; } = "Default Lobby";
 }

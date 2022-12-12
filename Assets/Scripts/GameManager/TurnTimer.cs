@@ -2,12 +2,12 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class TurnTimer : MonoBehaviourPun
 {
     [SerializeField] 
-    private Text _textTimer;
+    private TMP_Text _textTimer;
     private GameManager _gameManager;
     private TurnController _turnController;
     private MyPlugins _myPlugins;
@@ -41,7 +41,7 @@ public class TurnTimer : MonoBehaviourPun
 
     private void OnGameStarted()
     {
-        _turnTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.GameTime : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.GameTime];
+        _turnTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.RoundTime : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.RoundTime];
         Seconds = _turnTime;
     }
 
@@ -124,6 +124,6 @@ public class TurnTimer : MonoBehaviourPun
     {        
         Conditions<int>.Compare(Seconds, 0, SetNextTurn, Timer, null);
         OnTurnTimer?.Invoke(_turnController._turnState, Seconds);
-        _textTimer.text = Seconds.ToString("D2");
+        _textTimer.text = "00:" + Seconds.ToString("D2");
     }
 }

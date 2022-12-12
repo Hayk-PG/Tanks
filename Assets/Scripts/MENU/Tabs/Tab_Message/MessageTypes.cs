@@ -5,7 +5,7 @@ public class MessageTypes : MonoBehaviour
 {
     private Tab_Message _tabMessage;
     private Tab_StartGame _tabStartGame;
-    private Tab_InRoom _tabInRoom;
+    private Tab_Room _tabInRoom;
 
 
 
@@ -13,7 +13,7 @@ public class MessageTypes : MonoBehaviour
     {
         _tabMessage = Get<Tab_Message>.From(gameObject);
         _tabStartGame = FindObjectOfType<Tab_StartGame>();
-        _tabInRoom = FindObjectOfType<Tab_InRoom>();
+        _tabInRoom = FindObjectOfType<Tab_Room>();
     }
 
     public void LeaveRoomMessage()

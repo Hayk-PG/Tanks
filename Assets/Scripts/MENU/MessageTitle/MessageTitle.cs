@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class MessageTitle : Tab_Base<Tab_Message>
+public class MessageTitle : Tab_Base
 {
     [SerializeField] private Text _text;
     [SerializeField] private CanvasGroup _canvasGroup;

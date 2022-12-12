@@ -5,26 +5,19 @@ public class Platform : MonoBehaviour
     private enum Direction { ToEndPoint, ToStartPoint}
     private enum PlatformType { Horizontal, Vertical}
 
-    [SerializeField] 
-    private Direction _direction;
-
-    [SerializeField]
-    private PlatformType _platformType;
-
-    [SerializeField]
-    private Rigidbody _rigidBody;
+    [SerializeField] private Direction _direction;
+    [SerializeField] private PlatformType _platformType;
+    [SerializeField] private Rigidbody _rigidBody;
 
     private PlatformSensors[] _platformSensors;
     private PlatformSerializer _platformSerializer;
     private TankController _collidedTanksController;
 
-    [SerializeField]
     private Vector3 _startPoint, _endPoint;
     private Vector3 _target;
     private Vector3 _currentVelocity;
 
-    [SerializeField]
-    private float _smoothTime, _maxSpeed;
+    [SerializeField] private float _smoothTime, _maxSpeed;
 
     private float DistanceFromStartPoint
     {
@@ -100,6 +93,12 @@ public class Platform : MonoBehaviour
             _collidedTanksController.transform.SetParent(null);
             _collidedTanksController = null;
         }
+    }
+
+    public void Set(Vector3 start, Vector3 end)
+    {
+        _startPoint = start;
+        _endPoint = end;
     }
 
     private void InitializePlatformSerializer()

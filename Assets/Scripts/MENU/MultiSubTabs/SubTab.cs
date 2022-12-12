@@ -16,20 +16,20 @@ public class SubTab : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_subTabsButton != null)
-        {
-            _subTabsButton.onSelect += Open;
-            _subTabsButton.onDeselect += Close;
-        }
+        if (_subTabsButton == null)
+            return;
+
+        _subTabsButton.onSelect += Open;
+        _subTabsButton.onDeselect += Close;
     }
 
     private void OnDisable()
     {
-        if (_subTabsButton != null)
-        {
-            _subTabsButton.onSelect -= Open;
-            _subTabsButton.onDeselect -= Close;
-        }
+        if (_subTabsButton == null)
+            return;
+
+        _subTabsButton.onSelect -= Open;
+        _subTabsButton.onDeselect -= Close;
     }
 
     private void SubTabActivity(bool isActive)
@@ -38,13 +38,6 @@ public class SubTab : MonoBehaviour
         _onActivity?.Invoke(isActive);
     }
 
-    public void Open()
-    {
-        SubTabActivity(true);      
-    }
-
-    public void Close()
-    {
-        SubTabActivity(false);
-    }
+    public void Open() => SubTabActivity(true);
+    public void Close() => SubTabActivity(false);
 }

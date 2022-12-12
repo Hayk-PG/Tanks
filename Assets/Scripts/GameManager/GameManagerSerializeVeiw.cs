@@ -32,7 +32,6 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             stream.SendNext(_turnController._previousTurnState);
 
             stream.SendNext(_windSystemController.CurrentWindForce);
-            stream.SendNext(_windSystemController.CurrentInternval);
 
             if(_gameManagerBulletSerializer.BulletController != null)
             {
@@ -90,7 +89,6 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             _turnController._previousTurnState = (TurnState)stream.ReceiveNext();
 
             _windSystemController.CurrentWindForce = (int)stream.ReceiveNext();
-            _windSystemController.CurrentInternval = (int)stream.ReceiveNext();
 
             if (_gameManagerBulletSerializer.BulletController != null)
             {
