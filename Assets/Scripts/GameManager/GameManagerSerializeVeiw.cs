@@ -11,6 +11,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
     private InstantiatePickables _instantiatePickables;
     private WoodenBoxSerializer _woodenBoxSerializer;
     private PlatformSerializer _platformSerializer;
+    private GlobalExplosiveBarrels _globalExplosiveBarrels;
 
     private void Awake()
     {
@@ -22,6 +23,7 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
         _instantiatePickables = Get<InstantiatePickables>.From(gameObject);
         _woodenBoxSerializer = Get<WoodenBoxSerializer>.From(gameObject);
         _platformSerializer = Get<PlatformSerializer>.From(gameObject);
+        _globalExplosiveBarrels = Get<GlobalExplosiveBarrels>.From(gameObject);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -82,6 +84,9 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 stream.SendNext(_platformSerializer.RigidbodyPlatformVert.velocity);
                 stream.SendNext(_platformSerializer.RigidbodyPlatformVert.position);
             }
+
+            if (_globalExplosiveBarrels.BarrelRigidBody != null)
+                stream.SendNext(_globalExplosiveBarrels.BarrelRigidBody.position);
         }
         else
         {
@@ -154,6 +159,9 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
                 _platformSerializer.RigidbodyPlatformVert.position += (_platformSerializer.RigidbodyPlatformVert.velocity * lag);
             }
+
+            if (_globalExplosiveBarrels.BarrelRigidBody != null)
+                _globalExplosiveBarrels.BarrelRigidBody.position = (Vector3)stream.ReceiveNext();
         }
     }    
 }
