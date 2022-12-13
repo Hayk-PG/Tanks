@@ -85,8 +85,10 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 stream.SendNext(_platformSerializer.RigidbodyPlatformVert.position);
             }
 
-            if (_globalExplosiveBarrels.BarrelRigidBody != null)
-                stream.SendNext(_globalExplosiveBarrels.BarrelRigidBody.position);
+            for (int i = 0; i < _globalExplosiveBarrels.BarrelRigidBody.Length; i++)
+            {
+                stream.SendNext(_globalExplosiveBarrels.BarrelRigidBody[i]?.position);
+            }
         }
         else
         {
@@ -160,8 +162,11 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 _platformSerializer.RigidbodyPlatformVert.position += (_platformSerializer.RigidbodyPlatformVert.velocity * lag);
             }
 
-            if (_globalExplosiveBarrels.BarrelRigidBody != null)
-                _globalExplosiveBarrels.BarrelRigidBody.position = (Vector3)stream.ReceiveNext();
+            for (int i = 0; i < _globalExplosiveBarrels.BarrelRigidBody.Length; i++)
+            {
+                if (_globalExplosiveBarrels.BarrelRigidBody[i] != null)
+                    _globalExplosiveBarrels.BarrelRigidBody[i].position = (Vector3)stream.ReceiveNext();
+            }
         }
     }    
 }

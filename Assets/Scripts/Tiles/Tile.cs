@@ -80,7 +80,7 @@ public class Tile : MonoBehaviour, IDestruct
     public void StoreForLaterUse()
     {
         _tilesData.TilesDict.Remove(transform.position);
-        _tilesData.StoredInactiveTiles.Find(tile => tile.TileName == name).Tiles.Add(this);
+        _tilesData.StoredInactiveTiles.Find(tile => tile.TileName == name).Tiles?.Add(this);
         transform.SetParent(_tilesData.IntactiveTilesContainer);
         gameObject.SetActive(false);
     }

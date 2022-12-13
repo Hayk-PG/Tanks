@@ -4,11 +4,13 @@ public class LevelCreator : BaseLevelGenerator
 {
     [SerializeField] private ColorToPrefab _colorOfArmoredTile;
     [SerializeField] private ColorToPrefab _colorOfArmoredWall;
+    [SerializeField] private ColorToPrefab _colorOfExplosiveBarrel;
 
     protected override void GetLevelGeneratorData(LevelGeneratorData levelGeneratorData)
     {
         CreateArmoredTiles(levelGeneratorData);
         CreateTilesWithArmoredWall(levelGeneratorData);
+        CreateExplosiveBarrels(levelGeneratorData);
         CreateTiles(levelGeneratorData);
     }
 
@@ -24,16 +26,22 @@ public class LevelCreator : BaseLevelGenerator
     private void CreateArmoredTiles(LevelGeneratorData levelGeneratorData)
     {
         if (_colorOfArmoredTile._color == levelGeneratorData.MapTexturePixelColor)
-            AcitavateProps(Tile(_colorOfArmoredTile._prefab, levelGeneratorData), TileProps.PropsType.MetalGround);
+            ActivateProps(Tile(_colorOfArmoredTile._prefab, levelGeneratorData), TileProps.PropsType.MetalGround);
     }
 
     private void CreateTilesWithArmoredWall(LevelGeneratorData levelGeneratorData)
     {
         if (_colorOfArmoredWall._color == levelGeneratorData.MapTexturePixelColor)
-            AcitavateProps(Tile(_colorOfArmoredWall._prefab, levelGeneratorData), TileProps.PropsType.MetalGround);
+            ActivateProps(Tile(_colorOfArmoredWall._prefab, levelGeneratorData), TileProps.PropsType.MetalGround);
     }
 
-    private void AcitavateProps(GameObject tile, TileProps.PropsType propsType)
+    private void CreateExplosiveBarrels(LevelGeneratorData levelGeneratorData)
+    {
+        if (_colorOfExplosiveBarrel._color == levelGeneratorData.MapTexturePixelColor)
+            ActivateProps(Tile(_colorOfArmoredWall._prefab, levelGeneratorData), TileProps.PropsType.ExplosiveBarrels);
+    }
+
+    private void ActivateProps(GameObject tile, TileProps.PropsType propsType)
     {
         TileProps tileProps = Get<TileProps>.From(tile);
         tileProps?.ActiveProps(propsType, true, null);

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GlobalExplosiveBarrels : MonoBehaviourPun
 {
-    public Rigidbody BarrelRigidBody { get; set; }
+    public Rigidbody[] BarrelRigidBody { get; set; } = new Rigidbody[4];
 
 
     public void LaunchBarrel(Vector3 position)
@@ -40,7 +40,28 @@ public class GlobalExplosiveBarrels : MonoBehaviourPun
         GlobalFunctions.Loop<Barrel>.Foreach(barrels, barrel =>
         {
             if (Get<Rigidbody>.From(barrel.gameObject).position == position)
-                BarrelRigidBody = Get<Rigidbody>.From(barrel.gameObject);
+            {
+                for (int i = 0; i < BarrelRigidBody.Length; i++)
+                {
+                    if(BarrelRigidBody[i] == null)
+                    {
+                        BarrelRigidBody[i] = Get<Rigidbody>.From(barrel.gameObject);
+                        break;
+                    }
+                }
+            } 
         });
+    }
+
+    public void ExplodeBarrel(string collisionTag, Vector3 collisionPosition, Vector3 barrelRigidbodyPosition)
+    {
+        photonView.RPC("ExplodeBarrelRPC", RpcTarget.AllViaServer, collisionTag, collisionPosition, barrelRigidbodyPosition);
+    }
+
+    [PunRPC]
+    private void ExplodeBarrelRPC(string collisionTag, Vector3 collisionPosition, Vector3 barrelRigidbodyPosition)
+    {
+        Barrel barrel = GlobalFunctions.ObjectsOfType<Barrel>.Find(b => b.Rigidbody.position == barrelRigidbodyPosition);
+        barrel.Damage(collisionTag, collisionPosition);
     }
 }

@@ -60,6 +60,7 @@ public class TileProps : MonoBehaviour
 
             case PropsType.ExplosiveBarrels:
                 SetExplosiveBarrelsActivity(isActive);
+                SetArmoredTileActivity(isActive);
                 break;
 
             case PropsType.All:
