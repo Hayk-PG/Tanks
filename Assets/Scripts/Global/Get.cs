@@ -14,6 +14,11 @@ public class Get<T> : MonoBehaviour
         return obj.GetComponentInChildren<T>() != null ? obj.GetComponentInChildren<T>() : default;
     }
 
+    public static T FromChild(GameObject obj, bool includeInactive)
+    {
+        return obj.GetComponentInChildren<T>(includeInactive) != null ? obj.GetComponentInChildren<T>(includeInactive) : default;
+    }
+
     public static Type Type(object obj)
     {
         return obj.GetType();

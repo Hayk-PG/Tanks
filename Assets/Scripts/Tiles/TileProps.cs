@@ -3,7 +3,7 @@
 
 public class TileProps : MonoBehaviour
 {
-    public enum PropsType { Sandbags, MetalCube, MetalGround, All}
+    public enum PropsType { Sandbags, MetalCube, MetalGround, ExplosiveBarrels, All}
     public PropsType _propsType;
 
     private Tile _tile;
@@ -11,16 +11,16 @@ public class TileProps : MonoBehaviour
     [SerializeField] private Sandbags _sandBags;
     [SerializeField] private MetalCube _metalCube;
     [SerializeField] private MetalTile _metalGround;
+    [SerializeField] private ExplosiveBarrels _explosiveBarrels;
     
     public Sandbags Sandbags => _sandBags;
     public MetalCube MetalCube => _metalCube;
     public MetalTile MetalGround => _metalGround;
+    public ExplosiveBarrels ExplosiveBarrels => _explosiveBarrels;
 
 
-    private void Awake()
-    {
-        _tile = Get<Tile>.From(gameObject);
-    }
+
+    private void Awake() => _tile = Get<Tile>.From(gameObject);
 
     private void OnTileProtection(bool isProtected)
     {
@@ -28,7 +28,7 @@ public class TileProps : MonoBehaviour
             _tile.IsProtected = isProtected;
     }
 
-    private void OnSandbags(bool isActive, bool? isPlayer1)
+    private void SetSandbagsActivity(bool isActive, bool? isPlayer1)
     {
         Sandbags.gameObject.SetActive(isActive);
 
@@ -36,37 +36,37 @@ public class TileProps : MonoBehaviour
             Sandbags.SandbagsDirection(isPlayer1.Value);
     }
 
-    private void OnArmoredCube(bool isActive)
-    {
-        MetalCube.gameObject.SetActive(isActive);
-    }
+    private void SetArmoredCubeActivity(bool isActive) => MetalCube.gameObject.SetActive(isActive);
 
-    private void OnArmoredTile(bool isActive)
-    {
-        //transform.GetChild(0).gameObject.SetActive(!isActive);
-        MetalGround.gameObject.SetActive(isActive);
-    }
+    private void SetArmoredTileActivity(bool isActive) => MetalGround.gameObject.SetActive(isActive);
+
+    private void SetExplosiveBarrelsActivity(bool isActive) => ExplosiveBarrels.gameObject.SetActive(isActive);
 
     public void ActiveProps(PropsType propsType, bool isActive, bool? isPlayer1)
     {
         switch (propsType)
         {
             case PropsType.Sandbags:
-                OnSandbags(isActive, isPlayer1);
+                SetSandbagsActivity(isActive, isPlayer1);
                 break;
 
             case PropsType.MetalCube:
-                OnArmoredCube(isActive);
+                SetArmoredCubeActivity(isActive);
                 break;
 
             case PropsType.MetalGround:
-                OnArmoredTile(isActive);
+                SetArmoredTileActivity(isActive);
+                break;
+
+            case PropsType.ExplosiveBarrels:
+                SetExplosiveBarrelsActivity(isActive);
+                SetArmoredTileActivity(isActive);
                 break;
 
             case PropsType.All:
-                OnSandbags(isActive, isPlayer1);
-                OnArmoredCube(isActive);
-                OnArmoredTile(isActive);
+                SetSandbagsActivity(isActive, isPlayer1);
+                SetArmoredCubeActivity(isActive);
+                SetArmoredTileActivity(isActive);
                 break;
         }
 
