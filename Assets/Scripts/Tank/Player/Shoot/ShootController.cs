@@ -99,7 +99,7 @@ public class ShootController : BaseShootController
             RotateCanon();
             ApplyForce();
             OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
-            _trajectory.PointsOverlapSphere();
+            _trajectory?.PointsOverlapSphere(_tankController.BasePlayer != null);
         }
         else
         {
@@ -146,7 +146,7 @@ public class ShootController : BaseShootController
     protected virtual void ApplyForce()
     {
         if(_shootPoint != null && _shootPoint.gameObject.activeInHierarchy)
-            _trajectory.PredictedTrajectory(CurrentForce);
+            _trajectory?.PredictedTrajectory(CurrentForce);
     }
 
     protected virtual void OnShootButtonClick(bool isTrue)

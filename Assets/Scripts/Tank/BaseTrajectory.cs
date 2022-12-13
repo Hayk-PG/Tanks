@@ -17,7 +17,7 @@ public class BaseTrajectory : MonoBehaviour
 
     }
 
-    public virtual void PointsOverlapSphere()
+    public virtual void PointsOverlapSphere(bool isLocalPlayer)
     {
 
     }

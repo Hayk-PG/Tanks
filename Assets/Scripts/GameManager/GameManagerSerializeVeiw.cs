@@ -61,7 +61,6 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             if (_woodenBoxSerializer.ParachuteWithWoodBoxController != null)
             {
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RandomDestroyTime);
-
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position);
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity);
                 stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.rotation);
@@ -90,18 +89,18 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
                 stream.SendNext(_globalExplosiveBarrels.BarrelRigidBody[i]?.position);
             }
         }
-        else
+        if(stream.IsReading && !info.Sender.IsMasterClient)
         {
-            _turnController._turnState = (TurnState)stream.ReceiveNext();
-            _turnController._previousTurnState = (TurnState)stream.ReceiveNext();
+            _turnController._turnState = (TurnState)stream?.ReceiveNext();
+            _turnController._previousTurnState = (TurnState)stream?.ReceiveNext();
 
-            _windSystemController.CurrentWindForce = (int)stream.ReceiveNext();
+            _windSystemController.CurrentWindForce = (int)stream?.ReceiveNext();
 
             if (_gameManagerBulletSerializer.BulletController != null)
             {
-                _gameManagerBulletSerializer.BulletController.RigidBody.position = (Vector3)stream.ReceiveNext();
-                _gameManagerBulletSerializer.BulletController.RigidBody.velocity = (Vector3)stream.ReceiveNext();
-                _gameManagerBulletSerializer.BulletController.RigidBody.rotation = (Quaternion)stream.ReceiveNext();
+                _gameManagerBulletSerializer.BulletController.RigidBody.position = (Vector3)stream?.ReceiveNext();
+                _gameManagerBulletSerializer.BulletController.RigidBody.velocity = (Vector3)stream?.ReceiveNext();
+                _gameManagerBulletSerializer.BulletController.RigidBody.rotation = (Quaternion)stream?.ReceiveNext();
 
                 float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
                 _gameManagerBulletSerializer.BulletController.RigidBody.position += (_gameManagerBulletSerializer.BulletController.RigidBody.velocity * lag);
@@ -111,28 +110,28 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             {
                 if (bullet != null)
                 {
-                    bullet.RigidBody.position = (Vector3)stream.ReceiveNext();
-                    bullet.RigidBody.velocity = (Vector3)stream.ReceiveNext();
-                    bullet.RigidBody.rotation = (Quaternion)stream.ReceiveNext();
+                    bullet.RigidBody.position = (Vector3)stream?.ReceiveNext();
+                    bullet.RigidBody.velocity = (Vector3)stream?.ReceiveNext();
+                    bullet.RigidBody.rotation = (Quaternion)stream?.ReceiveNext();
 
                     float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
                     bullet.RigidBody.position += (bullet.RigidBody.velocity * lag);
                 }
             }
 
-            _turnTimer.Seconds = (int)stream.ReceiveNext();
-            _turnTimer.IsTurnChanged = (bool)stream.ReceiveNext();
+            _turnTimer.Seconds = (int)stream?.ReceiveNext();
+            _turnTimer.IsTurnChanged = (bool)stream?.ReceiveNext();
 
-            _globalActivtyTimer._playersActiveShieldsTimer[0] = (int)stream.ReceiveNext();
-            _globalActivtyTimer._playersActiveShieldsTimer[1] = (int)stream.ReceiveNext();
+            _globalActivtyTimer._playersActiveShieldsTimer[0] = (int)stream?.ReceiveNext();
+            _globalActivtyTimer._playersActiveShieldsTimer[1] = (int)stream?.ReceiveNext();
 
             if (_woodenBoxSerializer.ParachuteWithWoodBoxController != null)
             {
-                _woodenBoxSerializer.ParachuteWithWoodBoxController.RandomDestroyTime = (int)stream.ReceiveNext();
-
-                _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position = (Vector3)stream.ReceiveNext();
-                _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity = (Vector3)stream.ReceiveNext();
-                _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.rotation = (Quaternion)stream.ReceiveNext();
+                
+                _woodenBoxSerializer.ParachuteWithWoodBoxController.RandomDestroyTime = (int)stream?.ReceiveNext();
+                _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position = (Vector3)stream?.ReceiveNext();
+                _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity = (Vector3)stream?.ReceiveNext();
+                _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.rotation = (Quaternion)stream?.ReceiveNext();
 
                 float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
                 _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position += (_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity * lag);
@@ -140,14 +139,14 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
 
             if (_woodenBoxSerializer.WoodBox != null)
             {
-                _woodenBoxSerializer.WoodBox.ContentIndex = (int)stream.ReceiveNext();
-                _woodenBoxSerializer.WoodBox.WeaponIndex = (int)stream.ReceiveNext();
+                _woodenBoxSerializer.WoodBox.ContentIndex = (int)stream?.ReceiveNext();
+                _woodenBoxSerializer.WoodBox.WeaponIndex = (int)stream?.ReceiveNext();
             }
 
             if (_platformSerializer.RigidbodyPlatformHor != null)
             {
-                _platformSerializer.RigidbodyPlatformHor.position = (Vector3)stream.ReceiveNext();
-                _platformSerializer.RigidbodyPlatformHor.velocity = (Vector3)stream.ReceiveNext();
+                _platformSerializer.RigidbodyPlatformHor.position = (Vector3)stream?.ReceiveNext();
+                _platformSerializer.RigidbodyPlatformHor.velocity = (Vector3)stream?.ReceiveNext();
 
                 float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
                 _platformSerializer.RigidbodyPlatformHor.position += (_platformSerializer.RigidbodyPlatformHor.velocity * lag);
@@ -155,8 +154,8 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
 
             if (_platformSerializer.RigidbodyPlatformVert != null)
             {
-                _platformSerializer.RigidbodyPlatformVert.position = (Vector3)stream.ReceiveNext();
-                _platformSerializer.RigidbodyPlatformVert.velocity = (Vector3)stream.ReceiveNext();
+                _platformSerializer.RigidbodyPlatformVert.position = (Vector3)stream?.ReceiveNext();
+                _platformSerializer.RigidbodyPlatformVert.velocity = (Vector3)stream?.ReceiveNext();
 
                 float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
                 _platformSerializer.RigidbodyPlatformVert.position += (_platformSerializer.RigidbodyPlatformVert.velocity * lag);
@@ -165,7 +164,9 @@ public class GameManagerSerializeVeiw : MonoBehaviourPun,IPunObservable
             for (int i = 0; i < _globalExplosiveBarrels.BarrelRigidBody.Length; i++)
             {
                 if (_globalExplosiveBarrels.BarrelRigidBody[i] != null)
-                    _globalExplosiveBarrels.BarrelRigidBody[i].position = (Vector3)stream.ReceiveNext();
+                {
+                    _globalExplosiveBarrels.BarrelRigidBody[i].position = (Vector3)stream?.ReceiveNext();
+                }
             }
         }
     }    

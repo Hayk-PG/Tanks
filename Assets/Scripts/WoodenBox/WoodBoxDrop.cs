@@ -14,12 +14,12 @@ public class WoodBoxDrop : MonoBehaviour
 
     private void OnEnable()
     {
-        _parachuteWithWoodBoxCollision.OnCollision += OnCollision;
+        _parachuteWithWoodBoxCollision.onCollisionEnter += OnCollision;
     }
 
     private void OnDisable()
     {
-        _parachuteWithWoodBoxCollision.OnCollision -= OnCollision;
+        _parachuteWithWoodBoxCollision.onCollisionEnter -= OnCollision;
     }
 
     private void OnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)

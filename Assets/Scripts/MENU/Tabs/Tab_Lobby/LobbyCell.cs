@@ -13,7 +13,10 @@ public class LobbyCell : MonoBehaviour
     [SerializeField] private LobbyGUI _lobbyGUI;
     [SerializeField] private Btn _btnJoinLobby;
 
+    [SerializeField] private Maps _allMaps;
+
     [SerializeField] private string _lobbyName;
+    [SerializeField] private int _mapIndex;
     [SerializeField] private Color _color;
 
     private MyPhotonCallbacks _myPhotonCallbacks;
@@ -30,6 +33,14 @@ public class LobbyCell : MonoBehaviour
     private int RoundDuration
     {
         get => Data.Manager.ConvertRoundTimeStates(_roundTimeStates);
+    }
+
+    public int MapIndex
+    {
+        get
+        {
+            return _mapIndex < _allMaps.All.Length ? _mapIndex : _allMaps.All.Length - 1;
+        }
     }
     private bool IsWindOn
     {
@@ -124,6 +135,9 @@ public class LobbyCell : MonoBehaviour
                     MaxPlayers = 2,
                     CustomRoomProperties = new ExitGames.Client.Photon.Hashtable {
                         { Keys.RoomFakeName, LobbyName },
+                        { Keys.MapWind, IsWindOn },
+                        { Keys.RoundTime, RoundDuration },
+                        { Keys.MapIndex, MapIndex },
                         { Keys.ItemName,  itemsName},
                         { Keys.ItemAmount,  itemsAmount}
                     },

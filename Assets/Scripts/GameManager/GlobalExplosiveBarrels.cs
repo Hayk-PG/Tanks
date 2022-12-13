@@ -4,6 +4,7 @@ using UnityEngine;
 public class GlobalExplosiveBarrels : MonoBehaviourPun
 {
     public Rigidbody[] BarrelRigidBody { get; set; } = new Rigidbody[4];
+    private GameObject _tempBarrel;
 
 
     public void LaunchBarrel(Vector3 position)
@@ -26,42 +27,33 @@ public class GlobalExplosiveBarrels : MonoBehaviourPun
         });
     }
 
-    public void AllocateBarrel(Vector3 position)
+    public void AllocateBarrel(Vector3 id)
     {
         if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
-            photonView.RPC("AllocateBarrelRPC", RpcTarget.AllViaServer, position);
+            photonView.RPC("AllocateBarrelRPC", RpcTarget.AllViaServer, id);
     }
 
     [PunRPC]
-    private void AllocateBarrelRPC(Vector3 position)
+    private void AllocateBarrelRPC(Vector3 id)
     {
-        Barrel[] barrels = FindObjectsOfType<Barrel>();
-
-        GlobalFunctions.Loop<Barrel>.Foreach(barrels, barrel =>
+        for (int i = 0; i < BarrelRigidBody.Length; i++)
         {
-            if (Get<Rigidbody>.From(barrel.gameObject).position == position)
+            if(BarrelRigidBody[i] == null)
             {
-                for (int i = 0; i < BarrelRigidBody.Length; i++)
-                {
-                    if(BarrelRigidBody[i] == null)
-                    {
-                        BarrelRigidBody[i] = Get<Rigidbody>.From(barrel.gameObject);
-                        break;
-                    }
-                }
-            } 
-        });
+                _tempBarrel = GlobalFunctions.ObjectsOfType<Barrel>.Find(barrel => barrel.ID == id)?.gameObject;
+                BarrelRigidBody[i] = _tempBarrel != null ? Get<Rigidbody>.From(_tempBarrel) : null;
+            }
+        }
     }
 
-    public void ExplodeBarrel(string collisionTag, Vector3 collisionPosition, Vector3 barrelRigidbodyPosition)
+    public void ExplodeBarrel(string collisionTag, Vector3 collisionPosition, Vector3 id)
     {
-        photonView.RPC("ExplodeBarrelRPC", RpcTarget.AllViaServer, collisionTag, collisionPosition, barrelRigidbodyPosition);
+        photonView.RPC("ExplodeBarrelRPC", RpcTarget.AllViaServer, collisionTag, collisionPosition, id);
     }
 
     [PunRPC]
-    private void ExplodeBarrelRPC(string collisionTag, Vector3 collisionPosition, Vector3 barrelRigidbodyPosition)
+    private void ExplodeBarrelRPC(string collisionTag, Vector3 collisionPosition, Vector3 id)
     {
-        Barrel barrel = GlobalFunctions.ObjectsOfType<Barrel>.Find(b => b.Rigidbody.position == barrelRigidbodyPosition);
-        barrel.Damage(collisionTag, collisionPosition);
+        GlobalFunctions.ObjectsOfType<Barrel>.Find(barrel => barrel.ID == id)?.Damage(collisionTag, collisionPosition);
     }
 }

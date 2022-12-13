@@ -14,15 +14,9 @@ public class TankOutline : MonoBehaviour
         _playerTurn = Get<PlayerTurn>.From(gameObject);
     }
 
-    private void OnEnable()
-    {
-        _gameManager.OnGameStarted += OnGameStarted;
-    }
+    private void OnEnable() => _gameManager.OnGameStarted += OnGameStarted;
 
-    private void OnDisable()
-    {
-        _gameManager.OnGameStarted -= OnGameStarted;
-    }
+    private void OnDisable() => _gameManager.OnGameStarted -= OnGameStarted;
 
     private void OnGameStarted()
     {

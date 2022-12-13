@@ -10,8 +10,8 @@ public class Barrel : MonoBehaviour
     private LavaSplash _lavaSplash;
 
     private bool _isActive;
-    private int _collisionsCount;
 
+    public Vector3 ID { get; private set; }
     public Rigidbody Rigidbody => _rigidBody;
 
 
@@ -20,8 +20,10 @@ public class Barrel : MonoBehaviour
         _rigidBody = Get<Rigidbody>.From(gameObject);
         _globalExplosiveBarrels = FindObjectOfType<GlobalExplosiveBarrels>();
         _lavaSplash = FindObjectOfType<LavaSplash>();
-    }
 
+        AllocateBarrel();
+    }
+    
     private void FixedUpdate()
     {
         if (_isActive && _rigidBody.position.y <= VerticalLimit.Min)
@@ -33,11 +35,15 @@ public class Barrel : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        _collisionsCount++;
-
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
                 delegate { Damage(collision.gameObject.tag, collision.transform.position); },
-                delegate { _globalExplosiveBarrels.ExplodeBarrel(collision.gameObject.name, collision.transform.position, _rigidBody.position); });
+                delegate { _globalExplosiveBarrels.ExplodeBarrel(collision.gameObject.name, collision.transform.position, ID); });
+    }
+
+    private void AllocateBarrel()
+    {
+        ID = transform.position;
+        _globalExplosiveBarrels.AllocateBarrel(ID);
     }
 
     public void LaunchBarrel()
@@ -48,20 +54,22 @@ public class Barrel : MonoBehaviour
         _rigidBody.isKinematic = false;
         _rigidBody.velocity = new Vector3(Random.Range(-1, 1), 1, 0) * Random.Range(3, 10);
         _rigidBody.rotation = Quaternion.LookRotation(_rigidBody.velocity);
-        _globalExplosiveBarrels.AllocateBarrel(_rigidBody.position);
         SecondarySoundController.PlaySound(2, 2);
     }
 
     public void Damage(string collisionTag, Vector3 collisionPosition)
     {
-        GameObject collision = collisionTag == Tags.AI || collisionTag == Tags.Player ? 
+        if (!System.String.IsNullOrEmpty(collisionTag))
+        {
+            GameObject collision = collisionTag == Tags.AI || collisionTag == Tags.Player ?
                                GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.transform.position == collisionPosition).gameObject :
                                collisionTag == Tags.Tile ? GlobalFunctions.ObjectsOfType<Tile>.Find(tile => tile.transform.position == collisionPosition).gameObject : null;
 
-        if (collision != null)
-        {
-            Get<IDestruct>.From(collision.gameObject)?.Destruct(27, 0);
-            Get<IDamage>.From(collision.gameObject)?.Damage(32);
+            if (collision != null)
+            {
+                Get<IDestruct>.From(collision.gameObject)?.Destruct(27, 0);
+                Get<IDamage>.From(collision.gameObject)?.Damage(32);
+            }
         }
 
         Explode(true);

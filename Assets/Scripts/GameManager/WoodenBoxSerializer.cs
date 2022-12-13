@@ -5,11 +5,8 @@ using UnityEngine;
 
 public class WoodenBoxSerializer : MonoBehaviourPun
 {
-    [SerializeField]
-    private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
-
-    [SerializeField]
-    private WoodBox _woodBox;
+    [SerializeField] private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
+    [SerializeField] private WoodBox _woodBox;
 
     public ParachuteWithWoodBoxController ParachuteWithWoodBoxController
     {
@@ -22,13 +19,39 @@ public class WoodenBoxSerializer : MonoBehaviourPun
         set => _woodBox = value;
     }
 
-
     public System.Action<object[]> OnBoxTriggerEnteredSerializer { get; set; }
 
 
+
+    public void AllocateWoodBoxController()
+    {
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+            photonView.RPC("AllocateWoodBoxControllerRPC", RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    private void AllocateWoodBoxControllerRPC()
+    {
+        ParachuteWithWoodBoxController = FindObjectOfType<ParachuteWithWoodBoxController>();
+        ParachuteWithWoodBoxController.SetInitValues();
+    }
+
+    public void AllocateWoodBox()
+    {
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+            photonView.RPC("AllocateWoodBoxRPC", RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    private void AllocateWoodBoxRPC()
+    {
+        WoodBox = FindObjectOfType<WoodBox>();
+        WoodBox.SetInitValues();
+    }
+
     public void DestroyParachuteWithWoodBoxController()
     {
-        if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
         {
             photonView.RPC("DestroyRPC", RpcTarget.AllViaServer);
         }
@@ -46,7 +69,7 @@ public class WoodenBoxSerializer : MonoBehaviourPun
 
     public void BoxTriggerEntered(Collider other)
     {
-        if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
         {
             EventInfo.Content_WoodBoxTriggerEntered = new object[]
             {

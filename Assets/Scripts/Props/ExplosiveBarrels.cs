@@ -10,13 +10,14 @@ public class ExplosiveBarrels : MonoBehaviour
     private bool _isOverlapped;
 
 
+
     private void Awake() => _globalExplosiveBarrels = FindObjectOfType<GlobalExplosiveBarrels>();
 
     private void OnCollisionEnter(Collision collision) => Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, LaunchBarrel, () => _globalExplosiveBarrels.LaunchBarrel(transform.position));
 
     public void LaunchBarrel()
     {
-        GlobalFunctions.Loop<Barrel>.Foreach(_barrels, barrel => { barrel.LaunchBarrel(); });
+        GlobalFunctions.Loop<Barrel>.Foreach(_barrels, barrel => { barrel?.LaunchBarrel(); });
         Explode();
     }
 

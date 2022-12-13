@@ -8,6 +8,7 @@ public class WoodBox : MonoBehaviour
 
     private ParachuteWithWoodBoxController _woodBoxController;
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
+    private WoodenBoxSerializer _woodBoxSerializer;
     private Tab_WoodboxContent _tabWoodboxContent;
     private TurnController _turnController;
     private NewWeaponFromWoodBox _newWeaponFromWoodBox;
@@ -31,6 +32,7 @@ public class WoodBox : MonoBehaviour
     {
         _woodBoxController = Get<ParachuteWithWoodBoxController>.From(gameObject);
         _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
+        _woodBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();
         _tabWoodboxContent = FindObjectOfType<Tab_WoodboxContent>();
         _turnController = FindObjectOfType<TurnController>();
         _newWeaponFromWoodBox = FindObjectOfType<NewWeaponFromWoodBox>();
@@ -42,34 +44,27 @@ public class WoodBox : MonoBehaviour
             new AddMoreShellsContent(),
             new GiveTurnContent(_turnController)
         };
-
         _iWoodBoxWeapons = new IWoodBoxContent[]
         {
             new AddNewWeaponContent(_newWeapon[0], _newWeaponFromWoodBox)
         };
+
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, SetInitValues, AllocateWoodBox);
     }
 
-    private void OnEnable()
-    {
-        _woodBoxController.OnInitialized += OnWoodBoxControllerInitialized;
-        _parachuteWithWoodBoxCollision.OnCollision += OnCollision;
-    }
+    private void OnEnable() => _parachuteWithWoodBoxCollision.onCollisionEnter += GetCollisions;
 
-    private void OnDisable()
-    {
-        _woodBoxController.OnInitialized -= OnWoodBoxControllerInitialized;
-        _parachuteWithWoodBoxCollision.OnCollision -= OnCollision;
-    }
+    private void OnDisable() => _parachuteWithWoodBoxCollision.onCollisionEnter -= GetCollisions;
 
-    private void OnWoodBoxControllerInitialized(WoodenBoxSerializer woodBoxSerializer)
-    {
-        woodBoxSerializer.WoodBox = this;
+    private void AllocateWoodBox() => _woodBoxSerializer.AllocateWoodBox();
 
+    public void SetInitValues()
+    {
         ContentIndex = Random.Range(0, ContentsCount);
         WeaponIndex = Random.Range(0, WeaponsCount);
     }
 
-    private void OnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)
+    private void GetCollisions(ParachuteWithWoodBoxCollision.CollisionData collisionData)
     {
         if (collisionData._tankController != null)
         {

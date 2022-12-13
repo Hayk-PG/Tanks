@@ -1,14 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
-
 
 
 public class ParachuteWithWoodBoxController : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject _parachute, _sparkles, _woodBoxExplosion;
+    [SerializeField] private GameObject _parachute, _sparkles, _woodBoxExplosion;
 
-    public Rigidbody RigidBody { get; set; }
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
     private BoxTrigger _boxTrigger;
     private WoodenBoxSerializer _woodenBoxSerializer;
@@ -16,50 +14,41 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
     private delegate float Value();
     private Value _gravity;
 
+    public Rigidbody RigidBody { get; set; }
     public float RandomDestroyTime { get; set; }
-
-    internal System.Action<WoodenBoxSerializer> OnInitialized { get; set; }
-
-
 
 
     private void Awake()
-    {       
-        RigidBody = Get<Rigidbody>.From(gameObject);
+    {
         _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
         _boxTrigger = Get<BoxTrigger>.FromChild(gameObject);
         _gravity = delegate { return 30 * Time.fixedDeltaTime; };
-        _woodenBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();       
-    }
+        _woodenBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();
+        RigidBody = Get<Rigidbody>.From(gameObject);
 
-    private void Start()
-    {
-        Initialized();
-        StartCoroutine(DestroyAfterTime());
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, SetInitValues, AllocateWoodBoxController);
     }
 
     private void OnEnable()
     {
-        _parachuteWithWoodBoxCollision.OnCollision += OnCollision;
+        _parachuteWithWoodBoxCollision.onCollisionEnter += OnCollision;
         _boxTrigger.OnBoxTriggerEntered += OnBoxTriggerEntered;
     }
 
     private void OnDisable()
     {
-        _parachuteWithWoodBoxCollision.OnCollision -= OnCollision;
+        _parachuteWithWoodBoxCollision.onCollisionEnter -= OnCollision;
         _boxTrigger.OnBoxTriggerEntered -= OnBoxTriggerEntered;
     }
 
-    private void FixedUpdate()
-    {
-        Rigidbody();
-    }
+    private void FixedUpdate() => Rigidbody();
 
-    private void Initialized()
+    private void AllocateWoodBoxController() => _woodenBoxSerializer.AllocateWoodBoxController();
+
+    public void SetInitValues()
     {
-        _woodenBoxSerializer.ParachuteWithWoodBoxController = this;
-        RandomDestroyTime = Random.Range(60, 91);
-        OnInitialized?.Invoke(_woodenBoxSerializer);
+        RandomDestroyTime = UnityEngine.Random.Range(30, 90);
+        StartCoroutine(DestroyAfterTime());
     }
 
     private void OnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)
