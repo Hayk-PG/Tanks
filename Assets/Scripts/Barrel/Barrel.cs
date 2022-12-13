@@ -1,3 +1,5 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
 using UnityEngine;
 
 public class Barrel : MonoBehaviour
@@ -10,9 +12,8 @@ public class Barrel : MonoBehaviour
     private LavaSplash _lavaSplash;
 
     private bool _isActive;
+    private Vector3 id;
 
-    public Vector3 ID { get; private set; }
-    public Rigidbody Rigidbody => _rigidBody;
 
 
     private void Awake()
@@ -21,9 +22,19 @@ public class Barrel : MonoBehaviour
         _globalExplosiveBarrels = FindObjectOfType<GlobalExplosiveBarrels>();
         _lavaSplash = FindObjectOfType<LavaSplash>();
 
-        AllocateBarrel();
+        id = transform.position;
     }
-    
+
+    private void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += Damage;
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= Damage;
+    }
+
     private void FixedUpdate()
     {
         if (_isActive && _rigidBody.position.y <= VerticalLimit.Min)
@@ -37,13 +48,7 @@ public class Barrel : MonoBehaviour
     {
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
                 delegate { Damage(collision.gameObject.tag, collision.transform.position); },
-                delegate { _globalExplosiveBarrels.ExplodeBarrel(collision.gameObject.name, collision.transform.position, ID); });
-    }
-
-    private void AllocateBarrel()
-    {
-        ID = transform.position;
-        _globalExplosiveBarrels.AllocateBarrel(ID);
+                delegate { _globalExplosiveBarrels.ExplodeBarrelRaiseEvent(collision.gameObject.tag, collision.transform.position, id); });
     }
 
     public void LaunchBarrel()
@@ -57,7 +62,7 @@ public class Barrel : MonoBehaviour
         SecondarySoundController.PlaySound(2, 2);
     }
 
-    public void Damage(string collisionTag, Vector3 collisionPosition)
+    private void Damage(string collisionTag, Vector3 collisionPosition)
     {
         if (!System.String.IsNullOrEmpty(collisionTag))
         {
@@ -73,6 +78,17 @@ public class Barrel : MonoBehaviour
         }
 
         Explode(true);
+    }
+
+    private void Damage(EventData eventData)
+    {
+        if(eventData.Code == EventInfo.Code_BarrelCollision)
+        {
+            object[] data = (object[])eventData.CustomData;
+
+            if ((Vector3)data[2] == id)
+                Damage((string)data[0], (Vector3)data[1]);
+        }
     }
 
     private void Explode(bool includeExplosion)

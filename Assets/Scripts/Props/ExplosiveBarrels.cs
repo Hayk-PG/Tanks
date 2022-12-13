@@ -1,3 +1,5 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
 using UnityEngine;
 
 public class ExplosiveBarrels : MonoBehaviour
@@ -13,12 +15,36 @@ public class ExplosiveBarrels : MonoBehaviour
 
     private void Awake() => _globalExplosiveBarrels = FindObjectOfType<GlobalExplosiveBarrels>();
 
-    private void OnCollisionEnter(Collision collision) => Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, LaunchBarrel, () => _globalExplosiveBarrels.LaunchBarrel(transform.position));
+    private void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += LaunchBarrel;
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= LaunchBarrel;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, LaunchBarrel, () => _globalExplosiveBarrels.LaunchBarrelRaiseEvent(transform.position));
+    }
 
     public void LaunchBarrel()
     {
         GlobalFunctions.Loop<Barrel>.Foreach(_barrels, barrel => { barrel?.LaunchBarrel(); });
         Explode();
+    }
+
+    private void LaunchBarrel(EventData eventData)
+    {
+        if(eventData.Code == EventInfo.Code_LaunchBarrel)
+        {
+            object[] data = (object[])eventData.CustomData;
+
+            if ((Vector3)data[0] == transform.position)
+                LaunchBarrel();
+        }
     }
 
     private void Explode()
