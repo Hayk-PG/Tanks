@@ -26,6 +26,11 @@ public class TurnTimer : MonoBehaviourPun
         _myPlugins = FindObjectOfType<MyPlugins>();
     }
 
+    private void Start()
+    {
+        StartCoroutine(RunTimerOnEditorMode());
+    }
+
     private void OnEnable()
     {
         _gameManager.OnGameStarted += OnGameStarted;
@@ -45,15 +50,9 @@ public class TurnTimer : MonoBehaviourPun
         Seconds = _turnTime;
     }
 
-    private void UnsubscribeFromPluginService()
-    {
-        _myPlugins.OnPluginService -= OnPluginService;
-    }
+    private void UnsubscribeFromPluginService() => _myPlugins.OnPluginService -= OnPluginService;
 
-    private void SubscribeToPluginService()
-    {
-        _myPlugins.OnPluginService += OnPluginService;
-    }
+    private void SubscribeToPluginService() => _myPlugins.OnPluginService += OnPluginService;
 
     private void OnTurnChanged(TurnState currentState)
     {
@@ -67,34 +66,25 @@ public class TurnTimer : MonoBehaviourPun
         }           
     }
 
-#if UNITY_EDITOR
-    private void Start()
-    {
-        StartCoroutine(RunTimerOnEditorMode());
-    }
-
     private IEnumerator RunTimerOnEditorMode()
     {
-        while (true)
+        if (MyPhotonNetwork.IsOfflineMode && PlatformChecker.IsEditor)
         {
-            RunTimer();
-            yield return new WaitForSeconds(1);
+            while (true)
+            {
+                RunTimer();
+                yield return new WaitForSeconds(1);
+            }
         }
     }
-#endif
 
     private void OnPluginService()
     {
         if (MyPhotonNetwork.IsOfflineMode || MyPhotonNetwork.AmPhotonViewOwner(photonView))
-        {
-            RunTimer();
-        }
+            photonView.RPC("RunTimerRPC", RpcTarget.AllViaServer);
     } 
 
-    private void Timer()
-    {
-        Seconds--;       
-    }
+    private void Timer() => Seconds--;
 
     private void SetNextTurn()
     {
@@ -125,5 +115,11 @@ public class TurnTimer : MonoBehaviourPun
         Conditions<int>.Compare(Seconds, 0, SetNextTurn, Timer, null);
         OnTurnTimer?.Invoke(_turnController._turnState, Seconds);
         _textTimer.text = "00:" + Seconds.ToString("D2");
+    }
+
+    [PunRPC]
+    private void RunTimerRPC()
+    {
+        RunTimer();
     }
 }

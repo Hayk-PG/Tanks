@@ -18,4 +18,10 @@ public static class EventInfo
 
     public static byte Code_BarrelCollision { get; private set; } = 5;
     public static object[] Content_BarrelCollision { get; set; }
+
+    public static byte Code_HorizontalPlatform { get; private set; } = 6;
+    public static object[] Content_HorizontalPlatform { get; set; }
+
+    public static byte Code_VerticalPlatform { get; private set; } = 7;
+    public static object[] Content_VerticalPlatform { get; set; }
 }
