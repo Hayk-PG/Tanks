@@ -67,8 +67,8 @@ public class Barrel : MonoBehaviour
         if (!System.String.IsNullOrEmpty(collisionTag))
         {
             GameObject collision = collisionTag == Tags.AI || collisionTag == Tags.Player ?
-                               GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.transform.position == collisionPosition).gameObject :
-                               collisionTag == Tags.Tile ? GlobalFunctions.ObjectsOfType<Tile>.Find(tile => tile.transform.position == collisionPosition).gameObject : null;
+                               GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.transform.position == collisionPosition)?.gameObject :
+                               collisionTag == Tags.Tile ? GlobalFunctions.ObjectsOfType<Tile>.Find(tile => tile.transform.position == collisionPosition)?.gameObject : null;
 
             if (collision != null)
             {

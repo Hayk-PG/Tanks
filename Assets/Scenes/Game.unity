@@ -22466,7 +22466,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8937049981597977293, guid: 98ba86d059d069241a6dc06a078ed3ee, type: 3}
+    - {fileID: 2798824069396154464, guid: 98ba86d059d069241a6dc06a078ed3ee, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 98ba86d059d069241a6dc06a078ed3ee, type: 3}
 --- !u!114 &588615946 stripped
 MonoBehaviour:
@@ -75992,7 +75994,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8937049981597977293, guid: 98ba86d059d069241a6dc06a078ed3ee, type: 3}
+    - {fileID: 2798824069396154464, guid: 98ba86d059d069241a6dc06a078ed3ee, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 98ba86d059d069241a6dc06a078ed3ee, type: 3}
 --- !u!114 &1993327006 stripped
 MonoBehaviour:
@@ -76716,6 +76720,7 @@ GameObject:
   - component: {fileID: 2025759536}
   - component: {fileID: 2025759535}
   - component: {fileID: 2025759534}
+  - component: {fileID: 2025759540}
   - component: {fileID: 2025759512}
   - component: {fileID: 2025759515}
   - component: {fileID: 2025759520}
@@ -76833,6 +76838,7 @@ MonoBehaviour:
   - {fileID: 2025759536}
   - {fileID: 2025759535}
   - {fileID: 2025759534}
+  - {fileID: 2025759540}
   sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -77000,7 +77006,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2025759507}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b87798af8899ce740a078c7f11fca7d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ed8bfcdb53f3f241b548d8622273507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _parachuteWithWoodBoxController: {fileID: 0}
@@ -77114,6 +77120,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75b492bdb22e01e47a567e3c9f3dd12f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2025759540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025759507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6371644201013ba408ae398e13ad2043, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _horizPlatform: {fileID: 588615946}
+  _vertPlatform: {fileID: 1993327006}
 --- !u!1001 &2029697864
 PrefabInstance:
   m_ObjectHideFlags: 0

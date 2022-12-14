@@ -3,7 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class WoodenBoxSerializer : MonoBehaviourPun
+public class WoodBoxSerializer : MonoBehaviourPun
 {
     [SerializeField] private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
     [SerializeField] private WoodBox _woodBox;

@@ -8,7 +8,7 @@ public class BoxTrigger : MonoBehaviour
 {
     private Tile _triggerEnteredTile;
     private TileProps _triggerEnteredTilesProps;
-    private WoodenBoxSerializer _woodBoxSerializer;
+    private WoodBoxSerializer _woodBoxSerializer;
     private TilesData _tilesData;
 
     private Vector3 _triggerEnteredObjectsPosition;
@@ -22,7 +22,7 @@ public class BoxTrigger : MonoBehaviour
 
     private void Awake()
     {
-        _woodBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();
+        _woodBoxSerializer = FindObjectOfType<WoodBoxSerializer>();
         _tilesData = FindObjectOfType<TilesData>();
     }
 

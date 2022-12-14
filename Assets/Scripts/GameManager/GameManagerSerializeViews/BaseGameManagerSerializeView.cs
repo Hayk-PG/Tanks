@@ -8,7 +8,7 @@ public abstract class BaseGameManagerSerializeView : MonoBehaviourPun, IPunObser
     protected TurnTimer _turnTimer;
     protected GlobalActivityTimer _globalActivtyTimer;
     protected InstantiatePickables _instantiatePickables;
-    protected WoodenBoxSerializer _woodenBoxSerializer;
+    protected WoodBoxSerializer _woodenBoxSerializer;
 
 
 
@@ -21,7 +21,7 @@ public abstract class BaseGameManagerSerializeView : MonoBehaviourPun, IPunObser
         _turnTimer = Get<TurnTimer>.From(gameObject);
         _globalActivtyTimer = Get<GlobalActivityTimer>.From(gameObject);
         _instantiatePickables = Get<InstantiatePickables>.From(gameObject);
-        _woodenBoxSerializer = Get<WoodenBoxSerializer>.From(gameObject);
+        _woodenBoxSerializer = Get<WoodBoxSerializer>.From(gameObject);
     }
 
 

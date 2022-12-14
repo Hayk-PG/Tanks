@@ -80,7 +80,10 @@ public class TurnTimer : MonoBehaviourPun
 
     private void OnPluginService()
     {
-        if (MyPhotonNetwork.IsOfflineMode || MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        if (MyPhotonNetwork.IsOfflineMode)
+            RunTimer();
+
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
             photonView.RPC("RunTimerRPC", RpcTarget.AllViaServer);
     } 
 

@@ -9,7 +9,8 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
     private BoxTrigger _boxTrigger;
-    private WoodenBoxSerializer _woodenBoxSerializer;
+    private WoodBoxSerializer _woodenBoxSerializer;
+    private LavaSplash _lavaSplash;
 
     private delegate float Value();
     private Value _gravity;
@@ -20,11 +21,12 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
     private void Awake()
     {
+        RigidBody = Get<Rigidbody>.From(gameObject);
         _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
         _boxTrigger = Get<BoxTrigger>.FromChild(gameObject);
         _gravity = delegate { return 30 * Time.fixedDeltaTime; };
-        _woodenBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();
-        RigidBody = Get<Rigidbody>.From(gameObject);
+        _woodenBoxSerializer = FindObjectOfType<WoodBoxSerializer>();
+        _lavaSplash = FindObjectOfType<LavaSplash>();
 
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, SetInitValues, AllocateWoodBoxController);
     }
@@ -78,8 +80,11 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
         RigidBody.position = new Vector3(RigidBody.position.x, RigidBody.position.y, 0);
         RigidBody.rotation = Quaternion.Euler(0, 0, RigidBody.rotation.z);
 
-        if (RigidBody.position.y <= -5)
+        if (RigidBody.position.y <= VerticalLimit.Min)
+        {
+            _lavaSplash.ActivateSmallSplash(RigidBody.position);
             DestroyGameobject();
+        }
     }
 
     private void OnLand()

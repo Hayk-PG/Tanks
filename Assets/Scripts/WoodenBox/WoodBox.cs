@@ -8,7 +8,7 @@ public class WoodBox : MonoBehaviour
 
     private ParachuteWithWoodBoxController _woodBoxController;
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
-    private WoodenBoxSerializer _woodBoxSerializer;
+    private WoodBoxSerializer _woodBoxSerializer;
     private Tab_WoodboxContent _tabWoodboxContent;
     private TurnController _turnController;
     private NewWeaponFromWoodBox _newWeaponFromWoodBox;
@@ -32,7 +32,7 @@ public class WoodBox : MonoBehaviour
     {
         _woodBoxController = Get<ParachuteWithWoodBoxController>.From(gameObject);
         _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
-        _woodBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();
+        _woodBoxSerializer = FindObjectOfType<WoodBoxSerializer>();
         _tabWoodboxContent = FindObjectOfType<Tab_WoodboxContent>();
         _turnController = FindObjectOfType<TurnController>();
         _newWeaponFromWoodBox = FindObjectOfType<NewWeaponFromWoodBox>();
