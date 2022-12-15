@@ -24,13 +24,13 @@ public class BaseWeaponProperties<T> : ScriptableObject
     public Type _type;
     public Range _range;
   
-    [Range(0, 70)]
+    [Range(10, 100)]
     public int _damageValue;
-    [Range(0.3f, 0.4f)]
+    [Range(0.3f, 1f)]
     public float _radius;
-    [Range(0, 20)]
+    [Range(10, 100)]
     public int _destructDamage;    
-    [Range(3, 50)] public float _bulletMaxForce;
+    [Range(1, 20)] public float _bulletMaxForce;
     [Range(1, 10)] public float _bulletForceMaxSpeed;
     public int _tileParticleIndex;   
     public string _weaponType;  

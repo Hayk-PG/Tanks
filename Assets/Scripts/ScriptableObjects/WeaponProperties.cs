@@ -60,9 +60,9 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomLight = new RandomType
                 {
-                    _damageValues = new int?[2] { 5, 15 },
-                    _destructDamageValues = new int?[2] { 10, 12 },
-                    _radiusValues = new float?[2] { 0.3f, 0.32f }
+                    _damageValues = new int?[2] { 10, 30 },
+                    _destructDamageValues = new int?[2] { 10, 29 },
+                    _radiusValues = new float?[2] { 0.3f, 0.4f }
                 };
 
                 Randomizer(randomLight);               
@@ -72,9 +72,9 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomMedium = new RandomType
                 {
-                    _damageValues = new int?[2] { 20, 35 },
-                    _destructDamageValues = new int?[2] { 13, 16 },
-                    _radiusValues = new float?[2] { 0.37f, 0.4f }
+                    _damageValues = new int?[2] { 30, 63 },
+                    _destructDamageValues = new int?[2] { 29, 65 },
+                    _radiusValues = new float?[2] { 0.4f, 0.63f }
                 };
 
                 Randomizer(randomMedium);
@@ -84,9 +84,9 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomHeavy = new RandomType
                 {
-                    _damageValues = new int?[2] { 40, 70 },
-                    _destructDamageValues = new int?[2] { 17, 20 },
-                    _radiusValues = new float?[2] { 0.33f, 0.36f }
+                    _damageValues = new int?[2] { 63, 100 },
+                    _destructDamageValues = new int?[2] { 65, 100 },
+                    _radiusValues = new float?[2] { 0.63f, 1f }
                 };
 
                 Randomizer(randomHeavy);
@@ -99,7 +99,7 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomLong = new RandomType
                 {
-                    _bulletMaxForceVaues = new int?[2] { 16, 20 },
+                    _bulletMaxForceVaues = new int?[2] { 17, 20 },
                     _bulletForceMaxSpeedValues = new int?[2] { 6, 10 }
                 };
 
@@ -110,7 +110,7 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomMedium = new RandomType
                 {
-                    _bulletMaxForceVaues = new int?[2] { 13, 15 },
+                    _bulletMaxForceVaues = new int?[2] { 13, 17 },
                     _bulletForceMaxSpeedValues = new int?[2] { 4, 5 }
                 };
 
@@ -121,7 +121,7 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomClose = new RandomType
                 {
-                    _bulletMaxForceVaues = new int?[2] { 10, 12 },
+                    _bulletMaxForceVaues = new int?[2] { 7, 13 },
                     _bulletForceMaxSpeedValues = new int?[2] { 1, 3 }
                 };
 
@@ -136,9 +136,9 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         string mediumRange = " MR";
         string closeRange = " CR";
 
-        string range = _bulletMaxForce >= 16 ? longRange :
-                       _bulletMaxForce >= 13 && _bulletMaxForce < 15 ? mediumRange :
-                       _bulletMaxForce >= 10 && _bulletMaxForce < 12 ? closeRange : "";
+        string range = _bulletMaxForce >= 17 ? longRange :
+                       _bulletMaxForce >= 13 && _bulletMaxForce < 17 ? mediumRange :
+                       _bulletMaxForce >= 10 && _bulletMaxForce < 13 ? closeRange : "";
 
         if (_weaponType.Contains(longRange))
             _weaponType.Substring(_weaponType.Length - longRange.Length, _weaponType.Length);

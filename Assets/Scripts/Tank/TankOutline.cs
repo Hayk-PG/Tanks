@@ -6,6 +6,7 @@ public class TankOutline : MonoBehaviour
     private GameManager _gameManager;
     private PlayerTurn _playerTurn;
     private MeshRenderer _meshRenderer;
+    private Outline _outline;
 
 
     private void Awake()
@@ -23,14 +24,18 @@ public class TankOutline : MonoBehaviour
         if(_playerTurn != null)
         {
             for (int i = 0; i < _playerTurn.GetComponentsInChildren<MeshRenderer>(true).Length; i++)
-            {                
-                Outline outline = _playerTurn.GetComponentsInChildren<MeshRenderer>(true)[i].gameObject.AddComponent<Outline>();
+            {
+                _meshRenderer = _playerTurn.GetComponentsInChildren<MeshRenderer>(true)[i];
 
-                if (outline != null)
+                if (_meshRenderer != null)
                 {
-                    outline.OutlineMode = Outline.Mode.OutlineVisible;
-                    outline.OutlineWidth = 1;
-                    outline.OutlineColor = _playerTurn.MyTurn == TurnState.Player1 ? _outlineColors[0] : _outlineColors[1];
+                    if (Get<Outline>.From(_meshRenderer.gameObject) == null)
+                    {
+                        _outline = _meshRenderer.gameObject.AddComponent<Outline>();
+                        _outline.OutlineMode = Outline.Mode.OutlineVisible;
+                        _outline.OutlineWidth = 1;
+                        _outline.OutlineColor = _playerTurn.MyTurn == TurnState.Player1 ? _outlineColors[0] : _outlineColors[1];
+                    }
                 }
             }
         }  

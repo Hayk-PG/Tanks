@@ -2,8 +2,14 @@
 
 public class MetalTile : MonoBehaviour
 {
+    private GameManager _gameManager;
+
+
     private void Awake()
     {
-        SecondarySoundController.PlaySound(1, 2);
+        _gameManager = FindObjectOfType<GameManager>();
+
+        if (_gameManager.IsGameStarted)
+            SecondarySoundController.PlaySound(1, 2);
     }
 }
