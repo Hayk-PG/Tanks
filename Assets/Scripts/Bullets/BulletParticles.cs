@@ -2,25 +2,21 @@
 
 public class BulletParticles : MonoBehaviour
 {
-    [SerializeField]
-    protected ParticleSystem _muzzleFlash;
-
-    [SerializeField]
-    protected GameObject _trail;
-
-    [SerializeField]
-    protected Explosion _explosion;
-
-    [Header("Optional non collided explosion")]
-    [SerializeField]
-    protected GameObject _optionalExplosion;
-
     protected IBulletTrail _iBulletTrail;
     protected IBulletExplosion _iBulletExplosion;
 
+    [SerializeField] protected ParticleSystem _muzzleFlash;
+    [SerializeField] protected GameObject _trail;
+    [SerializeField] protected Explosion _explosion;
+    [Header("Optional non collided explosion")]
+    [SerializeField] protected GameObject _optionalExplosion;
+
+    
+
     protected virtual void Awake()
     {
-        if(_muzzleFlash != null) _muzzleFlash.transform.parent = null;
+        if(_muzzleFlash != null) 
+            _muzzleFlash.transform.parent = null;
 
         _iBulletTrail = Get<IBulletTrail>.From(gameObject);
         _iBulletExplosion = Get<IBulletExplosion>.From(gameObject);
@@ -33,9 +29,6 @@ public class BulletParticles : MonoBehaviour
 
         if (_iBulletExplosion != null)
             _iBulletExplosion.OnBulletExplosion += OnExplosion;
-
-        if (_iBulletExplosion != null)
-            _iBulletExplosion.OnBulletExplosionWithoutHitting += OnBulletExplosionWithoutHitting;
     }
 
     protected virtual void OnDisable()
@@ -45,9 +38,6 @@ public class BulletParticles : MonoBehaviour
 
         if (_iBulletExplosion != null)
             _iBulletExplosion.OnBulletExplosion -= OnExplosion;
-
-        if (_iBulletExplosion != null)
-            _iBulletExplosion.OnBulletExplosionWithoutHitting -= OnBulletExplosionWithoutHitting;
     }
 
     protected virtual void OnTrailActivity(bool isActive)

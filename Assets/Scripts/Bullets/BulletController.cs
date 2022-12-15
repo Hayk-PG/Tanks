@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, IBulletVelocity<BulletController.VelocityData>, ITurnController
+public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBulletLimit, IBulletVelocity<BulletController.VelocityData>, ITurnController
 {
-    public Rigidbody RigidBody { get; protected set; }
+    public Rigidbody RigidBody { get; set; }
     public IScore OwnerScore { get; set; }
     public Vector3 StartPosition { get; set; }
     public float Distance
@@ -11,15 +11,8 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
         get => Vector3.Distance(StartPosition, transform.position);
     }
     public bool IsLastShellOfBarrage { get; set; }
-
-    public Action<Collider, IScore, float> OnCollision { get; set; }
-    public Action<IScore, float> OnExplodeOnCollision { get; set; }
-    public Action<bool> OnExplodeOnLimit { get; set; }
-    public Action<VelocityData> OnBulletVelocity { get; set; }
-    public Action OnExitCollision { get; set; }
-
     public TurnController TurnController { get; set; }
-
+  
     protected WindSystemController _windSystemController;
     protected bool _isWindActivated;
     protected int _collisionsCount;
@@ -41,6 +34,14 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
         }
     }
 
+
+    public Action<Collider, IScore, float> OnCollision { get; set; }
+    public Action<IScore, float> OnExplodeOnCollision { get; set; }
+    public Action<bool> OnExplodeOnLimit { get; set; }
+    public Action<VelocityData> OnBulletVelocity { get; set; }
+    public Action OnExitCollision { get; set; }
+
+    
 
 
     protected virtual void Awake()

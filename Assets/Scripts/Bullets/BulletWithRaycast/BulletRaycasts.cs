@@ -12,7 +12,6 @@ using UnityEngine;
     public Action <RaycastHit> OnHit { get; set; }
 }
 
-
 public class BulletRaycasts : MonoBehaviour
 {
     public RaycastProperties _front;

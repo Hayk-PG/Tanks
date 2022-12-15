@@ -23,18 +23,17 @@ public class BulletVelocity : GetBulletController, IBulletTrail
 
     protected virtual void OnEnable()
     {
-        if (_iBulletVelocity != null) _iBulletVelocity.OnBulletVelocity += OnBulletVelocity;
+        if (_iBulletVelocity != null) 
+            _iBulletVelocity.OnBulletVelocity += OnBulletVelocity;
     }
 
     protected virtual void OnDisable()
     {
-        if (_iBulletVelocity != null) _iBulletVelocity.OnBulletVelocity -= OnBulletVelocity;
+        if (_iBulletVelocity != null) 
+            _iBulletVelocity.OnBulletVelocity -= OnBulletVelocity;
     }
 
-    protected virtual void ActivateTrail()
-    {
-        OnTrailActivity?.Invoke(true);
-    }
+    protected virtual void ActivateTrail() => OnTrailActivity?.Invoke(true);
 
     protected virtual void OnBulletVelocity(BulletController.VelocityData velocityData)
     {
@@ -52,10 +51,7 @@ public class BulletVelocity : GetBulletController, IBulletTrail
         }
     }
 
-    protected virtual void BulletLookRotation(BulletController.VelocityData velocityData)
-    {
-        velocityData._rigidBody.transform.rotation = velocityData._lookRotation;
-    }
+    protected virtual void BulletLookRotation(BulletController.VelocityData velocityData) => velocityData._rigidBody.transform.rotation = velocityData._lookRotation;
 
     protected virtual void ApplyWindForceToTheMovement(BulletController.VelocityData velocityData)
     {
