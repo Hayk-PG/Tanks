@@ -57,6 +57,12 @@ public class ScriptableComponentsCustomEditor : Editor
         {
             tankScriptableComponents.OnClickAddComponnets();
         }
+
+        GUI.backgroundColor = Color.red;
+        if (GUILayout.Button("Destroy target's components", GUILayout.Height(40)))
+        {
+            tankScriptableComponents.OnClickRemoveComponents();
+        }
     }
 }
 

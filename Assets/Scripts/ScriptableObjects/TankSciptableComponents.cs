@@ -8,9 +8,10 @@ using System.Linq;
 [CreateAssetMenu(menuName = "Scriptable objects/Component/New tank's component")]
 public class TankSciptableComponents : ScriptableComponents
 {
-    private Rigidbody _rigidbody;
-    private WheelColliderController _wheelColliderController;
-    private WheelCollider _wheelCollider;
+    protected Rigidbody _rigidbody;
+    protected WheelColliderController _wheelColliderController;
+    protected WheelsColliderCenter _wheelColliderCenter;
+    protected WheelCollider _wheelCollider;
 
 
     public override void OnClickGetComponents()
@@ -20,12 +21,13 @@ public class TankSciptableComponents : ScriptableComponents
         _scripts = _componentsHolder.GetComponents<MonoBehaviour>();
         _rigidbody = Get<Rigidbody>.From(_componentsHolder);
         _wheelColliderController = Get<WheelColliderController>.FromChild(_componentsHolder);
+        _wheelColliderCenter = Get<WheelsColliderCenter>.FromChild(_componentsHolder);
         _wheelCollider = Get<WheelCollider>.FromChild(_wheelColliderController.gameObject);
 
         EditorUtility.SetDirty(this);
     }
 
-    public void OnClickAddComponnets()
+    public virtual void OnClickAddComponnets()
     {
         if (_target != null)
         {
@@ -37,18 +39,34 @@ public class TankSciptableComponents : ScriptableComponents
         }
     }
 
-    private bool IsComponentsHolderIsAITank()
+    public virtual void OnClickRemoveComponents()
+    {
+        if(_target != null)
+        {
+            GlobalFunctions.DebugLog(_target.GetComponents<Component>().Length);
+
+            foreach (var component in _target.GetComponents<Component>())
+            {
+                if(component.GetType() != typeof(Transform))
+                {
+                    DestroyImmediate(component, true);
+                }
+            }
+        }
+    }
+
+    protected virtual bool IsComponentsHolderIsAITank()
     {
         return _componentsHolder.GetComponents<MonoBehaviour>().ToList().Find(m => m.GetType() == typeof(AITankMovement));
     }
 
-    private void TagAndLayer()
+    protected virtual void TagAndLayer()
     {
         _target.tag = IsComponentsHolderIsAITank()? Tags.AI: Tags.Player;
         _target.layer = LayerMask.NameToLayer(Layers.Vehicle);
     }
 
-    private void AddRigidbody()
+    protected virtual void AddRigidbody()
     {
         ComponentUtility.CopyComponent(_rigidbody);
 
@@ -58,7 +76,7 @@ public class TankSciptableComponents : ScriptableComponents
             ComponentUtility.PasteComponentValues(_target.GetComponent(Get<object>.Type(_rigidbody)));
     }
 
-    private void AddMeshCollider()
+    protected virtual void AddMeshCollider()
     {
         if (_target.transform.Find("Body") != null)
         {
@@ -70,7 +88,7 @@ public class TankSciptableComponents : ScriptableComponents
         }
     }
 
-    private void AddRootScripts()
+    protected virtual void AddRootScripts()
     {
         GlobalFunctions.Loop<MonoBehaviour>.Foreach(_scripts, script =>
         {
@@ -82,25 +100,44 @@ public class TankSciptableComponents : ScriptableComponents
         });
     }
 
-    private void AddWheelColliderController()
+    protected virtual void AddWheelColliderController()
     {
-        ComponentUtility.CopyComponent(_wheelColliderController);
-        ComponentUtility.CopyComponent(_wheelCollider);
-
         Transform wheelCollidersTransform = _target.transform.Find("WheelColliders");
-        Transform[] wheels = wheelCollidersTransform.gameObject.GetComponentsInChildren<Transform>();
         Type wheelColliderType = Get<object>.Type(_wheelCollider);
 
         if (wheelCollidersTransform.GetComponent<WheelColliderController>() == null)
+        {           
+            ComponentUtility.CopyComponent(_wheelColliderController);
             ComponentUtility.PasteComponentAsNew(wheelCollidersTransform.gameObject);
+        }
         else
-            ComponentUtility.PasteComponentValues(wheelCollidersTransform.GetComponent<WheelColliderController>());         
-
-        GlobalFunctions.Loop<Transform>.Foreach(wheels, wheel =>
         {
-            if (wheel.GetComponent(wheelColliderType) == null) ComponentUtility.PasteComponentAsNew(wheel.gameObject);
-            if (wheel.GetComponent(wheelColliderType) != null) ComponentUtility.PasteComponentValues(wheel.GetComponent(wheelColliderType));
-        });
+            ComponentUtility.PasteComponentValues(wheelCollidersTransform.GetComponent<WheelColliderController>());
+        }
+
+        if (wheelCollidersTransform.GetComponent<WheelsColliderCenter>() == null && _wheelColliderCenter != null && !IsComponentsHolderIsAITank())
+        {
+            ComponentUtility.CopyComponent(_wheelColliderCenter);
+            ComponentUtility.PasteComponentAsNew(wheelCollidersTransform.gameObject);
+        }
+        else
+        {
+            ComponentUtility.PasteComponentValues(wheelCollidersTransform.GetComponent<WheelsColliderCenter>());
+        }
+
+        for (int i = 0; i < wheelCollidersTransform.childCount; i++)
+        {
+            ComponentUtility.CopyComponent(_wheelCollider);
+
+            if (wheelCollidersTransform.GetChild(i).GetComponent(wheelColliderType) == null)
+            {
+                ComponentUtility.PasteComponentAsNew(wheelCollidersTransform.GetChild(i).gameObject);
+            }
+            if (wheelCollidersTransform.GetChild(i).GetComponent(wheelColliderType) != null)
+            {
+                ComponentUtility.PasteComponentValues(wheelCollidersTransform.GetChild(i).GetComponent(wheelColliderType));
+            }
+        }       
     }
 }
 #endif

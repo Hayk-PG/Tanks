@@ -1,6 +1,6 @@
 public class AITanksList : BaseTanksList
 {
-    protected override int SelectedTankIndex => 0;
+    protected override int SelectedTankIndex => Data.Manager.SelectedAITankIndex;
 
 
     protected override void OnEnable()

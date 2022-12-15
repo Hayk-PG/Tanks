@@ -389,7 +389,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7732026767761371988}
   - component: {fileID: 2716530727854926117}
-  - component: {fileID: -6373700415516018741}
   m_Layer: 9
   m_Name: WheelColliders
   m_TagString: Untagged
@@ -428,36 +427,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 196617ee90986af44a24853628f2a3fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!146 &-6373700415516018741
-WheelCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7732026767761371991}
-  m_Center: {x: 0, y: 0.25, z: 0}
-  m_Radius: 0.45
-  m_SuspensionSpring:
-    spring: 100000
-    damper: 4500
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.5
-  m_ForceAppPointDistance: 0
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 2
-  m_Enabled: 1
 --- !u!1 &7732026767935100776
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,7 +615,7 @@ GameObject:
   - component: {fileID: 6881782560770741735}
   - component: {fileID: 6564221982772543652}
   m_Layer: 9
-  m_Name: AITank
+  m_Name: (AI) Tank
   m_TagString: AI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2380,24 +2349,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7628970629287435628}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4155982621903401702 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5796845697205497738, guid: 3e12b12be4be45c4aa07bcb26ba73381,
-    type: 3}
-  m_PrefabInstance: {fileID: 7628970629287435628}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3267707648878973011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4155982621903401702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56ab3ed698af4954d9d76fbd918e2802, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8512861734248823849
 PrefabInstance:
   m_ObjectHideFlags: 0

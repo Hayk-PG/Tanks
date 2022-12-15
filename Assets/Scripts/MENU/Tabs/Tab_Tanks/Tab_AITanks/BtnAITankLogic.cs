@@ -8,6 +8,6 @@ public class BtnAITankLogic : BaseBtnTankLogic
 
     protected override void SaveTankIndex(int relatedTankIndex)
     {
-        
+        Data.Manager.SelectedAITankIndex = relatedTankIndex;
     }
 }
