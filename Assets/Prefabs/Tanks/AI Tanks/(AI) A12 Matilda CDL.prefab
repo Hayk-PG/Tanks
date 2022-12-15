@@ -1003,14 +1003,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ec0004b6bf46043a39929f7d7c03ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tankName: 
-  _starsCount: 0
-  _getItNowPrice: 0
-  _initialBuildHours: 0
-  _initialBuildMinutes: 0
-  _initialBuildSeconds: 0
-  _availableInLevel: 0
-  _requiredItems: []
+  _tankName: Mada-12
+  _starsCount: 3
+  _getItNowPrice: 303
+  _initialBuildHours: 8
+  _initialBuildMinutes: 35
+  _initialBuildSeconds: 19
+  _availableInLevel: 2
+  _requiredItems:
+  - _item: {fileID: 11400000, guid: 077ddc907e3750741a03e9e75654cf03, type: 2}
+    _number: 5
+  - _item: {fileID: 11400000, guid: 683eb51f5ebca6e48970148797edb3b5, type: 2}
+    _number: 1
 --- !u!114 &-2772705950339274418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1096,9 +1100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa5e9113b4b4a05479a59cf162cfb1b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _normalSpeed: 500
-  _maxBrake: 500
-  _accelerated: 2500
+  _normalSpeed: 350
+  _maxBrake: 350
+  _accelerated: 2000
   _damageFactor: 10
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
 --- !u!114 &-7265888430926344867
@@ -1114,13 +1118,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canon:
-    _minEulerAngleX: -70
-    _maxEulerAngleX: 27
+    _minEulerAngleX: -55
+    _maxEulerAngleX: 12
     _rotationSpeed: 50
     _rotationStabilizer: {x: -90, y: -90, z: 0}
   _bulletsPrefab:
-  - {fileID: 11400000, guid: e1e7dc64357c36243a99361f3cb38dba, type: 2}
-  - {fileID: 11400000, guid: f3ebcfe4af2327f47832b71703475ac2, type: 2}
+  - {fileID: 11400000, guid: b62dd0ab6d85096419a577142540fd39, type: 2}
+  - {fileID: 11400000, guid: 920a7aa57e584f14b9a070503a8eece0, type: 2}
+  - {fileID: 11400000, guid: c5cc9c2bf7d7c4e418c720225ea82a2d, type: 2}
   _activeBulletIndex: 0
 --- !u!114 &6347205936136175454
 MonoBehaviour:
@@ -1146,7 +1151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42eb9b573ac7ee545b5fec0b60624f38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _armor: 10
+  _armor: 60
 --- !u!114 &-5193692448313556996
 MonoBehaviour:
   m_ObjectHideFlags: 0
