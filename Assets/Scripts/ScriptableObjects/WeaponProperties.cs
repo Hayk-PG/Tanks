@@ -135,19 +135,29 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         string longRange = " LR";
         string mediumRange = " MR";
         string closeRange = " CR";
+        string fixedName = "";
 
         string range = _bulletMaxForce >= 17 ? longRange :
                        _bulletMaxForce >= 13 && _bulletMaxForce < 17 ? mediumRange :
-                       _bulletMaxForce >= 10 && _bulletMaxForce < 13 ? closeRange : "";
+                       _bulletMaxForce >= 7 && _bulletMaxForce < 13 ? closeRange : "fsdfsdfsdf";
 
         if (_weaponType.Contains(longRange))
-            _weaponType.Substring(_weaponType.Length - longRange.Length, _weaponType.Length);
+        {
+            fixedName = _weaponType.Substring(0, _weaponType.Length - mediumRange.Length);
+            _weaponType = fixedName;
+        }
 
         if (_weaponType.Contains(mediumRange))
-            _weaponType.Substring(_weaponType.Length - mediumRange.Length, _weaponType.Length);
+        {
+            fixedName = _weaponType.Substring(0, _weaponType.Length - mediumRange.Length);
+            _weaponType = fixedName;
+        }
 
         if (_weaponType.Contains(closeRange))
-            _weaponType.Substring(_weaponType.Length - closeRange.Length, _weaponType.Length);
+        {
+            fixedName = _weaponType.Substring(0, _weaponType.Length - mediumRange.Length);
+            _weaponType = fixedName;
+        }
 
         _weaponType += range;
     }
