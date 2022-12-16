@@ -53,13 +53,4 @@ public class BulletParticles : MonoBehaviour
         _explosion.gameObject.SetActive(true);
         _explosion.transform.parent = null;
     }
-
-    protected virtual void OnBulletExplosionWithoutHitting()
-    {
-        if(_optionalExplosion != null)
-        {
-            _optionalExplosion.SetActive(true);
-            _optionalExplosion.transform.parent = null;
-        }
-    }
 }
