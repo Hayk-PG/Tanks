@@ -14,7 +14,8 @@ public class Stun : MonoBehaviour
         set => ParticlesActivity(value);
     }
 
-    public System.Action<bool> OnStunEffect { get; set; }
+    public event System.Action<bool> OnStunEffect;
+
 
 
     private void Awake()
@@ -51,9 +52,7 @@ public class Stun : MonoBehaviour
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
         if (damage >= 30)
-        {
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, ()=> OnStunned(Random.Range(10, 30)), () => _globalTankStun.OnStunned(_playerTurn.MyTurn, Random.Range(10,30)));
-        }
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => OnStunned(Random.Range(10, 30)), () => _globalTankStun.OnStunned(_playerTurn.MyTurn, Random.Range(10, 30)));
     }
 
     public void OnStunned(float duration)
