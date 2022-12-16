@@ -128,6 +128,8 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
                 Randomizer(randomClose);
                 break;
         }
+
+        SetRandomUnlockTime();
     }
 
     private void DefineRangeType()
@@ -160,6 +162,15 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         }
 
         _weaponType += range;
+    }
+
+    private void SetRandomUnlockTime()
+    {
+        if (_index == 0)
+            return;
+
+        _seconds = Random.Range(0, 61);
+        _minutes = Random.Range(0, 11);
     }
 
     public void OnClickSetWeaponProperties()
