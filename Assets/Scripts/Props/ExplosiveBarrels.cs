@@ -1,19 +1,28 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 
-public class ExplosiveBarrels : MonoBehaviour
+public class ExplosiveBarrels : MonoBehaviour, IDestruct
 {
     [SerializeField] private Barrel[] _barrels;
     [SerializeField] private GameObject _explosion;
-    private Collider[] _colliders;
+    private BoxCollider _boxCollider;
     private GlobalExplosiveBarrels _globalExplosiveBarrels;
-    
+    private Collider[] _colliders;
+       
     private bool _isOverlapped;
+    private bool _isLaunched;
+
+    public float Health { get; set; }
 
 
 
-    private void Awake() => _globalExplosiveBarrels = FindObjectOfType<GlobalExplosiveBarrels>();
+    private void Awake()
+    {
+        _boxCollider = Get<BoxCollider>.From(gameObject);
+        _globalExplosiveBarrels = FindObjectOfType<GlobalExplosiveBarrels>();
+    }
 
     private void OnEnable()
     {
@@ -30,10 +39,35 @@ public class ExplosiveBarrels : MonoBehaviour
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, LaunchBarrel, () => _globalExplosiveBarrels.LaunchBarrelRaiseEvent(transform.position));
     }
 
+    public void Destruct(int damage, int tileParticleIndex)
+    {
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, LaunchBarrel, () => _globalExplosiveBarrels.LaunchBarrelRaiseEvent(transform.position));
+    }
+
     public void LaunchBarrel()
     {
-        GlobalFunctions.Loop<Barrel>.Foreach(_barrels, barrel => { barrel?.LaunchBarrel(); });
-        Explode();
+        if (!_isLaunched)
+        {
+            _boxCollider.enabled = false;
+            _isLaunched = true;
+            StartCoroutine(LaunchBarrelCoroutine());
+        }
+    }
+
+    private IEnumerator LaunchBarrelCoroutine()
+    {
+        while (true)
+        {
+            foreach (var barrel in _barrels)
+            {
+                if (barrel != null)
+                    barrel.LaunchBarrel();
+
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            Explode();
+        }
     }
 
     private void LaunchBarrel(EventData eventData)

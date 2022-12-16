@@ -12,6 +12,7 @@ public class Barrel : MonoBehaviour
     private LavaSplash _lavaSplash;
 
     private bool _isActive;
+    private GameObject _firstCollision;
     private Vector3 id;
 
 
@@ -25,15 +26,9 @@ public class Barrel : MonoBehaviour
         id = transform.position;
     }
 
-    private void OnEnable()
-    {
-        PhotonNetwork.NetworkingClient.EventReceived += Damage;
-    }
+    private void OnEnable() => PhotonNetwork.NetworkingClient.EventReceived += Damage;
 
-    private void OnDisable()
-    {
-        PhotonNetwork.NetworkingClient.EventReceived -= Damage;
-    }
+    private void OnDisable() => PhotonNetwork.NetworkingClient.EventReceived -= Damage;
 
     private void FixedUpdate()
     {
@@ -46,9 +41,15 @@ public class Barrel : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
+        if (_firstCollision == null && collision.gameObject.tag != Tags.AI && collision.gameObject.tag != Tags.Player)
+            _firstCollision = collision.gameObject;
+
+        if (collision.gameObject != _firstCollision)
+        {
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
                 delegate { Damage(collision.gameObject.tag, collision.transform.position); },
                 delegate { _globalExplosiveBarrels.ExplodeBarrelRaiseEvent(collision.gameObject.tag, collision.transform.position, id); });
+        }
     }
 
     public void LaunchBarrel()
@@ -57,7 +58,7 @@ public class Barrel : MonoBehaviour
         _isActive = true;
         _trail.SetActive(true);
         _rigidBody.isKinematic = false;
-        _rigidBody.velocity = new Vector3(Random.Range(-1, 1), 1, 0) * Random.Range(3, 10);
+        _rigidBody.velocity = new Vector3(Random.Range(-1, 1) < 0 ? -1: 1, 1, 0) * Random.Range(3, 10);
         _rigidBody.rotation = Quaternion.LookRotation(_rigidBody.velocity);
         SecondarySoundController.PlaySound(2, 2);
     }

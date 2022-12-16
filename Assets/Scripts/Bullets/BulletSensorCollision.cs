@@ -15,6 +15,5 @@ public class BulletSensorCollision : BulletCollision
     private void Hit(RaycastHit hit)
     {
         OnCollision(hit.collider, _iBulletId.OwnerScore, _iBulletId.Distance);
-        print(hit.collider.name);
     }
 }
