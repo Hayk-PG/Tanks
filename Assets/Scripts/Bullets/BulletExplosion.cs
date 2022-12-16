@@ -21,6 +21,9 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
         if (_iBulletCollision != null) 
             _iBulletCollision.OnExplodeOnCollision += OnExplodeOnCollision;
 
+        if (_iBulletLimit != null)
+            _iBulletLimit.OnDestroyTimeLimit += delegate { OnExplodeOnCollision(_iBulletId.OwnerScore, 0); };
+
         if (_iBulletLimit != null) 
             _iBulletLimit.OnExplodeOnLimit += OnExplodeOnLimit;
     }
@@ -29,6 +32,9 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
     {
         if (_iBulletCollision != null)
             _iBulletCollision.OnExplodeOnCollision -= OnExplodeOnCollision;
+
+        if (_iBulletLimit != null)
+            _iBulletLimit.OnDestroyTimeLimit -= delegate { OnExplodeOnCollision(_iBulletId.OwnerScore, 0); };
 
         if (_iBulletLimit != null)
             _iBulletLimit.OnExplodeOnLimit -= OnExplodeOnLimit;

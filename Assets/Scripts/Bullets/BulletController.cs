@@ -14,6 +14,7 @@ public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBul
     public TurnController TurnController { get; set; }
   
     protected WindSystemController _windSystemController;
+    [SerializeField] private bool _dontDestroyOnTimeLimit;
     protected bool _isWindActivated;
     protected int _collisionsCount;
     public struct VelocityData
@@ -38,11 +39,11 @@ public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBul
     public Action<Collider, IScore, float> OnCollision { get; set; }
     public Action<IScore, float> OnExplodeOnCollision { get; set; }
     public Action<bool> OnExplodeOnLimit { get; set; }
+    public Action OnDestroyTimeLimit { get; set; }
     public Action<VelocityData> OnBulletVelocity { get; set; }
     public Action OnExitCollision { get; set; }
 
     
-
 
     protected virtual void Awake()
     {
@@ -58,6 +59,7 @@ public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBul
         TurnController.SetNextTurn(TurnState.Other);
 
         Invoke("ActivateWindForce", 0.5f);
+        Invoke("DestroyOnTimeLimit", 8);
     }
    
     protected virtual void OnEnable()
@@ -103,7 +105,10 @@ public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBul
     } 
 
     protected virtual void ActivateWindForce() => _isWindActivated = true;
+
+    protected virtual void DestroyOnTimeLimit()
+    {
+        if (!_dontDestroyOnTimeLimit)
+            OnDestroyTimeLimit?.Invoke();
+    }
 }
-
-    
-

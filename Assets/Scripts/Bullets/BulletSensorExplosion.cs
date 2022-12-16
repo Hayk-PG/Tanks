@@ -7,6 +7,9 @@ public class BulletSensorExplosion : BulletExplosion
         if (_iBulletLimit != null)
             _iBulletLimit.OnExplodeOnLimit += OnExplodeOnLimit;
 
+        if (_iBulletLimit != null && _iBulletSensor != null)
+            _iBulletLimit.OnDestroyTimeLimit += delegate { Hit(default); };
+
         if (_iBulletSensor != null)
             _iBulletSensor.OnHit += Hit;
     }
@@ -15,6 +18,9 @@ public class BulletSensorExplosion : BulletExplosion
     {
         if (_iBulletLimit != null)
             _iBulletLimit.OnExplodeOnLimit -= OnExplodeOnLimit;
+
+        if (_iBulletLimit != null && _iBulletSensor != null)
+            _iBulletLimit.OnDestroyTimeLimit -= delegate { Hit(default); };
 
         if (_iBulletSensor != null)
             _iBulletSensor.OnHit -= Hit;
