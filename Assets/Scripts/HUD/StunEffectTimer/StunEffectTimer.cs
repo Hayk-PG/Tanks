@@ -66,7 +66,7 @@ public class StunEffectTimer : MonoBehaviour
 
     private IEnumerator RunCoroutine()
     {
-        _seconds = 0;
+        _seconds = 30;
 
         while (_isCoroutineRunning)
         {
@@ -78,7 +78,7 @@ public class StunEffectTimer : MonoBehaviour
     //Animation event
     public void Increment()
     {
-        _seconds++;
+        _seconds--;
         _txtTimer.text = _seconds.ToString();
     }
 }
