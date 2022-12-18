@@ -4,6 +4,7 @@ using System;
 public interface IScore
 {
     int Score { get; set; }
+    int MainScore { get; set; }
 
     IDamage IDamage { get; set; }
     PlayerTurn PlayerTurn { get; set; }

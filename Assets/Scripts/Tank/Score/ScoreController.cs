@@ -21,11 +21,11 @@ public class ScoreController : MonoBehaviour, IScore
         get => _score;
         set => _score = value;
     }
+    public int MainScore { get; set; }
+
     public Action<int, float> OnDisplayTempPoints { get; set; }
     public Action<int> OnPlayerGetsPoints { get; set; }
     public Action<int[]> OnHitEnemy { get; set; }
-
-
 
     private void Awake()
     {       
@@ -39,6 +39,7 @@ public class ScoreController : MonoBehaviour, IScore
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
 
         Score = 0;
+        MainScore = 0;
     }
 
     private void OnEnable()
@@ -121,6 +122,10 @@ public class ScoreController : MonoBehaviour, IScore
     private void UpdateScore(int score, float waitForSeconds)
     {
         Score += score;
+
+        if (score > 0)
+            MainScore += score;
+
         OnDisplayTempPoints?.Invoke(score, waitForSeconds);
         OnPlayerGetsPoints?.Invoke(Score);
     }

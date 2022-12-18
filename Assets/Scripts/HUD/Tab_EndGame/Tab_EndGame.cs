@@ -45,11 +45,11 @@ public partial class Tab_EndGame : MonoBehaviour
 
         if (_successed(successedTank))
         {
-            Display(GameResult.Win, new Values(Data.Manager.Level, 50, 150, 300, (int)(_ui._sliderXP.value), successedTanksScore.Score));          
+            Display(GameResult.Win, new Values(Data.Manager.Level, 50, 150, 300, (int)(_ui._sliderXP.value), successedTanksScore.MainScore));          
         }
         else if(_defeated(defeatedTank))
         {
-            Display(GameResult.Lose, new Values(Data.Manager.Level, 50, 150, 0, (int)(_ui._sliderXP.value), defeatedTanksScore.Score));
+            Display(GameResult.Lose, new Values(Data.Manager.Level, 50, 150, 0, (int)(_ui._sliderXP.value), defeatedTanksScore.MainScore));
         }
     }
 
