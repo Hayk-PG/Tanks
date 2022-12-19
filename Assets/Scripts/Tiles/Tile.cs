@@ -49,17 +49,17 @@ public class Tile : MonoBehaviour, IDestruct
     private void OnEnable()
     {
         ResetTile();
-        _changeTiles.OnTilesUpdated += OnTilesUpdated;
+        //_changeTiles.OnTilesUpdated += OnTilesUpdated;
     }
 
     private void OnDisable()
     {       
-        _changeTiles.OnTilesUpdated -= OnTilesUpdated;
+        //_changeTiles.OnTilesUpdated -= OnTilesUpdated;
     }
 
     private void Update()
     {
-        MoveTheTileDown();
+        //MoveTheTileDown();
     }
 
     public void ResetTile()
