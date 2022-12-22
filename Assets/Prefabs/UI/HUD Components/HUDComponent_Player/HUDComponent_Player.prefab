@@ -183,7 +183,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 418743281317446825}
+  - component: {fileID: 6644485821925232185}
   - component: {fileID: 2713987948738633387}
+  - component: {fileID: 536817544430770522}
   m_Layer: 5
   m_Name: HUDComponent_Player
   m_TagString: Untagged
@@ -215,6 +217,26 @@ RectTransform:
   m_AnchoredPosition: {x: -620.25, y: 368.94}
   m_SizeDelta: {x: 449.96, y: 81.328}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &6644485821925232185
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7631435049875171099}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8e188725ede50f544bffb8b608c5124a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &2713987948738633387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +251,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _txtPlayerName: {fileID: 7867715804505202527}
   _turnState: 0
+--- !u!114 &536817544430770522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7631435049875171099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbdb6312b2ef8bf46a667355d3a87aae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _turnState: 0
+  _imgFillLayer1: {fileID: 8230546331858866106}
+  _imgFillLayer2: {fileID: 8230546331799719305}
+  _animator: {fileID: 6644485821925232185}
 --- !u!1 &8230546331637275701
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,7 +475,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.983
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
