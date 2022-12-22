@@ -6,6 +6,7 @@ public class Stun : MonoBehaviour
     private ParticleSystem _particles;
     private HealthController _healthController;
     private PlayerTurn _playerTurn;
+    private TurnTimer _turnTimer;
     private GlobalTankStun _globalTankStun;
 
     public bool IsStunned
@@ -23,6 +24,7 @@ public class Stun : MonoBehaviour
         _particles = Get<ParticleSystem>.FromChild(gameObject);
         _healthController = Get<HealthController>.From(transform.parent.gameObject);
         _playerTurn = Get<PlayerTurn>.From(transform.parent.gameObject);
+        _turnTimer = FindObjectOfType<TurnTimer>();
         _globalTankStun = FindObjectOfType<GlobalTankStun>();
     }
 
@@ -52,7 +54,10 @@ public class Stun : MonoBehaviour
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
         if (damage >= 30)
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => OnStunned(Random.Range(10, 30)), () => _globalTankStun.OnStunned(_playerTurn.MyTurn, Random.Range(10, 30)));
+        {
+            float duration = Random.Range(1, _turnTimer.RoundTime / 2);
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => OnStunned(duration), () => _globalTankStun.OnStunned(_playerTurn.MyTurn, duration));
+        }
     }
 
     public void OnStunned(float duration)

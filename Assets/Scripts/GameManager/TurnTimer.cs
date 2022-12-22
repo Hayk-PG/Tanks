@@ -12,8 +12,7 @@ public class TurnTimer : MonoBehaviourPun
     private TurnController _turnController;
     private MyPlugins _myPlugins;
 
-    private int _turnTime;
-
+    public int RoundTime { get; private set; }
     public int Seconds { get; set; }
     public bool IsTurnChanged { get; internal set; }
     public Action<TurnState, int> OnTurnTimer { get; set; }
@@ -46,8 +45,8 @@ public class TurnTimer : MonoBehaviourPun
 
     private void OnGameStarted()
     {
-        _turnTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.RoundTime : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.RoundTime];
-        Seconds = _turnTime;
+        RoundTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.RoundTime : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.RoundTime];
+        Seconds = RoundTime;
     }
 
     private void UnsubscribeFromPluginService() => _myPlugins.OnPluginService -= OnPluginService;
@@ -56,7 +55,7 @@ public class TurnTimer : MonoBehaviourPun
 
     private void OnTurnChanged(TurnState currentState)
     {
-        Seconds = currentState == TurnState.Player1 || currentState == TurnState.Player2 ? _turnTime : 0;
+        Seconds = currentState == TurnState.Player1 || currentState == TurnState.Player2 ? RoundTime : 0;
         UnsubscribeFromPluginService();
 
         if (currentState == TurnState.Player1 || currentState == TurnState.Player2)
