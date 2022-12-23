@@ -12,7 +12,7 @@ public class EndOnlineGame : BaseEndGame
 
     protected override void OnPluginService()
     {
-        if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
         {
             base.OnPluginService();
         }

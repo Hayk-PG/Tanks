@@ -47,6 +47,15 @@ public class BaseEndGame : MonoBehaviourPun
         }
     }
 
+    protected IEnumerator RunningGameEndChecker()
+    {
+        while (!_gameManager.IsGameEnded)
+        {
+            GameEndChecker();
+            yield return new WaitForSeconds(1);
+        }
+    }
+
     protected void UnsubscribeFromPluginService()
     {
         _myPlugins.OnPluginService -= OnPluginService;
@@ -60,15 +69,6 @@ public class BaseEndGame : MonoBehaviourPun
     protected virtual void OnPluginService()
     {
         GameEndChecker();
-    }
-
-    protected IEnumerator RunningGameEndChecker()
-    {
-        while (!_gameManager.IsGameEnded)
-        {
-            GameEndChecker();
-            yield return new WaitForSeconds(1);
-        }
     }
 
     protected virtual void GameEndChecker()

@@ -18,6 +18,8 @@ public class Platform : MonoBehaviour
     private float DistanceFromStartPoint => Vector3.Distance(transform.position, _startPoint);
     private float DistanceFromEndPoint => Vector3.Distance(transform.position, _endPoint);
 
+    public Vector3? SynchedPosition { get; set; }
+
 
 
     private void Awake()
@@ -44,15 +46,35 @@ public class Platform : MonoBehaviour
 
     private void Update()
     {
-        if (DistanceFromStartPoint <= 0.1f && _direction != Direction.ToEndPoint)
-            _direction = Direction.ToEndPoint;
+        if (MyPhotonNetwork.IsOfflineMode || MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+        {
+            if (DistanceFromStartPoint <= 0.1f && _direction != Direction.ToEndPoint)
+                _direction = Direction.ToEndPoint;
 
-        if (DistanceFromEndPoint <= 0.1f && _direction != Direction.ToStartPoint)
-            _direction = Direction.ToStartPoint;
+            if (DistanceFromEndPoint <= 0.1f && _direction != Direction.ToStartPoint)
+                _direction = Direction.ToStartPoint;
 
-        _target = _direction == Direction.ToEndPoint ? _endPoint : _direction == Direction.ToStartPoint ? _startPoint : transform.position;
-        transform.position = Vector3.MoveTowards(transform.position, _target, 1 * Time.deltaTime);
-        transform.rotation = Quaternion.identity;
+            _target = _direction == Direction.ToEndPoint ? _endPoint : _direction == Direction.ToStartPoint ? _startPoint : transform.position;
+            transform.position = Vector3.MoveTowards(transform.position, _target, 1 * Time.deltaTime);
+            transform.rotation = Quaternion.identity;
+            SynchedPosition = transform.position;
+        }
+        else if (!MyPhotonNetwork.IsOfflineMode && !MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+        {
+            if(SynchedPosition.HasValue)
+            {
+                if(Vector3.Distance(transform.position, SynchedPosition.Value) <= 1)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, SynchedPosition.Value, 1 * Time.deltaTime);
+                }
+                else
+                {
+                    transform.position = SynchedPosition.Value;
+                }
+             
+                transform.rotation = Quaternion.identity;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
