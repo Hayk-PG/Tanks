@@ -1,20 +1,18 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CurrentWeaponStatus : MonoBehaviour
 {
     private AmmoTabCustomization _ammoTabCustomization;
     private Animator _animator;
 
-    [Serializable]
-    private struct Properties
+    [Serializable] private struct Properties
     {
-        [SerializeField]
-        private Image _currentWeaponIcon;
+        [SerializeField] private Image _currentWeaponIcon;
 
-        [SerializeField]
-        private Text _bulletsLeftText;
+        [SerializeField] private TMP_Text _bulletsLeftText;
 
         public Sprite CurrentWeaponIcon
         {
@@ -27,16 +25,16 @@ public class CurrentWeaponStatus : MonoBehaviour
             set => _bulletsLeftText.text = value;
         }
     }
+    [SerializeField] private Properties _properties;
 
-    [SerializeField]
-    private Properties _properties;
-
+    public CanvasGroup CanvasGroup { get; private set; }
    
 
     private void Awake()
     {
+        CanvasGroup = Get<CanvasGroup>.From(gameObject);
+        _animator = Get<Animator>.FromChild(gameObject);
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-        _animator = GetComponentInChildren<Animator>();
     }
 
     private void OnEnable()

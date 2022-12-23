@@ -170,7 +170,7 @@ public class HealthController : MonoBehaviour, IDamage
     {
         if(isActive)
         {
-            ShieldHealth = 5;
+            ShieldHealth = 100;
             onUpdateArmorBar?.Invoke(ShieldHealth);
         }
     }

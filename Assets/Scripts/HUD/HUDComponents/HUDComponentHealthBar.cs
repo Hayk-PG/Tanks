@@ -71,7 +71,7 @@ public class HUDComponentHealthBar : MonoBehaviour
     protected virtual void OnUpdateBar(int value)
     {
         _imgFillLayer1.fillAmount = (float)value / 100;
-        _animator.Play(AnimationStateName, AnimationLayer);
+        _animator.Play(AnimationStateName, AnimationLayer, 0);
     }
 
     public void MatchHealthBarValues()

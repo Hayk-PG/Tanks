@@ -14,7 +14,8 @@ public class TempPoints : MonoBehaviour
     private const string _tempPointsAnim = "TempPointsAnim";
 
     private ScoreController _localPlayerScoreController;
-    private HUDScore _hudScore;
+    private HUDScore[] _hudScores;
+    private HUDScore _activeHudScore;
 
     public Action OnTempPointsMotionSoundFX { get; set; }
     public Action<int> OnScoreTextUpdated { get; set; }
@@ -28,7 +29,7 @@ public class TempPoints : MonoBehaviour
         _canvasGroup = GetComponent<CanvasGroup>();
         _pointsText = GetComponentInChildren<Text>();
 
-        _hudScore = FindObjectOfType<HUDScore>();
+        _hudScores = FindObjectsOfType<HUDScore>();
     }
 
     private void OnDisable()
@@ -48,9 +49,23 @@ public class TempPoints : MonoBehaviour
         StartCoroutine(Coroutine(score, waitForSeconds));
     }
 
+    private void GetActiveHudScore()
+    {
+        if (_activeHudScore == null)
+        {
+            GlobalFunctions.Loop<HUDScore>.Foreach(_hudScores, hudscore =>
+            {
+                if (hudscore.gameObject.activeInHierarchy)
+                    _activeHudScore = hudscore;
+            });
+        }
+    }
+
     private IEnumerator Coroutine(int score, float waitForSeconds)
     {
-        _rectTransform.position = _hudScore.TempPointsStartPoint.position;
+        GetActiveHudScore();
+
+        _rectTransform.position = _activeHudScore.TempPointsStartPoint.position;
         string operat = score > 0 ? "+" : "";
         _pointsText.text = operat + score;
         _canvasGroup.alpha = 1;
@@ -67,7 +82,7 @@ public class TempPoints : MonoBehaviour
 
         while (!isReachedToTheDestination)
         {
-            destination = _hudScore.ScoreTextTransform.position;
+            destination = _activeHudScore.ScoreTextTransform.position;
             transform.position = Vector2.Lerp(transform.position, destination, 10 * Time.deltaTime);
 
             magnitude = (destination - transform.position).magnitude;

@@ -9,7 +9,6 @@ public class PlayerShields : PlayerDeployProps
     public event Action<bool> onShieldActivity;
 
 
-  
 
     protected override void Awake()
     {
