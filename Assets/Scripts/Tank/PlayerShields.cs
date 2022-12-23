@@ -1,16 +1,20 @@
-﻿public class PlayerShields : PlayerDeployProps
+﻿using System;
+
+public class PlayerShields : PlayerDeployProps
 {
     protected Shields _shields;
-    private GlobalActivityTimer _globalActivityTimer;
-    private int _endTime = 60;
+
     public bool IsShieldActive { get; set; }
+
+    public event Action<bool> onShieldActivity;
+
+
   
 
     protected override void Awake()
     {
         base.Awake();
         _shields = Get<Shields>.FromChild(gameObject);
-        _globalActivityTimer = FindObjectOfType<GlobalActivityTimer>();
     }
 
     protected override void Start()
@@ -29,40 +33,36 @@
         _propsTabCustomization.OnActivateShields += OnActivateShields;
     }
 
-    public void ActivateShields(int index)
-    {
-        IsShieldActive = true;
-        _shields.Activity(0, IsShieldActive);
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => RunTimerDirectly(), () => RunTimerViaMasterClient(index)); 
-    }
-
-    public void DeactivateShields()
-    {
-        IsShieldActive = false;
-
-        for (int i = 0; i < 2; i++)
-        {
-            _shields.Activity(i, IsShieldActive);
-        }
-    }
-
-    private void RunTimerViaMasterClient(int index)
-    {
-        _globalActivityTimer._playersActiveShieldsTimer[index] = _endTime;
-    }
-
-    private void RunTimerDirectly()
-    {
-        _shields.RunTimerCoroutine(_endTime);
-    }
-
     private void OnActivateShields()
     {
         if (_playerTurn.IsMyTurn)
         {
             int index = _playerTurn.MyTurn == TurnState.Player1 ? 0 : 1;
-            _iPlayerDeployProps?.ActivateShields(index);         
+            _iPlayerDeployProps?.ActivateShields(index);
             _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
+        }
+    }
+
+    public void ActivateShields(int index)
+    {
+        if (IsShieldActive == false)
+        {
+            IsShieldActive = true;
+            _shields.Activity(index, IsShieldActive);
+            onShieldActivity?.Invoke(true);
+        }
+    }
+
+    public void DeactivateShields()
+    {
+        if (IsShieldActive == true)
+        {
+            IsShieldActive = false;
+            for (int i = 0; i < 2; i++)
+            {
+                _shields.Activity(i, IsShieldActive);
+            }
+            onShieldActivity?.Invoke(false);
         }
     }
 }

@@ -11,22 +11,28 @@ public class HealthController : MonoBehaviour, IDamage
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
   
     [SerializeField][Range(0, 100)] private int _armor;
-    private int _currentHealth;
-    private int _minHealth = 0;
-    private int _maxHealth = 100;
-    public int Health
-    {
-        get => _currentHealth;
-        set => _currentHealth = value;
-    }
+
+    public int Health { get; set; }
+    public int ShieldHealth { get; set; }
     public int Armor
     {
         get => _armor;
         set => _armor = value;
     }
-  
+    public bool IsShieldActive
+    {
+        get
+        {
+            bool isShieldActiive = _playerShields != null && _playerShields.IsShieldActive ? true :
+                                   _playerShields == null || _playerShields != null && !_playerShields.IsShieldActive ? false : false;
+
+            return isShieldActiive;
+        }
+    }
+
     public Action<BasePlayer, int> OnTakeDamage { get; set; }
     public Action<int> OnUpdateHealthBar { get; set; }
+    public event Action<int> onUpdateArmorBar;
     public Action<int> OnTankDamageFire { get; set; }
 
 
@@ -34,11 +40,12 @@ public class HealthController : MonoBehaviour, IDamage
 
     private void Awake()
     {
-        Health = _maxHealth;
         _tankController = Get<TankController>.From(gameObject);
         _vehiclePool = Get<VehiclePool>.FromChild(gameObject);
         _playerShields = Get<PlayerShields>.From(gameObject);
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
+
+        Health = 100;
     }
 
     private void OnEnable()
@@ -47,6 +54,8 @@ public class HealthController : MonoBehaviour, IDamage
             _gameManagerBulletSerializer.OnTornado += OnTornadoDamage;
         else
             PhotonNetwork.NetworkingClient.EventReceived += OnTornadoDamage;
+
+        _playerShields.onShieldActivity += OnShieldActivity;
     }
 
     private void OnDisable()
@@ -55,12 +64,63 @@ public class HealthController : MonoBehaviour, IDamage
             _gameManagerBulletSerializer.OnTornado -= OnTornadoDamage;
         else
             PhotonNetwork.NetworkingClient.EventReceived -= OnTornadoDamage;
+
+        _playerShields.onShieldActivity -= OnShieldActivity;
+    }
+
+    public void Damage(int damage)
+    {
+        if (IsShieldActive)
+            ApplyArmorDamage(damage);
+        else
+            ApplyHealthDamage(damage);
+    }
+
+    private void ApplyHealthDamage(int damage)
+    {
+        Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
+        _vehiclePool.Pool(0, null);
+        OnUpdateHealthBar?.Invoke(Health);
+        OnTakeDamage?.Invoke(_tankController.BasePlayer, DamageValue(DamageValue(damage)));
+        OnTankDamageFire?.Invoke(Health);
+    }
+
+    private void ApplyArmorDamage(int damage)
+    {
+        int shieldHealth = damage - ShieldHealth;
+
+        Conditions<int>.Compare(shieldHealth, 0,
+            delegate 
+            {
+                ShieldHealth = 0;
+                _playerShields.DeactivateShields();
+            }, 
+            delegate 
+            {
+                ShieldHealth = 0;
+                ApplyHealthDamage(shieldHealth);
+                _playerShields.DeactivateShields();
+            }, 
+            delegate
+            {
+                ShieldHealth = Mathf.Abs(shieldHealth);
+            });
+
+        onUpdateArmorBar?.Invoke(ShieldHealth);
+    }
+
+    public int DamageValue(int damage)
+    {
+        float d = damage;
+        float d1 = d / 100;
+        float a = 100 - Armor;
+        return Mathf.FloorToInt(d1 * a);        
     }
 
     private void ReceiveTornadoDamage(object[] data)
     {
         if ((string)data[0] == name)
-        {           
+        {
             Damage((int)data[1]);
         }
     }
@@ -72,31 +132,10 @@ public class HealthController : MonoBehaviour, IDamage
 
     private void OnTornadoDamage(EventData data)
     {
-        if(data.Code == EventInfo.Code_TornadoDamage)
+        if (data.Code == EventInfo.Code_TornadoDamage)
         {
             ReceiveTornadoDamage((object[])data.CustomData);
         }
-    }
-
-    public void Damage(int damage)
-    {
-        if (_playerShields == null || !_playerShields.IsShieldActive)
-        {
-            Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
-            _vehiclePool.Pool(0, null);
-
-            OnUpdateHealthBar?.Invoke(Health);
-            OnTakeDamage?.Invoke(_tankController.BasePlayer ,DamageValue(DamageValue(damage)));
-            OnTankDamageFire?.Invoke(Health);
-        }
-    }
-
-    public int DamageValue(int damage)
-    {
-        float d = damage;
-        float d1 = d / 100;
-        float a = 100 - Armor;
-        return Mathf.FloorToInt(d1 * a);        
     }
 
     public void GetHealthFromWoodBox(out bool isDone, out string text)
@@ -124,6 +163,15 @@ public class HealthController : MonoBehaviour, IDamage
         if(_tankController.BasePlayer != null)
         {
             FindObjectOfType<CameraChromaticAberration>().CameraGlitchFX(60);
+        }
+    }
+
+    private void OnShieldActivity(bool isActive)
+    {
+        if(isActive)
+        {
+            ShieldHealth = 5;
+            onUpdateArmorBar?.Invoke(ShieldHealth);
         }
     }
 }

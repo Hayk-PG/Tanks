@@ -6,7 +6,7 @@ public class AIShields : PlayerShields
     [SerializeField] private PropsProperties _shieldProperties;
     private ScoreController _scoreController;
     private HealthController _healthController;
-    private int _time;
+    private int _seconds;
 
 
     protected override void Awake()
@@ -30,19 +30,19 @@ public class AIShields : PlayerShields
 
     private void OnTurnChanged(TurnState turn)
     {
-        if(turn == _playerTurn.MyTurn && _scoreController.Score >= _shieldProperties._requiredScoreAmmount && _healthController.Health <= 60 && _time < 1)
-        {
-            StartCoroutine(ShieldUsageCoroutine());
-        }
+        if (turn == _playerTurn.MyTurn && _scoreController.Score >= _shieldProperties._requiredScoreAmmount && _healthController.Health <= 60 && _seconds <= 0)
+            StartCoroutine(ActivateShields());
     }
 
-    private IEnumerator ShieldUsageCoroutine()
+    private IEnumerator ActivateShields()
     {
-        _shields?.Activity(1, true);
-        IsShieldActive = true;
-        _time++;
-        yield return new WaitForSeconds(60);
-        IsShieldActive = false;
-        _shields?.Activity(1, false);
+        ActivateShields(1);
+        _seconds = (_shieldProperties._minutes * 60) + _shieldProperties._seconds;
+
+        while (_seconds > 0)
+        {
+            _seconds--;
+            yield return new WaitForSeconds(1);
+        }
     }
 }

@@ -3,49 +3,79 @@ using UnityEngine.UI;
 
 public class HUDComponentHealthBar : MonoBehaviour
 {
-    [SerializeField] private TurnState _turnState;
-    [SerializeField] private Image _imgFillLayer1, _imgFillLayer2;
-    [SerializeField] private Animator _animator;
-    private TurnController _turnController;
-    private HealthController _healthController;
+    [SerializeField] protected TurnState _turnState;
+    [SerializeField] protected Image _imgFillLayer1, _imgFillLayer2;
+    protected Animator _animator;
+    protected TurnController _turnController;
+    protected PlayerTurn _playerTurn;
+    protected HealthController _healthController;
 
-    private bool _isSubscribed;
+    protected bool _isSubscribed;
+
+    protected virtual string AnimationStateName => "LastHealthFillAnim";
+    protected virtual int AnimationLayer => 0;
 
 
 
-    private void Awake() => _turnController = FindObjectOfType<TurnController>();
-
-    private void OnEnable() => _turnController.OnTurnChanged += delegate { SubscribeToHealthController(); };
-
-    private void OnDisable()
+    protected virtual void Awake()
     {
-        _turnController.OnTurnChanged -= delegate { SubscribeToHealthController(); };
-
-        if (_healthController != null)
-            _healthController.OnUpdateHealthBar -= OnUpdateHealthBar;
+        _animator = Get<Animator>.From(gameObject);
+        _turnController = FindObjectOfType<TurnController>();
     }
 
-    private void SubscribeToHealthController()
+    protected virtual void OnEnable()
+    {
+        _turnController.OnTurnChanged += delegate { Initialize(); };
+    }
+
+    protected virtual void OnDisable()
+    {
+        _turnController.OnTurnChanged -= delegate { Initialize(); };
+
+        UnsubscribeFromHealthController();
+    }
+
+    protected virtual void Initialize()
     {
         if (!_isSubscribed)
         {
-            PlayerTurn playerTurn = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == _turnState);
+            _playerTurn = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == _turnState);
 
-            if (playerTurn != null)
+            if (_playerTurn != null)
             {
-                _healthController = Get<HealthController>.From(playerTurn.gameObject);
-                _healthController.OnUpdateHealthBar += OnUpdateHealthBar;
+                GetHealthController();
+                SubscribeToHealthController();
             }
 
             _isSubscribed = true;
         }
     }
 
-    private void OnUpdateHealthBar(int value)
+    protected virtual void GetHealthController()
     {
-        _imgFillLayer1.fillAmount = (float)value / 100;
-        _animator.SetTrigger("play");
+        _healthController = Get<HealthController>.From(_playerTurn.gameObject);
     }
 
-    public void UpdateHealthBarLayer2() => _imgFillLayer2.fillAmount = _imgFillLayer1.fillAmount;
+    protected virtual void SubscribeToHealthController()
+    {
+        if(_healthController != null)
+            _healthController.OnUpdateHealthBar += OnUpdateBar;
+    }
+
+    protected virtual void UnsubscribeFromHealthController()
+    {
+        if (_healthController != null)
+            _healthController.OnUpdateHealthBar -= OnUpdateBar;
+    }
+
+    protected virtual void OnUpdateBar(int value)
+    {
+        _imgFillLayer1.fillAmount = (float)value / 100;
+        _animator.Play(AnimationStateName, AnimationLayer);
+    }
+
+    public void MatchHealthBarValues()
+    {
+        _imgFillLayer2.fillAmount = _imgFillLayer1.fillAmount;      
+    }
 }
