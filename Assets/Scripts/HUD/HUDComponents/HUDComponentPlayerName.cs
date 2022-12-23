@@ -52,7 +52,11 @@ public class HUDComponentPlayerName : MonoBehaviour
         {
             GlobalFunctions.Loop<Player>.Foreach(PhotonNetwork.PlayerList, player => 
             {
-                _txtPlayerName.text = player.IsMasterClient && _turnState == TurnState.Player1 || !player.IsMasterClient && _turnState == TurnState.Player2 ? player.NickName : "";
+                if (player.IsMasterClient && _turnState == TurnState.Player1)
+                    _txtPlayerName.text = player.NickName;
+
+                if (!player.IsMasterClient && _turnState == TurnState.Player2)
+                    _txtPlayerName.text = player.NickName;
             });
 
             _isPlayerNameAssigned = true;
