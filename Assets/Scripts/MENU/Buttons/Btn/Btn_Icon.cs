@@ -26,13 +26,13 @@ public class Btn_Icon : MonoBehaviour
     private void OnEnable()
     {
         _btn.onSelect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
-        _btn.onDeselect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
+        _btn.onDeselect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtReleased, _clrReleased); };
     }
 
     private void OnDisable()
     {
         _btn.onSelect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
-        _btn.onDeselect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
+        _btn.onDeselect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtReleased, _clrReleased); };
     }
 
     private void CacheIconDefaultLook()
@@ -45,9 +45,9 @@ public class Btn_Icon : MonoBehaviour
     {
         switch (buttonClickType)
         {
-            case Btn.ButtonClickType.ChangeSprite: ChangeIconSprite(_sprtPressed); break;
-            case Btn.ButtonClickType.ChangeColor: ChangeIconColor(_clrPressed); break;
-            case Btn.ButtonClickType.Both: ChangeIconSprite(_sprtPressed); ChangeIconColor(_clrPressed); break;
+            case Btn.ButtonClickType.ChangeSprite: ChangeIconSprite(sprite); break;
+            case Btn.ButtonClickType.ChangeColor: ChangeIconColor(color); break;
+            case Btn.ButtonClickType.Both: ChangeIconSprite(sprite); ChangeIconColor(color); break;
         }
     }
 
