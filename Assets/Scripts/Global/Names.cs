@@ -28,6 +28,7 @@ public static class Names
     public static string Shield { get; private set; } = "Bubble Shield";
     public static string LightMortarSupport { get; private set; } = "60mm Mortar Support";
     public static string ModifyGround { get; private set; } = "Block " + "<color=#FD0D3D>" + "(Add)" + "</color>";
+    public static string Modify { get; private set; } = "Modify";
     public static string Bridge { get; private set; } = "Bridge";
     public static string SkipTurn { get; private set; } = "Skip Turn";
 

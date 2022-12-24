@@ -42,7 +42,7 @@ public class TileModifyGUI : MonoBehaviour
     {
         switch (tileModifyType)
         {
-            case Tab_TileModify.TileModifyType.NewTile:
+            case Tab_TileModify.TileModifyType.BuildBasicTiles:
                 OnClickAction = delegate
                 {
                     Vector3 newTilePosition = CurrentTilePosition + _tileModifyGUIElement._corespondentPosition;
@@ -50,20 +50,20 @@ public class TileModifyGUI : MonoBehaviour
                 };
                 break;
 
-            case Tab_TileModify.TileModifyType.ArmoredCube:
+            case Tab_TileModify.TileModifyType.BuildConcreteTiles:
                 OnClickAction = delegate
                 {
-                    _globalTileController.Modify(CurrentTilePosition, Tab_TileModify.TileModifyType.ArmoredCube);
+                    _globalTileController.Modify(CurrentTilePosition, Tab_TileModify.TileModifyType.BuildConcreteTiles);
                 };
                 break;
 
-            case Tab_TileModify.TileModifyType.ArmoredTile:
+            case Tab_TileModify.TileModifyType.UpgradeToConcreteTiles:
                 OnClickAction = delegate
                 {
-                    _globalTileController.Modify(CurrentTilePosition, Tab_TileModify.TileModifyType.ArmoredTile);
+                    _globalTileController.Modify(CurrentTilePosition, Tab_TileModify.TileModifyType.UpgradeToConcreteTiles);
                 };
                 break;
-            case Tab_TileModify.TileModifyType.Bridge:
+            case Tab_TileModify.TileModifyType.ExtendBasicTiles:
                 OnClickAction = delegate
                 {
                     Vector3 side = CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition;
@@ -78,10 +78,10 @@ public class TileModifyGUI : MonoBehaviour
         if (_tileModifyGUIElement._guiElement != null)
         {
             Vector3 top = CurrentTilePosition + _tileModifyGUIElement._corespondentPosition;
-            return tileModifyType == Tab_TileModify.TileModifyType.NewTile ?
+            return tileModifyType == Tab_TileModify.TileModifyType.BuildBasicTiles ?
                                      !_changeTiles.HasTile(top) && !_tilesData.TilesDict.ContainsKey(top) :
-                                     tileModifyType == Tab_TileModify.TileModifyType.ArmoredCube ||
-                                     tileModifyType == Tab_TileModify.TileModifyType.ArmoredTile ?
+                                     tileModifyType == Tab_TileModify.TileModifyType.BuildConcreteTiles ||
+                                     tileModifyType == Tab_TileModify.TileModifyType.UpgradeToConcreteTiles ?
                                      !_changeTiles.HasTile(top) && !_tilesData.TilesDict.ContainsKey(top) &&
                                      !_tilesData.TilesDict[CurrentTilePosition].GetComponent<Tile>().IsProtected : false;
         }
@@ -91,7 +91,7 @@ public class TileModifyGUI : MonoBehaviour
 
     private bool CanBridgeGUIElementBeActive(Tab_TileModify.TileModifyType tileModifyType)
     {
-        if (_bridgeModifyGUIElement._guiElement != null && tileModifyType == Tab_TileModify.TileModifyType.Bridge)
+        if (_bridgeModifyGUIElement._guiElement != null && tileModifyType == Tab_TileModify.TileModifyType.ExtendBasicTiles)
         {
             Vector3 side = CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition;
             Vector3 bottom = new Vector3(0, -Mathf.Abs(_bridgeModifyGUIElement._corespondentPosition.x), 0);

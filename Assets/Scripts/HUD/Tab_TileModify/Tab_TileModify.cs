@@ -5,27 +5,15 @@ using System.Collections;
 
 public class Tab_TileModify : MonoBehaviour
 {
-    public enum TileModifyType { NewTile, ArmoredCube, ArmoredTile, Bridge }
-    internal class LocalPlayer
-    {
-        internal PlayerTurn _turn;
-        internal ScoreController _score;
-        internal Transform _transform;
-    }
-    [SerializeField] 
-    private TMP_Text _scoreText;
-    [SerializeField] 
-    private TMP_Text _priceText;
-
+    public enum TileModifyType { BuildBasicTiles, ExtendBasicTiles, BuildConcreteTiles, UpgradeToConcreteTiles }
     private TileModifyType _tileModifyType;
-    private CanvasGroup _canvasGroup;
-    private PropsTabCustomization _propsTabCustomization;
-    private HUDMainTabsActivity _hudMainTabsActivity;
-    private TilesData _tilesData;
-    private GameManager _gameManager;
-    private TurnController _turnController;
-    private LocalPlayer _localPlayer;   
+    private Tab_Modify _tabModify;
+    private TilesModifiers _tilesModifiers;
+    private TilesData _tilesData;  
     private List<GameObject> foundTiles;
+
+    [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] private TMP_Text _priceText;
     
     private int Price
     {
@@ -37,16 +25,10 @@ public class Tab_TileModify : MonoBehaviour
         get => _scoreText.text;
         set => _scoreText.text = value;
     }
-    private bool IsLocalInitialized
-    {
-        get => _localPlayer != null;
-    }
     public bool CanModifyTiles
     {
-        get => _localPlayer._score.Score >= Price;
+        get => _tabModify.LocalPlayerScoreController.Score >= Price;
     }
-    public bool IsTab_TileModifyOpen { get; private set; }
-
     public class Prices
     {
         public string Name { get; set; }
@@ -62,146 +44,68 @@ public class Tab_TileModify : MonoBehaviour
     };
 
 
+
+
     private void Awake()
     {
-        _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _propsTabCustomization = FindObjectOfType<PropsTabCustomization>();
-        _hudMainTabsActivity = FindObjectOfType<HUDMainTabsActivity>();
+        _tabModify = Get<Tab_Modify>.From(gameObject);
+        _tilesModifiers = Get<TilesModifiers>.From(gameObject);
         _tilesData = FindObjectOfType<TilesData>();
-        _gameManager = FindObjectOfType<GameManager>();
-        _turnController = FindObjectOfType<TurnController>();
         _priceText.text = 0.ToString();
     }
 
     private void OnEnable()
     {
-        _gameManager.OnGameStarted += OnGameStarted;
-        _propsTabCustomization.OnModifyGround += OnModifyGround;
-        _propsTabCustomization.OnInstantiateMetalCube += OnInstantiateMetalCube;
-        _propsTabCustomization.OnChangeToMetalGround += OnChangeToMetalGround;
-        _propsTabCustomization.OnBridge += OnBridge;
-        _turnController.OnTurnChanged += OnTurnChanged;
+        _tilesModifiers.onBuildBasicTiles += BuildBasicTiles;
+        _tilesModifiers.onExtendBasicTiles += ExtendBasicTiles;
+        _tilesModifiers.onBuildConcreteTiles += BuildConcreteTiles;
+        _tilesModifiers.onUpgradeToConcreteTiles += UpgradeToConcreteTiles;
     }
 
     private void OnDisable()
     {
-        _gameManager.OnGameStarted -= OnGameStarted;
-        _propsTabCustomization.OnModifyGround -= OnModifyGround;
-        _propsTabCustomization.OnInstantiateMetalCube -= OnInstantiateMetalCube;
-        _propsTabCustomization.OnChangeToMetalGround -= OnChangeToMetalGround;
-        _propsTabCustomization.OnBridge -= OnBridge;
-        _turnController.OnTurnChanged -= OnTurnChanged;
+        _tilesModifiers.onBuildBasicTiles -= BuildBasicTiles;
+        _tilesModifiers.onExtendBasicTiles -= ExtendBasicTiles;
+        _tilesModifiers.onBuildConcreteTiles -= BuildConcreteTiles;
+        _tilesModifiers.onUpgradeToConcreteTiles -= UpgradeToConcreteTiles;
     }
 
-    private void SetTileModifyType(TileModifyType tileModifyType)
-    {
-        _tileModifyType = tileModifyType;
-    }
-
-    private void SetPrice(int price)
-    {
-        Price = price;
-    }
-
-    private void OnGameStarted()
-    {
-        InitializeLocalPlayer();
-    }
-
-    private void OnModifyGround()
+    private void BuildBasicTiles()
     {
         SetPrice(NewPrices[0].Price);
-        SetTileModifyType(TileModifyType.NewTile);
+        SetTileModifyType(TileModifyType.BuildBasicTiles);
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
-    private void OnInstantiateMetalCube()
-    {
-        SetPrice(NewPrices[1].Price);
-        SetTileModifyType(TileModifyType.ArmoredCube);
-        StartCoroutine(StartFindTilesAroundPlayer());
-    }
-
-    private void OnChangeToMetalGround()
-    {
-        SetPrice(NewPrices[2].Price);
-        SetTileModifyType(TileModifyType.ArmoredTile);
-        StartCoroutine(StartFindTilesAroundPlayer());
-    }
-
-    private void OnBridge()
+    private void ExtendBasicTiles()
     {
         SetPrice(NewPrices[3].Price);
-        SetTileModifyType(TileModifyType.Bridge);
+        SetTileModifyType(TileModifyType.ExtendBasicTiles);
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
-    private void OnTurnChanged(TurnState turnState)
+    private void BuildConcreteTiles()
     {
-        OnClickToClose();
+        SetPrice(NewPrices[1].Price);
+        SetTileModifyType(TileModifyType.BuildConcreteTiles);
+        StartCoroutine(StartFindTilesAroundPlayer());
     }
 
-    private void InitializeLocalPlayer()
+    private void UpgradeToConcreteTiles()
     {
-        Transform localPlayerTransform = GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.BasePlayer != null).transform;
-
-        if (localPlayerTransform != null)
-        {
-            _localPlayer = new LocalPlayer
-            {
-                _transform = localPlayerTransform,
-                _turn = Get<PlayerTurn>.From(localPlayerTransform.gameObject),
-                _score = Get<ScoreController>.From(localPlayerTransform.gameObject)
-            };
-        }
+        SetPrice(NewPrices[2].Price);
+        SetTileModifyType(TileModifyType.UpgradeToConcreteTiles);
+        StartCoroutine(StartFindTilesAroundPlayer());
     }
+
+    private void SetPrice(int price) => Price = price;
+
+    private void SetTileModifyType(TileModifyType tileModifyType) => _tileModifyType = tileModifyType;
 
     private void StoreFoundTiles(bool canStore, GameObject tile)
     {
         if (canStore && tile != null && Get<TileModifyGUI>.FromChild(tile) != null)
-        {
             foundTiles.Add(tile);
-        }
-    }
-
-    public void FindTilesAroundPlayer()
-    {
-        if (IsLocalInitialized)
-        {
-            if (_localPlayer._turn.IsMyTurn)
-            {
-                _hudMainTabsActivity.CanvasGroupsActivity(false);
-                GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
-                ScoreText = _localPlayer._score.Score.ToString();
-                foundTiles = new List<GameObject>();
-                IsTab_TileModifyOpen = true;
-
-                foreach (var tile in _tilesData.TilesDict)
-                {
-                    bool haveLeftTilesBeenFound = tile.Key.x <= _localPlayer._transform.position.x - _tilesData.Size && tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6);
-                    bool haveRIghtTilesBeenFound = tile.Key.x >= _localPlayer._transform.position.x + _tilesData.Size && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
-                    bool foundNearTiles = tile.Key.x >= _localPlayer._transform.position.x - (_tilesData.Size * 6) && tile.Key.x <= _localPlayer._transform.position.x + (_tilesData.Size * 6);
-
-                    if (_tileModifyType == TileModifyType.ArmoredCube || _tileModifyType == TileModifyType.NewTile)
-                    {                        
-                        StoreFoundTiles(haveLeftTilesBeenFound, tile.Value);
-                        StoreFoundTiles(haveRIghtTilesBeenFound, tile.Value);
-                    }
-                    if(_tileModifyType == TileModifyType.ArmoredTile || _tileModifyType == TileModifyType.Bridge)
-                    {                       
-                        StoreFoundTiles(foundNearTiles, tile.Value);
-                    }
-                }
-
-                foreach (var tile in foundTiles)
-                {
-                    if (!Get<Tile>.From(tile).IsProtected)
-                    {
-                        Get<TileModifyGUI>.FromChild(tile).EnableGUI(_tileModifyType);
-                    }
-                }
-            }
-        }
     }
 
     private IEnumerator StartFindTilesAroundPlayer()
@@ -210,28 +114,40 @@ public class Tab_TileModify : MonoBehaviour
         FindTilesAroundPlayer();
     }
 
-    public void OnClickToClose()
+    public void FindTilesAroundPlayer()
     {
-        foreach (var gui in FindObjectsOfType<TileModifyGUI>())
+        ScoreText = _tabModify.LocalPlayerScoreController.Score.ToString();
+        foundTiles = new List<GameObject>();
+
+        foreach (var tile in _tilesData.TilesDict)
         {
-            gui.DisableGUI();
+            bool haveLeftTilesBeenFound = tile.Key.x <= _tabModify.LocalPlayerTransform.position.x - _tilesData.Size && tile.Key.x >= _tabModify.LocalPlayerTransform.position.x - (_tilesData.Size * 6);
+            bool haveRIghtTilesBeenFound = tile.Key.x >= _tabModify.LocalPlayerTransform.position.x + _tilesData.Size && tile.Key.x <= _tabModify.LocalPlayerTransform.position.x + (_tilesData.Size * 6);
+            bool foundNearTiles = tile.Key.x >= _tabModify.LocalPlayerTransform.position.x - (_tilesData.Size * 6) && tile.Key.x <= _tabModify.LocalPlayerTransform.position.x + (_tilesData.Size * 6);
+
+            if (_tileModifyType == TileModifyType.BuildConcreteTiles || _tileModifyType == TileModifyType.BuildBasicTiles)
+            {
+                StoreFoundTiles(haveLeftTilesBeenFound, tile.Value);
+                StoreFoundTiles(haveRIghtTilesBeenFound, tile.Value);
+            }
+            if (_tileModifyType == TileModifyType.UpgradeToConcreteTiles || _tileModifyType == TileModifyType.ExtendBasicTiles)
+            {
+                StoreFoundTiles(foundNearTiles, tile.Value);
+            }
         }
-      
-        GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
 
-        if (IsTab_TileModifyOpen)
-            _hudMainTabsActivity.CanvasGroupsActivity(true);
-
-        IsTab_TileModifyOpen = false;
+        foreach (var tile in foundTiles)
+        {
+            if (!Get<Tile>.From(tile).IsProtected)
+                Get<TileModifyGUI>.FromChild(tile).EnableGUI(_tileModifyType);
+        }
     }
 
     public void SubtractScore()
     {
-        if (IsLocalInitialized)
-        {
-            int newScore = _localPlayer._score.Score - Price;
-            ScoreText = newScore.ToString();
-            _localPlayer._score.GetScore(-Price, null);
-        }
+        int newScore = _tabModify.LocalPlayerScoreController.Score - Price;
+        ScoreText = newScore.ToString();
+        _tabModify.LocalPlayerScoreController.GetScore(-Price, null);
+        StartCoroutine(StartFindTilesAroundPlayer());
     }
 }

@@ -60,8 +60,8 @@ public class GlobalTileController : MonoBehaviourPun
     {
         TileProps tileProps = _tilesData.TilesDict[currentTilePosition].GetComponent<TileProps>();
 
-        TileProps.PropsType propsType = tileModifyType == Tab_TileModify.TileModifyType.ArmoredCube ?
-        TileProps.PropsType.MetalCube : tileModifyType == Tab_TileModify.TileModifyType.ArmoredTile ?
+        TileProps.PropsType propsType = tileModifyType == Tab_TileModify.TileModifyType.BuildConcreteTiles ?
+        TileProps.PropsType.MetalCube : tileModifyType == Tab_TileModify.TileModifyType.UpgradeToConcreteTiles ?
         TileProps.PropsType.MetalGround : TileProps.PropsType.Sandbags;
 
         tileProps?.ActiveProps(propsType, true, null);

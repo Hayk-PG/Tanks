@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 {
-    [Header("Props")]
-    [SerializeField] private PropsProperties[] _props;
+    [Header("Props")] [SerializeField] private PropsProperties[] _props;
 
     public AmmoTypeButton[] InstantiatedTypeButtons
     {
@@ -20,6 +19,10 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     public Action OnModifyGround { get; set; }
     public Action OnBridge { get; set; }
     public Action OnSkipTurn { get; set; }
+
+    public event Action onModify;
+
+
  
 
     private void Start()
@@ -87,6 +90,9 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
         if (propsTypeButton._properties.SupportOrPropsType == Names.SkipTurn)
             OnSkipTurn?.Invoke();
+
+        if (propsTypeButton._properties.SupportOrPropsType == Names.Modify)
+            onModify?.Invoke();
 
         OnAmmoTypeController?.Invoke();
     }
