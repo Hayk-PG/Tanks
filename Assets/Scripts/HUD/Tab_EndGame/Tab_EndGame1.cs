@@ -31,10 +31,18 @@ public partial class Tab_EndGame
             _step3 = _step2 + _playerNewGainedPoints + _winPoints;
         }
     }
+    public struct Result
+    {
+        public int _win;
+        public int _lose;
+        public int _points;
+        public int _level;
+    }
     private float _currentVelocity;
     private bool _isCoroutineRunning = true;
 
     public Action OnGameResultsFinished { get; set; }
+    public event Action<Result> onResult;
 
 
 
@@ -118,6 +126,7 @@ public partial class Tab_EndGame
 
             yield return new WaitUntil(() => _ui._sliderXP.value >= values._step3);
             OnGameResultsFinished?.Invoke();
+            CalculateResult(gameResult, (int)_ui._sliderXP.value, int.Parse(_ui._textLevel.text));
             _isCoroutineRunning = false;
         }
     }
@@ -129,5 +138,18 @@ public partial class Tab_EndGame
         SetSliderXPMinAndMaxValues(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0], Data.Manager.PointsSliderMinAndMaxValues[newLevel, 1]);
         SetSliderXPValue(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0]);
         SecondarySoundController.PlaySound(0, 4);
+    }
+
+    private void CalculateResult(GameResult gameResult, int points, int level)
+    {
+        Result result = new Result
+        {
+            _win = gameResult == GameResult.Win ? 1 : 0,
+            _lose = gameResult == GameResult.Win ? 0 : 1,
+            _points = points,
+            _level = level
+        };
+
+        onResult?.Invoke(result);
     }
 }
