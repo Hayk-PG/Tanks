@@ -4,7 +4,7 @@ public class Tab_EndgameChatButton : MonoBehaviour
 {
     private CanvasGroup _canvasGroup;
     private Chat _chat;
-    private Tab_EndGame _tabEndGame;
+    private GameResultProcessor _gameResultProcessor;
     private Tab_EndgameChat _tabEndgameChat;   
     [SerializeField] private GameObject _notification;
 
@@ -13,21 +13,21 @@ public class Tab_EndgameChatButton : MonoBehaviour
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
         _chat = FindObjectOfType<Chat>();
-        _tabEndGame = FindObjectOfType<Tab_EndGame>();
+        _gameResultProcessor = FindObjectOfType<GameResultProcessor>();
         _tabEndgameChat = FindObjectOfType<Tab_EndgameChat>();
     }
 
     private void OnEnable()
     {
         _chat.OnTextInstantiated += OnTextInstantiated;
-        _tabEndGame.OnGameResultsFinished += ShowChatButton;
+        _gameResultProcessor.onFinishResultProcess += ShowChatButton;
         _tabEndgameChat.OnChatOpen += OnChatOpen;
     }
 
     private void OnDisable()
     {
         _chat.OnTextInstantiated -= OnTextInstantiated;
-        _tabEndGame.OnGameResultsFinished -= ShowChatButton;
+        _gameResultProcessor.onFinishResultProcess -= ShowChatButton;
         _tabEndgameChat.OnChatOpen -= OnChatOpen;
     }
 

@@ -7,7 +7,10 @@ public class GameResultProcessor : MonoBehaviour
     private WinnerLoserIdentifier _winnerLoserIdentifier;
     private EndGameUIManager _endGameUIManager;
 
+    private bool _isGameResultCalculated;
+
     public event Action onBeginResultProcess;
+    public event Action onFinishResultProcess;
 
 
     private void Awake()
@@ -25,19 +28,38 @@ public class GameResultProcessor : MonoBehaviour
         StartCoroutine(ProcessLocalPlayerGameResultCoroutine(scoreController, isWin));
     }
 
+    private IEnumerator ProcessLocalPlayerGameResultCoroutine(ScoreController scoreController, bool isWin)
+    {
+        InitializeEndGameUIManagerValues(isWin);
+        GameResultValues gameResultValues = GameResultValues(scoreController, isWin);
+        DeactivateTanks();
+        yield return StartCoroutine(DelayCalculations());
+        yield return StartCoroutine(AnnounceGameResult(isWin));
+
+        while (!_isGameResultCalculated)
+        {
+            yield return StartCoroutine(CalculateScores(gameResultValues._playPoints, gameResultValues._stageFirst));
+            yield return StartCoroutine(CalculateScores(gameResultValues._experiencePoints, gameResultValues._stageSecond));
+            yield return StartCoroutine(CalculateScores(gameResultValues._newPoints, gameResultValues._stageThird));
+            _isGameResultCalculated = true;
+            onFinishResultProcess?.Invoke();
+        }
+    }
+
     private void InitializeEndGameUIManagerValues(bool isWin)
     {
-        int level = Data.Manager.Statistics[Keys.Level];
+        int level = MyPhotonNetwork.IsOfflineMode ? 0 : Data.Manager.Statistics[Keys.Level];
+        int points = MyPhotonNetwork.IsOfflineMode ? 0 : Data.Manager.Statistics[Keys.Points];
 
         _endGameUIManager.SetGameResultPanelVisible(isWin ? 0 : 1);
         _endGameUIManager.SetLevel(level);
         _endGameUIManager.SetSliderLimits(Data.Manager.PointsSliderMinAndMaxValues[level, 0], Data.Manager.PointsSliderMinAndMaxValues[level, 1]);
-        _endGameUIManager.SetSliderValueAndCurrentXP(Data.Manager.Statistics[Keys.Points]);
+        _endGameUIManager.SetSliderValueAndCurrentXP(points);
     }
 
     private GameResultValues GameResultValues(ScoreController scoreController, bool isWin)
     {
-        int lastSavedPoints = Data.Manager.Statistics[Keys.Points];
+        int lastSavedPoints = MyPhotonNetwork.IsOfflineMode ? 0 : Data.Manager.Statistics[Keys.Points];
         int newPoints = scoreController.MainScore;
         int playPoints = 50;
         int _experiencePoints = 150;
@@ -69,36 +91,20 @@ public class GameResultProcessor : MonoBehaviour
 
     private IEnumerator AnnounceGameResult(bool isWin)
     {
-        yield return new WaitForSeconds(1);
-
         int clipIndex = isWin ? Indexes.Combat_Announcer_Male_Effect_You_Win_1 : Indexes.Combat_Announcer_Male_Effect_You_Lose;
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
         SoundController.PlaySound(0, clipIndex, out float clipLength);
-
         yield return new WaitForSeconds(clipLength);
-
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
-    }
-
-    private void LevelUpAndResetSlider()
-    {
-        int newLevel = _endGameUIManager.Level + 1;
-        _endGameUIManager.SetLevel(newLevel);
-        _endGameUIManager.SetSliderLimits(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0], Data.Manager.PointsSliderMinAndMaxValues[newLevel, 1]);
-        _endGameUIManager.SetSliderValueAndCurrentXP(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0]);
-        SecondarySoundController.PlaySound(0, 4);
     }
 
     private IEnumerator CalculateScores(int xp, int stage)
     {
         _endGameUIManager.SetReceivedXP(xp);
 
-        int sliderValue = _endGameUIManager.SliderValue;
-        int sliderMax = _endGameUIManager.SliderMax;
-
-        while (sliderValue <= stage)
+        while (_endGameUIManager.SliderValue < stage)
         {
-            if (sliderValue < sliderMax)
+            if (_endGameUIManager.SliderValue < _endGameUIManager.SliderMax)
             {
                 _endGameUIManager.SetSliderValueAndCurrentXP(stage);
                 yield return null;
@@ -109,24 +115,16 @@ public class GameResultProcessor : MonoBehaviour
                 yield return new WaitForSeconds(2);
             }
         }
-
         yield return new WaitUntil(() => _endGameUIManager.SliderValue >= stage);
         yield return new WaitForSeconds(1);
     }
 
-    private IEnumerator ProcessLocalPlayerGameResultCoroutine(ScoreController scoreController, bool isWin)
+    private void LevelUpAndResetSlider()
     {
-        InitializeEndGameUIManagerValues(isWin);
-        GameResultValues gameResultValues = GameResultValues(scoreController, isWin);
-        DeactivateTanks();
-        StartCoroutine(DelayCalculations());
-        StartCoroutine(AnnounceGameResult(isWin));
-
-        while (true)
-        {
-            StartCoroutine(CalculateScores(gameResultValues._playPoints, gameResultValues._stageFirst));
-            StartCoroutine(CalculateScores(gameResultValues._experiencePoints, gameResultValues._stageSecond));
-            StartCoroutine(CalculateScores(gameResultValues._newPoints, gameResultValues._stageThird));
-        }
+        int newLevel = _endGameUIManager.Level + 1;
+        _endGameUIManager.SetLevel(newLevel);
+        _endGameUIManager.SetSliderLimits(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0], Data.Manager.PointsSliderMinAndMaxValues[newLevel, 1]);
+        _endGameUIManager.SetSliderValueAndCurrentXP(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0]);
+        SecondarySoundController.PlaySound(0, 4);
     }
 }

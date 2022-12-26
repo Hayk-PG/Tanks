@@ -8,7 +8,7 @@ public class WinnerLoserIdentifier : MonoBehaviour
     public event Action<ScoreController, bool> onIdentified;
 
 
-    private void Awake() => _baseEndGame = FindObjectOfType<BaseEndGame>();
+    private void Awake() => _baseEndGame = MyPhotonNetwork.IsOfflineMode ? FindObjectOfType<EndOfflineGame>() : FindObjectOfType<EndOnlineGame>();
 
     private void OnEnable() => _baseEndGame.OnEndGameTab += GetGameResult;
 
@@ -48,6 +48,4 @@ public class WinnerLoserIdentifier : MonoBehaviour
         if (IsLocalPlayer(Get<TankController>.From(defeatedTank)))
             Process(defeatedTank, false);
     }
-
-    
 }

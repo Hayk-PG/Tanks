@@ -70,6 +70,9 @@ public class HealthController : MonoBehaviour, IDamage
 
     public void Damage(int damage)
     {
+        if (Health <= 0)
+            return;
+
         if (IsShieldActive)
             ApplyArmorDamage(damage);
         else

@@ -7,7 +7,7 @@ public class Tab_EndgameTimer : MonoBehaviour
 {
     [SerializeField] private Text _textTimer;
     private CanvasGroup _canvasGroup;
-    private Tab_EndGame _tabEndGame;
+    private GameResultProcessor _gameResultProcessor;
     private int _seconds;
 
     public Action<string> OnTimerEnd { get; set; }
@@ -15,7 +15,7 @@ public class Tab_EndgameTimer : MonoBehaviour
     private void Awake()
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _tabEndGame = FindObjectOfType<Tab_EndGame>();
+        _gameResultProcessor = FindObjectOfType<GameResultProcessor>();
     }
 
     private void Start()
@@ -25,12 +25,12 @@ public class Tab_EndgameTimer : MonoBehaviour
 
     private void OnEnable()
     {
-        _tabEndGame.OnGameResultsFinished += StartTimerCoroutine;
+        _gameResultProcessor.onFinishResultProcess += StartTimerCoroutine;
     }
 
     private void OnDisable()
     {
-        _tabEndGame.OnGameResultsFinished -= StartTimerCoroutine;
+        _gameResultProcessor.onFinishResultProcess -= StartTimerCoroutine;
     }
 
     private void StartTimerCoroutine()
