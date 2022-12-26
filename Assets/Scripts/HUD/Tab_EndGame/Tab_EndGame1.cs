@@ -53,9 +53,14 @@ public partial class Tab_EndGame
 
     private IEnumerator DisplayController(bool _isCoroutineRunning, Values values, GameResult gameResult)
     {
-        SetLevelText(Data.Manager.Level);
-        SetSliderXPMinAndMaxValues(Data.Manager.PointsSliderMinAndMaxValues[Data.Manager.Level, 0], Data.Manager.PointsSliderMinAndMaxValues[Data.Manager.Level, 1]);
-        SetSliderXPValue(Data.Manager.Points);
+        int level = Data.Manager.Statistics[Keys.Level];
+        int sliderMin = Data.Manager.PointsSliderMinAndMaxValues[level, 0];
+        int sliderMax = Data.Manager.PointsSliderMinAndMaxValues[level, 1];
+        int currentPoints = Data.Manager.Statistics[Keys.Points];
+
+        SetLevelText(level);
+        SetSliderXPMinAndMaxValues(sliderMin, sliderMax);
+        SetSliderXPValue(currentPoints);
         DeactivateTanks();
 
         yield return new WaitForSeconds(1);

@@ -8984,7 +8984,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3149197456553858514}
   - component: {fileID: 151913594584917394}
-  - component: {fileID: 3401682077070019459}
+  - component: {fileID: 7035036020859425873}
+  - component: {fileID: 8594620784895126062}
+  - component: {fileID: 2539451594126730507}
+  - component: {fileID: 9011640631453579942}
   - component: {fileID: 4827530716667859599}
   m_Layer: 5
   m_Name: Tab_EndGame
@@ -9031,10 +9034,10 @@ CanvasGroup:
   m_GameObject: {fileID: 3149197456553858513}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &3401682077070019459
+--- !u!114 &7035036020859425873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9043,18 +9046,53 @@ MonoBehaviour:
   m_GameObject: {fileID: 3149197456553858513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c9198b2a5449834da2b3b57947ef92b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ada2fa6c4b325043bf8778abc824fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ui:
-    _textXP: {fileID: 1958359382211731651}
-    _textPointsPlus: {fileID: 1699102313}
-    _textLevel: {fileID: 6796423592306420476}
-    _sliderXP: {fileID: 7614938890868694015}
-    _canvasGroupGameResults:
-    - {fileID: 2723227185587177007}
-    - {fileID: 2799166971342354017}
-    _textPointsPlusAnim: {fileID: 6902713184935340020}
+--- !u!114 &8594620784895126062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3149197456553858513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d82904543901632438258b531a530312, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameResultPanelsCanvasGroups:
+  - {fileID: 2723227185587177007}
+  - {fileID: 2799166971342354017}
+  _txtCurrentXP: {fileID: 1958359382211731651}
+  _txtReceivedXP: {fileID: 1699102313}
+  _txtLevel: {fileID: 6796423592306420476}
+  _sldrXP: {fileID: 7614938890868694015}
+  _animReceivedXP: {fileID: 6902713184935340020}
+--- !u!114 &2539451594126730507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3149197456553858513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd774d1cc6c1acc4699a1ea6058c660c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9011640631453579942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3149197456553858513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74d0f6e0217796341957cfcaf3e7db16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4827530716667859599
 MonoBehaviour:
   m_ObjectHideFlags: 0
