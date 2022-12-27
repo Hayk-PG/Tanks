@@ -3,10 +3,8 @@ using TMPro;
 
 public class PlayerNewHUDHealth : MonoBehaviour
 {
+    [SerializeField] private TMP_Text _textHealth;
     private HealthController _healthController;
-
-    [SerializeField]
-    private TMP_Text _textHealth;
 
 
 
