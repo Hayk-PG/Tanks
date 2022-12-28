@@ -57,7 +57,7 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
 
     protected virtual void SetTurnToTransition() => _iTurnController.TurnController.SetNextTurn(TurnState.Transition);
 
-    protected virtual void DestroyBullet()
+    public virtual void DestroyBullet()
     {
         SetTurnToTransition();
         Destroy(gameObject);

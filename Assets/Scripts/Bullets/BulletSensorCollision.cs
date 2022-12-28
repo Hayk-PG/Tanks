@@ -12,7 +12,7 @@ public class BulletSensorCollision : BulletCollision
 
     protected override void OnDisable() => _iBulletSensor.OnHit -= Hit;
 
-    private void Hit(RaycastHit hit)
+    protected virtual void Hit(RaycastHit hit)
     {
         OnCollision(hit.collider, _iBulletId.OwnerScore, _iBulletId.Distance);
     }

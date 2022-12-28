@@ -44,7 +44,7 @@ public class BulletSensorExplosion : BulletExplosion
         }
     }
 
-    private void Hit(RaycastHit hit)
+    protected virtual void Hit(RaycastHit hit)
     {
         OnExplodeOnCollision(_iBulletId.OwnerScore, _iBulletId.Distance);
     }
