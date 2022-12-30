@@ -42,7 +42,8 @@ public class WoodBox : MonoBehaviour
             new AddScoreContent(),
             new AddMoreHPContent(),
             new AddMoreShellsContent(),
-            new GiveTurnContent(_turnController)
+            new GiveTurnContent(_turnController), 
+            new AALauncherContent()
         };
         _iWoodBoxWeapons = new IWoodBoxContent[]
         {
@@ -60,7 +61,8 @@ public class WoodBox : MonoBehaviour
 
     public void SetInitValues()
     {
-        ContentIndex = Random.Range(0, ContentsCount);
+        //ContentIndex = Random.Range(0, ContentsCount);
+        ContentIndex = 4;
         WeaponIndex = Random.Range(0, WeaponsCount);
     }
 

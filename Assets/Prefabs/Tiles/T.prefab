@@ -84,6 +84,7 @@ MonoBehaviour:
   _metalCube: {fileID: 4676914304831828487}
   _metalGround: {fileID: 1739523841595223640}
   _explosiveBarrels: {fileID: 7923789292903035574}
+  _aaProjectileLauncher: {fileID: 2677559294016565299}
 --- !u!1 &8906974078321809068
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,6 +255,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TileProps
       objectReference: {fileID: 0}
+    - target: {fileID: 1586827020249733918, guid: 7117e7609a71549eaa660eef49ae3325,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2700473634903867076, guid: 7117e7609a71549eaa660eef49ae3325,
         type: 3}
       propertyPath: m_IsActive
@@ -348,6 +354,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0bfe3a0049c093d448ef44387c84138d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2677559294016565299 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6280647882016694173, guid: 7117e7609a71549eaa660eef49ae3325,
+    type: 3}
+  m_PrefabInstance: {fileID: 8215073717077487534}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49e55b0dc33ad2945ac6442f6cefe0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4676914304831828487 stripped

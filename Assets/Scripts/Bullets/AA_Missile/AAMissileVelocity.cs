@@ -3,12 +3,20 @@ using UnityEngine;
 
 public class AAMissileVelocity : BulletVelocity, IAATargetDetector<BulletController.VelocityData>
 {
+    private PhotonNetworkAALauncher _photonNetworkAALauncher;
+
     private bool _isTrailActive;
 
     public BulletController Target { get; set; }
     public Action OnTargetDetected { get; set; }
 
 
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _photonNetworkAALauncher = FindObjectOfType<PhotonNetworkAALauncher>();
+    }
 
     protected override void OnBulletVelocity(BulletController.VelocityData velocityData)
     {
@@ -42,9 +50,19 @@ public class AAMissileVelocity : BulletVelocity, IAATargetDetector<BulletControl
     {
         if (isConditionMet)
         {
-            IBulletExplosion iBulletExplosion = Get<IBulletExplosion>.From(Target.gameObject);
-            iBulletExplosion?.DestroyBullet();
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, DestroyTarget, () => DestroyTarget(Target.OwnerScore.PlayerTurn.gameObject.name));
             OnTargetDetected?.Invoke();
         }
+    }
+
+    private void DestroyTarget()
+    {
+        IBulletExplosion iBulletExplosion = Get<IBulletExplosion>.From(Target.gameObject);
+        iBulletExplosion?.DestroyBullet();
+    }
+
+    private void DestroyTarget(string targetOwnerName)
+    {
+        _photonNetworkAALauncher.DestroyTarget(targetOwnerName);
     }
 }

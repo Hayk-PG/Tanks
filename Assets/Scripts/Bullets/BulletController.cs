@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBulletLimit, IBulletVelocity<BulletController.VelocityData>, ITurnController
@@ -57,9 +58,8 @@ public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBul
     protected virtual void Start()
     {
         TurnController.SetNextTurn(TurnState.Other);
-
-        Invoke("ActivateWindForce", 0.5f);
-        Invoke("DestroyOnTimeLimit", 8);
+        StartCoroutine(ActivateWindForce(0.5f));
+        StartCoroutine(DestroyOnTimeLimit(8));
     }
    
     protected virtual void OnEnable()
@@ -104,10 +104,15 @@ public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBul
                                  _isWindActivated));
     } 
 
-    protected virtual void ActivateWindForce() => _isWindActivated = true;
-
-    protected virtual void DestroyOnTimeLimit()
+    protected virtual IEnumerator ActivateWindForce(float delay)
     {
+        yield return new WaitForSeconds(delay);
+        _isWindActivated = true;
+    }
+
+    protected virtual IEnumerator DestroyOnTimeLimit(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         if (!_dontDestroyOnTimeLimit)
             OnDestroyTimeLimit?.Invoke();
     }

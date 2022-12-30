@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class ScoreController : MonoBehaviour, IScore
 {
-    public PlayerTurn PlayerTurn { get; set; }
     public IDamage IDamage { get; set; }
     private TankController _tankController;
     private AmmoTabCustomization _ammoTabCustomization;
@@ -16,6 +15,7 @@ public class ScoreController : MonoBehaviour, IScore
 
     private int _score;
 
+    public PlayerTurn PlayerTurn { get; set; }
     public int Score
     {
         get => _score;
@@ -26,6 +26,9 @@ public class ScoreController : MonoBehaviour, IScore
     public Action<int, float> OnDisplayTempPoints { get; set; }
     public Action<int> OnPlayerGetsPoints { get; set; }
     public Action<int[]> OnHitEnemy { get; set; }
+
+
+
 
     private void Awake()
     {       

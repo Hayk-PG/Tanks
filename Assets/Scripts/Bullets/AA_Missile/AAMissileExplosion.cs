@@ -24,4 +24,9 @@ public class AAMissileExplosion : BulletSensorExplosion
         if (_iAATargetDetector != null)
             _iAATargetDetector.OnTargetDetected -= delegate { Hit(default); };
     }
+
+    public override void DestroyBullet()
+    {
+        Destroy(gameObject);
+    }
 }
