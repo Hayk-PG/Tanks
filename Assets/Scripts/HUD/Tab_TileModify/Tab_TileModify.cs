@@ -110,7 +110,7 @@ public class Tab_TileModify : MonoBehaviour
 
     private IEnumerator StartFindTilesAroundPlayer()
     {
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(0.1f);
         FindTilesAroundPlayer();
     }
 

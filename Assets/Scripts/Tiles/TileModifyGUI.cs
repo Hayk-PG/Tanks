@@ -8,10 +8,8 @@
 
 public class TileModifyGUI : MonoBehaviour
 {
-    [SerializeField] 
-    private TileModifyGUIElement _tileModifyGUIElement;
-    [SerializeField]
-    private TileModifyGUIElement _bridgeModifyGUIElement;
+    [SerializeField] private TileModifyGUIElement _tileModifyGUIElement;
+    [SerializeField] private TileModifyGUIElement _bridgeModifyGUIElement;
 
     private Canvas _canvas;
     private GlobalTileController _globalTileController;
@@ -66,8 +64,31 @@ public class TileModifyGUI : MonoBehaviour
             case Tab_TileModify.TileModifyType.ExtendBasicTiles:
                 OnClickAction = delegate
                 {
-                    Vector3 side = CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition;
-                    _globalTileController.Modify(side);
+                    int random = Random.Range(0, 2);
+                    bool hasTileOnRight = _changeTiles.HasTile(CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition) && _tilesData.TilesDict.ContainsKey(CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition);
+                    bool hasTileOnLeft = _changeTiles.HasTile(CurrentTilePosition - _bridgeModifyGUIElement._corespondentPosition) && _tilesData.TilesDict.ContainsKey(CurrentTilePosition - _bridgeModifyGUIElement._corespondentPosition);
+
+                    Vector3? position = null;
+
+                    if (!hasTileOnRight && hasTileOnLeft)
+                    {
+                        position = CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition;
+                    }
+
+                    if(hasTileOnRight && !hasTileOnLeft)
+                    {
+                        position = CurrentTilePosition - _bridgeModifyGUIElement._corespondentPosition;
+                    }
+
+                    if (!hasTileOnRight && !hasTileOnLeft)
+                    {
+                        position = random < 1 ? CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition : CurrentTilePosition - _bridgeModifyGUIElement._corespondentPosition;
+                    }
+
+                    if (position != null)
+                    {
+                        _globalTileController.Modify(position.Value);
+                    }
                 };
                 break;
         }
@@ -78,12 +99,12 @@ public class TileModifyGUI : MonoBehaviour
         if (_tileModifyGUIElement._guiElement != null)
         {
             Vector3 top = CurrentTilePosition + _tileModifyGUIElement._corespondentPosition;
-            return tileModifyType == Tab_TileModify.TileModifyType.BuildBasicTiles ?
-                                     !_changeTiles.HasTile(top) && !_tilesData.TilesDict.ContainsKey(top) :
-                                     tileModifyType == Tab_TileModify.TileModifyType.BuildConcreteTiles ||
-                                     tileModifyType == Tab_TileModify.TileModifyType.UpgradeToConcreteTiles ?
-                                     !_changeTiles.HasTile(top) && !_tilesData.TilesDict.ContainsKey(top) &&
-                                     !_tilesData.TilesDict[CurrentTilePosition].GetComponent<Tile>().IsProtected : false;
+
+            return tileModifyType == Tab_TileModify.TileModifyType.BuildBasicTiles ? IsAbleToBuildBasicTiles(top) :
+                   tileModifyType == Tab_TileModify.TileModifyType.BuildConcreteTiles ? IsAbleToBuildConcreteTiles(top) :
+                   tileModifyType == Tab_TileModify.TileModifyType.UpgradeToConcreteTiles ? IsAbleToUpgradeToConcreteTiles(top) :
+                   tileModifyType == Tab_TileModify.TileModifyType.ExtendBasicTiles ? IsAbleToExtendBasicTiles() :
+                   false;
         }
         else
             return false;
@@ -91,13 +112,42 @@ public class TileModifyGUI : MonoBehaviour
 
     private bool CanBridgeGUIElementBeActive(Tab_TileModify.TileModifyType tileModifyType)
     {
-        if (_bridgeModifyGUIElement._guiElement != null && tileModifyType == Tab_TileModify.TileModifyType.ExtendBasicTiles)
-        {
-            Vector3 side = CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition;
-            Vector3 bottom = new Vector3(0, -Mathf.Abs(_bridgeModifyGUIElement._corespondentPosition.x), 0);
-            return !_changeTiles.HasTile(side) && !_changeTiles.HasTile(side + bottom) ? true : false;
-        }
-        else return false;
+        return false;
+    }
+
+    private bool IsAbleToBuildBasicTiles(Vector3 position)
+    {
+        return !_changeTiles.HasTile(position) && !_tilesData.TilesDict.ContainsKey(position);
+    }
+
+    private bool IsAbleToBuildConcreteTiles(Vector3 position)
+    {
+        return IsAbleToBuildBasicTiles(position) && !_tilesData.TilesDict[CurrentTilePosition].GetComponent<Tile>().IsProtected;
+    }
+
+    private bool IsAbleToUpgradeToConcreteTiles(Vector3 position)
+    {
+        return IsAbleToBuildConcreteTiles(position);
+    }
+
+    private bool IsAbleToExtendBasicTiles()
+    {
+        float tileSize = _bridgeModifyGUIElement._corespondentPosition.x;
+        Vector3 right = new Vector3(tileSize, 0, 0);
+        Vector3 left = new Vector3(-tileSize, 0, 0);
+        Vector3 bottom = new Vector3(0, -tileSize, 0);
+        Vector3 up = new Vector3(0, tileSize, 0);
+
+        bool noTileOnRight = !_changeTiles.HasTile(CurrentTilePosition + right) && !_tilesData.TilesDict.ContainsKey(CurrentTilePosition + right);
+        bool noTileOnLeft = !_changeTiles.HasTile(CurrentTilePosition + left) && !_tilesData.TilesDict.ContainsKey(CurrentTilePosition + left);
+        bool noTileOnRightBottom = !_changeTiles.HasTile(CurrentTilePosition + bottom + right) && !_tilesData.TilesDict.ContainsKey(CurrentTilePosition + bottom + right);
+        bool noTileOnLefttBottom = !_changeTiles.HasTile(CurrentTilePosition + bottom + left) && !_tilesData.TilesDict.ContainsKey(CurrentTilePosition + bottom + left);
+        bool noTileOnRightUp = !_changeTiles.HasTile(CurrentTilePosition + up + right) && !_tilesData.TilesDict.ContainsKey(CurrentTilePosition + up + right);
+        bool noTileOnLefttUp = !_changeTiles.HasTile(CurrentTilePosition + up + left) && !_tilesData.TilesDict.ContainsKey(CurrentTilePosition + up + left);
+
+        return noTileOnRight && noTileOnRightBottom && noTileOnRightUp ? true :
+               noTileOnLeft && noTileOnLefttBottom && noTileOnLefttUp ? true :
+               false;
     }
 
     private void TileModifyGUIElementActivity(bool isActive)
@@ -130,9 +180,7 @@ public class TileModifyGUI : MonoBehaviour
     {
         if (_tabTileModify.CanModifyTiles)
         {
-            TileModifyGUIElementActivity(false);
-            BridgeModifyGUIElementActivity(false);
-
+            DisableGUI();
             _tabTileModify.SubtractScore();
             OnClickAction?.Invoke();                    
         }
