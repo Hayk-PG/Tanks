@@ -4,6 +4,7 @@ public class AAProjectileLauncher : MonoBehaviour
 {
     [SerializeField] private BulletController[] _missiles;
 
+    private Animator _animator;
     private TurnController _turnController;
     private PhotonNetworkAALauncher _photonNetworkAALauncher;
     private IScore _ownerScore;
@@ -12,6 +13,7 @@ public class AAProjectileLauncher : MonoBehaviour
     [SerializeField] private float _force;
     private int index = 0;
     private bool _launched;
+    private string _animationLaunch = "Launch";
 
     public BulletController[] Missiles => _missiles;
     public Vector3 ID { get; private set; }
@@ -20,6 +22,7 @@ public class AAProjectileLauncher : MonoBehaviour
 
     private void Awake()
     {
+        _animator = Get<Animator>.From(gameObject);
         _turnController = FindObjectOfType<TurnController>();
         _photonNetworkAALauncher = FindObjectOfType<PhotonNetworkAALauncher>();
     }
@@ -56,6 +59,7 @@ public class AAProjectileLauncher : MonoBehaviour
         _missiles[index].gameObject.SetActive(true);
         _missiles[index].OwnerScore = _ownerScore;
         _missiles[index].RigidBody.velocity = _missiles[index].transform.TransformDirection(Vector3.forward) * _force;
+        _animator.Play(_animationLaunch, 0, 0);
         index++;
     }
 
