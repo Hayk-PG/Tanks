@@ -6,7 +6,6 @@ using UnityEngine;
 public class HealthController : MonoBehaviour, IDamage
 {
     private TankController _tankController;
-    private VehiclePool _vehiclePool;
     private PlayerShields _playerShields;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
   
@@ -41,7 +40,6 @@ public class HealthController : MonoBehaviour, IDamage
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
-        _vehiclePool = Get<VehiclePool>.FromChild(gameObject);
         _playerShields = Get<PlayerShields>.From(gameObject);
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
 
@@ -81,11 +79,17 @@ public class HealthController : MonoBehaviour, IDamage
 
     private void ApplyHealthDamage(int damage)
     {
-        Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
-        _vehiclePool.Pool(0, null);
+        Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;       
         OnUpdateHealthBar?.Invoke(Health);
         OnTakeDamage?.Invoke(_tankController.BasePlayer, DamageValue(DamageValue(damage)));
         OnTankDamageFire?.Invoke(Health);
+        PlayDamageSoundFX();
+    }
+
+    private void PlayDamageSoundFX()
+    {
+        if (_tankController.BasePlayer != null)
+            SecondarySoundController.PlaySound(0, 5);
     }
 
     private void ApplyArmorDamage(int damage)
