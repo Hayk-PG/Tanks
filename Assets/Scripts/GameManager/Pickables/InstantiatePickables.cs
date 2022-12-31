@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class InstantiatePickables : MonoBehaviourPun
 {
-    [SerializeField]
-    private ParachuteWithWoodBoxController _woodBoxControllerPrefab;
+    [SerializeField] private ParachuteWithWoodBoxController _woodBoxControllerPrefab;
     private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
 
     private GameManager _gameManager;
+    private TilesData _tilesData;
     private Transform _player1, _player2;
-    private Vector3 _spawnPosition;
 
 
 
-    private void Awake() => _gameManager = Get<GameManager>.From(gameObject);
+    private void Awake()
+    {
+        _gameManager = Get<GameManager>.From(gameObject);
+        _tilesData = FindObjectOfType<TilesData>();
+    }
 
     private void OnEnable() => _gameManager.OnGameStarted += OnGameStarted;
 
@@ -36,15 +39,33 @@ public class InstantiatePickables : MonoBehaviourPun
 
             if (FindObjectOfType<ParachuteWithWoodBoxController>() == null)
             {
-                _spawnPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
+                if (_player1 != null && _player2 != null)
+                {
+                    if (MyPhotonNetwork.IsOfflineMode)
+                        SpawnWoodBox(WoodBoxSpawnPosition());
 
-                if (MyPhotonNetwork.IsOfflineMode)
-                    SpawnWoodBox(_spawnPosition);
-
-                if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
-                    photonView.RPC("SpawnWoodBoxRPC", RpcTarget.AllViaServer, _spawnPosition);
+                    if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+                        photonView.RPC("SpawnWoodBoxRPC", RpcTarget.AllViaServer, WoodBoxSpawnPosition());
+                }
             }            
         }
+    }
+
+    private Vector3 WoodBoxSpawnPosition()
+    {
+        Vector3 tempPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
+        Vector3 tilePosition = tempPosition;
+
+        foreach (var tileDict in _tilesData.TilesDict)
+        {
+            if(tileDict.Key.x >= tempPosition.x - 1 && tileDict.Key.x <= tempPosition.x + 1)
+            {
+                tilePosition.x = tileDict.Key.x;
+                break;
+            } 
+        }
+
+        return tilePosition;
     }
 
     private void SpawnWoodBox(Vector3 position)
