@@ -26,14 +26,17 @@ public class TileModifyGUI : MonoBehaviour
 
     
 
-    private void Awake()
+    private void GetObjects()
     {
+        if (_tilesData != null)
+            return;
+
         _canvas = FindObjectOfType<Canvas>();
+        _canvas.worldCamera = Camera.main;
         _globalTileController = FindObjectOfType<GlobalTileController>();
         _tilesData = FindObjectOfType<TilesData>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
         _tabTileModify = FindObjectOfType<Tab_TileModify>();
-        _canvas.worldCamera = Camera.main;
     }
 
     private void DefineOnClickAction(Tab_TileModify.TileModifyType tileModifyType)
@@ -164,8 +167,8 @@ public class TileModifyGUI : MonoBehaviour
 
     public void EnableGUI(Tab_TileModify.TileModifyType tileModifyType)
     {
+        GetObjects();
         DefineOnClickAction(tileModifyType);
-
         TileModifyGUIElementActivity(CanGUIElementBeActive(tileModifyType) ? true : false);
         BridgeModifyGUIElementActivity(CanBridgeGUIElementBeActive(tileModifyType) ? true : false);
     }
