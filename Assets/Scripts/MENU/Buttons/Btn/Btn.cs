@@ -50,11 +50,7 @@ public class Btn : MonoBehaviour
     private void Start()
     {
         GetSiblings();
-    }
 
-    private void Update()
-    {
-        Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(Select);
     }
 
