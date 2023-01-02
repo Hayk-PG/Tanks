@@ -30,7 +30,7 @@ public class TileModifyManager : MonoBehaviour
         new Prices{Name = Names.ModifyGround, Price = 250},
         new Prices{Name = Names.MetalCube, Price = 1000},
         new Prices{Name = Names.MetalGround, Price = 1000},
-        new Prices{Name = Names.MetalGround, Price = 0}
+        new Prices{Name = Names.Bridge, Price = 250}
     };
 
 

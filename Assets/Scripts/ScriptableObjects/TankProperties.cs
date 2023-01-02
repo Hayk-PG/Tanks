@@ -50,6 +50,7 @@ public class TankProperties : ScriptableObject
     public int _tileModifyCutPercent;
     public int _armoredCubeCutPercent;
     public int _armoredTileCutPercent;
+    public int _extendTileCutPercent;
 
 
     public virtual void GetValuesFromTankPrefab()
@@ -112,6 +113,7 @@ public class TankProperties : ScriptableObject
             _tileModifyCutPercent = propsPriceByVehicle.TileModifyPriceReducePercent;
             _armoredCubeCutPercent = propsPriceByVehicle.ArmoredCubePriceReducePercent;
             _armoredTileCutPercent = propsPriceByVehicle.ArmoredTilePriceReducePrecent;
+            _extendTileCutPercent = propsPriceByVehicle.ExtendTilePriceReducePercent;
         }
 
 #if UNITY_EDITOR

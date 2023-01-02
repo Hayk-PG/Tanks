@@ -7,7 +7,7 @@ public class PropsPriceByVehicle : MonoBehaviour
     private TileModifyManager _tileModifyManager;
 
     [SerializeField] [Range(0, 100)]
-    private int _shieldPriceReducePercent, _tileModifyPriceReducePercent, _armoredCubePriceReducePercent, _armoredTilePriceReducePercent;
+    private int _shieldPriceReducePercent, _tileModifyPriceReducePercent, _armoredCubePriceReducePercent, _armoredTilePriceReducePercent, _extendTilePriceReducePrecent;
     private int _oldRequiredScoreAmmount;
 
     public int ShieldPriceReducePercent
@@ -31,6 +31,11 @@ public class PropsPriceByVehicle : MonoBehaviour
         set => _armoredTilePriceReducePercent = value;
     }
 
+    public int ExtendTilePriceReducePercent
+    {
+        get => _extendTilePriceReducePrecent;
+        set => _extendTilePriceReducePrecent = value;
+    }
     
 
 
@@ -53,17 +58,17 @@ public class PropsPriceByVehicle : MonoBehaviour
 
     private void OnInitialize()
     {
-        DefineNewRequiredScoreAmounts();
-        DefineNewTileModifyScoreAmounts();
+        UpdateRequirementsForPropsAndSupport();
+        UpdateRequirementsForTileModifiers();
     }
 
-    private int NewRequiredScoreAmount(int oldRequiredScoreAmount, int percent)
+    private int UpdatedRequirement(int oldRequiredScoreAmount, int percent)
     {
         int reducedAmount = oldRequiredScoreAmount / 100 * percent;
         return oldRequiredScoreAmount - reducedAmount;
     }
 
-    private void DefineNewRequiredScoreAmounts()
+    private void UpdateRequirementsForPropsAndSupport()
     {
         if (_propsTabCustomization != null && _propsTabCustomization.InstantiatedTypeButtons.Length > 0)
         {
@@ -72,12 +77,12 @@ public class PropsPriceByVehicle : MonoBehaviour
                 _oldRequiredScoreAmmount = typeButton._properties.RequiredScoreAmmount;
 
                 if (typeButton._properties.SupportOrPropsType == Names.Shield)
-                    typeButton._properties.RequiredScoreAmmount = NewRequiredScoreAmount(_oldRequiredScoreAmmount, ShieldPriceReducePercent);
+                    typeButton._properties.RequiredScoreAmmount = UpdatedRequirement(_oldRequiredScoreAmmount, ShieldPriceReducePercent);
             });
         }
     }
 
-    private void DefineNewTileModifyScoreAmounts()
+    private void UpdateRequirementsForTileModifiers()
     {
         if(_tileModifyManager != null && _tileModifyManager.NewPrices.Length > 0)
         {
@@ -86,13 +91,16 @@ public class PropsPriceByVehicle : MonoBehaviour
                 _oldRequiredScoreAmmount = props.Price;
 
                 if(props.Name == Names.ModifyGround)
-                    props.Price = NewRequiredScoreAmount(_oldRequiredScoreAmmount, TileModifyPriceReducePercent);
+                    props.Price = UpdatedRequirement(_oldRequiredScoreAmmount, TileModifyPriceReducePercent);
 
                 if (props.Name == Names.MetalCube)
-                    props.Price = NewRequiredScoreAmount(_oldRequiredScoreAmmount, ArmoredCubePriceReducePercent);
+                    props.Price = UpdatedRequirement(_oldRequiredScoreAmmount, ArmoredCubePriceReducePercent);
 
                 if (props.Name == Names.MetalGround)
-                    props.Price = NewRequiredScoreAmount(_oldRequiredScoreAmmount, ArmoredTilePriceReducePrecent);
+                    props.Price = UpdatedRequirement(_oldRequiredScoreAmmount, ArmoredTilePriceReducePrecent);
+
+                if (props.Name == Names.Bridge)
+                    props.Price = UpdatedRequirement(_oldRequiredScoreAmmount, ExtendTilePriceReducePercent);
             });
         }
     }
