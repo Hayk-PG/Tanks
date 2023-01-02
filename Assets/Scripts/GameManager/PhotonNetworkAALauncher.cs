@@ -34,6 +34,19 @@ public class PhotonNetworkAALauncher : MonoBehaviourPun
         aAProjectileLauncher?.InitMissile();
     }
 
+    public void Deactivate(Vector3 id)
+    {
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+            photonView.RPC("DeactivateRPC", RpcTarget.AllViaServer, id);
+    }
+
+    [PunRPC]
+    private void DeactivateRPC(Vector3 id)
+    {
+        AAProjectileLauncher aAProjectileLauncher = GlobalFunctions.ObjectsOfType<AAProjectileLauncher>.Find(launcher => launcher.ID == id);
+        aAProjectileLauncher?.Deactivate();
+    }
+
     public void DestroyTarget(string enemyName)
     {
         if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
