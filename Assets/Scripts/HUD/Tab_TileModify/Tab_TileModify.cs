@@ -12,19 +12,9 @@ public class Tab_TileModify : MonoBehaviour
     private TilesData _tilesData;  
     private List<GameObject> foundTiles;
 
-    [SerializeField] private TMP_Text _scoreText;
-    [SerializeField] private TMP_Text _priceText;
-    
-    private int Price
-    {
-        get => int.Parse(_priceText.text);
-        set => _priceText.text = value.ToString();
-    }
-    private string ScoreText
-    {
-        get => _scoreText.text;
-        set => _scoreText.text = value;
-    }
+    [SerializeField] private TMP_Text _txtScorePrice;
+    private int Price { get; set; }
+
     public bool CanModifyTiles
     {
         get => _tabModify.LocalPlayerScoreController.Score >= Price;
@@ -51,7 +41,6 @@ public class Tab_TileModify : MonoBehaviour
         _tabModify = Get<Tab_Modify>.From(gameObject);
         _tilesModifiers = Get<TilesModifiers>.From(gameObject);
         _tilesData = FindObjectOfType<TilesData>();
-        _priceText.text = 0.ToString();
     }
 
     private void OnEnable()
@@ -68,6 +57,11 @@ public class Tab_TileModify : MonoBehaviour
         _tilesModifiers.onExtendBasicTiles -= ExtendBasicTiles;
         _tilesModifiers.onBuildConcreteTiles -= BuildConcreteTiles;
         _tilesModifiers.onUpgradeToConcreteTiles -= UpgradeToConcreteTiles;
+    }
+
+    private void SetScorePriceText(int score, int price)
+    {
+        _txtScorePrice.text = score + "/" + price;
     }
 
     private void BuildBasicTiles()
@@ -116,7 +110,7 @@ public class Tab_TileModify : MonoBehaviour
 
     public void FindTilesAroundPlayer()
     {
-        ScoreText = _tabModify.LocalPlayerScoreController.Score.ToString();
+        SetScorePriceText(_tabModify.LocalPlayerScoreController.Score, Price);
         foundTiles = new List<GameObject>();
 
         foreach (var tile in _tilesData.TilesDict)
@@ -145,8 +139,7 @@ public class Tab_TileModify : MonoBehaviour
 
     public void SubtractScore()
     {
-        int newScore = _tabModify.LocalPlayerScoreController.Score - Price;
-        ScoreText = newScore.ToString();
+        SetScorePriceText(_tabModify.LocalPlayerScoreController.Score - Price, Price);
         _tabModify.LocalPlayerScoreController.GetScore(-Price, null);
         StartCoroutine(StartFindTilesAroundPlayer());
     }
