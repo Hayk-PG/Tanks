@@ -15,7 +15,7 @@ public class TileModifyGUI : MonoBehaviour
     private GlobalTileController _globalTileController;
     private TilesData _tilesData;
     private ChangeTiles _changeTiles;
-    private Tab_TileModify _tabTileModify;   
+    private TileModifyManager _tileModifyManager;   
     private delegate void CustomDelegate();
 
     private Vector3 CurrentTilePosition
@@ -36,14 +36,14 @@ public class TileModifyGUI : MonoBehaviour
         _globalTileController = FindObjectOfType<GlobalTileController>();
         _tilesData = FindObjectOfType<TilesData>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
-        _tabTileModify = FindObjectOfType<Tab_TileModify>();
+        _tileModifyManager = FindObjectOfType<TileModifyManager>();
     }
 
-    private void DefineOnClickAction(Tab_TileModify.TileModifyType tileModifyType)
+    private void DefineOnClickAction(TileModifyManager.TileModifyType tileModifyType)
     {
         switch (tileModifyType)
         {
-            case Tab_TileModify.TileModifyType.BuildBasicTiles:
+            case TileModifyManager.TileModifyType.BuildBasicTiles:
                 OnClickAction = delegate
                 {
                     Vector3 newTilePosition = CurrentTilePosition + _tileModifyGUIElement._corespondentPosition;
@@ -51,20 +51,20 @@ public class TileModifyGUI : MonoBehaviour
                 };
                 break;
 
-            case Tab_TileModify.TileModifyType.BuildConcreteTiles:
+            case TileModifyManager.TileModifyType.BuildConcreteTiles:
                 OnClickAction = delegate
                 {
-                    _globalTileController.Modify(CurrentTilePosition, Tab_TileModify.TileModifyType.BuildConcreteTiles);
+                    _globalTileController.Modify(CurrentTilePosition, TileModifyManager.TileModifyType.BuildConcreteTiles);
                 };
                 break;
 
-            case Tab_TileModify.TileModifyType.UpgradeToConcreteTiles:
+            case TileModifyManager.TileModifyType.UpgradeToConcreteTiles:
                 OnClickAction = delegate
                 {
-                    _globalTileController.Modify(CurrentTilePosition, Tab_TileModify.TileModifyType.UpgradeToConcreteTiles);
+                    _globalTileController.Modify(CurrentTilePosition, TileModifyManager.TileModifyType.UpgradeToConcreteTiles);
                 };
                 break;
-            case Tab_TileModify.TileModifyType.ExtendBasicTiles:
+            case TileModifyManager.TileModifyType.ExtendBasicTiles:
                 OnClickAction = delegate
                 {
                     int random = Random.Range(0, 2);
@@ -97,23 +97,23 @@ public class TileModifyGUI : MonoBehaviour
         }
     }
 
-    private bool CanGUIElementBeActive(Tab_TileModify.TileModifyType tileModifyType)
+    private bool CanGUIElementBeActive(TileModifyManager.TileModifyType tileModifyType)
     {
         if (_tileModifyGUIElement._guiElement != null)
         {
             Vector3 top = CurrentTilePosition + _tileModifyGUIElement._corespondentPosition;
 
-            return tileModifyType == Tab_TileModify.TileModifyType.BuildBasicTiles ? IsAbleToBuildBasicTiles(top) :
-                   tileModifyType == Tab_TileModify.TileModifyType.BuildConcreteTiles ? IsAbleToBuildConcreteTiles(top) :
-                   tileModifyType == Tab_TileModify.TileModifyType.UpgradeToConcreteTiles ? IsAbleToUpgradeToConcreteTiles(top) :
-                   tileModifyType == Tab_TileModify.TileModifyType.ExtendBasicTiles ? IsAbleToExtendBasicTiles() :
+            return tileModifyType == TileModifyManager.TileModifyType.BuildBasicTiles ? IsAbleToBuildBasicTiles(top) :
+                   tileModifyType == TileModifyManager.TileModifyType.BuildConcreteTiles ? IsAbleToBuildConcreteTiles(top) :
+                   tileModifyType == TileModifyManager.TileModifyType.UpgradeToConcreteTiles ? IsAbleToUpgradeToConcreteTiles(top) :
+                   tileModifyType == TileModifyManager.TileModifyType.ExtendBasicTiles ? IsAbleToExtendBasicTiles() :
                    false;
         }
         else
             return false;
     }
 
-    private bool CanBridgeGUIElementBeActive(Tab_TileModify.TileModifyType tileModifyType)
+    private bool CanBridgeGUIElementBeActive(TileModifyManager.TileModifyType tileModifyType)
     {
         return false;
     }
@@ -165,7 +165,7 @@ public class TileModifyGUI : MonoBehaviour
             _bridgeModifyGUIElement._guiElement.SetActive(isActive);
     }
 
-    public void EnableGUI(Tab_TileModify.TileModifyType tileModifyType)
+    public void EnableGUI(TileModifyManager.TileModifyType tileModifyType)
     {
         GetObjects();
         DefineOnClickAction(tileModifyType);
@@ -181,10 +181,10 @@ public class TileModifyGUI : MonoBehaviour
 
     public void OnClick()
     {
-        if (_tabTileModify.CanModifyTiles)
+        if (_tileModifyManager.CanModifyTiles)
         {
             DisableGUI();
-            _tabTileModify.SubtractScore();
+            _tileModifyManager.SubtractScore();
             OnClickAction?.Invoke();                    
         }
     }

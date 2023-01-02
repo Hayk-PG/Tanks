@@ -3,12 +3,12 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
-public class Tab_TileModify : MonoBehaviour
+public class TileModifyManager : MonoBehaviour
 {
     public enum TileModifyType { BuildBasicTiles, ExtendBasicTiles, BuildConcreteTiles, UpgradeToConcreteTiles }
     private TileModifyType _tileModifyType;
     private Tab_Modify _tabModify;
-    private TilesModifiers _tilesModifiers;
+    private TileModifyTabButtonsListener _tilesModifiers;
     private TilesData _tilesData;  
     private List<GameObject> foundTiles;
 
@@ -39,7 +39,7 @@ public class Tab_TileModify : MonoBehaviour
     private void Awake()
     {
         _tabModify = Get<Tab_Modify>.From(gameObject);
-        _tilesModifiers = Get<TilesModifiers>.From(gameObject);
+        _tilesModifiers = Get<TileModifyTabButtonsListener>.From(gameObject);
         _tilesData = FindObjectOfType<TilesData>();
     }
 

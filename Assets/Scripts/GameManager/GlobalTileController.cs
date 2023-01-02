@@ -7,7 +7,6 @@ public class GlobalTileController : MonoBehaviourPun
     [SerializeField] private GameObject _prefab;
     private TilesData _tilesData;
     private ChangeTiles _changeTiles;
-    private Transform _parent;
 
     public Action<Vector3> OnCreateNewTile { get; set; }
 
@@ -16,10 +15,8 @@ public class GlobalTileController : MonoBehaviourPun
     {
         _tilesData = FindObjectOfType<TilesData>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
-        _parent = transform;
     }
 
-    #region Modify
     public void Modify(Vector3 newTilePosition)
     {  
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
@@ -39,10 +36,8 @@ public class GlobalTileController : MonoBehaviourPun
         OnCreateNewTile?.Invoke(newTilePosition);
         _changeTiles.UpdateTiles(newTilePosition);
     }
-    #endregion
 
-    #region TileProps
-    public void Modify(Vector3 currentTilePosition, Tab_TileModify.TileModifyType tileModifyType)
+    public void Modify(Vector3 currentTilePosition, TileModifyManager.TileModifyType tileModifyType)
     {
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, 
             delegate 
@@ -56,15 +51,14 @@ public class GlobalTileController : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void ActivateTileProps(Vector3 currentTilePosition, Tab_TileModify.TileModifyType tileModifyType)
+    private void ActivateTileProps(Vector3 currentTilePosition, TileModifyManager.TileModifyType tileModifyType)
     {
         TileProps tileProps = _tilesData.TilesDict[currentTilePosition].GetComponent<TileProps>();
 
-        TileProps.PropsType propsType = tileModifyType == Tab_TileModify.TileModifyType.BuildConcreteTiles ?
-        TileProps.PropsType.MetalCube : tileModifyType == Tab_TileModify.TileModifyType.UpgradeToConcreteTiles ?
+        TileProps.PropsType propsType = tileModifyType == TileModifyManager.TileModifyType.BuildConcreteTiles ?
+        TileProps.PropsType.MetalCube : tileModifyType == TileModifyManager.TileModifyType.UpgradeToConcreteTiles ?
         TileProps.PropsType.MetalGround : TileProps.PropsType.Sandbags;
 
         tileProps?.ActiveProps(propsType, true, null);
     }
-    #endregion
 }

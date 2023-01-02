@@ -4,7 +4,7 @@ public class PropsPriceByVehicle : MonoBehaviour
 {
     private TankController _tankController;
     private PropsTabCustomization _propsTabCustomization;
-    private Tab_TileModify _tabTileModify;
+    private TileModifyManager _tileModifyManager;
 
     [SerializeField] [Range(0, 100)]
     private int _shieldPriceReducePercent, _tileModifyPriceReducePercent, _armoredCubePriceReducePercent, _armoredTilePriceReducePercent;
@@ -38,7 +38,7 @@ public class PropsPriceByVehicle : MonoBehaviour
     {
         _tankController = Get<TankController>.From(gameObject);
         _propsTabCustomization = FindObjectOfType<PropsTabCustomization>();
-        _tabTileModify = FindObjectOfType<Tab_TileModify>();
+        _tileModifyManager = FindObjectOfType<TileModifyManager>();
     }
 
     private void OnEnable()
@@ -79,9 +79,9 @@ public class PropsPriceByVehicle : MonoBehaviour
 
     private void DefineNewTileModifyScoreAmounts()
     {
-        if(_tabTileModify != null && _tabTileModify.NewPrices.Length > 0)
+        if(_tileModifyManager != null && _tileModifyManager.NewPrices.Length > 0)
         {
-            GlobalFunctions.Loop<Tab_TileModify.Prices>.Foreach(_tabTileModify.NewPrices, props => 
+            GlobalFunctions.Loop<TileModifyManager.Prices>.Foreach(_tileModifyManager.NewPrices, props => 
             {
                 _oldRequiredScoreAmmount = props.Price;
 

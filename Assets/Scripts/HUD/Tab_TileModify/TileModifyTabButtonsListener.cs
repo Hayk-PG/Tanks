@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class TilesModifiers : MonoBehaviour, IReset
+public class TileModifyTabButtonsListener : MonoBehaviour, IReset
 {
     [SerializeField] private Btn _btnBuildBasicTiles;
     [SerializeField] private Btn _btnExtendBasicTiles;

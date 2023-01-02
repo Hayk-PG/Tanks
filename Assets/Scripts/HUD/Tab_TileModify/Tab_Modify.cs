@@ -60,11 +60,12 @@ public class Tab_Modify : MonoBehaviour
 
     private IEnumerator OpenTabCoroutine()
     {
-        GlobalFunctions.Loop<IReset>.Foreach(_iResets, iReset => { iReset.SetDefault(); });
         yield return new WaitForSeconds(0.01f);
+
         if ((bool)LocalPlayerTurn?.IsMyTurn)
         {
             _hudMainTabsActivity.CanvasGroupsActivity(false);
+            GlobalFunctions.Loop<IReset>.Foreach(_iResets, iReset => { iReset.SetDefault(); });
             GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
             _isTabOpen = true;
         }
