@@ -185,6 +185,7 @@ public class TileModifyGUI : MonoBehaviour
         {
             DisableGUI();
             _tileModifyManager.SubtractScore();
+            SecondarySoundController.PlaySound(3, 0);
             OnClickAction?.Invoke();                    
         }
     }
