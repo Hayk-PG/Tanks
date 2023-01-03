@@ -10,7 +10,6 @@ public class Tile : MonoBehaviour, IDestruct
 
 
     [SerializeField] private bool _isSuspended, _isProtected;
-    private bool _isStored;
 
     public bool IsSuspended
     {
@@ -28,34 +27,28 @@ public class Tile : MonoBehaviour, IDestruct
 
 
 
-    private void OnEnable() => ResetTile();
-
-    public void ResetTile()
-    {
-        if (_isStored)
-        {
-            _isStored = false;
-            IsProtected = false;
-            IsSuspended = false;
-            Health = 100;
-            OnTileHealth?.Invoke(Health);
-
-            Trigger(false);
-            ExplosionActivity(false);
-
-            _tileParticles?.gameObject.SetActive(true);
-            _tileParticles?.ResetTileParticles();
-            _tileProps?.ActiveProps(TileProps.PropsType.All, false, null);
-        }
-    }
-
     public void StoreForLaterUse()
     {
-        _isStored = true;
         LevelGenerator.TilesData.TilesDict.Remove(transform.position);
         LevelGenerator.TilesData.StoredInactiveTiles.Find(tile => tile.TileName == name).Tiles?.Add(this);
         transform.SetParent(LevelGenerator.TilesData.IntactiveTilesContainer);
         gameObject.SetActive(false);
+    }
+
+    public void ReUse()
+    {
+        IsProtected = false;
+        IsSuspended = false;
+        Health = 100;
+        OnTileHealth?.Invoke(Health);
+        LevelGenerator.TilesData.TilesDict.Add(transform.position, gameObject);
+
+        Trigger(false);
+        ExplosionActivity(false);
+
+        _tileParticles?.gameObject.SetActive(true);
+        _tileParticles?.ResetTileParticles();
+        _tileProps?.ActiveProps(TileProps.PropsType.All, false, null);
     }
 
     public void Destruct(int damage, int tileParticleIndex)

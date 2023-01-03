@@ -63,7 +63,7 @@ public class BaseChangeTiles : MonoBehaviour
         _newTile.transform.SetParent(transform);
         _newTile.transform.position = pos;
         _newTile.gameObject.SetActive(true);
-        _tileData.TilesDict.Add(pos, _newTile.gameObject);
+        _newTile.ReUse();
     }
 
     private void OnTileUpdates(Vector3 pos, Tile tile)
