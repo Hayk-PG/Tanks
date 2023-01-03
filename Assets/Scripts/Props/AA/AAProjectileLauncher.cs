@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AAProjectileLauncher : MonoBehaviour
@@ -8,13 +7,14 @@ public class AAProjectileLauncher : MonoBehaviour
     private PhotonNetworkAALauncher _photonNetworkAALauncher;
     private IScore _ownerScore;
     private BulletController _enemyBullet;
+    private AAProjectileArsenal _arsenal;
 
-    [SerializeField] private AAProjectileArsenal[] _aaProjectileArsenals;
+    [SerializeField] private Transform[] _points;
     [SerializeField] private ParticleSystem _gameobjectSpawnEffect;
-    [SerializeField] private List<ParticleSystem> _gameobjectDespawnEffects;
     [SerializeField] private float _force;
     private int _index = 0;
     private bool _launched;
+    private bool _isDeactivated;
     private string _animationLaunch = "Launch";
 
     public Vector3 ID { get; private set; }
@@ -28,30 +28,11 @@ public class AAProjectileLauncher : MonoBehaviour
         _photonNetworkAALauncher = FindObjectOfType<PhotonNetworkAALauncher>();
     }
 
-    private void OnEnable()
-    {
-        PlayGameobjectSpawnEffect();
-        _turnController.OnTurnChanged += OnTurnChanged;
-    }
+    private void OnEnable() => _turnController.OnTurnChanged += OnTurnChanged;
 
-    private void OnDisable()
-    {
-        _turnController.OnTurnChanged -= OnTurnChanged;
-    }
+    private void OnDisable() => _turnController.OnTurnChanged -= OnTurnChanged;
 
     private void FixedUpdate() => LaunchMissile();
-
-    private void PlayGameobjectSpawnEffect() => _gameobjectSpawnEffect.Play(true);
-
-    private void PlayGameobjectDespawnEffect()
-    {
-        if(_gameobjectDespawnEffects.Count > 0)
-        {
-            _gameobjectDespawnEffects[0].Play(true);           
-            _gameobjectDespawnEffects[0].transform.SetParent(null);
-            _gameobjectDespawnEffects.RemoveAt(0);
-        }
-    }
 
     public void Init(TankController ownerTankController)
     {
@@ -60,7 +41,9 @@ public class AAProjectileLauncher : MonoBehaviour
 
         ID = transform.position;
         _index = 0;
+        _isDeactivated = false;
         _ownerScore = Get<IScore>.From(ownerTankController.gameObject);
+        _gameobjectSpawnEffect.Play(true);
         print(_ownerScore);
     }
 
@@ -70,14 +53,18 @@ public class AAProjectileLauncher : MonoBehaviour
         {
             if (!_launched)
             {
-                if (_index < _aaProjectileArsenals.Length)
+                if (_index < _points.Length)
                 {
                     Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, InitMissile, () => InitMissile(_photonNetworkAALauncher));
                     _launched = true;
                 }
                 else
                 {
-                    Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, Deactivate, () => Deactivate(_photonNetworkAALauncher));
+                    if(!_isDeactivated)
+                    {
+                        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, Deactivate, () => Deactivate(_photonNetworkAALauncher));
+                        _isDeactivated = true;
+                    }
                 }
             }
         }
@@ -85,15 +72,7 @@ public class AAProjectileLauncher : MonoBehaviour
 
     public void InitMissile()
     {
-        if(_aaProjectileArsenals[_index].Missiles.Count > 0)
-        {
-            _aaProjectileArsenals[_index].Missiles[0].gameObject.SetActive(true);
-            _aaProjectileArsenals[_index].Missiles[0].OwnerScore = _ownerScore;
-            _aaProjectileArsenals[_index].Missiles[0].RigidBody.velocity = _aaProjectileArsenals[_index].transform.TransformDirection(Vector3.forward) * _force;
-            _aaProjectileArsenals[_index].Missiles.RemoveAt(0);
-            _animator.Play(_animationLaunch, 0, 0);
-            _index++;
-        }
+        LoadAssetAsync();
     }
 
     private void InitMissile(PhotonNetworkAALauncher photonNetworkAALauncher)
@@ -101,10 +80,39 @@ public class AAProjectileLauncher : MonoBehaviour
         photonNetworkAALauncher.InitMissile(ID);
     }
 
+    private void LoadAssetAsync()
+    {
+        MyAddressable.LoadAssetAsync((string)AddressablesPath.AAProjectileArsenal[0, 0], (int)AddressablesPath.AAProjectileArsenal[0, 1], true,
+            delegate (GameObject gameObject)
+            {
+                Shoot(gameObject);
+            },
+            null);
+    }
+
+    private void Shoot(GameObject gameObject)
+    {
+        if (_arsenal != null)
+            Destroy(_arsenal);
+
+        _arsenal = Get<AAProjectileArsenal>.From(Instantiate(gameObject, _points[_index]));
+        _arsenal.Missile.gameObject.SetActive(true);
+        _arsenal.Missile.OwnerScore = _ownerScore;
+        _arsenal.Missile.RigidBody.velocity = _arsenal.transform.TransformDirection(Vector3.forward) * _force;
+        _animator.Play(_animationLaunch, 0, 0);
+        _index++;
+    }
+
     public void Deactivate()
     {
-        PlayGameobjectDespawnEffect();
-        gameObject.SetActive(false);
+        MyAddressable.LoadAssetAsync((string)AddressablesPath.AAProjectileArsenalDespawnEffect[0, 0], (int)AddressablesPath.AAProjectileArsenalDespawnEffect[0, 1], true,
+            (obj) =>
+            {
+                GameObject particle = Instantiate(obj);
+                particle.transform.position = transform.position + (Vector3.up / 2);
+                gameObject.SetActive(false);
+            },
+            null);
     }
 
     private void Deactivate(PhotonNetworkAALauncher photonNetworkAALauncher)

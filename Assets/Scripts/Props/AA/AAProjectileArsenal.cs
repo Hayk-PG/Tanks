@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AAProjectileArsenal : MonoBehaviour
 {
-    [SerializeField] private List<BulletController> _missiles;
+    [SerializeField] private BulletController _missile;
 
-    public List<BulletController> Missiles => _missiles;
+    public BulletController Missile => _missile;
 }
