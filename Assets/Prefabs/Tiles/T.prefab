@@ -87,7 +87,6 @@ MonoBehaviour:
   _metalCube: {fileID: 4676914304831828487}
   _metalGround: {fileID: 1739523841595223640}
   _explosiveBarrels: {fileID: 7923789292903035574}
-  _aaProjectileLauncher: {fileID: 2677559294016565299}
 --- !u!1 &8906974078321809068
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,6 +284,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4047569716364947869, guid: 7117e7609a71549eaa660eef49ae3325,
+        type: 3}
+      propertyPath: _tileProps
+      value: 
+      objectReference: {fileID: 6068824112099817856}
     - target: {fileID: 4448742929954436666, guid: 7117e7609a71549eaa660eef49ae3325,
         type: 3}
       propertyPath: m_RootOrder
@@ -369,18 +373,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0bfe3a0049c093d448ef44387c84138d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2677559294016565299 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6280647882016694173, guid: 7117e7609a71549eaa660eef49ae3325,
-    type: 3}
-  m_PrefabInstance: {fileID: 8215073717077487534}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49e55b0dc33ad2945ac6442f6cefe0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4676914304831828487 stripped
@@ -611,6 +603,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940717488448683718, guid: 6a864d70fba545c41baad153e651c72b,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7847043288689349978, guid: 6a864d70fba545c41baad153e651c72b,
         type: 3}

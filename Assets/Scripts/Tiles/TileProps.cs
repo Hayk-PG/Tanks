@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 
 public class TileProps : MonoBehaviour
@@ -12,13 +14,13 @@ public class TileProps : MonoBehaviour
     [SerializeField] private MetalCube _metalCube;
     [SerializeField] private MetalTile _metalGround;
     [SerializeField] private ExplosiveBarrels _explosiveBarrels;
-    [SerializeField] private AAProjectileLauncher _aaProjectileLauncher;
-    
+   
     public Sandbags Sandbags => _sandBags;
     public MetalCube MetalCube => _metalCube;
     public MetalTile MetalGround => _metalGround;
     public ExplosiveBarrels ExplosiveBarrels => _explosiveBarrels;
-    public AAProjectileLauncher AAProjectileLauncher => _aaProjectileLauncher;
+
+    public event Action<bool, bool?> onAAProjectileLauncherActivity;
 
 
 
@@ -46,18 +48,7 @@ public class TileProps : MonoBehaviour
 
     private void SetAAProjectileLaucnherActivity(bool isActive, bool? isPlayer1)
     {
-        if (isActive)
-        {
-            string tankName = isPlayer1.Value == true ? Names.Tank_FirstPlayer : Names.Tank_SecondPlayer;
-            TankController ownerTankController = GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.gameObject.name == tankName);
-            AAProjectileLauncher.gameObject.SetActive(true);
-            AAProjectileLauncher.Init(ownerTankController);
-        }
-        else
-        {
-            AAProjectileLauncher.gameObject.SetActive(false);
-            AAProjectileLauncher.Init(null);
-        }
+        onAAProjectileLauncherActivity?.Invoke(isActive, isPlayer1);
     }
 
     public void ActiveProps(PropsType propsType, bool isActive, bool? isPlayer1)
