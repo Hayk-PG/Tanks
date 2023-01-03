@@ -41,7 +41,7 @@ public class ScoreController : MonoBehaviour, IScore
         _getScoreFromTerOccInd = GetComponent<GetScoreFromTerOccInd>();
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
 
-        Score = 12000;
+        Score = 0;
         MainScore = 0;
     }
 
