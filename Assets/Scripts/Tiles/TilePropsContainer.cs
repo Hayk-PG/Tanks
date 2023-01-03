@@ -29,11 +29,11 @@ public class TilePropsContainer : MonoBehaviour
             }
             else
             {
-                MyAddressable.LoadAssetAsync(AddressablesPath.AAProjectileLauncher, true, delegate(GameObject gameObject) 
-                {
-                    AAProjectileLauncher = Get<AAProjectileLauncher>.From(Instantiate(gameObject, transform));
-                    InitAAProjectileLauncher(AAProjectileLauncher, isFirstPlayer);
-                }, 
+                MyAddressable.LoadAssetAsync((string)AddressablesPath.AAProjectileLauncher[0, 0], (int)AddressablesPath.AAProjectileLauncher[0, 1], true, delegate (GameObject gameObject)
+                 {
+                     AAProjectileLauncher = Get<AAProjectileLauncher>.From(Instantiate(gameObject, transform));
+                     InitAAProjectileLauncher(AAProjectileLauncher, isFirstPlayer);
+                 },
                 null);
             }
         }

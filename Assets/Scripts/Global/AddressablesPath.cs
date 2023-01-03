@@ -1,5 +1,5 @@
 public class AddressablesPath
 {
-    public static string AAProjectileLauncher { get; private set; } = "AAProjectileLauncher";
-    public static string ModifiableTiles { get; private set; } = "ModifiableTiles";
+    public static object[,] AAProjectileLauncher { get; private set; } = { { "AAProjectileLauncher", 0 } };
+    public static object[,] ModifiableTiles { get; private set; } = { { "ModifiableTiles", 1 } };
 }

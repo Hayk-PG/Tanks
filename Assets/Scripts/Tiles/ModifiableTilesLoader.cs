@@ -16,7 +16,7 @@ public class ModifiableTilesLoader : MonoBehaviour
 
     private void LoadAssetAsync()
     {
-        MyAddressable.LoadAssetAsync(AddressablesPath.ModifiableTiles, true, InstantiateTiles, null);
+        MyAddressable.LoadAssetAsync((string)AddressablesPath.ModifiableTiles[0, 0], (int)AddressablesPath.ModifiableTiles[0, 1], true, InstantiateTiles, null);
     }
 
     private void InstantiateTiles(GameObject gameObject)

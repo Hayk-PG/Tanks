@@ -3,19 +3,19 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class MyAddressable
 {
-    public static AsyncOperationHandle<UnityEngine.GameObject> _asyncOperationHandle;
+    public static AsyncOperationHandle<UnityEngine.GameObject>[] _asyncOperationHandle = new AsyncOperationHandle<UnityEngine.GameObject>[100];
 
-    public static void LoadAssetAsync(string path, bool release, System.Action<UnityEngine.GameObject> onSuccess, System.Action onFailed)
+    public static void LoadAssetAsync(string path, int operationIndex, bool release, System.Action<UnityEngine.GameObject> onSuccess, System.Action onFailed)
     {
-        _asyncOperationHandle = Addressables.LoadAssetAsync<UnityEngine.GameObject>(path);
-        _asyncOperationHandle.Completed += (result) => 
+        _asyncOperationHandle[operationIndex] = Addressables.LoadAssetAsync<UnityEngine.GameObject>(path);
+        _asyncOperationHandle[operationIndex].Completed += (result) => 
         { 
             if(result.Status == AsyncOperationStatus.Succeeded)
             {
                 onSuccess?.Invoke(result.Result);
 
                 if (release)
-                    Addressables.Release(_asyncOperationHandle);
+                    Addressables.Release(_asyncOperationHandle[operationIndex]);
             }
             else
             {
