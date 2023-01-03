@@ -20,6 +20,7 @@ public class LevelGenerator : MonoBehaviour
 
     public static ChangeTiles ChangeTiles { get; private set; }
     public static TilesData TilesData { get; private set; }
+    public static ModifiableTilesLoader ModifiableTilesLoader { get; private set; }
 
 
     public event Action<LevelGeneratorData> onMapTexturePixels;
@@ -30,6 +31,7 @@ public class LevelGenerator : MonoBehaviour
     {
         ChangeTiles = Get<ChangeTiles>.From(gameObject);
         TilesData = Get<TilesData>.From(gameObject);
+        ModifiableTilesLoader = Get<ModifiableTilesLoader>.From(gameObject);
     }
 
     private void Start()

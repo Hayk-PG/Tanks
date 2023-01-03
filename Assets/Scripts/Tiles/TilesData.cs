@@ -25,12 +25,8 @@ public class TilesData : MonoBehaviour
     }
     public List<InactiveTiles> StoredInactiveTiles;   
    
-    [SerializeField]
-    private Tile[] _prefabs;
-    [SerializeField]
-    private List<Tile> _modifiableTiles;
-    [SerializeField]
-    private Transform _inactiveTilesContainer;
+    [SerializeField] private Tile[] _prefabs;
+    [SerializeField] private Transform _inactiveTilesContainer;
     
     /// <summary>
     /// 0:T, 1:M, 2:L, 3:R, 4:TL, 5:TR, 6:LS, 7:RS, 8:TRL, 9:RL, 10:B, 11:BL, 12:BR, 13:RBL, 14:TLB, 15:TRB, 16:TB, 17:RTLB
@@ -40,11 +36,6 @@ public class TilesData : MonoBehaviour
         get => _prefabs;
     }
     public Dictionary<Vector3, GameObject> TilesDict { get; set; } = new Dictionary<Vector3, GameObject>();
-    public List<Tile> ModifiableTiles
-    {
-        get => _modifiableTiles;
-        set => _modifiableTiles = value;
-    }
     public Transform IntactiveTilesContainer
     {
         get => _inactiveTilesContainer;

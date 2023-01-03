@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 
 public class TilePropsContainer : MonoBehaviour
@@ -31,15 +29,12 @@ public class TilePropsContainer : MonoBehaviour
             }
             else
             {
-                LoadAddressable(AddressablesPath.LABEL_AAProjectileLauncher, result =>
+                MyAddressable.LoadAssetAsync(AddressablesPath.AAProjectileLauncher, true, delegate(GameObject gameObject) 
                 {
-                    if (result != null)
-                    {
-                        GameObject gameObject = Instantiate(result, transform);
-                        AAProjectileLauncher = Get<AAProjectileLauncher>.From(gameObject);
-                        InitAAProjectileLauncher(AAProjectileLauncher, isFirstPlayer);
-                    }
-                });
+                    AAProjectileLauncher = Get<AAProjectileLauncher>.From(Instantiate(gameObject, transform));
+                    InitAAProjectileLauncher(AAProjectileLauncher, isFirstPlayer);
+                }, 
+                null);
             }
         }
         else
@@ -47,17 +42,6 @@ public class TilePropsContainer : MonoBehaviour
             AAProjectileLauncher?.gameObject.SetActive(false);
             AAProjectileLauncher?.Init(null);
         }
-    }
-
-    private void LoadAddressable(string path, Action<GameObject> onResult)
-    {
-        Addressables.LoadAssetAsync<GameObject>(path).Completed += (asyncOperationHandle) =>
-        {
-            if (asyncOperationHandle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
-                onResult?.Invoke(asyncOperationHandle.Result);
-            else
-                onResult?.Invoke(null);
-        };
     }
 
     private void InitAAProjectileLauncher(AAProjectileLauncher aAProjectileLauncher, bool? isFirstPlayer)

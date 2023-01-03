@@ -93,10 +93,11 @@ public class BaseChangeTiles : MonoBehaviour
 
     protected virtual void OnGlobalTileController(Vector3 newTilePosition)
     {
-        if(_tileData.ModifiableTiles.Count > 0)
+        if(LevelGenerator.ModifiableTilesLoader.Container != null && LevelGenerator.ModifiableTilesLoader.Container.transform.childCount > 0)
         {
-            PoolNewTile(newTilePosition, _tileData.ModifiableTiles[0]);
-            _tileData.ModifiableTiles.RemoveAt(0);
+            Tile tile = Get<Tile>.From(LevelGenerator.ModifiableTilesLoader.Container.transform.GetChild(0).gameObject);
+            PoolNewTile(newTilePosition, tile);
+            LevelGenerator.ModifiableTilesLoader.TrackTilesCount();
         }
     }
 }
