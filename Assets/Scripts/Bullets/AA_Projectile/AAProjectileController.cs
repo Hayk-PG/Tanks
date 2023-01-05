@@ -1,4 +1,4 @@
-public class AAMissileController : BulletSensorController
+public class AAProjectileController : BulletSensorController
 {
     protected override void Start()
     {

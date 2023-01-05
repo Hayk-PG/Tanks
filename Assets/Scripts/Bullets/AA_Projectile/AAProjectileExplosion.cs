@@ -1,4 +1,4 @@
-public class AAMissileExplosion : BulletSensorExplosion
+public class AAProjectileExplosion : BulletSensorExplosion
 {
     private IAATargetDetector<BulletController.VelocityData> _iAATargetDetector;
 

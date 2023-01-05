@@ -21,17 +21,17 @@ public class PhotonNetworkAALauncher : MonoBehaviourPun
         }  
     }
 
-    public void InitMissile(Vector3 id)
+    public void InstantiateGun(Vector3 id)
     {
         if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
-            photonView.RPC("InitMissileeRPC", RpcTarget.AllViaServer, id);
+            photonView.RPC("InstantiateGunRPC", RpcTarget.AllViaServer, id);
     }
 
     [PunRPC]
-    private void InitMissileeRPC(Vector3 id)
+    private void InstantiateGunRPC(Vector3 id)
     {
-        AAProjectileLauncher aAProjectileLauncher = GlobalFunctions.ObjectsOfType<AAProjectileLauncher>.Find(launcher => launcher.ID == id);
-        aAProjectileLauncher?.InitMissile();
+        AALauncher aALauncher = GlobalFunctions.ObjectsOfType<AALauncher>.Find(launcher => launcher.ID == id);
+        aALauncher?.InstantiateGun();
     }
 
     public void Deactivate(Vector3 id)
@@ -43,8 +43,8 @@ public class PhotonNetworkAALauncher : MonoBehaviourPun
     [PunRPC]
     private void DeactivateRPC(Vector3 id)
     {
-        AAProjectileLauncher aAProjectileLauncher = GlobalFunctions.ObjectsOfType<AAProjectileLauncher>.Find(launcher => launcher.ID == id);
-        aAProjectileLauncher?.Deactivate();
+        AALauncher aALauncher = GlobalFunctions.ObjectsOfType<AALauncher>.Find(launcher => launcher.ID == id);
+        aALauncher?.Deactivate();
     }
 
     public void DestroyTarget(string enemyName)

@@ -23,4 +23,22 @@ public class MyAddressable
             }
         };
     }
+
+    public static void InstantiateAsync(string key, System.Action<UnityEngine.GameObject> onResult)
+    {
+        Addressables.InstantiateAsync(key).Completed += (addressable) =>
+        {
+            onResult?.Invoke(addressable.Result);
+        };
+    }
+
+    public static void InstantiateAsync(string key, UnityEngine.Transform transform, System.Action<UnityEngine.GameObject> onResult)
+    {
+        Addressables.InstantiateAsync(key, transform).Completed += (addressable) =>
+        {
+            onResult?.Invoke(addressable.Result);
+        };
+    }
+
+    public static void ReleaseInstance(UnityEngine.GameObject gameObject) => Addressables.ReleaseInstance(gameObject);
 }

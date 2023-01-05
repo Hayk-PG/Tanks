@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class AAProjectileLauncher : MonoBehaviour
+public class AALauncher : MonoBehaviour
 {
     private Animator _animator;
     private TurnController _turnController;
     private PhotonNetworkAALauncher _photonNetworkAALauncher;
     private IScore _ownerScore;
     private BulletController _enemyBullet;
-    private AAProjectileArsenal _arsenal;
+    private AAGun _arsenal;
 
     [SerializeField] private Transform[] _points;
     [SerializeField] private ParticleSystem _gameobjectSpawnEffect;
@@ -55,7 +55,7 @@ public class AAProjectileLauncher : MonoBehaviour
             {
                 if (_index < _points.Length)
                 {
-                    Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, InitMissile, () => InitMissile(_photonNetworkAALauncher));
+                    Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, InstantiateGun, () => InstantiateGun(_photonNetworkAALauncher));
                     _launched = true;
                 }
                 else
@@ -70,35 +70,28 @@ public class AAProjectileLauncher : MonoBehaviour
         }
     }
 
-    public void InitMissile()
-    {
-        LoadAssetAsync();
-    }
-
-    private void InitMissile(PhotonNetworkAALauncher photonNetworkAALauncher)
-    {
-        photonNetworkAALauncher.InitMissile(ID);
-    }
-
-    private void LoadAssetAsync()
-    {
-        MyAddressable.LoadAssetAsync((string)AddressablesPath.AAProjectileArsenal[0, 0], (int)AddressablesPath.AAProjectileArsenal[0, 1], true,
-            delegate (GameObject gameObject)
-            {
-                Shoot(gameObject);
-            },
-            null);
-    }
-
-    private void Shoot(GameObject gameObject)
+    public void InstantiateGun()
     {
         if (_arsenal != null)
+        {
+            MyAddressable.ReleaseInstance(_arsenal.gameObject);
             Destroy(_arsenal);
+        }
 
-        _arsenal = Get<AAProjectileArsenal>.From(Instantiate(gameObject, _points[_index]));
-        _arsenal.Missile.gameObject.SetActive(true);
-        _arsenal.Missile.OwnerScore = _ownerScore;
-        _arsenal.Missile.RigidBody.velocity = _arsenal.transform.TransformDirection(Vector3.forward) * _force;
+        MyAddressable.InstantiateAsync((string)AddressablesPath.AAGun[0, 0], _points[_index], InitMissile);
+    }
+
+    private void InstantiateGun(PhotonNetworkAALauncher photonNetworkAALauncher)
+    {
+        photonNetworkAALauncher.InstantiateGun(ID);
+    }
+
+    private void InitMissile(GameObject gun)
+    {
+        _arsenal = Get<AAGun>.From(gun);
+        _arsenal.Projectile.gameObject.SetActive(true);
+        _arsenal.Projectile.OwnerScore = _ownerScore;
+        _arsenal.Projectile.RigidBody.velocity = _arsenal.transform.TransformDirection(Vector3.forward) * _force;
         _animator.Play(_animationLaunch, 0, 0);
         _index++;
     }

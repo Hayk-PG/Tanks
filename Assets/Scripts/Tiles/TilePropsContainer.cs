@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 
 public class TilePropsContainer : MonoBehaviour
 {
     [SerializeField] private TileProps _tileProps;
 
-    public AAProjectileLauncher AAProjectileLauncher { get; private set; }
+    public AALauncher AALauncher { get; private set; }
 
 
 
@@ -23,32 +24,31 @@ public class TilePropsContainer : MonoBehaviour
     {
         if (isActive)
         {
-            if (AAProjectileLauncher != null)
+            if (AALauncher != null)
             {
-                InitAAProjectileLauncher(AAProjectileLauncher, isFirstPlayer);
+                InitAALauncher(AALauncher, isFirstPlayer);
             }
             else
             {
-                MyAddressable.LoadAssetAsync((string)AddressablesPath.AAProjectileLauncher[0, 0], (int)AddressablesPath.AAProjectileLauncher[0, 1], true, delegate (GameObject gameObject)
-                 {
-                     AAProjectileLauncher = Get<AAProjectileLauncher>.From(Instantiate(gameObject, transform));
-                     InitAAProjectileLauncher(AAProjectileLauncher, isFirstPlayer);
-                 },
-                null);
+                MyAddressable.InstantiateAsync((string)AddressablesPath.AALauncher[0, 0], transform, gameobject => 
+                {
+                    AALauncher = Get<AALauncher>.From(gameobject);
+                    InitAALauncher(AALauncher, isFirstPlayer);
+                });
             }
         }
         else
         {
-            AAProjectileLauncher?.gameObject.SetActive(false);
-            AAProjectileLauncher?.Init(null);
+            AALauncher?.gameObject.SetActive(false);
+            AALauncher?.Init(null);
         }
     }
 
-    private void InitAAProjectileLauncher(AAProjectileLauncher aAProjectileLauncher, bool? isFirstPlayer)
+    private void InitAALauncher(AALauncher aALauncher, bool? isFirstPlayer)
     {
         string tankName = isFirstPlayer.Value == true ? Names.Tank_FirstPlayer : Names.Tank_SecondPlayer;
         TankController ownerTankController = GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.gameObject.name == tankName);
-        aAProjectileLauncher.gameObject.SetActive(true);
-        aAProjectileLauncher.Init(ownerTankController);
+        aALauncher.gameObject.SetActive(true);
+        aALauncher.Init(ownerTankController);
     }
 }

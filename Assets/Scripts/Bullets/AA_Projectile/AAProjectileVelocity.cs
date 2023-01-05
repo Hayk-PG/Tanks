@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class AAMissileVelocity : BulletVelocity, IAATargetDetector<BulletController.VelocityData>
+public class AAProjectileVelocity : BulletVelocity, IAATargetDetector<BulletController.VelocityData>
 {
     private PhotonNetworkAALauncher _photonNetworkAALauncher;
 
