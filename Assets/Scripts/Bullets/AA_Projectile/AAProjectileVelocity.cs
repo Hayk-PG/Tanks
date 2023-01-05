@@ -34,7 +34,7 @@ public class AAProjectileVelocity : BulletVelocity, IAATargetDetector<BulletCont
     {
         if (isConditionMet)
         {
-            Target = FindObjectOfType<BulletController>();
+            Target = GlobalFunctions.ObjectsOfType<BulletController>.Find(bullet => bullet.transform.position != transform.position);
             ActivateTrail();
             _isTrailActive = true;
         }

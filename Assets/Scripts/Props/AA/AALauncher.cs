@@ -6,8 +6,8 @@ public class AALauncher : MonoBehaviour
     private TurnController _turnController;
     private PhotonNetworkAALauncher _photonNetworkAALauncher;
     private IScore _ownerScore;
-    private BulletController _enemyBullet;
-    private AAGun _arsenal;
+    private BulletController _enemyProjectile;
+    private AAGun _aAGun;
 
     [SerializeField] private Transform[] _points;
     [SerializeField] private ParticleSystem _gameobjectSpawnEffect;
@@ -72,12 +72,7 @@ public class AALauncher : MonoBehaviour
 
     public void InstantiateGun()
     {
-        if (_arsenal != null)
-        {
-            MyAddressable.ReleaseInstance(_arsenal.gameObject);
-            Destroy(_arsenal);
-        }
-
+        DestroyAAGun();
         MyAddressable.InstantiateAsync((string)AddressablesPath.AAGun[0, 0], _points[_index], InitMissile);
     }
 
@@ -88,10 +83,11 @@ public class AALauncher : MonoBehaviour
 
     private void InitMissile(GameObject gun)
     {
-        _arsenal = Get<AAGun>.From(gun);
-        _arsenal.Projectile.gameObject.SetActive(true);
-        _arsenal.Projectile.OwnerScore = _ownerScore;
-        _arsenal.Projectile.RigidBody.velocity = _arsenal.transform.TransformDirection(Vector3.forward) * _force;
+        _aAGun = Get<AAGun>.From(gun);
+        _aAGun.Projectile.transform.SetParent(null);
+        _aAGun.Projectile.gameObject.SetActive(true);
+        _aAGun.Projectile.OwnerScore = _ownerScore;
+        _aAGun.Projectile.RigidBody.velocity = _aAGun.transform.TransformDirection(Vector3.forward) *_force;
         _animator.Play(_animationLaunch, 0, 0);
         _index++;
     }
@@ -103,6 +99,7 @@ public class AALauncher : MonoBehaviour
             {
                 GameObject particle = Instantiate(obj);
                 particle.transform.position = transform.position + (Vector3.up / 2);
+                DestroyAAGun();
                 gameObject.SetActive(false);
             },
             null);
@@ -113,17 +110,26 @@ public class AALauncher : MonoBehaviour
         photonNetworkAALauncher.Deactivate(ID);
     }
 
+    private void DestroyAAGun()
+    {
+        if (_aAGun != null)
+        {
+            MyAddressable.ReleaseInstance(_aAGun.gameObject);
+            Destroy(_aAGun.gameObject);
+        }
+    }
+
     private void OnTurnChanged(TurnState turnState)
     {
         if(turnState == TurnState.Other)
         {
-            _enemyBullet = GlobalFunctions.ObjectsOfType<BulletController>.Find(bullet => bullet.OwnerScore != _ownerScore);
+            _enemyProjectile = GlobalFunctions.ObjectsOfType<BulletController>.Find(bullet => bullet.OwnerScore != _ownerScore);
             _launched = false;
         }
     }
 
     private bool IsTargetDetected()
     {
-        return _enemyBullet != null && Vector3.Distance(_enemyBullet.transform.position, transform.position) <= 10 ? true : false;
+        return _enemyProjectile != null && Vector3.Distance(_enemyProjectile.transform.position, transform.position) <= 10 ? true : false;
     }
 }
