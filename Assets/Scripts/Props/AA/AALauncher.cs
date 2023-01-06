@@ -1,5 +1,8 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
+//ADDRESSABLE
 public class AALauncher : MonoBehaviour
 {
     private Animator _animator;
@@ -9,6 +12,8 @@ public class AALauncher : MonoBehaviour
     private BulletController _enemyProjectile;
     private AAGun _aAGun;
 
+    [SerializeField] private AssetReference _assetReferenceAaGun;
+    [SerializeField] private AssetReference _assetReferenceDespawnEffect;
     [SerializeField] private Transform[] _points;
     [SerializeField] private ParticleSystem _gameobjectSpawnEffect;
     [SerializeField] private float _force;
@@ -49,22 +54,19 @@ public class AALauncher : MonoBehaviour
 
     private void LaunchMissile()
     {
-        if (IsTargetDetected())
+        if (IsTargetDetected() && !_launched)
         {
-            if (!_launched)
+            if (_index < _points.Length)
             {
-                if (_index < _points.Length)
+                Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, InstantiateGun, () => InstantiateGun(_photonNetworkAALauncher));
+                _launched = true;
+            }
+            else
+            {
+                if (!_isDeactivated)
                 {
-                    Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, InstantiateGun, () => InstantiateGun(_photonNetworkAALauncher));
-                    _launched = true;
-                }
-                else
-                {
-                    if(!_isDeactivated)
-                    {
-                        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, Deactivate, () => Deactivate(_photonNetworkAALauncher));
-                        _isDeactivated = true;
-                    }
+                    Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, Deactivate, () => Deactivate(_photonNetworkAALauncher));
+                    _isDeactivated = true;
                 }
             }
         }
@@ -73,17 +75,14 @@ public class AALauncher : MonoBehaviour
     public void InstantiateGun()
     {
         DestroyAAGun();
-        MyAddressable.InstantiateAsync((string)AddressablesPath.AAGun[0, 0], _points[_index], InitMissile);
+        Addressables.InstantiateAsync(_assetReferenceAaGun, _points[_index]).Completed += InitProjectile;
     }
 
-    private void InstantiateGun(PhotonNetworkAALauncher photonNetworkAALauncher)
-    {
-        photonNetworkAALauncher.InstantiateGun(ID);
-    }
+    private void InstantiateGun(PhotonNetworkAALauncher photonNetworkAALauncher) => photonNetworkAALauncher.InstantiateGun(ID);
 
-    private void InitMissile(GameObject gun)
+    private void InitProjectile(AsyncOperationHandle<GameObject> result)
     {
-        _aAGun = Get<AAGun>.From(gun);
+        _aAGun = Get<AAGun>.From(result.Result);
         _aAGun.Projectile.transform.SetParent(null);
         _aAGun.Projectile.gameObject.SetActive(true);
         _aAGun.Projectile.OwnerScore = _ownerScore;
@@ -92,29 +91,22 @@ public class AALauncher : MonoBehaviour
         _index++;
     }
 
-    public void Deactivate()
-    {
-        MyAddressable.LoadAssetAsync((string)AddressablesPath.AAProjectileArsenalDespawnEffect[0, 0], (int)AddressablesPath.AAProjectileArsenalDespawnEffect[0, 1], true,
-            (obj) =>
-            {
-                GameObject particle = Instantiate(obj);
-                particle.transform.position = transform.position + (Vector3.up / 2);
-                DestroyAAGun();
-                gameObject.SetActive(false);
-            },
-            null);
-    }
+    public void Deactivate() => Addressables.InstantiateAsync(_assetReferenceDespawnEffect).Completed += OnDeactivate;
 
-    private void Deactivate(PhotonNetworkAALauncher photonNetworkAALauncher)
+    private void Deactivate(PhotonNetworkAALauncher photonNetworkAALauncher) => photonNetworkAALauncher.Deactivate(ID);
+
+    private void OnDeactivate(AsyncOperationHandle<GameObject> result)
     {
-        photonNetworkAALauncher.Deactivate(ID);
+        result.Result.transform.position = transform.position + (Vector3.up / 2);
+        DestroyAAGun();
+        gameObject.SetActive(false);
     }
 
     private void DestroyAAGun()
     {
         if (_aAGun != null)
         {
-            MyAddressable.ReleaseInstance(_aAGun.gameObject);
+            _assetReferenceAaGun.ReleaseInstance(_aAGun.gameObject);
             Destroy(_aAGun.gameObject);
         }
     }

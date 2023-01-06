@@ -7,21 +7,21 @@ public class MyAddressable
 
     public static void LoadAssetAsync(string path, int operationIndex, bool release, System.Action<UnityEngine.GameObject> onSuccess, System.Action onFailed)
     {
-        _asyncOperationHandle[operationIndex] = Addressables.LoadAssetAsync<UnityEngine.GameObject>(path);
-        _asyncOperationHandle[operationIndex].Completed += (result) => 
-        { 
-            if(result.Status == AsyncOperationStatus.Succeeded)
-            {
-                onSuccess?.Invoke(result.Result);
+        //_asyncOperationHandle[operationIndex] = Addressables.LoadAssetAsync<UnityEngine.GameObject>(path);
+        //_asyncOperationHandle[operationIndex].Completed += (result) => 
+        //{ 
+        //    if(result.Status == AsyncOperationStatus.Succeeded)
+        //    {
+        //        onSuccess?.Invoke(result.Result);
 
-                if (release)
-                    Addressables.Release(_asyncOperationHandle[operationIndex]);
-            }
-            else
-            {
-                onFailed?.Invoke();
-            }
-        };
+        //        if (release)
+        //            Addressables.Release(_asyncOperationHandle[operationIndex]);
+        //    }
+        //    else
+        //    {
+        //        onFailed?.Invoke();
+        //    }
+        //};
     }
 
     public static void InstantiateAsync(string key, System.Action<UnityEngine.GameObject> onResult)

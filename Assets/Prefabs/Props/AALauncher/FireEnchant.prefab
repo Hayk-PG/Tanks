@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3418634527753250517}
   - component: {fileID: 4926747581995516627}
   - component: {fileID: 8618823552386528369}
+  - component: {fileID: -2046705669424518617}
   m_Layer: 0
   m_Name: FireEnchant
   m_TagString: Untagged
@@ -46,7 +47,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 1
   simulationSpeed: 1
-  stopAction: 2
+  stopAction: 3
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -4895,6 +4896,20 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-2046705669424518617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443047703623756402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82663761e4eaa844c975e69a3a79feac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stopBehaviour: 2
+  _releaseInstance: 1
 --- !u!1 &3036355277594598854
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,16 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.AddressableAssets;
 
+//ADDRESSABLE
 public class BulletParticles : MonoBehaviour
 {
     protected IBulletTrail _iBulletTrail;
     protected IBulletExplosion _iBulletExplosion;
 
+    [SerializeField] protected AssetReference _assetReferenceTrail;
+
     [SerializeField] protected ParticleSystem _muzzleFlash;
-    [SerializeField] protected GameObject _trail;
     [SerializeField] protected Explosion _explosion;
     [Header("Optional non collided explosion")]
     [SerializeField] protected GameObject _optionalExplosion;
 
+    protected bool _isTrailInstantiated;
+
+    protected GameObject Trail { get; set; }
     
 
     protected virtual void Awake()
@@ -40,10 +46,26 @@ public class BulletParticles : MonoBehaviour
             _iBulletExplosion.OnBulletExplosion -= OnExplosion;
     }
 
+    protected virtual void OnDestroy() => ReleaseAddressables();
+
     protected virtual void OnTrailActivity(bool isActive)
     {
-        if (_trail != null)
-            _trail.SetActive(isActive);
+        if (System.String.IsNullOrEmpty(_assetReferenceTrail.AssetGUID))
+            return;
+
+        InstantiateAndCacheTrail();
+    }
+
+    protected void InstantiateAndCacheTrail()
+    {
+        if (!_isTrailInstantiated)
+        {
+            Addressables.InstantiateAsync(_assetReferenceTrail, transform).Completed += (asset) =>
+            {
+                Trail = asset.Result;
+                _isTrailInstantiated = true;
+            };
+        }
     }
 
     protected virtual void OnExplosion(IScore ownerScore, float distance)
@@ -52,5 +74,11 @@ public class BulletParticles : MonoBehaviour
         _explosion.Distance = distance;
         _explosion.gameObject.SetActive(true);
         _explosion.transform.parent = null;
+    }
+
+    protected virtual void ReleaseAddressables()
+    {
+        if (Trail != null)
+            Addressables.ReleaseInstance(Trail);
     }
 }

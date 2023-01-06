@@ -1,6 +1,7 @@
 using UnityEngine;
 
 
+//ADDRESSABLE
 public class ModifiableTilesLoader : MonoBehaviour
 {
     private bool _isLoading;

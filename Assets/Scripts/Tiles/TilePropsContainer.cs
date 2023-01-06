@@ -2,9 +2,11 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 
+//ADDRESSABLE
 public class TilePropsContainer : MonoBehaviour
 {
     [SerializeField] private TileProps _tileProps;
+    [SerializeField] private AssetReference _assetReferenceAaLauncher;
 
     public AALauncher AALauncher { get; private set; }
 
@@ -25,16 +27,14 @@ public class TilePropsContainer : MonoBehaviour
         if (isActive)
         {
             if (AALauncher != null)
-            {
                 InitAALauncher(AALauncher, isFirstPlayer);
-            }
             else
             {
-                MyAddressable.InstantiateAsync((string)AddressablesPath.AALauncher[0, 0], transform, gameobject => 
+                Addressables.InstantiateAsync(_assetReferenceAaLauncher, transform).Completed += (asset) =>
                 {
-                    AALauncher = Get<AALauncher>.From(gameobject);
+                    AALauncher = Get<AALauncher>.From(asset.Result);
                     InitAALauncher(AALauncher, isFirstPlayer);
-                });
+                };
             }
         }
         else
