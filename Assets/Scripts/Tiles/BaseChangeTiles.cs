@@ -70,16 +70,17 @@ public class BaseChangeTiles : MonoBehaviour
     {
         if (!_tileData.TilesDict[pos].GetComponent<Tile>().IsProtected)
         {
-            if (_tileCreationMode == TileCreationMode.Instantiate)
-            {
-                InstantiateNewTile(pos, tile);
-            }
-            else
-            {
-                Get<Tile>.From(_tileData.TilesDict[pos])?.StoreForLaterUse();
-                PoolNewTile(pos, _tileData.StoredInactiveTiles.Find(storedTile => storedTile.TileName == tile.name).Tiles[0]);
-                _tileData.StoredInactiveTiles.Find(storedTile => storedTile.TileName == tile.name).Tiles.RemoveAt(0);
-            }
+            InstantiateNewTile(pos, tile);
+            //if (_tileCreationMode == TileCreationMode.Instantiate)
+            //{
+            //    InstantiateNewTile(pos, tile);
+            //}
+            //else
+            //{
+            //    Get<Tile>.From(_tileData.TilesDict[pos])?.StoreForLaterUse();
+            //    PoolNewTile(pos, _tileData.StoredInactiveTiles.Find(storedTile => storedTile.TileName == tile.name).Tiles[0]);
+            //    _tileData.StoredInactiveTiles.Find(storedTile => storedTile.TileName == tile.name).Tiles.RemoveAt(0);
+            //}
         }
     }
 
