@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class TileAddressables : MonoBehaviour
+public class TileRenderers : MonoBehaviour
 {
     [SerializeField] private AssetReference _assetReferenceRenderers;
 
@@ -10,10 +10,7 @@ public class TileAddressables : MonoBehaviour
     {
         if (!System.String.IsNullOrEmpty(_assetReferenceRenderers.AssetGUID))
         {
-            _assetReferenceRenderers.InstantiateAsync(transform).Completed += (asset) =>
-            {
-
-            };
+            _assetReferenceRenderers.InstantiateAsync(transform);
         }
     }
 }

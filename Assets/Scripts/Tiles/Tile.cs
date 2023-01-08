@@ -1,14 +1,12 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class Tile : MonoBehaviour, IDestruct
 {
-    [SerializeField] private GameObject _explosion;
     [SerializeField] private Collider _collider;
-    [SerializeField] private TileParticles _tileParticles;
     [SerializeField] private TileProps _tileProps;
-
-
+    [SerializeField] private AssetReference _assetReferenceParticles;
     [SerializeField] private bool _isSuspended, _isProtected;
 
     public bool IsSuspended
@@ -22,7 +20,6 @@ public class Tile : MonoBehaviour, IDestruct
         set => _isProtected = value;
     }
     public float Health { get; set; } = 100;
-
     public Action<float> OnTileHealth { get; set; }
 
 
@@ -44,10 +41,6 @@ public class Tile : MonoBehaviour, IDestruct
         LevelGenerator.TilesData.TilesDict.Add(transform.position, gameObject);
 
         Trigger(false);
-        ExplosionActivity(false);
-
-        _tileParticles?.gameObject.SetActive(true);
-        _tileParticles?.ResetTileParticles();
         _tileProps?.ActiveProps(TileProps.PropsType.All, false, null);
     }
 
@@ -63,35 +56,20 @@ public class Tile : MonoBehaviour, IDestruct
         }
     }
 
-    private void TileParticlesActivity(int tileParticleIndex)
-    {
-        if (_tileParticles != null)
-        {
-            Vector3 bottomTile = transform.position - new Vector3(0, 0.5f, 0);
-
-            if (LevelGenerator.ChangeTiles.HasTile(bottomTile))
-            {
-                if (LevelGenerator.TilesData.TilesDict[bottomTile].name != Names.LS || LevelGenerator.TilesData.TilesDict[bottomTile].name != Names.RS)
-                {
-                    _tileParticles.TileParticlesActivity(tileParticleIndex, LevelGenerator.TilesData, bottomTile, true);
-                }
-            }
-        }
-    }
-
     private void Trigger(bool isTrigger) => _collider.isTrigger = isTrigger;
 
-    private void ExplosionActivity(bool isActive)
+    private void ExplosionActivity()
     {
-        _explosion.SetActive(isActive);
-        _explosion.transform.parent = isActive ? null : transform;
+        _assetReferenceParticles.InstantiateAsync().Completed += (asset) =>
+        {
+            asset.Result.transform.position = transform.position;
+        };
     }
 
     private void Destruction(int tileParticleIndex)
     {
         Trigger(true);
-        ExplosionActivity(true);
-        TileParticlesActivity(tileParticleIndex);
+        ExplosionActivity();
         LevelGenerator.ChangeTiles.UpdateTiles(transform.position);
         StoreForLaterUse();
     }
