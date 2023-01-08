@@ -5,17 +5,15 @@ using UnityEngine.AddressableAssets;
 
 public class TileProps : MonoBehaviour
 {
-    public enum PropsType { Sandbags, MetalCube, MetalGround, ExplosiveBarrels, AALauncher, All}
+    public enum PropsType { MetalCube, MetalGround, ExplosiveBarrels, AALauncher, All}
     public PropsType _propsType;
 
     private Tile _tile;
 
-    [SerializeField] private Sandbags _sandBags;
     [SerializeField] private MetalCube _metalCube;
     [SerializeField] private MetalTile _metalGround;
     [SerializeField] private ExplosiveBarrels _explosiveBarrels;
    
-    public Sandbags Sandbags => _sandBags;
     public MetalCube MetalCube => _metalCube;
     public MetalTile MetalGround => _metalGround;
     public ExplosiveBarrels ExplosiveBarrels => _explosiveBarrels;
@@ -30,14 +28,6 @@ public class TileProps : MonoBehaviour
     {
         if(_tile != null)
             _tile.IsProtected = isProtected;
-    }
-
-    private void SetSandbagsActivity(bool isActive, bool? isPlayer1)
-    {
-        Sandbags.gameObject.SetActive(isActive);
-
-        if (isPlayer1 != null)
-            Sandbags.SandbagsDirection(isPlayer1.Value);
     }
 
     private void SetArmoredCubeActivity(bool isActive) => MetalCube.gameObject.SetActive(isActive);
@@ -55,10 +45,6 @@ public class TileProps : MonoBehaviour
     {
         switch (propsType)
         {
-            case PropsType.Sandbags:
-                SetSandbagsActivity(isActive, isPlayer1);
-                break;
-
             case PropsType.MetalCube:
                 SetArmoredCubeActivity(isActive);
                 break;
@@ -78,7 +64,6 @@ public class TileProps : MonoBehaviour
                 break;
 
             case PropsType.All:
-                SetSandbagsActivity(isActive, isPlayer1);
                 SetExplosiveBarrelsActivity(isActive);
                 SetAAProjectileLaucnherActivity(isActive, isPlayer1);
                 SetArmoredCubeActivity(isActive);

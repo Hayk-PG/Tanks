@@ -68,7 +68,7 @@ public partial class PlayerDeployProps : MonoBehaviour
 
     protected virtual void ActivateTileProps(TileProps tileProps, bool isPlayer1)
     {
-        tileProps?.ActiveProps(global::TileProps.PropsType.Sandbags, true, isPlayer1);
+        //tileProps?.ActiveProps(global::TileProps.PropsType.Sandbags, true, isPlayer1);
     }
 
     protected virtual void InstantiateHelper(out bool isPlayer1, out Vector3 transformPosition)
