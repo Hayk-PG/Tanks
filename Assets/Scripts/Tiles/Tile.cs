@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+//ADDRESSABLE
 public class Tile : MonoBehaviour, IDestruct
 {
     [SerializeField] private TileProps _tileProps;
@@ -34,7 +35,7 @@ public class Tile : MonoBehaviour, IDestruct
             _assetReferenceMesh.InstantiateAsync(transform).Completed += (asset) => { _cachedMesh = asset.Result; };
     }
 
-    private void Destruction(int tileParticleIndex)
+    private void Destruction()
     {
         LevelGenerator.ChangeTiles.UpdateTiles(transform.position);
         LevelGenerator.TilesData.TilesDict.Remove(transform.position);
@@ -54,7 +55,7 @@ public class Tile : MonoBehaviour, IDestruct
         if (Health <= 0)
         {
             IsProtected = false;
-            Destruction(tileParticleIndex);
+            Destruction();
         }
     }
 }

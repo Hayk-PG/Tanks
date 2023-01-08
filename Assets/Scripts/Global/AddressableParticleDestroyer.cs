@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+//ADDRESSABLE
 public class AddressableParticleDestroyer : MonoBehaviour
 {
     [SerializeField] private enum StopBehaviour { None, Disable, Destroy}
