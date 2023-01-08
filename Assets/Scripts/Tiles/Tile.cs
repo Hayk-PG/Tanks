@@ -4,10 +4,12 @@ using UnityEngine.AddressableAssets;
 
 public class Tile : MonoBehaviour, IDestruct
 {
-    [SerializeField] private Collider _collider;
     [SerializeField] private TileProps _tileProps;
+    [SerializeField] private AssetReference _assetReferenceMesh;
     [SerializeField] private AssetReference _assetReferenceParticles;
     [SerializeField] private bool _isSuspended, _isProtected;
+
+    private GameObject _cachedMesh;
 
     public bool IsSuspended
     {
@@ -24,24 +26,24 @@ public class Tile : MonoBehaviour, IDestruct
 
 
 
-    public void StoreForLaterUse()
+    private void Start() => InstantiateMesh();
+
+    private void InstantiateMesh()
     {
-        LevelGenerator.TilesData.TilesDict.Remove(transform.position);
-        LevelGenerator.TilesData.StoredInactiveTiles.Find(tile => tile.TileName == name).Tiles?.Add(this);
-        transform.SetParent(LevelGenerator.TilesData.IntactiveTilesContainer);
-        gameObject.SetActive(false);
+        if (!System.String.IsNullOrEmpty(_assetReferenceMesh.AssetGUID))
+            _assetReferenceMesh.InstantiateAsync(transform).Completed += (asset) => { _cachedMesh = asset.Result; };
     }
 
-    public void ReUse()
+    private void Destruction(int tileParticleIndex)
     {
-        IsProtected = false;
-        IsSuspended = false;
-        Health = 100;
-        OnTileHealth?.Invoke(Health);
-        LevelGenerator.TilesData.TilesDict.Add(transform.position, gameObject);
-
-        Trigger(false);
-        _tileProps?.ActiveProps(TileProps.PropsType.All, false, null);
+        LevelGenerator.ChangeTiles.UpdateTiles(transform.position);
+        LevelGenerator.TilesData.TilesDict.Remove(transform.position);
+        _assetReferenceParticles.InstantiateAsync().Completed += (asset) =>
+        {
+            asset.Result.transform.position = transform.position;
+            _assetReferenceMesh.ReleaseInstance(_cachedMesh);
+            Destroy(gameObject);
+        };
     }
 
     public void Destruct(int damage, int tileParticleIndex)
@@ -54,23 +56,5 @@ public class Tile : MonoBehaviour, IDestruct
             IsProtected = false;
             Destruction(tileParticleIndex);
         }
-    }
-
-    private void Trigger(bool isTrigger) => _collider.isTrigger = isTrigger;
-
-    private void ExplosionActivity()
-    {
-        _assetReferenceParticles.InstantiateAsync().Completed += (asset) =>
-        {
-            asset.Result.transform.position = transform.position;
-        };
-    }
-
-    private void Destruction(int tileParticleIndex)
-    {
-        Trigger(true);
-        ExplosionActivity();
-        LevelGenerator.ChangeTiles.UpdateTiles(transform.position);
-        StoreForLaterUse();
     }
 }

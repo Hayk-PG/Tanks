@@ -2,9 +2,6 @@
 
 public class BaseChangeTiles : MonoBehaviour
 {
-    public enum TileCreationMode { Instantiate, Pool}
-    public TileCreationMode _tileCreationMode;
-
     protected Tile _newTile;
     protected TilesData _tileData;
     protected MapPoints _mapPoints;
@@ -32,19 +29,33 @@ public class BaseChangeTiles : MonoBehaviour
         _globalTileController.OnCreateNewTile -= OnGlobalTileController;
     }
 
-    public bool HasTile(Vector3 pos)
+    protected void SetTile(Vector3 pos, Tile tile)
     {
-        return _tileData.TilesDict.ContainsKey(pos) && _tileData.TilesDict[pos].gameObject != null ? true :
-               _tileData.TilesDict.ContainsKey(pos) && _tileData.TilesDict[pos].gameObject == null ? false :
-               !_tileData.TilesDict.ContainsKey(pos) ? false : false;
+        if(tile != null)
+        {
+            UpdateTile(pos, tile);
+        }
     }
 
     protected void UpdateTile(Vector3 pos, Tile tile)
     {
-        if(_tileData.TilesDict[pos].name != tile.name)
+        if (_tileData.TilesDict[pos].name != tile.name)
         {
             OnTileUpdates(pos, tile);
         }
+    }
+
+    private void OnTileUpdates(Vector3 pos, Tile tile)
+    {
+        if (!_tileData.TilesDict[pos].GetComponent<Tile>().IsProtected)
+        {
+            InstantiateNewTile(pos, tile);
+        }
+    }
+
+    protected virtual void OnGlobalTileController(Vector3 newTilePosition)
+    {
+        InstantiateNewTile(newTilePosition, LevelGenerator.TilesData.TilesPrefabs[1]);
     }
 
     private void InstantiateNewTile(Vector3 pos, Tile tile)
@@ -57,38 +68,10 @@ public class BaseChangeTiles : MonoBehaviour
         newTile.transform.SetParent(transform);
     }
 
-    private void PoolNewTile(Vector3 pos, Tile newTile)
-    {       
-        _newTile = newTile;
-        _newTile.transform.SetParent(transform);
-        _newTile.transform.position = pos;
-        _newTile.gameObject.SetActive(true);
-        _newTile.ReUse();
-    }
-
-    private void OnTileUpdates(Vector3 pos, Tile tile)
+    public bool HasTile(Vector3 pos)
     {
-        if (!_tileData.TilesDict[pos].GetComponent<Tile>().IsProtected)
-        {
-            InstantiateNewTile(pos, tile);
-        }
-    }
-
-    protected void SetTile(Vector3 pos, Tile tile)
-    {
-        if(tile != null)
-        {
-            UpdateTile(pos, tile);
-        }
-    }
-
-    protected virtual void OnGlobalTileController(Vector3 newTilePosition)
-    {
-        if(LevelGenerator.ModifiableTilesLoader.Container != null && LevelGenerator.ModifiableTilesLoader.Container.transform.childCount > 0)
-        {
-            Tile tile = Get<Tile>.From(LevelGenerator.ModifiableTilesLoader.Container.transform.GetChild(0).gameObject);
-            PoolNewTile(newTilePosition, tile);
-            LevelGenerator.ModifiableTilesLoader.TrackTilesCount();
-        }
+        return _tileData.TilesDict.ContainsKey(pos) && _tileData.TilesDict[pos].gameObject != null ? true :
+               _tileData.TilesDict.ContainsKey(pos) && _tileData.TilesDict[pos].gameObject == null ? false :
+               !_tileData.TilesDict.ContainsKey(pos) ? false : false;
     }
 }

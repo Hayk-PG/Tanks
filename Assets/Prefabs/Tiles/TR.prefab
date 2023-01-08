@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6520224509187930981}
   - component: {fileID: -5949897009606623657}
   - component: {fileID: 8312160977630150010}
-  - component: {fileID: 9065604112389223224}
   m_Layer: 0
   m_Name: TR
   m_TagString: Tile
@@ -62,9 +61,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e90f0c855f9da644866686328fe22c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosion: {fileID: 0}
-  _collider: {fileID: 6520224509187930981}
   _tileProps: {fileID: 8312160977630150010}
+  _assetReferenceMesh:
+    m_AssetGUID: 7bcd930b51067f543837592329c48301
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   _assetReferenceParticles:
     m_AssetGUID: fe45b90e9cca4734b8ef32edfa176c3b
     m_SubObjectName: 
@@ -89,23 +91,6 @@ MonoBehaviour:
   _metalCube: {fileID: 3553654174112073928}
   _metalGround: {fileID: 7607326154179105943}
   _explosiveBarrels: {fileID: 2035720500671285369}
---- !u!114 &9065604112389223224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2980697628527095468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65863f4582b55d640acb87348d2d1cdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _assetReferenceRenderers:
-    m_AssetGUID: 7bcd930b51067f543837592329c48301
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
 --- !u!1001 &267805188624242017
 PrefabInstance:
   m_ObjectHideFlags: 0

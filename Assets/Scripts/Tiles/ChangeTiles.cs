@@ -184,14 +184,12 @@ public class ChangeTiles : BaseChangeTiles
     {
         if (currentTilePosition != null)
         {
-            _tileCreationMode = TileCreationMode.Pool;
             StoreInOptimizedTilesList(currentTilePosition.Value);
             yield return null;
             CreateTilesFromOptimizedTilesList();
         }
         else
         {
-            _tileCreationMode = TileCreationMode.Instantiate;
             CreateTilesFromTilesDict();
         }
 

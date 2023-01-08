@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6340754720874582373}
   - component: {fileID: 1334286069357573823}
   - component: {fileID: 8606460500901501177}
-  - component: {fileID: 48658741668729918}
   m_Layer: 0
   m_Name: B
   m_TagString: Tile
@@ -59,9 +58,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e90f0c855f9da644866686328fe22c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosion: {fileID: 0}
-  _collider: {fileID: 1334286069357573823}
   _tileProps: {fileID: 0}
+  _assetReferenceMesh:
+    m_AssetGUID: 09b6ee686c1bd3f47a5ef6bdf417602f
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   _assetReferenceParticles:
     m_AssetGUID: fe45b90e9cca4734b8ef32edfa176c3b
     m_SubObjectName: 
@@ -69,20 +71,3 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   _isSuspended: 0
   _isProtected: 0
---- !u!114 &48658741668729918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7036235644561695606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65863f4582b55d640acb87348d2d1cdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _assetReferenceRenderers:
-    m_AssetGUID: 09b6ee686c1bd3f47a5ef6bdf417602f
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
