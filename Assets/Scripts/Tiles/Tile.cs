@@ -23,8 +23,9 @@ public class Tile : MonoBehaviour, IDestruct
         set => _isProtected = value;
     }
     public float Health { get; set; } = 100;
-    public Action<float> OnTileHealth { get; set; }
 
+    public Action<float> OnTileHealth { get; set; }
+    public event Action onDestruction;
 
 
     private void Start() => InstantiateMesh();
@@ -43,6 +44,7 @@ public class Tile : MonoBehaviour, IDestruct
         {
             asset.Result.transform.position = transform.position;
             _assetReferenceMesh.ReleaseInstance(_cachedMesh);
+            onDestruction?.Invoke();
             Destroy(gameObject);
         };
     }

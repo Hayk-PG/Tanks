@@ -60,11 +60,9 @@ public class BulletParticles : MonoBehaviour
     {
         if (!_isTrailInstantiated)
         {
-            Addressables.InstantiateAsync(_assetReferenceTrail, transform).Completed += (asset) =>
-            {
-                Trail = asset.Result;
-                _isTrailInstantiated = true;
-            };
+            Addressables.InstantiateAsync(_assetReferenceTrail, transform).Completed += (asset) => { Trail = asset.Result; };
+
+            _isTrailInstantiated = true;
         }
     }
 
