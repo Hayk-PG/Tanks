@@ -11,8 +11,9 @@ public class AALauncher : MonoBehaviour
     private IScore _ownerScore;
     private BulletController _enemyProjectile;
     private AAGun _aAGun;
-
+    
     [SerializeField] private AssetReference _assetReferenceAaGun;
+    [SerializeField] private AssetReference _assetReferenceSpawnParticles;
     [SerializeField] private AssetReference _assetReferenceDespawnEffect;
     [SerializeField] private Transform[] _points;
     [SerializeField] private ParticleSystem _gameobjectSpawnEffect;
@@ -44,12 +45,15 @@ public class AALauncher : MonoBehaviour
         if (ownerTankController == null)
             return;
 
+        InstantiateSpawnParticlesAsync();
         ID = transform.position;
-        _index = 0;
-        _isDeactivated = false;
         _ownerScore = Get<IScore>.From(ownerTankController.gameObject);
-        _gameobjectSpawnEffect.Play(true);
         print(_ownerScore);
+    }
+
+    private void InstantiateSpawnParticlesAsync()
+    {
+        _assetReferenceSpawnParticles.InstantiateAsync(transform.position, Quaternion.Euler(-90, 0, 0), null);
     }
 
     private void LaunchMissile()
@@ -99,7 +103,7 @@ public class AALauncher : MonoBehaviour
     {
         result.Result.transform.position = transform.position + (Vector3.up / 2);
         DestroyAAGun();
-        gameObject.SetActive(false);
+        DestroyAALauncher();
     }
 
     private void DestroyAAGun()
@@ -109,6 +113,12 @@ public class AALauncher : MonoBehaviour
             _assetReferenceAaGun.ReleaseInstance(_aAGun.gameObject);
             Destroy(_aAGun.gameObject);
         }
+    }
+
+    private void DestroyAALauncher()
+    {
+        Addressables.ReleaseInstance(gameObject);
+        Destroy(gameObject);
     }
 
     private void OnTurnChanged(TurnState turnState)
