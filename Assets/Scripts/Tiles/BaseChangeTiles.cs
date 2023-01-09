@@ -53,19 +53,25 @@ public class BaseChangeTiles : MonoBehaviour
         }
     }
 
-    protected virtual void OnGlobalTileController(Vector3 newTilePosition)
-    {
-        InstantiateNewTile(newTilePosition, LevelGenerator.TilesData.TilesPrefabs[1]);
-    }
-
     private void InstantiateNewTile(Vector3 pos, Tile tile)
     {
         Destroy(_tileData.TilesDict[pos]);
         _tileData.TilesDict.Remove(pos);
-        Tile newTile = Instantiate(tile, pos, Quaternion.identity);
+        Tile newTile = Instantiate(tile, pos, Quaternion.identity, transform);
         newTile.name = tile.name;
         _tileData.TilesDict.Add(pos, newTile.gameObject);
-        newTile.transform.SetParent(transform);
+    }
+
+    protected virtual void OnGlobalTileController(Vector3 newTilePosition)
+    {
+        ModifyTiles(newTilePosition);
+    }
+
+    private void ModifyTiles(Vector3 newTilePosition)
+    {
+        Tile newTile = Instantiate(LevelGenerator.TilesData.TilesPrefabs[0], newTilePosition, Quaternion.identity, transform);
+        newTile.name = LevelGenerator.TilesData.TilesPrefabs[0].name;
+        _tileData.TilesDict.Add(newTilePosition, newTile.gameObject);
     }
 
     public bool HasTile(Vector3 pos)
