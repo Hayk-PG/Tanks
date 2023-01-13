@@ -34,6 +34,7 @@ public class BaseShootController: MonoBehaviour
         internal float _maxSpeed;
         internal float _currentVelocity;
         internal bool _isApplyingForce;
+        [SerializeField] internal float _rigidbodyForceMultiplier;
     }
 
     public Canon _canon;

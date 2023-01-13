@@ -249,7 +249,7 @@ public class AIShootController : BaseShootController
             BulletController bullet = Instantiate(_cachedBulletsList[_activeBulletIndex]._weaponProperties._prefab, _shootPoint.position, _canonPivotPoint.rotation);
             bullet.OwnerScore = _iScore;
             bullet.RigidBody.velocity = _target;
-            _rigidBody.AddForce(transform.forward * _target.magnitude * 1000, ForceMode.Impulse);
+            _rigidBody.AddForce(transform.forward * _target.magnitude * _shoot._rigidbodyForceMultiplier, ForceMode.Impulse);
             mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
             _currentTrajectoryTime = _defaultTrajectoryTime;
             OnShoot?.Invoke();

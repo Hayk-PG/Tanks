@@ -1033,6 +1033,8 @@ MonoBehaviour:
     _maxEulerAngleX: 39.314
     _rotationSpeed: 28
     _rotationStabilizer: {x: 0, y: 0, z: 0}
+  _shoot:
+    _rigidbodyForceMultiplier: 250
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
 --- !u!114 &-1200562185720216814
@@ -1677,7 +1679,6 @@ GameObject:
   - component: {fileID: 9105844820683657124}
   - component: {fileID: 5328231200091865089}
   - component: {fileID: 7932344459502679243}
-  - component: {fileID: 4283070713601098398}
   - component: {fileID: 427211995740580922}
   m_Layer: 0
   m_Name: 105-cm-lefh-18-3-auf-geschutzwagen-b-2-f
@@ -1751,19 +1752,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4283070713601098398
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8436831111218091294}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.18, y: 1.032797, z: 2.793032}
-  m_Center: {x: -0.00000070780516, y: 0.1496056, z: 0.025249124}
 --- !u!64 &427211995740580922
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2295,10 +2283,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 579180189149694233}
     m_Modifications:
+    - target: {fileID: 3212245265082641019, guid: 3e29ccfa0b0c9e647afb92e5d6855871,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3564710858297221117, guid: 3e29ccfa0b0c9e647afb92e5d6855871,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.18
+      value: 1.21
       objectReference: {fileID: 0}
     - target: {fileID: 3564710858457558169, guid: 3e29ccfa0b0c9e647afb92e5d6855871,
         type: 3}
@@ -2363,7 +2356,7 @@ PrefabInstance:
     - target: {fileID: 7501759017993711244, guid: 3e29ccfa0b0c9e647afb92e5d6855871,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.746
+      value: -1.21
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e29ccfa0b0c9e647afb92e5d6855871, type: 3}

@@ -39,6 +39,9 @@ public class TankProperties : ScriptableObject
     public float _rotationSpeed;
     public Vector3 _rotationStabilizer;
 
+    [Header("Tank prefab shoot parameters")]
+    public float _rigidbodyForceMultiplier;
+
     [Header("Weapons")]
     public WeaponProperties[] _weapons;
 
@@ -95,6 +98,7 @@ public class TankProperties : ScriptableObject
             _maxEulerAngleX = baseShootController._canon._maxEulerAngleX;
             _rotationSpeed = baseShootController._canon._rotationSpeed;
             _rotationStabilizer = baseShootController._canon._rotationStabilizer;
+            _rigidbodyForceMultiplier = baseShootController._shoot._rigidbodyForceMultiplier;
         }
 
         if(playerAmmoType != null)
@@ -158,6 +162,7 @@ public class TankProperties : ScriptableObject
             {
                 baseShootController._canon._minEulerAngleX = _minEulerAngleX;
                 baseShootController._canon._maxEulerAngleX = _maxEulerAngleX;
+                baseShootController._shoot._rigidbodyForceMultiplier = _rigidbodyForceMultiplier;
             }
 
             if (healthController != null)

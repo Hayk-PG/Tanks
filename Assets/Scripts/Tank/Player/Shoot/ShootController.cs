@@ -196,7 +196,7 @@ public class ShootController : BaseShootController
     protected virtual void AddForce(float force)
     {
         if(!_isSandbagsTriggered)
-            _rigidBody.AddForce(transform.forward * force * 1000, ForceMode.Impulse);
+            _rigidBody.AddForce(transform.forward * force * _shoot._rigidbodyForceMultiplier, ForceMode.Impulse);
     }
 
     public virtual void OnEnteredSandbagsTrigger(bool isEntered)
