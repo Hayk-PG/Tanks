@@ -13,9 +13,7 @@ public class TankAddressableLoader : MonoBehaviour
     [SerializeField] private Transform _transformBody;
     [SerializeField] private Transform _transformTurret;
     [SerializeField] private Transform _transformCanon;
-    [SerializeField] private Transform _transformWheels;
-
-    [SerializeField] private Vector3[] _positionWheels;
+    [SerializeField] private Transform[] _transformWheels;
 
 
 
@@ -26,7 +24,7 @@ public class TankAddressableLoader : MonoBehaviour
         yield return StartCoroutine(InstantiateAsync(_assetReferencesBody, _transformBody));
         yield return StartCoroutine(InstantiateAsync(_assetReferenceTurret, _transformTurret));
         yield return StartCoroutine(InstantiateAsync(_assetReferenceCanon, _transformCanon));
-        yield return StartCoroutine(InstantiateAsync(_assetReferenceWheels, _transformWheels, _positionWheels));
+        yield return StartCoroutine(InstantiateAsync(_assetReferenceWheels, _transformWheels));
     }
 
     private IEnumerator InstantiateAsync(AssetReference[] assetReferences, Transform transform)
@@ -36,7 +34,7 @@ public class TankAddressableLoader : MonoBehaviour
 
         while (index < assetReferences.Length)
         {
-            GlobalFunctions.Loop<AssetReference>.Foreach(assetReferences, assetReference =>
+            foreach (var assetReference in assetReferences)
             {
                 isInstantiated = false;
                 assetReference.InstantiateAsync(transform).Completed += delegate (AsyncOperationHandle<GameObject> asyncOperationHandle)
@@ -44,32 +42,30 @@ public class TankAddressableLoader : MonoBehaviour
                     isInstantiated = true;
                     index++;
                 };
-            });
-
-            yield return new WaitUntil(() => isInstantiated == true);
+                yield return new WaitUntil(() => isInstantiated == true);
+            }
         }
+        yield return null;
     }
 
-    private IEnumerator InstantiateAsync(AssetReference[] assetReferences, Transform transform, Vector3[] positions)
+    private IEnumerator InstantiateAsync(AssetReference[] assetReferences, Transform[] transform)
     {
         int index = 0;
         bool isInstantiated = false;
 
         while (index < assetReferences.Length)
         {
-            GlobalFunctions.Loop<AssetReference>.Foreach(assetReferences, assetReference =>
+            foreach (var assetReference in assetReferences)
             {
                 isInstantiated = false;
-                assetReference.InstantiateAsync(positions[index], Quaternion.identity, transform).Completed += delegate (AsyncOperationHandle<GameObject> asyncOperationHandle)
+                assetReference.InstantiateAsync(transform[index]).Completed += delegate (AsyncOperationHandle<GameObject> asyncOperationHandle)
                 {
                     isInstantiated = true;
                     index++;
                 };
-            });
-
-            yield return new WaitUntil(() => isInstantiated == true);
+                yield return new WaitUntil(() => isInstantiated == true);
+            }
         }
-
         yield return null;
     }
 }
