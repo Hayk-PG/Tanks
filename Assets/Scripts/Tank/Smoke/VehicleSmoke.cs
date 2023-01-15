@@ -17,20 +17,23 @@ public class VehicleSmoke : MonoBehaviour
 
     private void OnEnable()
     {
-        if(_tankMovement != null) _tankMovement.OnVehicleMove += OnVehicleMove;
-        if (_tankDamageFire != null) _tankDamageFire.OnTankDamageFire += OnTankDamageFire;
+        if (_tankMovement != null)
+            _tankMovement.OnVehicleMove += OnVehicleMove;
+
+        if (_tankDamageFire != null)
+            _tankDamageFire.OnTankDamageFire += OnTankDamageFire;
     }
 
     private void OnDisable()
     {
-        if (_tankMovement != null) _tankMovement.OnVehicleMove -= OnVehicleMove;
-        if (_tankDamageFire != null) _tankDamageFire.OnTankDamageFire -= OnTankDamageFire;
+        if (_tankMovement != null)
+            _tankMovement.OnVehicleMove -= OnVehicleMove;
+
+        if (_tankDamageFire != null)
+            _tankDamageFire.OnTankDamageFire -= OnTankDamageFire;
     }
 
-    private void OnVehicleMove(float rpm)
-    {
-        ParticleSystemActivtiy(rpm != 0 && _canPlaySmokeParticles);
-    }
+    private void OnVehicleMove(float rpm) => ParticleSystemActivtiy(rpm != 0 && _canPlaySmokeParticles);
 
     private void ParticleSystemActivtiy(bool isEnabled)
     {
@@ -38,8 +41,5 @@ public class VehicleSmoke : MonoBehaviour
         if (_particleSystem.isPlaying && !isEnabled) _particleSystem.Stop();
     }
 
-    private void OnTankDamageFire(bool canPlaySmokeParticles)
-    {
-        _canPlaySmokeParticles = canPlaySmokeParticles;
-    }
+    private void OnTankDamageFire(bool canPlaySmokeParticles) => _canPlaySmokeParticles = canPlaySmokeParticles;
 }

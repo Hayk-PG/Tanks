@@ -2,30 +2,27 @@
 
 public class VehicleEngineSoundCtrl : MonoBehaviour
 {
-    [SerializeField]
-    private AudioSource audioSRC;  
-
-    [SerializeField]
-    private AudioClip _engineSound, _stopSound;
+    [SerializeField] private AudioSource audioSRC;  
+    [SerializeField] private AudioClip _engineSound, _stopSound;
 
     private BaseTankMovement _baseTankMovement;
 
     private bool _hasStopSoundEnded, _isEngineSoundPlaying, _IsStopSoundPlayingOnBrake, _isEngineSoundPlayingOnMovement;
 
 
-    private void Awake()
-    {
-        _baseTankMovement = Get<BaseTankMovement>.From(gameObject);
-    }
+
+    private void Awake() => _baseTankMovement = Get<BaseTankMovement>.From(gameObject);
 
     private void OnEnable()
     {
-        if(_baseTankMovement != null) _baseTankMovement.OnVehicleMove += OnVehicleEngineSound;
+        if (_baseTankMovement != null)
+            _baseTankMovement.OnVehicleMove += OnVehicleEngineSound;
     }
 
     private void OnDisable()
     {
-        if (_baseTankMovement != null) _baseTankMovement.OnVehicleMove -= OnVehicleEngineSound;
+        if (_baseTankMovement != null)
+            _baseTankMovement.OnVehicleMove -= OnVehicleEngineSound;
     }
    
     private void OnVehicleEngineSound(float rpm)
@@ -48,15 +45,9 @@ public class VehicleEngineSoundCtrl : MonoBehaviour
             () => SwitchAudioClips(audioSRC, _engineSound, true), null, null);
     }
 
-    private void OnSetVehicleSrcVolumeToZero()
-    {
-        audioSRC.volume = 0;
-    }
+    private void OnSetVehicleSrcVolumeToZero() => audioSRC.volume = 0;
 
-    private void OnIncreaseVehicleSrcVolume()
-    {
-        audioSRC.volume = Mathf.Lerp(audioSRC.volume, 1, 10 * Time.deltaTime);
-    }
+    private void OnIncreaseVehicleSrcVolume() => audioSRC.volume = Mathf.Lerp(audioSRC.volume, 1, 10 * Time.deltaTime);
 
     private void IncreaseVehSrcPitch(float rpm)
     {

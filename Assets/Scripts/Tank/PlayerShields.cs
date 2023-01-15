@@ -10,16 +10,9 @@ public class PlayerShields : PlayerDeployProps
 
 
 
-    protected override void Awake()
-    {
-        base.Awake();
-        _shields = Get<Shields>.FromChild(gameObject);
-    }
+    protected override void Awake() => base.Awake();
 
-    protected override void Start()
-    {
-        InitializeRelatedPropsButton(Names.Shield);
-    }
+    protected override void Start() => InitializeRelatedPropsButton(Names.Shield);
 
     protected override void OnDisable()
     {
@@ -27,10 +20,9 @@ public class PlayerShields : PlayerDeployProps
         _propsTabCustomization.OnActivateShields -= OnActivateShields;
     }
 
-    protected override void SubscribeToPropsEvent()
-    {
-        _propsTabCustomization.OnActivateShields += OnActivateShields;
-    }
+    protected override void SubscribeToPropsEvent() => _propsTabCustomization.OnActivateShields += OnActivateShields;
+
+    public virtual void SetShield(Shields shields) => _shields = shields;
 
     private void OnActivateShields()
     {
@@ -44,6 +36,9 @@ public class PlayerShields : PlayerDeployProps
 
     public void ActivateShields(int index)
     {
+        if (_shields == null)
+            return;
+
         if (IsShieldActive == false)
         {
             IsShieldActive = true;
@@ -54,6 +49,9 @@ public class PlayerShields : PlayerDeployProps
 
     public void DeactivateShields()
     {
+        if (_shields == null)
+            return;
+
         if (IsShieldActive == true)
         {
             IsShieldActive = false;

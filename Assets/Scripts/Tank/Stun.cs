@@ -28,15 +28,9 @@ public class Stun : MonoBehaviour
         _globalTankStun = FindObjectOfType<GlobalTankStun>();
     }
 
-    private void OnEnable()
-    {
-        _healthController.OnTakeDamage += OnTakeDamage;
-    }
+    private void OnEnable() => _healthController.OnTakeDamage += OnTakeDamage;
 
-    private void OnDisable()
-    {
-        _healthController.OnTakeDamage -= OnTakeDamage;
-    }
+    private void OnDisable() => _healthController.OnTakeDamage -= OnTakeDamage;
 
     private void ParticlesActivity(bool isActive)
     {

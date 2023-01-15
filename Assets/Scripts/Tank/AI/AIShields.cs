@@ -11,22 +11,15 @@ public class AIShields : PlayerShields
 
     protected override void Awake()
     {
-        _shields = Get<Shields>.FromChild(gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
         _scoreController = Get<ScoreController>.From(gameObject);
         _healthController = Get<HealthController>.From(gameObject);
         _turnController = FindObjectOfType<TurnController>();
     }
 
-    protected override void OnEnable()
-    {
-        _turnController.OnTurnChanged += OnTurnChanged;
-    }
+    protected override void OnEnable() => _turnController.OnTurnChanged += OnTurnChanged;
 
-    protected override void OnDisable()
-    {
-        _turnController.OnTurnChanged -= OnTurnChanged;
-    }
+    protected override void OnDisable() => _turnController.OnTurnChanged -= OnTurnChanged;
 
     private void OnTurnChanged(TurnState turn)
     {

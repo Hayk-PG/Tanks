@@ -10,19 +10,18 @@ public class TankDamageFire : MonoBehaviour
     public Action<bool> OnTankDamageFire { get; set; }
 
 
-    private void Awake()
-    {
-        _healthController = Get<HealthController>.From(gameObject);
-    }
+    private void Awake() => _healthController = Get<HealthController>.From(gameObject);
 
     private void OnEnable()
     {
-        if(_healthController != null) _healthController.OnTankDamageFire += OnHealthControllerTankDamageFire;
+        if (_healthController != null)
+            _healthController.OnTankDamageFire += OnHealthControllerTankDamageFire;
     }
 
     private void OnDisable()
     {
-        if (_healthController != null) _healthController.OnTankDamageFire -= OnHealthControllerTankDamageFire;
+        if (_healthController != null)
+            _healthController.OnTankDamageFire -= OnHealthControllerTankDamageFire;
     }
 
     private void OnParticle(ParticleSystem particle, bool play)

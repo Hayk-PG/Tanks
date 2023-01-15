@@ -12,6 +12,10 @@ public class Shields : MonoBehaviour
         _shields[1] = transform.GetChild(1).gameObject;
     }
 
+    private void Start() => SetTankShield();
+
+    private void SetTankShield() => Get<PlayerShields>.From(gameObject).SetShield(this);
+
     public void Activity(int index, bool isActive)
     {
         _shields[index].SetActive(isActive);
