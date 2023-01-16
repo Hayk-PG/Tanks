@@ -45,6 +45,7 @@ public class UpperTab : MonoBehaviour
             _rectTransform.offsetMax = Vector2.zero;
         }
 
-        GlobalFunctions.CanvasGroupActivity(_canvasGroupSettingsButton, !isOpen);
+        if (_canvasGroupSettingsButton != null)
+            GlobalFunctions.CanvasGroupActivity(_canvasGroupSettingsButton, !isOpen);
     }
 }
