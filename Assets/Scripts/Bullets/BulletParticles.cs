@@ -8,11 +8,9 @@ public class BulletParticles : MonoBehaviour
     protected IBulletExplosion _iBulletExplosion;
 
     [SerializeField] protected AssetReference _assetReferenceTrail;
-
-    [SerializeField] protected ParticleSystem _muzzleFlash;
+    [SerializeField] protected AssetReference _assetReferenceMuzzleFlash;
     [SerializeField] protected Explosion _explosion;
-    [Header("Optional non collided explosion")]
-    [SerializeField] protected GameObject _optionalExplosion;
+
 
     protected bool _isTrailInstantiated;
 
@@ -21,11 +19,10 @@ public class BulletParticles : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if(_muzzleFlash != null) 
-            _muzzleFlash.transform.parent = null;
-
         _iBulletTrail = Get<IBulletTrail>.From(gameObject);
         _iBulletExplosion = Get<IBulletExplosion>.From(gameObject);
+
+        InstantiateMuzzleFlashAsync();
     }
 
     protected virtual void OnEnable()
@@ -44,6 +41,12 @@ public class BulletParticles : MonoBehaviour
 
         if (_iBulletExplosion != null)
             _iBulletExplosion.OnBulletExplosion -= OnExplosion;
+    }
+
+    protected virtual void InstantiateMuzzleFlashAsync()
+    {
+        if (!System.String.IsNullOrEmpty(_assetReferenceMuzzleFlash.AssetGUID))
+            _assetReferenceMuzzleFlash.InstantiateAsync(transform).Completed += (asset) => { asset.Result.transform.SetParent(null); };
     }
 
     protected virtual void OnDestroy() => ReleaseAddressables();
