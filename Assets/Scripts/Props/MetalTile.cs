@@ -11,6 +11,9 @@ public class MetalTile : MonoBehaviour
     [SerializeField] protected AssetReference _assetReferenceMesh;
     [SerializeField] protected AssetReference _assetReferencePropsGUI;
 
+    private GameObject _meshObj;
+    private GameObject _propsGuiObj;
+
 
     protected virtual void Awake()
     {
@@ -38,12 +41,24 @@ public class MetalTile : MonoBehaviour
         InstantiatePropsGUI();
     }
 
-    protected virtual void InstantiateMesh() => _assetReferenceMesh.InstantiateAsync(transform);
-    protected virtual void InstantiatePropsGUI()=> _assetReferencePropsGUI.InstantiateAsync(transform);
+    protected virtual void InstantiateMesh()
+    {
+        _assetReferenceMesh.InstantiateAsync(transform).Completed += (asset) => 
+        {
+            _meshObj = asset.Result;
+        };
+    }
+    protected virtual void InstantiatePropsGUI()
+    {
+        _assetReferencePropsGUI.InstantiateAsync(transform).Completed += (asset) => 
+        {
+            _propsGuiObj = asset.Result;
+        };
+    }
 
     protected virtual void OnDestruction()
     {
-        _assetReferenceMesh.ReleaseAsset();
-        _assetReferencePropsGUI.ReleaseAsset();
+        _assetReferenceMesh.ReleaseInstance(_meshObj);
+        _assetReferencePropsGUI.ReleaseInstance(_propsGuiObj);
     }
 }

@@ -20,7 +20,7 @@ public class BulletParticles : MonoBehaviour
         _iBulletTrail = Get<IBulletTrail>.From(gameObject);
         _iBulletExplosion = Get<IBulletExplosion>.From(gameObject);
 
-        InstantiateMuzzleFlashAsync();
+        InstantiateMuzzleFlashAsync(transform.position);
     }
 
     protected virtual void OnEnable()
@@ -41,13 +41,16 @@ public class BulletParticles : MonoBehaviour
             _iBulletExplosion.OnBulletExplosion -= OnExplosion;
     }
 
-    protected virtual void InstantiateMuzzleFlashAsync()
+    protected virtual void InstantiateMuzzleFlashAsync(Vector3 position)
     {
         if (!System.String.IsNullOrEmpty(_assetReferenceMuzzleFlash.AssetGUID))
-            _assetReferenceMuzzleFlash.InstantiateAsync(transform).Completed += (asset) => 
-            { 
+        {
+            _assetReferenceMuzzleFlash.InstantiateAsync(transform).Completed += (asset) =>
+            {
+                asset.Result.transform.position = position;
                 asset.Result.transform.SetParent(null);
             };
+        }   
     }
 
     protected virtual void OnTrailActivity(bool isActive)
