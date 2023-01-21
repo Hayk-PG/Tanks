@@ -14,9 +14,7 @@ public class ExplosionAddressables : MonoBehaviour
         _assetReferenceParticles.InstantiateAsync(transform).Completed += (asset) => 
         {
             asset.Result.transform.SetParent(null);
-            DestroyGameObject();
+            Destroy(gameObject);
         };
     }
-
-    private void DestroyGameObject() => Destroy(gameObject);
 }

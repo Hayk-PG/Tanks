@@ -2,11 +2,10 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using UnityEngine;
 
+
+
 public class Barrel : MonoBehaviour
 {
-    [SerializeField] private GameObject _trail;
-    [SerializeField] private GameObject _explosion;
-
     private Rigidbody _rigidBody;
     private GlobalExplosiveBarrels _globalExplosiveBarrels;
     private LavaSplash _lavaSplash;
@@ -14,6 +13,8 @@ public class Barrel : MonoBehaviour
     private bool _isActive;
     private GameObject _firstCollision;
     private Vector3 id;
+
+    internal event System.Action<Vector3> onLaunch, onExplode;
 
 
 
@@ -56,10 +57,10 @@ public class Barrel : MonoBehaviour
     {
         transform.SetParent(null);
         _isActive = true;
-        _trail.SetActive(true);
         _rigidBody.isKinematic = false;
         _rigidBody.velocity = new Vector3(Random.Range(-1, 1) < 0 ? -1: 1, 1, 0) * Random.Range(3, 10);
         _rigidBody.rotation = Quaternion.LookRotation(_rigidBody.velocity);
+        onLaunch?.Invoke(transform.position);
         SecondarySoundController.PlaySound(2, 2);
     }
 
@@ -94,9 +95,8 @@ public class Barrel : MonoBehaviour
 
     private void Explode(bool includeExplosion)
     {
-        _explosion.transform.SetParent(null);
-        _explosion.SetActive(includeExplosion);
-        ExplosionsSoundController.PlaySound(1, 3);
+        ExplosionsSoundController.PlaySound(1, 3);        
+        onExplode?.Invoke(transform.position);
         Destroy(gameObject);
     }
 }

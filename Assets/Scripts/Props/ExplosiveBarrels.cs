@@ -2,17 +2,21 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
+
+//ADDRESSABLE
 public class ExplosiveBarrels : MonoBehaviour, IDestruct
 {
     [SerializeField] private Barrel[] _barrels;
-    [SerializeField] private GameObject _explosion;
+    [Space] [SerializeField] private AssetReference _assetReferenceExplosion;
     private BoxCollider _boxCollider;
     private GlobalExplosiveBarrels _globalExplosiveBarrels;
     private Collider[] _colliders;
        
     private bool _isOverlapped;
     private bool _isLaunched;
+    private bool _isExplosed;
 
     public float Health { get; set; }
 
@@ -83,15 +87,19 @@ public class ExplosiveBarrels : MonoBehaviour, IDestruct
 
     private void Explode()
     {
-        OverlapSphere();
-        int l = _colliders.Length >= 2 ? 2 : _colliders.Length;
-        for (int i = 0; i < l; i++)
+        if (!_isExplosed)
         {
-            Get<IDestruct>.From(_colliders[i].gameObject)?.Destruct(200, 0);
-            Get<IDamage>.From(_colliders[i].gameObject)?.Damage(46);
-        }
+            OverlapSphere();
+            int l = _colliders.Length >= 2 ? 2 : _colliders.Length;
+            for (int i = 0; i < l; i++)
+            {
+                Get<IDestruct>.From(_colliders[i].gameObject)?.Destruct(200, 0);
+                Get<IDamage>.From(_colliders[i].gameObject)?.Damage(46);
+            }
 
-        DestroyGameObject();
+            DestroyGameObject();
+            _isExplosed = true;
+        }
     }
 
     private void OverlapSphere()
@@ -105,9 +113,11 @@ public class ExplosiveBarrels : MonoBehaviour, IDestruct
 
     public void DestroyGameObject()
     {
-        _explosion.SetActive(true);
-        _explosion.transform.SetParent(null);
-        ExplosionsSoundController.PlaySound(2, 1);
-        Destroy(gameObject);
+        _assetReferenceExplosion.InstantiateAsync(transform).Completed += (asset) => 
+        {
+            asset.Result.transform.SetParent(null);
+            ExplosionsSoundController.PlaySound(2, 1);
+            Destroy(gameObject);
+        };
     }
 }

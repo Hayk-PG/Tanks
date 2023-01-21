@@ -11,11 +11,9 @@ public class BulletParticles : MonoBehaviour
     [SerializeField] protected AssetReference _assetReferenceMuzzleFlash;
     [SerializeField] protected Explosion _explosion;
 
-
     protected bool _isTrailInstantiated;
 
-    protected GameObject Trail { get; set; }
-    
+
 
     protected virtual void Awake()
     {
@@ -46,10 +44,11 @@ public class BulletParticles : MonoBehaviour
     protected virtual void InstantiateMuzzleFlashAsync()
     {
         if (!System.String.IsNullOrEmpty(_assetReferenceMuzzleFlash.AssetGUID))
-            _assetReferenceMuzzleFlash.InstantiateAsync(transform).Completed += (asset) => { asset.Result.transform.SetParent(null); };
+            _assetReferenceMuzzleFlash.InstantiateAsync(transform).Completed += (asset) => 
+            { 
+                asset.Result.transform.SetParent(null);
+            };
     }
-
-    protected virtual void OnDestroy() => ReleaseAddressables();
 
     protected virtual void OnTrailActivity(bool isActive)
     {
@@ -63,8 +62,7 @@ public class BulletParticles : MonoBehaviour
     {
         if (!_isTrailInstantiated)
         {
-            Addressables.InstantiateAsync(_assetReferenceTrail, transform).Completed += (asset) => { Trail = asset.Result; };
-
+            Addressables.InstantiateAsync(_assetReferenceTrail, transform);
             _isTrailInstantiated = true;
         }
     }
@@ -75,11 +73,5 @@ public class BulletParticles : MonoBehaviour
         _explosion.Distance = distance;
         _explosion.gameObject.SetActive(true);
         _explosion.transform.parent = null;
-    }
-
-    protected virtual void ReleaseAddressables()
-    {
-        if (Trail != null)
-            Addressables.ReleaseInstance(Trail);
     }
 }
