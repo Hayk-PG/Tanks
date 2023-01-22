@@ -17,21 +17,25 @@ using UnityEngine;
 
 public class SoundController : MonoBehaviour
 {
+    public enum MusicVolume { Down, Up}
+
     private static SoundController _inst;
     private MyScene _myScene;
     private AudioSource _musicSRC;
     private AudioSource _soundSRC;
-    private Animator _musicAnimator;
-
     [SerializeField] private AudioSource[] _allAudioSources;
-    
-    public enum MusicVolume { Down, Up}
+    private Animator _musicAnimator;
 
     [SerializeField] private SoundsList[] _soundsList;
     public SoundsList[] SoundsList
     {
         get => _soundsList;
     }
+
+    public static bool IsMuted => _inst._soundSRC.mute;
+
+    public static event Action<bool> onAudioSourceMute;
+
 
 
     private void Awake()
@@ -79,7 +83,8 @@ public class SoundController : MonoBehaviour
     public static void SoundSRCCondition(bool isMuted)
     {
         _inst._soundSRC.mute = !isMuted;
-        GlobalFunctions.Loop<AudioSource>.Foreach(_inst._allAudioSources, audioSource => { audioSource.mute = !isMuted; });       
+        GlobalFunctions.Loop<AudioSource>.Foreach(_inst._allAudioSources, audioSource => { audioSource.mute = !isMuted; });
+        onAudioSourceMute?.Invoke(_inst._soundSRC.mute);
     }
 
     public static void PlaySound(int soundsListIndex, int clipIndex, out float clipLength)

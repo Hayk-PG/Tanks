@@ -2,11 +2,9 @@
 
 public class VehicleCanonSoundCtrl : MonoBehaviour
 {
-    [SerializeField]
-    protected AudioSource _audioSRC;
+    [SerializeField] protected AudioSource _audioSRC;
 
-    [SerializeField]
-    protected AudioClip _clip;
+    [SerializeField] protected AudioClip _clip;
 
     protected ShootController _shootController;
 
@@ -23,12 +21,14 @@ public class VehicleCanonSoundCtrl : MonoBehaviour
 
     private void OnEnable()
     {
-        if(_shootController != null) _shootController.OnCanonRotation += OnCanonRotation;
+        if(_shootController != null) 
+            _shootController.OnCanonRotation += OnCanonRotation;
     }
 
     private void OnDisable()
     {
-        if (_shootController != null) _shootController.OnCanonRotation -= OnCanonRotation;
+        if (_shootController != null) 
+            _shootController.OnCanonRotation -= OnCanonRotation;
     }
 
     protected void SetAudioSrc()
@@ -46,11 +46,13 @@ public class VehicleCanonSoundCtrl : MonoBehaviour
 
     private void OnRotation()
     {
-        if(_audioSRC.volume != 1) _audioSRC.volume = 1;
+        if(_audioSRC.volume != 1) 
+            _audioSRC.volume = 1;
     }
 
     private void OnStopRotation()
     {
-        if (_audioSRC.volume != 0) _audioSRC.volume = 0;
+        if (_audioSRC.volume != 0)
+            _audioSRC.volume = 0;
     }
 }

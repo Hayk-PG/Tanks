@@ -1,15 +1,15 @@
-﻿using UnityEngine;
-
-public class VehicleShootForceSoundCtrl : VehicleCanonSoundCtrl
+﻿public class VehicleShootForceSoundCtrl : VehicleCanonSoundCtrl
 {
     private void OnEnable()
     {
-        if(_shootController != null) _shootController.OnApplyingForce += OnApplyingForce;
+        if(_shootController != null) 
+            _shootController.OnApplyingForce += OnApplyingForce;
     }
 
     private void OnDisable()
     {
-        if (_shootController != null) _shootController.OnApplyingForce -= OnApplyingForce;
+        if (_shootController != null) 
+            _shootController.OnApplyingForce -= OnApplyingForce;
     }
 
     private void OnApplyingForce(bool isApplyingForce)
