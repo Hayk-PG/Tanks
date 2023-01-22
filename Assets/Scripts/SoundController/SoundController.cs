@@ -14,6 +14,7 @@ using UnityEngine;
     public Clips[] _clips;
 }
 
+
 public class SoundController : MonoBehaviour
 {
     private static SoundController _inst;
@@ -21,6 +22,8 @@ public class SoundController : MonoBehaviour
     private AudioSource _musicSRC;
     private AudioSource _soundSRC;
     private Animator _musicAnimator;
+
+    [SerializeField] private AudioSource[] _allAudioSources;
     
     public enum MusicVolume { Down, Up}
 
@@ -76,6 +79,7 @@ public class SoundController : MonoBehaviour
     public static void SoundSRCCondition(bool isMuted)
     {
         _inst._soundSRC.mute = !isMuted;
+        GlobalFunctions.Loop<AudioSource>.Foreach(_inst._allAudioSources, audioSource => { audioSource.mute = !isMuted; });       
     }
 
     public static void PlaySound(int soundsListIndex, int clipIndex, out float clipLength)
