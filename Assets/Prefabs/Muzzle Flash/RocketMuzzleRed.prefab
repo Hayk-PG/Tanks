@@ -19610,11 +19610,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7242149671580293490}
   - component: {fileID: 7372765095072548770}
-  - component: {fileID: 2177014785903920407}
   - component: {fileID: 7373869081117607556}
   - component: {fileID: 4497638409887288380}
   - component: {fileID: 3700134983042075799}
   - component: {fileID: -5136267142914658025}
+  - component: {fileID: 5647121792985547493}
   m_Layer: 0
   m_Name: RocketMuzzleRed
   m_TagString: Untagged
@@ -24436,19 +24436,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &2177014785903920407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7248339633830396858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a58d74888b355c44ba6f46385b1d913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _clipIndex: 0
 --- !u!199 &7373869081117607556
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -24593,3 +24580,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 564ff136073d8e14594b1a39f9f94a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5647121792985547493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7248339633830396858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2532bb7065e60d940b964452aeee2a86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundType: 0
+  _listIndex: 4
+  _clipIndex: 3

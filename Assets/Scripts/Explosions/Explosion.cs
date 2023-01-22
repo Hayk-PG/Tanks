@@ -8,7 +8,6 @@ public class Explosion : MonoBehaviour
     
     [SerializeField] protected float _radius, _maxDamageValue;
     protected int _currentDamageValue;
-    [SerializeField] protected int _soundsListIndex, _soundIndex;
     protected float _percentage;
     protected float _distanceFactorPercentage;
     protected float _magnitude;
@@ -33,8 +32,6 @@ public class Explosion : MonoBehaviour
         _iDamages = new List<IDamage>();
         _colliders = Physics.OverlapSphere(transform.position, _radius);
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
-
-        PlayExplosionSoundFx();
     }
 
     protected virtual void Start()
@@ -45,8 +42,6 @@ public class Explosion : MonoBehaviour
             GetIDamage(Get<IDamage>.From(_colliders[i].gameObject));           
         }
     }
-
-    protected void PlayExplosionSoundFx() => ExplosionsSoundController.PlaySound(_soundsListIndex, _soundIndex);
 
     protected virtual void GetIDamage(IDamage iDamage)
     {

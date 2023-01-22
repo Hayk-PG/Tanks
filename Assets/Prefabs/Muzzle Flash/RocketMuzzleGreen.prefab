@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8569939771053121745}
   - component: {fileID: 8368195784821096607}
-  - component: {fileID: 521023040448649790}
   - component: {fileID: 8368920936160386243}
   - component: {fileID: 5434876374223324395}
   - component: {fileID: -4899920661935473348}
   - component: {fileID: -5827989280951795322}
+  - component: {fileID: -874430484074113892}
   m_Layer: 0
   m_Name: RocketMuzzleGreen
   m_TagString: Untagged
@@ -4836,19 +4836,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &521023040448649790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8567113689377784993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a58d74888b355c44ba6f46385b1d913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _clipIndex: 0
 --- !u!199 &8368920936160386243
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -4993,6 +4980,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 564ff136073d8e14594b1a39f9f94a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-874430484074113892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8567113689377784993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2532bb7065e60d940b964452aeee2a86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundType: 0
+  _listIndex: 4
+  _clipIndex: 3
 --- !u!1 &8567347104234823733
 GameObject:
   m_ObjectHideFlags: 0
