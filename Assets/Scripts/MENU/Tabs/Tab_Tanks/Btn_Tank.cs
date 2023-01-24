@@ -18,6 +18,7 @@ public class Btn_Tank : MonoBehaviour
     public Image ImageTank { get => _imgTank; }
     public Sprite SpriteButton { get => _button.image.sprite; internal set => _button.image.sprite = value; }
 
+
     public event Action<int, int> _onAutoSelect;
     public event Action<int> _onClick;
 
