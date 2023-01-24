@@ -10,7 +10,7 @@ public class BaseTankMovement : MonoBehaviour
     public float _maxBrake;
     [Range(0, 3000)]
     public float _accelerated;
-    [Range(0, 100)]
+    [Range(0, 100)] [Tooltip("Light => 0 - 40: Medium => 45 - 75: Heavy => 80 - 100")]
     public int _damageFactor;
     public Vector3 _normalCenterOfMass;
     protected float _currentBrake;

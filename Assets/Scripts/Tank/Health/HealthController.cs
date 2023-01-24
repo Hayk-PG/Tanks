@@ -9,7 +9,7 @@ public class HealthController : MonoBehaviour, IDamage
     private PlayerShields _playerShields;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
   
-    [SerializeField][Range(0, 100)] private int _armor;
+    [SerializeField][Range(0, 50)] [Tooltip("Light => 0 - 10: Medium => 15 - 30: Heavy => 35 - 50")] private int _armor;
 
     public int Health { get; set; }
     public int ShieldHealth { get; set; }
