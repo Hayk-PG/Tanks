@@ -11,6 +11,8 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
     [SerializeField] protected Color _clrTankReleased;  
     [SerializeField] protected Color _clrTankPressed;
 
+    public event System.Action<TankProperties> onTankSelected;
+
 
 
     protected abstract void Awake();
@@ -54,6 +56,8 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
 
         _btnTank.SpriteButton = _sprtButtonPressed;
         _btnTank.ImageTank.color = _clrTankPressed;
+
+        onTankSelected?.Invoke(Data.Manager.AvailableTanks[relatedTankIndex]);
     }
 
     public void SetDefault()

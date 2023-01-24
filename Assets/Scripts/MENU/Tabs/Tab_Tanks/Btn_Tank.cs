@@ -18,15 +18,14 @@ public class Btn_Tank : MonoBehaviour
     public Image ImageTank { get => _imgTank; }
     public Sprite SpriteButton { get => _button.image.sprite; internal set => _button.image.sprite = value; }
 
-
     public event Action<int, int> _onAutoSelect;
     public event Action<int> _onClick;
 
 
-    private void Update()
+
+    private void Start()
     {
-        _button.onClick.RemoveAllListeners();
-        _button.onClick.AddListener(()=> _onClick?.Invoke(_relatedTankIndex));
+        _button.onClick.AddListener(() => _onClick?.Invoke(_relatedTankIndex));
     }
 
     public void SetActivity(bool isActive)
