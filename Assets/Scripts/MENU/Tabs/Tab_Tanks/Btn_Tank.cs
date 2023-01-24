@@ -23,10 +23,9 @@ public class Btn_Tank : MonoBehaviour
     public event Action<int> _onClick;
 
 
-    private void Update()
+    private void Start()
     {
-        _button.onClick.RemoveAllListeners();
-        _button.onClick.AddListener(()=> _onClick?.Invoke(_relatedTankIndex));
+        _button.onClick.AddListener(() => _onClick?.Invoke(_relatedTankIndex));
     }
 
     public void SetActivity(bool isActive)
