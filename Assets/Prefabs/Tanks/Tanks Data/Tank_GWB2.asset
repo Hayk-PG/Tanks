@@ -16,25 +16,35 @@ MonoBehaviour:
   _iconTank: {fileID: 21300000, guid: 92849e41a0b3f154986d67806ef7de1d, type: 3}
   _tank: {fileID: 291995701642821217, guid: 092c2bdec49726048a9a5b90c1883270, type: 3}
   _aiTank: {fileID: 0}
-  _rigidbodyMass: 499.99997
-  _normalSpeed: 450
-  _accelerated: 1750
-  _maxBrake: 450
-  _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
-  _minEulerAngleX: -46
-  _maxEulerAngleX: 27
-  _rotationSpeed: 20
-  _rotationStabilizer: {x: 0, y: 0, z: 0}
-  _minForce: 3
-  _maxForce: 10
-  _smoothTime: 1
-  _maxSpeed: 5
-  _armor: 12
   _tankName: GWB2
   _starsCount: 2
   _getItNowPrice: 500
   _initialBuildHours: 0
   _initialBuildMinutes: 55
   _initialBuildSeconds: 0
-  _requiredResources: []
+  _requiredItems: []
   _availableInLevel: 1
+  _rigidbodyMass: 499.99997
+  _normalSpeed: 450
+  _maxBrake: 450
+  _accelerated: 1750
+  _damageFactor: 0
+  _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
+  _minEulerAngleX: -46
+  _maxEulerAngleX: 27
+  _rotationSpeed: 20
+  _rotationStabilizer: {x: 0, y: 0, z: 0}
+  _rigidbodyForceMultiplier: 0
+  _weapons:
+  - {fileID: 11400000, guid: e1e7dc64357c36243a99361f3cb38dba, type: 2}
+  - {fileID: 11400000, guid: 65a396703a5d9b147ae0297eda030aa9, type: 2}
+  - {fileID: 11400000, guid: d01f2aeffe4be964ebaea9278d128a26, type: 2}
+  _armor: 12
+  _shieldCutPerecent: 0
+  _tileModifyCutPercent: 0
+  _armoredCubeCutPercent: 0
+  _armoredTileCutPercent: 0
+  _extendTileCutPercent: 0
+  _mobility: 0.55
+  _protection: 0.024
+  _firePower: 0.080482654

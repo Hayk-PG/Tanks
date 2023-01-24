@@ -55,6 +55,11 @@ public class TankProperties : ScriptableObject
     public int _armoredTileCutPercent;
     public int _extendTileCutPercent;
 
+    [Header("Tank btn stats")]
+    public float _mobility;
+    public float _protection;
+    public float _firePower;
+
 
     public virtual void GetValuesFromTankPrefab()
     {
@@ -120,6 +125,9 @@ public class TankProperties : ScriptableObject
             _extendTileCutPercent = propsPriceByVehicle.ExtendTilePriceReducePercent;
         }
 
+        CalculateTankBtnStats();
+
+
 #if UNITY_EDITOR
         EditorUtility.SetDirty(this);
 #endif
@@ -170,5 +178,24 @@ public class TankProperties : ScriptableObject
                 healthController.Armor = _armor;
             }
         }
+    }
+
+    private void CalculateTankBtnStats()
+    {
+        _mobility = ((_normalSpeed + _accelerated) / 4000f * 100f) / 100f;
+
+        float p = _shieldCutPerecent + _armoredCubeCutPercent + _armoredTileCutPercent + _armor + _damageFactor;
+        _protection = (p / 500 * 100f) / 100f;
+
+        float v = 0f;
+        float divider = 0f;
+
+        foreach (var item in _weapons)
+        {
+            v += item._damageValue + item._radius + item._destructDamage + item._bulletMaxForce;
+            divider += 100f + 1f + 100f + 20f;
+        }
+
+        _firePower = (v / divider * 100f) / 100f;
     }
 }
