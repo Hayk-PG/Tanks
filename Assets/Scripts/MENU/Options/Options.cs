@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Options : MonoBehaviour
 {
-    private CanvasGroup _canvasGroup;
+    [SerializeField] private CanvasGroup _canvasGroup;
     private IReset[] _iResets;
 
     public event Action<bool> onOptionsActivity;
@@ -11,7 +11,6 @@ public class Options : MonoBehaviour
 
     private void Awake()
     {
-        _canvasGroup = Get<CanvasGroup>.From(gameObject);
         _iResets = GetComponentsInChildren<IReset>();
     }
 

@@ -9,8 +9,7 @@ public class MainCameraController : MonoBehaviour
     private MapPoints _mapPoints;
     private Transform _player1, _player2;
     
-    [SerializeField] 
-    private float _smoothTime, _maxTime;
+    [SerializeField] private float _smoothTime, _maxTime;
     private float _currentVelocityfloat;
     private float _ortographicSize;  
     private float _minPosX, _maxPosX, _newPosX;
@@ -74,7 +73,7 @@ public class MainCameraController : MonoBehaviour
             Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
             transform.position = smoothPosition;
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
-            _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 5);
+            _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 10);
             _hudCamera.orthographicSize = _camera.orthographicSize;
         }
     }
