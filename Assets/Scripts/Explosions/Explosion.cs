@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Explosion : MonoBehaviour
+public class Explosion : BaseExplosion
 {
-    public IScore OwnerScore { get; set; }
-    public float Distance { get; set; }
-    
     [SerializeField] protected float _radius, _maxDamageValue;
     protected int _currentDamageValue;
     protected float _percentage;
@@ -13,25 +10,24 @@ public class Explosion : MonoBehaviour
     protected float _magnitude;
     protected Collider[] _colliders;
     protected List<IDamage> _iDamages;
-    protected GameManagerBulletSerializer _gameManagerBulletSerializer;
 
-    public float RadiusValue
+    public override float RadiusValue
     {
         get => _radius;
         set => _radius = value;
     }
-    public float DamageValue
+    public override float DamageValue
     {
         get => _maxDamageValue;
         set => _maxDamageValue = value;
     }
 
 
-    protected virtual void Awake()
+
+    protected override void Awake()
     {
         _iDamages = new List<IDamage>();
         _colliders = Physics.OverlapSphere(transform.position, _radius);
-        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
     }
 
     protected virtual void Start()
@@ -72,15 +68,14 @@ public class Explosion : MonoBehaviour
         () => DamageAndScoreInOlineMode(iDamage, new int[2] { hitScore, distanceBonus }));
     }
 
-    protected virtual void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int[] scoreValues)
+    protected virtual void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int[] scores)
     {
         iDamage.Damage(damageValue);
-        OwnerScore?.GetScore(scoreValues[0] + scoreValues[1], iDamage);
-        OwnerScore?.HitEnemyAndGetScore(scoreValues, iDamage);
+        Score(iDamage, scores);
     }
 
-    protected virtual void DamageAndScoreInOlineMode(IDamage iDamage, int[] scoreValues)
+    protected virtual void DamageAndScoreInOlineMode(IDamage iDamage, int[] scores)
     {
-        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scoreValues, 0);
+        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scores, 0);
     }
 }

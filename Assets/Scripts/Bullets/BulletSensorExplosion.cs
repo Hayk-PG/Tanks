@@ -2,6 +2,18 @@ using UnityEngine;
 
 public class BulletSensorExplosion : BulletExplosion
 {
+    private IBulletSensor _iBulletSensor;
+    private IBulletVelocity<BulletController.VelocityData> _iBulletVelocity;
+
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _iBulletSensor = Get<IBulletSensor>.FromChild(gameObject);
+        _iBulletVelocity = Get<IBulletVelocity<BulletController.VelocityData>>.From(gameObject);
+    }
+
     protected override void OnEnable()
     {
         if (_iBulletSensor != null)

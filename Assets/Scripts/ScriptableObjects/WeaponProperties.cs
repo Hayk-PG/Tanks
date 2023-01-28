@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable objects/Weapons/New weapon")]
 public class WeaponProperties : BaseWeaponProperties<BulletController>
 {
-    internal struct RandomType
+    protected struct RandomType
     {
         internal int?[] _damageValues;
         internal int?[] _destructDamageValues;
@@ -13,7 +13,7 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         internal float?[] _radiusValues;
     }
 
-    private void Randomizer(RandomType randomType)
+    protected void Randomizer(RandomType randomType)
     {
         if(randomType._damageValues != null) 
             _damageValue = Random.Range(randomType._damageValues[0].Value, randomType._damageValues[1].Value);
@@ -34,14 +34,14 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         }
     }
 
-    private void SetExplosionValues()
+    protected virtual void SetExplosionValues()
     {
         Explosion[] explosion = _prefab.GetComponentsInChildren<Explosion>(true);
         explosion[0].RadiusValue = _radius;
         explosion[0].DamageValue = _damageValue;
     }
 
-    private void SetCollisionValues()
+    protected virtual void SetCollisionValues()
     {
         BulletCollision bulletCollision = Get<BulletCollision>.From(_prefab.gameObject);
 
@@ -132,7 +132,7 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         SetRandomUnlockTime();
     }
 
-    private void DefineRangeType()
+    protected void DefineRangeType()
     {
         string longRange = " LR";
         string mediumRange = " MR";
@@ -164,7 +164,7 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         _weaponType += range;
     }
 
-    private void SetRandomUnlockTime()
+    protected void SetRandomUnlockTime()
     {
         if (_index == 0)
             return;

@@ -1,8 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-public class BulletExplosion : GetBulletController, IBulletExplosion
-{
+public class BulletExplosion : MonoBehaviour, IBulletExplosion
+{    
+    protected IBulletCollision _iBulletCollision;
+    protected IBulletLimit _iBulletLimit;
+    protected IBulletID _iBulletId;
+    protected ITurnController _iTurnController;
     protected LavaSplash _lavaSplash;
 
     public Action<IScore, float> OnBulletExplosion { get; set; }
@@ -10,34 +14,55 @@ public class BulletExplosion : GetBulletController, IBulletExplosion
 
 
 
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
+        GetIBulletCollision();
+        _iBulletLimit = Get<IBulletLimit>.From(gameObject);
+        _iBulletId = Get<IBulletID>.From(gameObject);
+        _iTurnController = Get<ITurnController>.From(gameObject);
         _lavaSplash = FindObjectOfType<LavaSplash>();
     }
 
     protected virtual void OnEnable()
     {
-        if (_iBulletCollision != null) 
-            _iBulletCollision.OnExplodeOnCollision += OnExplodeOnCollision;
-
-        if (_iBulletLimit != null)
-            _iBulletLimit.OnDestroyTimeLimit += delegate { OnExplodeOnCollision(_iBulletId.OwnerScore, 0); };
-
-        if (_iBulletLimit != null) 
-            _iBulletLimit.OnExplodeOnLimit += OnExplodeOnLimit;
+        ListenIBulletCollision(true);
+        ListenIBulletLimit(true);
     }
 
     protected virtual void OnDisable()
     {
-        if (_iBulletCollision != null)
+        ListenIBulletCollision(false);
+        ListenIBulletLimit(false);
+    }
+
+    protected virtual void GetIBulletCollision() => _iBulletCollision = Get<IBulletCollision>.From(gameObject);
+
+    protected virtual void ListenIBulletCollision(bool isSubscribing)
+    {
+        if (_iBulletCollision == null)
+            return;
+
+        if (isSubscribing)
+            _iBulletCollision.OnExplodeOnCollision += OnExplodeOnCollision;
+        else
             _iBulletCollision.OnExplodeOnCollision -= OnExplodeOnCollision;
+    }
 
-        if (_iBulletLimit != null)
+    protected virtual void ListenIBulletLimit(bool isSubscribing)
+    {
+        if (_iBulletLimit == null)
+            return;
+
+        if (isSubscribing)
+        {
+            _iBulletLimit.OnDestroyTimeLimit += delegate { OnExplodeOnCollision(_iBulletId.OwnerScore, 0); };
+            _iBulletLimit.OnExplodeOnLimit += OnExplodeOnLimit;
+        }
+        else
+        {
             _iBulletLimit.OnDestroyTimeLimit -= delegate { OnExplodeOnCollision(_iBulletId.OwnerScore, 0); };
-
-        if (_iBulletLimit != null)
             _iBulletLimit.OnExplodeOnLimit -= OnExplodeOnLimit;
+        }
     }
 
     protected virtual void OnExplodeOnCollision(IScore ownerScore, float distance)

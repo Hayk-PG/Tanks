@@ -87,6 +87,27 @@ public class WeaponPropertiesCustomEditor: Editor
     }
 }
 
+[CustomEditor(typeof(WeaponPropertiesDirect))]
+public class WeaponPropertiesDirectCustomEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        WeaponPropertiesDirect weaponPropertiesDirect = (WeaponPropertiesDirect)target;
+
+        if (GUILayout.Button("Randomize", GUILayout.Height(40)))
+        {
+            weaponPropertiesDirect.Randomize();
+        }
+
+        if (GUILayout.Button("Set properties", GUILayout.Height(40)))
+        {
+            weaponPropertiesDirect.OnClickSetWeaponProperties();
+        }
+    }
+}
+
 [CustomEditor(typeof(DetailsLevel))]
 public class DetailsLevelCustomEditor : Editor
 {

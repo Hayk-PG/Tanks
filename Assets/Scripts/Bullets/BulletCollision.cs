@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
-public class BulletCollision : GetBulletController
+public class BulletCollision : MonoBehaviour
 {
-    [SerializeField]
-    protected int _destructDamage, _tileParticleIndex;
+    [SerializeField] protected int _destructDamage;
+    [SerializeField] protected int _tileParticleIndex;
+
+    protected IBulletCollision _iBulletCollision;
+    protected GameManagerBulletSerializer _gameManagerBulletSerializer;
 
     public int DestructDamage
     {
@@ -17,15 +20,16 @@ public class BulletCollision : GetBulletController
     }
 
 
-    protected virtual void OnEnable()
+
+    protected virtual void Awake()
     {
-        _iBulletCollision.OnCollision += OnCollision;
+        _iBulletCollision = Get<IBulletCollision>.From(gameObject);
+        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
     }
 
-    protected virtual void OnDisable()
-    {
-        _iBulletCollision.OnCollision -= OnCollision;
-    }
+    protected virtual void OnEnable() => _iBulletCollision.OnCollision += OnCollision;
+
+    protected virtual void OnDisable() => _iBulletCollision.OnCollision -= OnCollision;
 
     protected virtual void OnCollision(Collider collider, IScore ownerScore, float distance)
     {
@@ -41,8 +45,5 @@ public class BulletCollision : GetBulletController
         Get<IDestruct>.From(collider.gameObject)?.Destruct(_destructDamage, _tileParticleIndex);
     }
 
-    protected virtual void OnCollisionInOnlineMode(Collider collider, IScore ownerScore)
-    {
-        _gameManagerBulletSerializer.CallOnCollisionRPC(collider, ownerScore, _destructDamage);
-    }
+    protected virtual void OnCollisionInOnlineMode(Collider collider, IScore ownerScore) => _gameManagerBulletSerializer.CallOnCollisionRPC(collider, ownerScore, _destructDamage);
 }

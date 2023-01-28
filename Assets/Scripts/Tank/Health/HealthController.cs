@@ -1,6 +1,7 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamage
@@ -8,7 +9,11 @@ public class HealthController : MonoBehaviour, IDamage
     private TankController _tankController;
     private PlayerShields _playerShields;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
-  
+
+    [SerializeField] private Collider _weakSpot;
+    [SerializeField] private Collider _center;
+    [SerializeField] private Collider _strongSpot;
+
     [SerializeField][Range(0, 50)] [Tooltip("Light => 0 - 10: Medium => 15 - 30: Heavy => 35 - 50")] private int _armor;
 
     public int Health { get; set; }
@@ -75,6 +80,31 @@ public class HealthController : MonoBehaviour, IDamage
             ApplyArmorDamage(damage);
         else
             ApplyHealthDamage(damage);
+    }
+
+    public void Damage(Collider collider, int damage)
+    {
+        float fixedDamage = damage;
+        float newDamage = 0;
+
+        if (collider == _weakSpot)
+        {
+            newDamage = fixedDamage * 1.5f;
+        }
+
+        if(collider == _center)
+        {
+            newDamage = fixedDamage;
+            SecondarySoundController.PlaySound(0, 2);
+        }
+
+        if(collider == _strongSpot)
+        {
+            newDamage = fixedDamage / 1.5f;
+            SecondarySoundController.PlaySound(0, 2);
+        }
+
+        Damage(Mathf.RoundToInt(newDamage));
     }
 
     private void ApplyHealthDamage(int damage)

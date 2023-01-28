@@ -7,17 +7,22 @@ public class PlayerFeedback : BaseAnnouncer
     private HealthController _playerHealthController;
     private ScoreController _scoreController;
     private PlayerTurn _playerTurn;
+    private HitTextManager _hitTextManager;
 
     private int _playerHitsIndex;
     private int _playerTurnIndex;
+
 
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        if (_playerHealthController != null) _playerHealthController.OnTakeDamage -= OnTakeDamage;
-        if (_scoreController != null) _scoreController.OnHitEnemy -= OnGetPoints;
+        if (_playerHealthController != null) 
+            _playerHealthController.OnTakeDamage -= OnTakeDamage;
+
+        if (_scoreController != null) 
+            _scoreController.OnHitEnemy -= OnGetPoints;
     }
 
     public void CallPlayerEvents(HealthController playerHealth, ScoreController scoreController, PlayerTurn playerTurn)
@@ -25,9 +30,19 @@ public class PlayerFeedback : BaseAnnouncer
         _playerHealthController = playerHealth;
         _scoreController = scoreController;
         _playerTurn = playerTurn;
+        StartCoroutine(GetHitTextManager(playerTurn));
 
-        if (_playerHealthController != null) _playerHealthController.OnTakeDamage += OnTakeDamage;
-        if (_scoreController != null) _scoreController.OnHitEnemy += OnGetPoints;
+        if (_playerHealthController != null) 
+            _playerHealthController.OnTakeDamage += OnTakeDamage;
+
+        if (_scoreController != null) 
+            _scoreController.OnHitEnemy += OnGetPoints;
+    }
+
+    private IEnumerator GetHitTextManager(PlayerTurn playerTurn)
+    {
+        yield return new WaitUntil(() => playerTurn.MyTurn != TurnState.None);
+        _hitTextManager = playerTurn.MyTurn == TurnState.Player1 ? FindObjectOfType<Tab_HitText>().HitTexManagerForPlayer1 : FindObjectOfType<Tab_HitText>().HitTextManagerForPlayer2;
     }
 
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
@@ -73,13 +88,13 @@ public class PlayerFeedback : BaseAnnouncer
             }
 
             yield return null;
-
-            TextAnnouncement(0, _soundController.SoundsList[1]._clips[index]._clipName, true);
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-            SoundController.PlaySound(1, index, out float clipLength);
-            yield return new WaitForSeconds(clipLength);
-            TextAnnouncement(0, "", false);
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
+            _hitTextManager.Display(HitTextManager.TextType.Hit, "");
+            //TextAnnouncement(0, _soundController.SoundsList[1]._clips[index]._clipName, true);
+            //SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
+            //SoundController.PlaySound(1, index, out float clipLength);
+            //yield return new WaitForSeconds(clipLength);
+            //TextAnnouncement(0, "", false);
+            //SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
         }
 
         else

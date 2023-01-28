@@ -9,7 +9,7 @@ public class BulletParticles : MonoBehaviour
 
     [SerializeField] protected AssetReference _assetReferenceTrail;
     [SerializeField] protected AssetReference _assetReferenceMuzzleFlash;
-    [SerializeField] protected Explosion _explosion;
+    [SerializeField] protected BaseExplosion _explosion;
 
     protected bool _isTrailInstantiated;
 
@@ -18,26 +18,43 @@ public class BulletParticles : MonoBehaviour
     protected virtual void Awake()
     {
         _iBulletTrail = Get<IBulletTrail>.From(gameObject);
-        _iBulletExplosion = Get<IBulletExplosion>.From(gameObject);
-
+        GetIBulletExplosion();
         InstantiateMuzzleFlashAsync(transform.position);
     }
 
     protected virtual void OnEnable()
     {
-        if (_iBulletTrail != null)
-            _iBulletTrail.OnTrailActivity += OnTrailActivity;
-
-        if (_iBulletExplosion != null)
-            _iBulletExplosion.OnBulletExplosion += OnExplosion;
+        ListenIBulletTrail(true);
+        ListenIBulletExplosion(true);
     }
 
     protected virtual void OnDisable()
     {
-        if (_iBulletTrail != null)
-            _iBulletTrail.OnTrailActivity -= OnTrailActivity;
+        ListenIBulletTrail(false);
+        ListenIBulletExplosion(false);
+    }
 
-        if (_iBulletExplosion != null)
+    protected virtual void GetIBulletExplosion() => _iBulletExplosion = Get<IBulletExplosion>.From(gameObject);
+
+    protected virtual void ListenIBulletTrail(bool isSubscribing)
+    {
+        if (_iBulletTrail == null)
+            return;
+
+        if (isSubscribing)
+            _iBulletTrail.OnTrailActivity += OnTrailActivity;
+        else
+            _iBulletTrail.OnTrailActivity -= OnTrailActivity;
+    }
+
+    protected virtual void ListenIBulletExplosion(bool isSubscribing)
+    {
+        if (_iBulletExplosion == null)
+            return;
+
+        if (isSubscribing)
+            _iBulletExplosion.OnBulletExplosion += OnExplosion;
+        else
             _iBulletExplosion.OnBulletExplosion -= OnExplosion;
     }
 
