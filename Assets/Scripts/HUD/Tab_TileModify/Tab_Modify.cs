@@ -4,12 +4,12 @@ using UnityEngine;
 public class Tab_Modify : MonoBehaviour
 {
     [SerializeField] private Btn _btnClose;
-    private CanvasGroup _canvasGroup;
+    [SerializeField] private BuildModeSwitcher _buildModeSwitcher;
+    [SerializeField] private CanvasGroup _canvasGroup;
+    [SerializeField] private HUDMainTabsActivity _hudMainTabsActivity;
+    [SerializeField] private GameManager _gameManager;
+    [SerializeField] private TurnController _turnController;
     private IReset[] _iResets;
-    private HUDMainTabsActivity _hudMainTabsActivity;
-    private PropsTabCustomization _propsTabCustomization;
-    private GameManager _gameManager;
-    private TurnController _turnController;
     
     private bool _isTabOpen;
 
@@ -19,19 +19,11 @@ public class Tab_Modify : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _iResets = GetComponentsInChildren<IReset>();
-        _hudMainTabsActivity = FindObjectOfType<HUDMainTabsActivity>();
-        _propsTabCustomization = FindObjectOfType<PropsTabCustomization>();
-        _gameManager = FindObjectOfType<GameManager>();
-        _turnController = FindObjectOfType<TurnController>();
-    }
+    private void Awake() => _iResets = GetComponentsInChildren<IReset>();
 
     private void OnEnable()
     {
-        _propsTabCustomization.onModify += OpenTab;
+        _buildModeSwitcher.onSelect += OpenTab;
         _gameManager.OnGameStarted += OnGameStarted;
         _turnController.OnTurnChanged += delegate { CloseTab(); };
         _btnClose.onSelect += CloseTab;
@@ -39,7 +31,7 @@ public class Tab_Modify : MonoBehaviour
 
     private void OnDisable()
     {
-        _propsTabCustomization.onModify -= OpenTab;
+        _buildModeSwitcher.onSelect -= OpenTab;
         _gameManager.OnGameStarted -= OnGameStarted;
         _turnController.OnTurnChanged -= delegate { CloseTab(); };
         _btnClose.onSelect -= CloseTab;
