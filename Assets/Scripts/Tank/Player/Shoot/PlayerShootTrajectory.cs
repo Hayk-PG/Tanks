@@ -99,7 +99,7 @@ public class PlayerShootTrajectory : BaseTrajectory
 
     public override void PointsOverlapSphere(bool isLocalPlayer)
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && gameObject.activeInHierarchy)
         {
             _pointTarget.SetActive(false);
 

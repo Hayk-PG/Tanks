@@ -48,7 +48,7 @@ public class BaseShootController: MonoBehaviour
     protected virtual void Awake()
     {
         FindCanonPivotPoint();
-        _shootPoint = Get<BaseTrajectory>.FromChild(_canonPivotPoint.gameObject).transform;
+        _shootPoint = Get<BaseTrajectory>.FromChild(_canonPivotPoint.gameObject, true).transform;
         _trajectory = Get<BaseTrajectory>.From(_shootPoint.gameObject);
         _aiCanonRaycast = Get<AICanonRaycast>.From(_trajectory.gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);

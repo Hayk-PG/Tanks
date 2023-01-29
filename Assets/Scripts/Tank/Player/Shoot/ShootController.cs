@@ -26,6 +26,7 @@ public class ShootController : BaseShootController
     protected IScore _iScore;
     protected IShoot _iShoot;
     protected PlayerAmmoType _playerAmmoType;
+    protected GameplayAnnouncer _gameplayAnnouncer;
     
     [HideInInspector] [SerializeField] protected BulletController _instantiatedBullet;
     [HideInInspector] [SerializeField] protected int _activeAmmoIndex;
@@ -35,28 +36,33 @@ public class ShootController : BaseShootController
         get => _instantiatedBullet;
         set => _instantiatedBullet = value;
     }
+
     public float Direction { get; set; }
     public float CurrentForce
     {
         get => _shoot._currentForce;
         set => _shoot._currentForce = value;
     }
+
     public int ActiveAmmoIndex
     {
         get => _activeAmmoIndex;
         set => _activeAmmoIndex = value;
     }
+
     public Vector3 CanonPivotPointEulerAngles
     {
         get => _canonPivotPoint.eulerAngles;
         set => _canonPivotPoint.eulerAngles = value;
     }
+
     public bool IsApplyingForce
     {
         get => _shoot._isApplyingForce;
         set => _shoot._isApplyingForce = value;
     }
     protected bool _isSandbagsTriggered;
+    protected bool _isGameplayAnnounced;
 
     public Action<bool> OnCanonRotation { get; set; }
     public Action<PlayerHUDValues> OnUpdatePlayerHUDValues { get; set; }
@@ -71,7 +77,8 @@ public class ShootController : BaseShootController
         _rigidBody = GetComponent<Rigidbody>();       
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
         _iScore = Get<IScore>.From(gameObject);       
-        _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);        
+        _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
+        _gameplayAnnouncer = FindObjectOfType<GameplayAnnouncer>();
     }
 
     protected override void OnEnable()
@@ -81,6 +88,7 @@ public class ShootController : BaseShootController
         _tankController.OnControllers += OnControllers;
         _tankController.OnShootButtonClick += OnShootButtonClick;
         _tankMovement.OnDirectionValue += OnMovementDirectionValue;
+        _gameplayAnnouncer.OnGameStartAnnouncement += delegate { _isGameplayAnnounced = true; };
     }
 
     protected override void OnDisable()
@@ -90,6 +98,7 @@ public class ShootController : BaseShootController
         _tankController.OnControllers -= OnControllers;
         _tankController.OnShootButtonClick -= OnShootButtonClick;
         _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
+        _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { _isGameplayAnnounced = true; };
     }
 
     protected virtual void FixedUpdate()
@@ -107,15 +116,11 @@ public class ShootController : BaseShootController
         }
     }
 
-    protected virtual void OnInitialize()
-    {
-        _iShoot = Get<IShoot>.From(_tankController.BasePlayer.gameObject);
-        ShootPointGameobjectActivity(true);
-    }
+    protected virtual void OnInitialize() => _iShoot = Get<IShoot>.From(_tankController.BasePlayer.gameObject);
 
     protected virtual void ShootPointGameobjectActivity(bool isActive)
     {
-        if (_shootPoint.gameObject.activeInHierarchy != isActive)
+        if (_shootPoint.gameObject.activeInHierarchy != isActive && _isGameplayAnnounced)
             _shootPoint.gameObject.SetActive(isActive);
     }
 
