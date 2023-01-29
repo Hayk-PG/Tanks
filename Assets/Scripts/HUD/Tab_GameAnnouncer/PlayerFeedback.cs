@@ -7,6 +7,7 @@ public class PlayerFeedback : BaseAnnouncer
     private HealthController _playerHealthController;
     private ScoreController _scoreController;
     private PlayerTurn _playerTurn;
+    private AmmoTabCustomization _ammoTabCustomization;
     private HitTextManager _hitTextManager;
 
     private int _playerHitsIndex;
@@ -23,6 +24,9 @@ public class PlayerFeedback : BaseAnnouncer
 
         if (_scoreController != null) 
             _scoreController.OnHitEnemy -= OnHitEnemy;
+
+        if (_ammoTabCustomization != null)
+            _ammoTabCustomization.OnPlayerWeaponChanged -= OnWeaponChanged;
     }
 
     public void CallPlayerEvents(HealthController playerHealth, ScoreController scoreController, PlayerTurn playerTurn)
@@ -30,6 +34,7 @@ public class PlayerFeedback : BaseAnnouncer
         _playerHealthController = playerHealth;
         _scoreController = scoreController;
         _playerTurn = playerTurn;
+        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
         StartCoroutine(GetHitTextManager(playerTurn));
 
         if (_playerHealthController != null) 
@@ -37,6 +42,9 @@ public class PlayerFeedback : BaseAnnouncer
 
         if (_scoreController != null) 
             _scoreController.OnHitEnemy += OnHitEnemy;
+
+        if (_ammoTabCustomization != null)
+            _ammoTabCustomization.OnPlayerWeaponChanged += OnWeaponChanged;
     }
 
     private IEnumerator GetHitTextManager(PlayerTurn playerTurn)
@@ -93,11 +101,6 @@ public class PlayerFeedback : BaseAnnouncer
         }
     }
 
-    private void DisplayHitText(HitTextManager.TextType textType, string text)
-    {
-        _hitTextManager.Display(textType, text);
-    }
-
     private void GetComboScore(int total, int index)
     {
         float a = _soundController.SoundsList[2]._clips[index]._score;
@@ -105,6 +108,19 @@ public class PlayerFeedback : BaseAnnouncer
         float c = (total * b);
 
         _scoreController.GetScore(Mathf.RoundToInt(c), null);
+    }
+
+    private void OnWeaponChanged(AmmoTypeButton ammoTypeButton)
+    {
+        if (_hitTextManager == null)
+            return;
+
+        DisplayHitText(HitTextManager.TextType.Hint, ammoTypeButton._properties.WeaponType);
+    }
+
+    private void DisplayHitText(HitTextManager.TextType textType, string text)
+    {
+        _hitTextManager.Display(textType, text);
     }
 
     protected override void OnTurnChanged(TurnState turnState)
