@@ -22,7 +22,7 @@ public class PlayerFeedback : BaseAnnouncer
             _playerHealthController.OnTakeDamage -= OnTakeDamage;
 
         if (_scoreController != null) 
-            _scoreController.OnHitEnemy -= OnGetPoints;
+            _scoreController.OnHitEnemy -= OnHitEnemy;
     }
 
     public void CallPlayerEvents(HealthController playerHealth, ScoreController scoreController, PlayerTurn playerTurn)
@@ -36,7 +36,7 @@ public class PlayerFeedback : BaseAnnouncer
             _playerHealthController.OnTakeDamage += OnTakeDamage;
 
         if (_scoreController != null) 
-            _scoreController.OnHitEnemy += OnGetPoints;
+            _scoreController.OnHitEnemy += OnHitEnemy;
     }
 
     private IEnumerator GetHitTextManager(PlayerTurn playerTurn)
@@ -49,13 +49,49 @@ public class PlayerFeedback : BaseAnnouncer
     {
         if (basePlayer != null)
         {
-            //_playerDamageScreenText.Display(-damage);
+            HitTextManager.TextType textType = damage < 30 ? HitTextManager.TextType.Damage : HitTextManager.TextType.CriticalDamage;
+            DisplayHitText(textType, GlobalFunctions.RedColorText((-damage).ToString()));
         }        
     }
 
-    private void OnGetPoints(int[] scoreValues)
+    private void OnHitEnemy(int[] scores)
     {
-        StartCoroutine(OnGetPointsCoroutine(scoreValues));
+        _playerHitsIndex = _playerTurnIndex + 1;
+
+        int total = 0;
+
+        GlobalFunctions.Loop<int>.Foreach(scores, value => { total += value; });
+        Conditions<bool>.Compare(_playerHitsIndex < 3, () => OnSingleHit(total), ()=> OnBackToBackHit(total));
+    }
+
+    private void OnSingleHit(int total)
+    {
+        for (int i = 0; i < _soundController.SoundsList[1]._clips.Length; i++)
+        {
+            if (_soundController.SoundsList[1]._clips[i]._score >= total)
+            {
+                DisplayHitText(HitTextManager.TextType.Hit, "");
+                break;
+            }
+        }
+    }
+
+    private void OnBackToBackHit(int total)
+    {
+        for (int i = 0; i < _soundController.SoundsList[2]._clips.Length; i++)
+        {
+            if (_soundController.SoundsList[2]._clips[i]._score >= _playerHitsIndex)
+            {
+                GetComboScore(total, i);
+                DisplayHitText(HitTextManager.TextType.HitCombo, GlobalFunctions.BlueColorText("+" + (_playerHitsIndex - 2)));
+                break;
+            }
+        }
+    }
+
+    private void DisplayHitText(HitTextManager.TextType textType, string text)
+    {
+        _hitTextManager.Display(textType, text);
     }
 
     private void GetComboScore(int total, int index)
@@ -65,59 +101,6 @@ public class PlayerFeedback : BaseAnnouncer
         float c = (total * b);
 
         _scoreController.GetScore(Mathf.RoundToInt(c), null);
-    }
-
-    private IEnumerator OnGetPointsCoroutine(int[] scoreValues)
-    {
-        _playerHitsIndex = _playerTurnIndex + 1;
-
-        int total = 0;
-        int index = 0;
-
-        GlobalFunctions.Loop<int>.Foreach(scoreValues, value => { total += value; });
-
-        if (_playerHitsIndex < 3)
-        {
-            for (int i = 0; i < _soundController.SoundsList[1]._clips.Length; i++)
-            {
-                if(_soundController.SoundsList[1]._clips[i]._score >= total)
-                {
-                    index = i;                   
-                    break;
-                }
-            }
-
-            yield return null;
-            _hitTextManager.Display(HitTextManager.TextType.Hit, "");
-            //TextAnnouncement(0, _soundController.SoundsList[1]._clips[index]._clipName, true);
-            //SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-            //SoundController.PlaySound(1, index, out float clipLength);
-            //yield return new WaitForSeconds(clipLength);
-            //TextAnnouncement(0, "", false);
-            //SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
-        }
-
-        else
-        {
-            for (int i = 0; i < _soundController.SoundsList[2]._clips.Length; i++)
-            {
-                if (_soundController.SoundsList[2]._clips[i]._score >= _playerHitsIndex)
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            yield return null;
-
-            GetComboScore(total, index);
-            TextAnnouncement(0, _soundController.SoundsList[2]._clips[index]._clipName, true);
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-            SoundController.PlaySound(2, index, out float clipLength);
-            yield return new WaitForSeconds(clipLength);
-            TextAnnouncement(0, "", false);
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
-        }      
     }
 
     protected override void OnTurnChanged(TurnState turnState)

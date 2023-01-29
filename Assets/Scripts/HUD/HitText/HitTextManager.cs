@@ -49,7 +49,7 @@ public class HitTextManager : MonoBehaviour
     private string Text(TextType textType, string other)
     {
         string txt = textType == TextType.Hint ? "" : textType == TextType.Warning ? "" : textType == TextType.Hit ? "hit" : textType == TextType.CriticalHit ? "critical hit" :
-                     textType == TextType.HitCombo ? "hit combo +" : textType == TextType.Damage ? "damage" : textType == TextType.CriticalDamage ? "critical damage" : null;
+                     textType == TextType.HitCombo ? "hit combo" : textType == TextType.Damage ? "damage" : textType == TextType.CriticalDamage ? "critical damage" : null;
 
         return txt + " " + other;
     }
