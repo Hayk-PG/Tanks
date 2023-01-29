@@ -109,6 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be55be163a95b7f4b8f07ae332d3303e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gravityForcePercentage: 31
+  _windForcePercentage: 76
 --- !u!114 &6392731286410595255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,12 +393,12 @@ PrefabInstance:
     - target: {fileID: 746160120472670002, guid: 586731be37b74a1468f150a7d4a5f297,
         type: 3}
       propertyPath: _damage
-      value: 16
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 746160120472670002, guid: 586731be37b74a1468f150a7d4a5f297,
         type: 3}
       propertyPath: _destructDamage
-      value: 25
+      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 586731be37b74a1468f150a7d4a5f297, type: 3}

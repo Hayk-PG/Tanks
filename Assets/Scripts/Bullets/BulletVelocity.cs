@@ -3,18 +3,17 @@ using UnityEngine;
 
 public class BulletVelocity : GetBulletController, IBulletTrail
 {
-    public Action<bool> OnTrailActivity { get; set; }
+    [SerializeField] protected float _gravityForcePercentage;
+    [SerializeField] protected float _windForcePercentage;  
     protected float _gravity;
+    
+    public float GravityForcePercentage { get => _gravityForcePercentage; set => _gravityForcePercentage = value; }
+    public float WindForcePercentage { get => _windForcePercentage; set => _windForcePercentage = value; }
 
-    protected virtual Vector3 ExtraMovementValue
-    {
-        get
-        {
-            return Vector3.zero;
-        }
-    }
+    public Action<bool> OnTrailActivity { get; set; }
+    
 
-
+    
 
     protected virtual void Start()
     {
@@ -39,14 +38,14 @@ public class BulletVelocity : GetBulletController, IBulletTrail
     {
         BulletLookRotation(velocityData);
         ApplyWindForceToTheMovement(velocityData);
-        IncreaseGravitation(velocityData, 1.5f);
+        IncreaseGravitation(velocityData, GravityForcePercentage);
     }
 
     protected virtual void IncreaseGravitation(BulletController.VelocityData velocityData, float force)
     {
         if (velocityData._rigidBody.velocity.y <= 0)
         {
-            _gravity = velocityData._rigidBody.velocity.y + velocityData._rigidBody.velocity.y * force * Time.fixedDeltaTime;
+            _gravity = velocityData._rigidBody.velocity.y + (velocityData._rigidBody.velocity.y / 100 * force) * Time.fixedDeltaTime;
             velocityData._rigidBody.velocity = new Vector3(velocityData._rigidBody.velocity.x, _gravity, velocityData._rigidBody.velocity.z);
         }
     }
@@ -56,8 +55,6 @@ public class BulletVelocity : GetBulletController, IBulletTrail
     protected virtual void ApplyWindForceToTheMovement(BulletController.VelocityData velocityData)
     {
         if (velocityData._isWindActivated)
-            velocityData._rigidBody.velocity += velocityData._windVelocity + ExtraMovementValue;
-        else
-            velocityData._rigidBody.velocity += ExtraMovementValue;
+            velocityData._rigidBody.velocity += new Vector3((velocityData._windVelocity.x / 100 * WindForcePercentage), velocityData._windVelocity.y, velocityData._windVelocity.z);
     }
 }

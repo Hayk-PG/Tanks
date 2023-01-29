@@ -11,6 +11,8 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         internal int?[] _bulletMaxForceVaues;
         internal int?[] _bulletForceMaxSpeedValues;
         internal float?[] _radiusValues;
+        internal float?[] _gravityForcePercentage;
+        internal float?[] _windForcePercentage;
     }
 
     protected void Randomizer(RandomType randomType)
@@ -32,6 +34,12 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
             float radiusRound = Mathf.Round(Random.Range(randomType._radiusValues[0].Value, randomType._radiusValues[1].Value) * 100) * 0.01f;
             _radius = radiusRound;
         }
+
+        if (randomType._gravityForcePercentage != null)
+            _gravityForcePercentage = Mathf.Round(Random.Range(randomType._gravityForcePercentage[0].Value, randomType._gravityForcePercentage[1].Value));
+
+        if (randomType._windForcePercentage != null)
+            _windForcePercentage = Mathf.Round(Random.Range(randomType._windForcePercentage[0].Value, randomType._windForcePercentage[1].Value));
     }
 
     protected virtual void SetExplosionValues()
@@ -52,6 +60,17 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
         }
     }
 
+    protected virtual void SetForcePercentages()
+    {
+        BulletVelocity bulletVelocity = Get<BulletVelocity>.From(_prefab.gameObject);
+
+        if(bulletVelocity != null)
+        {
+            bulletVelocity.GravityForcePercentage = _gravityForcePercentage;
+            bulletVelocity.WindForcePercentage = _windForcePercentage;
+        }
+    }
+
     public void Randomize()
     {
         switch (_type)
@@ -60,9 +79,11 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomLight = new RandomType
                 {
-                    _damageValues = new int?[2] { 10, 30 },
-                    _destructDamageValues = new int?[2] { 10, 29 },
-                    _radiusValues = new float?[2] { 0.3f, 0.4f }
+                    _damageValues = new int?[] { 10, 30 },
+                    _destructDamageValues = new int?[] { 10, 29 },
+                    _radiusValues = new float?[] { 0.3f, 0.4f },
+                    _gravityForcePercentage = new float?[] { 0, 35 },
+                    _windForcePercentage = new float?[] { 75, 100 }
                 };
 
                 Randomizer(randomLight);               
@@ -72,9 +93,11 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomMedium = new RandomType
                 {
-                    _damageValues = new int?[2] { 30, 63 },
-                    _destructDamageValues = new int?[2] { 29, 65 },
-                    _radiusValues = new float?[2] { 0.4f, 0.63f }
+                    _damageValues = new int?[] { 30, 63 },
+                    _destructDamageValues = new int?[] { 29, 65 },
+                    _radiusValues = new float?[] { 0.4f, 0.63f },
+                    _gravityForcePercentage = new float?[] { 40, 70 },
+                    _windForcePercentage = new float?[] { 40, 70 }
                 };
 
                 Randomizer(randomMedium);
@@ -84,9 +107,11 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomHeavy = new RandomType
                 {
-                    _damageValues = new int?[2] { 63, 100 },
-                    _destructDamageValues = new int?[2] { 65, 100 },
-                    _radiusValues = new float?[2] { 0.63f, 1f }
+                    _damageValues = new int?[] { 63, 100 },
+                    _destructDamageValues = new int?[] { 65, 100 },
+                    _radiusValues = new float?[] { 0.63f, 1f },
+                    _gravityForcePercentage = new float?[] { 75, 100 },
+                    _windForcePercentage = new float?[] { 0, 35 }
                 };
 
                 Randomizer(randomHeavy);
@@ -99,8 +124,8 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomLong = new RandomType
                 {
-                    _bulletMaxForceVaues = new int?[2] { 17, 20 },
-                    _bulletForceMaxSpeedValues = new int?[2] { 6, 10 }
+                    _bulletMaxForceVaues = new int?[] { 17, 20 },
+                    _bulletForceMaxSpeedValues = new int?[] { 6, 10 }
                 };
 
                 Randomizer(randomLong);
@@ -110,8 +135,8 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomMedium = new RandomType
                 {
-                    _bulletMaxForceVaues = new int?[2] { 13, 17 },
-                    _bulletForceMaxSpeedValues = new int?[2] { 4, 5 }
+                    _bulletMaxForceVaues = new int?[] { 13, 17 },
+                    _bulletForceMaxSpeedValues = new int?[] { 4, 5 }
                 };
 
                 Randomizer(randomMedium);
@@ -121,8 +146,8 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
                 RandomType randomClose = new RandomType
                 {
-                    _bulletMaxForceVaues = new int?[2] { 7, 13 },
-                    _bulletForceMaxSpeedValues = new int?[2] { 1, 3 }
+                    _bulletMaxForceVaues = new int?[] { 7, 13 },
+                    _bulletForceMaxSpeedValues = new int?[] { 1, 3 }
                 };
 
                 Randomizer(randomClose);
@@ -180,6 +205,7 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
         SetExplosionValues();
         SetCollisionValues();
+        SetForcePercentages();
         DefineRangeType();
 
 #if UNITY_EDITOR
