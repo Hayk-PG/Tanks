@@ -47,10 +47,14 @@ public class PlayerFeedback : BaseAnnouncer
 
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
-        if (basePlayer != null)
+        if (basePlayer != null && damage > 0)
         {
-            HitTextManager.TextType textType = damage < 30 ? HitTextManager.TextType.Damage : HitTextManager.TextType.CriticalDamage;
-            DisplayHitText(textType, GlobalFunctions.RedColorText((-damage).ToString()));
+            HitTextManager.TextType textType = damage <= 15 ? HitTextManager.TextType.Damage : damage > 15 && damage < 30 ? HitTextManager.TextType.CriticalDamage :
+                                               damage >= 30 && damage < 40 ? HitTextManager.TextType.CriticalStun : damage >= 40 ? HitTextManager.TextType.FatalStun : HitTextManager.TextType.None;
+            string colorCode = textType == HitTextManager.TextType.Damage ? "#D45719" : textType == HitTextManager.TextType.CriticalDamage ? "#EB4C28" :
+                               textType == HitTextManager.TextType.CriticalStun ? "#D42019" : textType == HitTextManager.TextType.FatalStun ? "#F61E74" : "#F6861E";
+
+            DisplayHitText(textType, GlobalFunctions.TextWithColorCode(colorCode, (-damage).ToString()));
         }        
     }
 
