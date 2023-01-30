@@ -35,7 +35,7 @@ public class Barrel : MonoBehaviour
     {
         if (_isActive && _rigidBody.position.y <= VerticalLimit.Min)
         {
-            _lavaSplash.ActivateSmallSplash(_rigidBody.position);
+            _lavaSplash?.ActivateSmallSplash(_rigidBody.position);
             Explode(false);
         }
     }

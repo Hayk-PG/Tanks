@@ -5,18 +5,28 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 //ADDRESSABLE
 public class AALauncher : MonoBehaviour
 {
+    [SerializeField] private AssetReference _assetReferenceMesh;
+    [SerializeField] private AssetReference _assetReferenceGunMesh;
+    [SerializeField] private AssetReference _assetReferenceAaGun;
+    [SerializeField] private AssetReference _assetReferenceSpawnParticles;
+    [SerializeField] private AssetReference _assetReferenceDespawnEffect;
+
+    [Space]
+    [SerializeField] private Transform _meshTransform;
+    [SerializeField] private Transform _gunMeshTrasnform;
+    [SerializeField] private Transform[] _points;    
+
+    private GameObject _meshObj;
+    private GameObject _gunMeshObj;
+   
     private Animator _animator;
     private TurnController _turnController;
     private PhotonNetworkAALauncher _photonNetworkAALauncher;
     private IScore _ownerScore;
     private BulletController _enemyProjectile;
     private AAGun _aAGun;
-    
-    [SerializeField] private AssetReference _assetReferenceAaGun;
-    [SerializeField] private AssetReference _assetReferenceSpawnParticles;
-    [SerializeField] private AssetReference _assetReferenceDespawnEffect;
-    [SerializeField] private Transform[] _points;
-    [SerializeField] private ParticleSystem _gameobjectSpawnEffect;
+
+    [Space]
     [SerializeField] private float _force;
     private int _index = 0;
     private bool _launched;
@@ -44,11 +54,20 @@ public class AALauncher : MonoBehaviour
     {
         if (ownerTankController == null)
             return;
-
+       
         InstantiateSpawnParticlesAsync();
+        InstantiateMeshesAsync();
+
         ID = transform.position;
         _ownerScore = Get<IScore>.From(ownerTankController.gameObject);
+
         print(_ownerScore);
+    }
+
+    private void InstantiateMeshesAsync()
+    {
+        _assetReferenceMesh.InstantiateAsync(_meshTransform).Completed += (asset) => { _meshObj = asset.Result; };
+        _assetReferenceGunMesh.InstantiateAsync(_gunMeshTrasnform).Completed += (asset) => { _gunMeshObj = asset.Result; };
     }
 
     private void InstantiateSpawnParticlesAsync()
@@ -79,7 +98,7 @@ public class AALauncher : MonoBehaviour
     public void InstantiateGun()
     {
         DestroyAAGun();
-        Addressables.InstantiateAsync(_assetReferenceAaGun, _points[_index]).Completed += InitProjectile;
+        _assetReferenceAaGun.InstantiateAsync(_points[_index]).Completed += InitProjectile;
     }
 
     private void InstantiateGun(PhotonNetworkAALauncher photonNetworkAALauncher) => photonNetworkAALauncher.InstantiateGun(ID);
@@ -118,6 +137,8 @@ public class AALauncher : MonoBehaviour
     private void DestroyAALauncher()
     {
         Addressables.ReleaseInstance(gameObject);
+        Addressables.ReleaseInstance(_meshObj);
+        Addressables.ReleaseInstance(_gunMeshObj);
         Destroy(gameObject);
     }
 

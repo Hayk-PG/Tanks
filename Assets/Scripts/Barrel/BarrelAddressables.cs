@@ -11,8 +11,10 @@ public class BarrelAddressables : MonoBehaviour
 
     [Space] [SerializeField] private Barrel _barrel;
 
+    private GameObject _mesh;
 
-    private void Awake() => _assetReferenceMesh.InstantiateAsync(transform);
+
+    private void Awake() => _assetReferenceMesh.InstantiateAsync(transform).Completed += (asset) => { _mesh = asset.Result; };
 
     private void OnEnable()
     {
@@ -25,6 +27,8 @@ public class BarrelAddressables : MonoBehaviour
         _barrel.onLaunch -= OnLaunch;
         _barrel.onExplode -= OnExplode;
     }
+
+    private void OnDestroy() => Addressables.ReleaseInstance(_mesh);
 
     private void OnLaunch(Vector3 position) => _assetReferenceTrail.InstantiateAsync(transform);
 

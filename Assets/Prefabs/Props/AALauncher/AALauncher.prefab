@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 670860031223771260}
-  - component: {fileID: 2911103969728522376}
-  - component: {fileID: 8116653316016763159}
   m_Layer: 0
   m_Name: AA_BodyMesh
   m_TagString: Untagged
@@ -34,61 +32,6 @@ Transform:
   m_Father: {fileID: 6067298580856604175}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: -180, z: 0}
---- !u!33 &2911103969728522376
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 224760856042118307}
-  m_Mesh: {fileID: 7876642686081658686, guid: da3f7aa7b7337a748b3e057831e913f3, type: 3}
---- !u!23 &8116653316016763159
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 224760856042118307}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 67432abb5cc84cf46a94a2841e38825a, type: 2}
-  - {fileID: 2100000, guid: 4347e3df29ad18a4bb59d84f58fd8498, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &399856623430758036
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,8 +41,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1305975405535403703}
-  - component: {fileID: 2712233561247828451}
-  - component: {fileID: 2481399721372361018}
   m_Layer: 0
   m_Name: AA_GunMesh
   m_TagString: Untagged
@@ -125,66 +66,6 @@ Transform:
   m_Father: {fileID: 670860031223771260}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2712233561247828451
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 399856623430758036}
-  m_Mesh: {fileID: 3710661760536234354, guid: da3f7aa7b7337a748b3e057831e913f3, type: 3}
---- !u!23 &2481399721372361018
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 399856623430758036}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: dda47ae8c47aaa7449d97711cfb45cfc, type: 2}
-  - {fileID: 2100000, guid: a972a2c83ef93d046b058248d5ae2c57, type: 2}
-  - {fileID: 2100000, guid: e655e92bcc2f1df4ca8c463f73b3a11b, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6048424350487093655
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,6 +132,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3422348aead4046b433a80847d7592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _assetReferenceMesh:
+    m_AssetGUID: 1b5d9944ad76e5646a02df65aaf762d1
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  _assetReferenceGunMesh:
+    m_AssetGUID: ccc26ec534a12154ea96dcbf1c8ffa6d
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   _assetReferenceAaGun:
     m_AssetGUID: 899f06595061a434fb7e7a26e2d0bfc4
     m_SubObjectName: 
@@ -266,6 +157,8 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+  _meshTransform: {fileID: 670860031223771260}
+  _gunMeshTrasnform: {fileID: 1305975405535403703}
   _points:
   - {fileID: 978440203890303534}
   - {fileID: 886163348932678866}
