@@ -21,6 +21,7 @@ public class BoostZoneManager : MonoBehaviour
     [SerializeField] private ParticleSystem _particles;
     [Space]
 
+    private PhotonNetworkBoostZoneManager _photonNetworkBoostZoneManager;
     private TankController _tankController;
 
     private bool _isParticlesPlayed;
@@ -33,35 +34,51 @@ public class BoostZoneManager : MonoBehaviour
         set => _canvasGroup.alpha = (value ? 0 : 1);
     }
 
+    public Vector3 ID { get; private set; }
+
 
 
 
     private void Awake()
     {
         _canvas.worldCamera = Camera.main;
+        _photonNetworkBoostZoneManager = FindObjectOfType<PhotonNetworkBoostZoneManager>();
+    }
+
+    private void Start()
+    {
+        ID = transform.position;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        bool isTankControllerNull = _tankController == null;
-        bool isOtherGameobjectTankController = Get<TankController>.From(other.gameObject) != null;
-
-        if (isTankControllerNull && isOtherGameobjectTankController)
+        if (_tankController == null && Get<TankController>.From(other.gameObject) != null)
         {
-            _tankController = Get<TankController>.From(other.gameObject);
-            BaseBoostZoneFeatures?.Use(this, _tankController);
-        } 
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, 
+                delegate 
+                { 
+                    OnEnter(Get<TankController>.From(other.gameObject)); 
+                }, 
+                delegate 
+                {
+                    _photonNetworkBoostZoneManager.OnEnter(ID, Get<TankController>.From(other.gameObject));
+                });
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        bool isTankControllerCached = _tankController != null;
-        bool isOtherGameobjectTankController = Get<TankController>.From(other.gameObject) != null;
-
-        if (isTankControllerCached && isOtherGameobjectTankController)
+        if (_tankController != null && Get<TankController>.From(other.gameObject) != null)
         {
-            BaseBoostZoneFeatures?.Release(this, _tankController);
-            _tankController = null;
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, 
+                delegate
+                { 
+                    OnExit(Get<TankController>.From(other.gameObject));
+                }, 
+                delegate 
+                {
+                    _photonNetworkBoostZoneManager.OnExit(ID, Get<TankController>.From(other.gameObject));
+                });
         }
     }
 
@@ -83,6 +100,18 @@ public class BoostZoneManager : MonoBehaviour
 
                 break;
         }
+    }
+
+    public void OnEnter(TankController tankController)
+    {
+        _tankController = tankController;
+        BaseBoostZoneFeatures?.Use(this, _tankController);
+    }
+
+    public void OnExit(TankController tankController)
+    {
+        BaseBoostZoneFeatures?.Release(this, tankController);
+        _tankController = null;
     }
 
     public void Trigger(bool isTriggered)
