@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class BoostZoneManager : MonoBehaviour
 {
@@ -9,15 +10,29 @@ public class BoostZoneManager : MonoBehaviour
     [Space]
 
     [SerializeField] private Canvas _canvas;
+    [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Image _imgIcon;
     [SerializeField] private TMP_Text _txt;
     [Space]
 
     [SerializeField] private Sprite[] _sprites;
+    [Space]
 
-    private BaseBoostZoneFeatures _boostZoneFeature;
+    [SerializeField] private ParticleSystem _particles;
+    [Space]
 
-    private GameObject _player;
+    private TankController _tankController;
+
+    private bool _isParticlesPlayed;
+
+    public BaseBoostZoneFeatures BaseBoostZoneFeatures { get; private set; }
+
+    public bool IsTriggered
+    {
+        get => _canvasGroup.alpha == 0;
+        set => _canvasGroup.alpha = (value ? 0 : 1);
+    }
+
 
 
 
@@ -28,14 +43,26 @@ public class BoostZoneManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        _player = Get<TankController>.From(other.gameObject)?.gameObject;
-        _boostZoneFeature?.Use(_player);
+        bool isTankControllerNull = _tankController == null;
+        bool isOtherGameobjectTankController = Get<TankController>.From(other.gameObject) != null;
+
+        if (isTankControllerNull && isOtherGameobjectTankController)
+        {
+            _tankController = Get<TankController>.From(other.gameObject);
+            BaseBoostZoneFeatures?.Use(this, _tankController);
+        } 
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (_player == other.gameObject)
-            _boostZoneFeature?.Release(other.gameObject);
+        bool isTankControllerCached = _tankController != null;
+        bool isOtherGameobjectTankController = Get<TankController>.From(other.gameObject) != null;
+
+        if (isTankControllerCached && isOtherGameobjectTankController)
+        {
+            BaseBoostZoneFeatures?.Release(this, _tankController);
+            _tankController = null;
+        }
     }
 
     public void Init(Feature feature)
@@ -43,15 +70,40 @@ public class BoostZoneManager : MonoBehaviour
         switch (feature)
         {
             case Feature.SafeZone:
-                _boostZoneFeature = new BoostZoneSafe();
+
+                BaseBoostZoneFeatures = new BoostZoneSafe();
                 _imgIcon.sprite = Sprite(Feature.SafeZone);
+
                 break;
 
             case Feature.XpBoost:
-                _boostZoneFeature = new BoostZoneXp();
+
+                BaseBoostZoneFeatures = new BoostZoneXp();
                 _imgIcon.sprite = Sprite(Feature.XpBoost);
+
                 break;
         }
+    }
+
+    public void Trigger(bool isTriggered)
+    {
+        IsTriggered = isTriggered;
+
+        if (!_isParticlesPlayed && IsTriggered)
+        {
+            PlayParticles();
+            StartCoroutine(MakeParticlesReplayable());
+            SecondarySoundController.PlaySound(6, 0);
+            _isParticlesPlayed = true;
+        }
+    }
+
+    private void PlayParticles() => _particles.Play();
+
+    private IEnumerator MakeParticlesReplayable()
+    {
+        yield return new WaitForSeconds(3);
+        _isParticlesPlayed = false;
     }
 
     private Sprite Sprite(Feature feature)

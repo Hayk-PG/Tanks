@@ -1,20 +1,15 @@
-using UnityEngine;
-
 public class BoostZoneXp : BaseBoostZoneFeatures
 {
     private ScoreController _scoreController;
 
 
-
-    protected override void OnTriggerEnter(GameObject player)
+    protected override void OnTriggerEnter(TankController tankController)
     {
-        if (_scoreController == null)
-            _scoreController = Get<ScoreController>.From(player);
-
+        _scoreController = Get<ScoreController>.From(tankController.gameObject);
         _scoreController?.BoostXp(true);
     }
 
-    protected override void OnTriggerExit(GameObject player)
+    protected override void OnTriggerExit(TankController tankController)
     {
         _scoreController?.BoostXp(false);
         _scoreController = null;
