@@ -49,9 +49,15 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             if(_photonPlayerTankController._healthController != null)
             {
                 stream.SendNext(_photonPlayerTankController._healthController.Health);
+                stream.SendNext(_photonPlayerTankController._healthController.IsSafeZone);
             }
 
-            if(_photonPlayerTankController._healthBar != null)
+            if (_photonPlayerTankController._scoreController != null)
+            {
+                stream.SendNext(_photonPlayerTankController._scoreController.IsXpBoost);
+            }
+
+            if (_photonPlayerTankController._healthBar != null)
             {
                 stream.SendNext(_photonPlayerTankController._healthBar.Value);
             }
@@ -93,6 +99,12 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
             if(_photonPlayerTankController._healthController != null)
             {
                 _photonPlayerTankController._healthController.Health = (int)stream.ReceiveNext();
+                _photonPlayerTankController._healthController.IsSafeZone = (bool)stream.ReceiveNext();
+            }
+
+            if(_photonPlayerTankController._scoreController != null)
+            {
+                _photonPlayerTankController._scoreController.IsXpBoost = (bool)stream.ReceiveNext();
             }
 
             if(_photonPlayerTankController._healthBar != null)

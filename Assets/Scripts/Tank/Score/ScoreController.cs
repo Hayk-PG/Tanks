@@ -22,6 +22,7 @@ public class ScoreController : MonoBehaviour, IScore
         set => _score = value;
     }
     public int MainScore { get; set; }
+    public bool IsXpBoost { get; set; }
 
     public Action<int, float> OnDisplayTempPoints { get; set; }
     public Action<int> OnPlayerGetsPoints { get; set; }
@@ -81,6 +82,8 @@ public class ScoreController : MonoBehaviour, IScore
             _getScoreFromTerOccInd.OnGetScoreFromTerOccInd += OnGetScoreFromTerOccInd;
     }
 
+    public void BoostXp(bool isXpBoost) => IsXpBoost = isXpBoost;
+
     private void ReceiveTornadoScore(object[] data)
     {
         if((string)data[2] == name && (string)data[0] != name)
@@ -124,12 +127,14 @@ public class ScoreController : MonoBehaviour, IScore
 
     private void UpdateScore(int score, float waitForSeconds)
     {
-        Score += score;
+        int sc = IsXpBoost && score > 0 ? score * 2 : score;
 
-        if (score > 0)
-            MainScore += score;
+        Score += sc;
 
-        OnDisplayTempPoints?.Invoke(score, waitForSeconds);
+        if (sc > 0)
+            MainScore += sc;
+
+        OnDisplayTempPoints?.Invoke(sc, waitForSeconds);
         OnPlayerGetsPoints?.Invoke(Score);
     }
 

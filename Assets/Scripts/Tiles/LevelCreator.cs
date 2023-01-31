@@ -5,6 +5,8 @@ public class LevelCreator : BaseLevelGenerator
     [SerializeField] private ColorToPrefab _colorOfArmoredTile;
     [SerializeField] private ColorToPrefab _colorOfArmoredWall;
     [SerializeField] private ColorToPrefab _colorOfExplosiveBarrel;
+    [SerializeField] private ColorToPrefab _colorOfBoostZoneDoubleXp;
+    [SerializeField] private ColorToPrefab _colorOfBoostZoneSafe;
 
     protected override void GetLevelGeneratorData(LevelGeneratorData levelGeneratorData)
     {
@@ -12,6 +14,8 @@ public class LevelCreator : BaseLevelGenerator
         CreateTilesWithArmoredWall(levelGeneratorData);
         CreateExplosiveBarrels(levelGeneratorData);
         CreateTiles(levelGeneratorData);
+        CreateDoubleXpBoostZone(levelGeneratorData);
+        CreateSafeBoostZone(levelGeneratorData);
     }
 
     private void CreateTiles(LevelGeneratorData levelGeneratorData)
@@ -39,6 +43,26 @@ public class LevelCreator : BaseLevelGenerator
     {
         if (_colorOfExplosiveBarrel._color == levelGeneratorData.MapTexturePixelColor)
             ActivateProps(Tile(_colorOfArmoredWall._prefab, levelGeneratorData), TileProps.PropsType.ExplosiveBarrels);
+    }
+
+    private void CreateDoubleXpBoostZone(LevelGeneratorData levelGeneratorData)
+    {
+        if (_colorOfBoostZoneDoubleXp._color == levelGeneratorData.MapTexturePixelColor)
+        {
+            GameObject boostZone = Instantiate(_colorOfBoostZoneDoubleXp._prefab, levelGeneratorData.MapTexturePixelsCoordinate, Quaternion.identity, transform);
+            BoostZoneManager boostZoneManager = Get<BoostZoneManager>.From(boostZone);
+            boostZoneManager.Init(BoostZoneManager.Feature.XpBoost);
+        }           
+    }
+
+    private void CreateSafeBoostZone(LevelGeneratorData levelGeneratorData)
+    {
+        if (_colorOfBoostZoneSafe._color == levelGeneratorData.MapTexturePixelColor)
+        {
+            GameObject boostZone = Instantiate(_colorOfBoostZoneSafe._prefab, levelGeneratorData.MapTexturePixelsCoordinate, Quaternion.identity, transform);
+            BoostZoneManager boostZoneManager = Get<BoostZoneManager>.From(boostZone);
+            boostZoneManager.Init(BoostZoneManager.Feature.SafeZone);
+        }
     }
 
     private void ActivateProps(GameObject tile, TileProps.PropsType propsType)

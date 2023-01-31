@@ -33,6 +33,7 @@ public class HealthController : MonoBehaviour, IDamage
             return isShieldActiive;
         }
     }
+    public bool IsSafeZone { get; set; }
 
     public Action<BasePlayer, int> OnTakeDamage { get; set; }
     public Action<int> OnUpdateHealthBar { get; set; }
@@ -71,15 +72,20 @@ public class HealthController : MonoBehaviour, IDamage
         _playerShields.onShieldActivity -= OnShieldActivity;
     }
 
+    public void BoostSafeZone(bool isSafeZone) => IsSafeZone = isSafeZone;
+
     public void Damage(int damage)
     {
         if (Health <= 0)
             return;
 
-        if (IsShieldActive)
-            ApplyArmorDamage(damage);
-        else
-            ApplyHealthDamage(damage);
+        if (!IsSafeZone)
+        {
+            if (IsShieldActive)
+                ApplyArmorDamage(damage);
+            else
+                ApplyHealthDamage(damage);
+        }
     }
 
     public void Damage(Collider collider, int damage)

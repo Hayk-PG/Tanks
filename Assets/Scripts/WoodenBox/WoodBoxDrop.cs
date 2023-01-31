@@ -45,7 +45,7 @@ public class WoodBoxDrop : MonoBehaviour
 
     private void ActivateParticles()
     {
-        if (!_isParticlesActivated)
+        if (!_isParticlesActivated && _particles != null)
         {
             _particles.gameObject.SetActive(true);
             _particles.transform.SetParent(null);
