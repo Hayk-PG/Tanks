@@ -4,14 +4,12 @@ public abstract class BaseBoostZoneFeatures
     {
         OnTriggerEnter(tankController);
         boostZoneManager.Trigger(true);
-        GlobalFunctions.DebugLog("true");
     }
 
     public virtual void Release(BoostZoneManager boostZoneManager, TankController tankController)
     {
         OnTriggerExit(tankController);
         boostZoneManager.Trigger(false);
-        GlobalFunctions.DebugLog("false");
     }
 
     protected abstract void OnTriggerEnter(TankController tankController);

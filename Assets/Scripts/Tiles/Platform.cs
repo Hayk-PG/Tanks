@@ -30,18 +30,18 @@ public class Platform : MonoBehaviour
 
     private void OnEnable()
     {
-        GlobalFunctions.Loop<PlatformSensors>.Foreach(_platformSensors, platformSensor =>
-        {
-            platformSensor.OnTriggerEntered += OnPlatformSensorTriggerEntered;
-        });
+        //GlobalFunctions.Loop<PlatformSensors>.Foreach(_platformSensors, platformSensor =>
+        //{
+        //    platformSensor.OnTriggerEntered += OnPlatformSensorTriggerEntered;
+        //});
     }
 
     private void OnDisable()
     {
-        GlobalFunctions.Loop<PlatformSensors>.Foreach(_platformSensors, platformSensor =>
-        {
-            platformSensor.OnTriggerEntered -= OnPlatformSensorTriggerEntered;
-        });
+        //GlobalFunctions.Loop<PlatformSensors>.Foreach(_platformSensors, platformSensor =>
+        //{
+        //    platformSensor.OnTriggerEntered -= OnPlatformSensorTriggerEntered;
+        //});
     }
 
     private void Update()
