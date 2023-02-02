@@ -4,8 +4,10 @@ using UnityEngine;
 public class TankController : MonoBehaviour
 {
     private BasePlayer _basePlayer;
+
     private Controllers _controllers; 
     private ShootButton _shootButton;
+    private Btn _btnJump;
 
     internal BasePlayer BasePlayer
     {
@@ -17,11 +19,19 @@ public class TankController : MonoBehaviour
     internal Action<bool> OnShootButtonClick { get; set; }
     internal Action OnInitialize { get; set; }
 
+    internal event Action onSelectJumpButton;
+
 
     private void Awake()
     {
         _controllers = FindObjectOfType<Controllers>();
         _shootButton = FindObjectOfType<ShootButton>();
+        _btnJump = Get<Btn>.From(GameObject.Find("Btn_Jump"));
+    }
+
+    private void OnDisable()
+    {
+        _btnJump.onSelect -= delegate { onSelectJumpButton?.Invoke(); };
     }
 
     public void GetTankControl(BasePlayer player)
@@ -33,6 +43,8 @@ public class TankController : MonoBehaviour
             _controllers.OnControllers += OnControllers;
             _controllers.OnHorizontalJoystick += OnMovementDirection;
             _shootButton.OnClick += OnShootButtonClick;
+            _btnJump.onSelect += delegate { onSelectJumpButton?.Invoke(); };
+
             OnInitialize?.Invoke();
         }
     }

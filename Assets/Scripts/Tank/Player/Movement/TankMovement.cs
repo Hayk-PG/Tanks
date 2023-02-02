@@ -22,6 +22,9 @@ public class TankMovement : BaseTankMovement
         } 
     }
 
+    [SerializeField] private bool _isJumpButtonPressed;
+    [SerializeField] private bool _isJumped;
+
 
     protected override void Awake()
     {
@@ -35,7 +38,10 @@ public class TankMovement : BaseTankMovement
         base.OnEnable();
 
         _tankController.OnMovementDirection += OnHorizontalJoystick;
-        if (_fuel != null) _fuel.OnFuelValue -= OnFuelValue;
+        _tankController.onSelectJumpButton += OnJump;
+
+        if (_fuel != null) 
+            _fuel.OnFuelValue -= OnFuelValue;
     }
 
     protected override void OnDisable()
@@ -43,6 +49,13 @@ public class TankMovement : BaseTankMovement
         base.OnDisable();
 
         _tankController.OnMovementDirection -= OnHorizontalJoystick;
+        _tankController.onSelectJumpButton -= OnJump;
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
+        ControlJump();
     }
 
     private void OnHorizontalJoystick(float horizontal)
@@ -53,9 +66,28 @@ public class TankMovement : BaseTankMovement
             Direction = 0;
     }
 
-    private void FixedUpdate()
+    private void OnJump()
     {
-        Move();      
+        if (!_isJumpButtonPressed && !_isJumped && _wheelColliderController.IsGrounded())
+        {
+            _rigidBody.AddForce(Vector3.up * 2500, ForceMode.Impulse);
+            _isJumpButtonPressed = true;
+        }
+    }
+
+    private void ControlJump()
+    {
+        if (_isJumpButtonPressed && !_wheelColliderController.IsGrounded())
+        {           
+            _isJumpButtonPressed = false;
+            _isJumped = true;
+        }
+
+        if (_isJumped)
+            _rigidBody.velocity += new Vector3(Direction, 0, 0) * 2.5f * Time.fixedDeltaTime;
+
+        if (_wheelColliderController.IsGrounded() && _isJumped)
+            _isJumped = false;
     }
 
     public void Move()

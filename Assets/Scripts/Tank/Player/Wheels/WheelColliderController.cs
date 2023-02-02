@@ -89,7 +89,7 @@ public class WheelColliderController : MonoBehaviour
         }
     }
 
-    public bool AreWheelsGrounded()
+    public bool IsGrounded()
     {
         if (_wheels != null)
         {

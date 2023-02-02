@@ -16,12 +16,12 @@ public class IsGroundedChecker : MonoBehaviour
 
     private void Start()
     {
-        _isVehicleFalling = !_wheelColliderController.AreWheelsGrounded();
+        _isVehicleFalling = !_wheelColliderController.IsGrounded();
     }
 
     private void Update()
     {
-        if (_isVehicleFalling && _wheelColliderController.AreWheelsGrounded())
+        if (_isVehicleFalling && _wheelColliderController.IsGrounded())
         {
             OnGrounded?.Invoke();
             SecondarySoundController.PlaySound(2, 0);
