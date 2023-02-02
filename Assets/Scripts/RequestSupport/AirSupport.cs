@@ -5,6 +5,7 @@ public class AirSupport : MonoBehaviour, ITurnController
 {
     [SerializeField] private Bomber _bomber;
 
+    private Rigidbody _rb;
     private MapPoints _mapPoints;
     private MainCameraController _mainCameraController;
     private float StartPointX
@@ -64,7 +65,7 @@ public class AirSupport : MonoBehaviour, ITurnController
         yield return new WaitForSeconds(1);
 
         _bomber.gameObject.SetActive(true);
-        _mainCameraController.CameraOffset(playerTurn, _bomber.transform, _bomber.transform.position.y - 2, 2);
+        _mainCameraController.CameraOffset(playerTurn, _rb, _bomber.transform.position.y - 2, 2);
     }
 
     private IEnumerator PlayAirSirenSound()

@@ -250,7 +250,7 @@ public class AIShootController : BaseShootController
             bullet.OwnerScore = _iScore;
             bullet.RigidBody.velocity = _target;
             _rigidBody.AddForce(transform.forward * _target.magnitude * _shoot._rigidbodyForceMultiplier, ForceMode.Impulse);
-            mainCameraController.CameraOffset(_playerTurn, bullet.transform, null, null);
+            mainCameraController.CameraOffset(_playerTurn, bullet.RigidBody, null, null);
             _currentTrajectoryTime = _defaultTrajectoryTime;
             OnShoot?.Invoke();
             OnDash(_aiTankMovement.Direction);

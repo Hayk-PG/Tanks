@@ -24,7 +24,7 @@ public class MultipleShootController : ShootController
             
             if (i == lastIndex)
             {
-                mainCameraController.CameraOffset(_playerTurn, Bullet.transform, null, null);
+                mainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
                 Bullet.IsLastShellOfBarrage = true;
             }
             yield return new WaitForSeconds(0.4f);

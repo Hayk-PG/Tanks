@@ -7,8 +7,9 @@ public class MainCameraController : MonoBehaviour
     private GameManager _gameManager;
     private TurnController _turnController;
     private MapPoints _mapPoints;
-    private Transform _player1, _player2;
-    
+    private Rigidbody _player1, _player2;
+
+    [SerializeField] private Rigidbody _rb;
     [SerializeField] private float _smoothTime, _maxTime;
     private float _currentVelocityfloat;
     private float _ortographicSize;  
@@ -19,6 +20,8 @@ public class MainCameraController : MonoBehaviour
     private Vector3 _currentVelocity;
     private Vector3 _halfLength = new Vector3(0.5f, 0, 0);
 
+    private Rigidbody Target1 { get; set; }
+    private Rigidbody Target2 { get; set; }
     private bool PlayersInitialized
     {
         get => Target1 != null && Target2 != null;
@@ -39,9 +42,10 @@ public class MainCameraController : MonoBehaviour
     {
         get => Vector3.Lerp(Target1.position, Target2.position, 0.5f);
     }
-    private Transform Target1 { get; set; }
-    private Transform Target2 { get; set; }
+    
     private float CameraWidth => _camera.orthographicSize * _camera.aspect;
+
+
 
 
     private void Awake()
@@ -69,9 +73,9 @@ public class MainCameraController : MonoBehaviour
     {
         if (PlayersInitialized)
         {
-            Vector3 targetPosition = new Vector3(Center.x, Center.y + _yOffset, transform.position.z);
-            Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
-            transform.position = smoothPosition;
+            Vector3 targetPosition = new Vector3(Center.x, Center.y + _yOffset, _rb.position.z);
+            Vector3 smoothPosition = Vector3.SmoothDamp(_rb.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
+            _rb.MovePosition(smoothPosition);
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
             _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 10);
             _hudCamera.orthographicSize = _camera.orthographicSize;
@@ -88,8 +92,11 @@ public class MainCameraController : MonoBehaviour
 
     private void OnGameStarted()
     {
-        _player1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn.MyTurn == TurnState.Player1).transform;
-        _player2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn.MyTurn == TurnState.Player2).transform;
+        PlayerTurn p1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn.MyTurn == TurnState.Player1);
+        PlayerTurn p2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn.MyTurn == TurnState.Player2);
+
+        _player1 = Get<Rigidbody>.From(p1.gameObject);
+        _player2 = Get<Rigidbody>.From(p2.gameObject);
 
         ResetTargets();
     }
@@ -104,7 +111,7 @@ public class MainCameraController : MonoBehaviour
         _desiredHeightOffset = value;
     }
 
-    private void SetTargets(Transform target1, Transform target2)
+    private void SetTargets(Rigidbody target1, Rigidbody target2)
     {
         Target1 = target1;
         Target2 = target2;
@@ -123,7 +130,7 @@ public class MainCameraController : MonoBehaviour
             ResetTargets();
     }
 
-    public void CameraOffset(PlayerTurn playerTurn, Transform target, float? yOffset, float? desiredHeightOffset)
+    public void CameraOffset(PlayerTurn playerTurn, Rigidbody target, float? yOffset, float? desiredHeightOffset)
     {
         //bool isDistanceAcceptable = Vector3.Distance(Target1 != null ? Target1.position: _player1.position, Target1 != null ? Target2.position : _player2.position) >= 5;
         bool isPlayerOnesTurn = playerTurn?.MyTurn == TurnState.Player1;

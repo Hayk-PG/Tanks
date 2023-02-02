@@ -169,7 +169,7 @@ public class ShootController : BaseShootController
         Bullet.OwnerScore = _iScore;
         Bullet.RigidBody.velocity = Bullet.transform.forward * force;
         _gameManagerBulletSerializer.BulletController = Bullet;
-        mainCameraController.CameraOffset(_playerTurn, Bullet.transform, null, null);
+        mainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
     }
 
     protected virtual bool HaveEnoughBullets()
