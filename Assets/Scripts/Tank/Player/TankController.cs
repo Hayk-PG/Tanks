@@ -7,7 +7,7 @@ public class TankController : MonoBehaviour
 
     private Controllers _controllers; 
     private ShootButton _shootButton;
-    private Btn _btnJump;
+    private JumpButton _jumpButton;
 
     internal BasePlayer BasePlayer
     {
@@ -26,12 +26,12 @@ public class TankController : MonoBehaviour
     {
         _controllers = FindObjectOfType<Controllers>();
         _shootButton = FindObjectOfType<ShootButton>();
-        _btnJump = Get<Btn>.From(GameObject.Find("Btn_Jump"));
+        _jumpButton = FindObjectOfType<JumpButton>();
     }
 
     private void OnDisable()
     {
-        _btnJump.onSelect -= delegate { onSelectJumpButton?.Invoke(); };
+        _jumpButton.onJump -= delegate { onSelectJumpButton?.Invoke(); };
     }
 
     public void GetTankControl(BasePlayer player)
@@ -43,7 +43,7 @@ public class TankController : MonoBehaviour
             _controllers.OnControllers += OnControllers;
             _controllers.OnHorizontalJoystick += OnMovementDirection;
             _shootButton.OnClick += OnShootButtonClick;
-            _btnJump.onSelect += delegate { onSelectJumpButton?.Invoke(); };
+            _jumpButton.onJump += delegate { onSelectJumpButton?.Invoke(); };
 
             OnInitialize?.Invoke();
         }

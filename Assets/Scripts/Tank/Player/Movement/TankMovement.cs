@@ -4,8 +4,12 @@ public class TankMovement : BaseTankMovement
 {
     private TankController _tankController;
     private Fuel _fuel;
+
     private bool _isEnoughFuel = true;
     private bool _isSandbagsTriggered;
+    [SerializeField] private bool _isJumpButtonPressed;
+    [SerializeField] private bool _isJumped;
+
     public float SpeedInSandbags
     {
         get
@@ -22,8 +26,7 @@ public class TankMovement : BaseTankMovement
         } 
     }
 
-    [SerializeField] private bool _isJumpButtonPressed;
-    [SerializeField] private bool _isJumped;
+    
 
 
     protected override void Awake()
@@ -62,13 +65,14 @@ public class TankMovement : BaseTankMovement
     {
         if (_playerTurn.IsMyTurn && _isEnoughFuel && !_isStunned)
             Direction = name == Names.Tank_FirstPlayer ? horizontal : -horizontal;
+
         else
             Direction = 0;
     }
 
     private void OnJump()
     {
-        if (!_isJumpButtonPressed && !_isJumped && _wheelColliderController.IsGrounded())
+        if (!_isJumpButtonPressed && !_isJumped && _wheelColliderController.IsPartiallyGrounded() && _playerTurn.IsMyTurn)
         {
             _rigidBody.AddForce(Vector3.up * 2500, ForceMode.Impulse);
             _isJumpButtonPressed = true;
@@ -119,11 +123,18 @@ public class TankMovement : BaseTankMovement
         _isOnRightSlope = Direction > 0.5f && _rayCasts.FrontHit.collider?.name == _slopesNames[0];
         _isOnLeftSlope = Direction < -0.5f && _rayCasts.BackHit.collider?.name == _slopesNames[1];
 
-        if (_isOnRightSlope) RigidbodyPush(_vectorRight, 2500);
-        if (_isOnLeftSlope) RigidbodyPush(_vectorLeft, 2500);
+        if (_isOnRightSlope) 
+            RigidbodyPush(_vectorRight, 2500);
 
-        if (_isOnRightSlope || _isOnLeftSlope) Speed = _accelerated;
-        else Speed = _normalSpeed;
+        if (_isOnLeftSlope) 
+            RigidbodyPush(_vectorLeft, 2500);
+
+
+        if (_isOnRightSlope || _isOnLeftSlope) 
+            Speed = _accelerated;
+
+        else 
+            Speed = _normalSpeed;
     }
 
     private void Brake()
@@ -138,7 +149,7 @@ public class TankMovement : BaseTankMovement
         RotationXAxis = Converter.AngleConverter(_rigidBody.transform.eulerAngles.x) >= 65 || Converter.AngleConverter(_rigidBody.transform.eulerAngles.x) <= -65 ?
                         0 : _rigidBody.transform.eulerAngles.x;
 
-        _rigidBody.transform.eulerAngles = new Vector3(RotationXAxis, InitialRotationYAxis, 0);
+        _rigidBody.transform.eulerAngles = new Vector3(_isJumped ? _rigidBody.transform.eulerAngles.x : RotationXAxis, InitialRotationYAxis, 0);
     }
 
     private void RigidbodyCenterOfMass()

@@ -91,20 +91,33 @@ public class WheelColliderController : MonoBehaviour
 
     public bool IsGrounded()
     {
-        if (_wheels != null)
-        {
-            int groundedWheels = 0;
+        bool isGrounded = true;
 
-            for (int i = 0; i < _wheels.Length; i++)
+        foreach (var wheel in _wheels)
+        {
+            if(!wheel._wheelCollider.isGrounded)
             {
-                if (_wheels[i]._wheelCollider.isGrounded) groundedWheels++;
+                isGrounded = false;
+                break;
             }
+        }
 
-            return groundedWheels == _wheels.Length ? true : false;
-        }
-        else
+        return isGrounded;
+    }
+
+    public bool IsPartiallyGrounded()
+    {
+        bool isPartiallyGrounded = false;
+
+        foreach (var wheel in _wheels)
         {
-            return false;
+            if (wheel._wheelCollider.isGrounded)
+            {
+                isPartiallyGrounded = true;
+                break;
+            }
         }
+
+        return isPartiallyGrounded;
     }
 }

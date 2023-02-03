@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Button))]
 
-public class Btn : MonoBehaviour
+public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public enum ButtonClickType { ChangeSprite, ChangeColor, Both, None, OnlyInvokeEvent}
     public ButtonClickType _buttonClickType;
@@ -36,9 +37,12 @@ public class Btn : MonoBehaviour
     }
     public bool IsSelected { get; private set; }
 
-
     public event Action onSelect;
     public event Action onDeselect;
+    public event Action onPointerDown;
+    public event Action onPointerUp;
+
+
 
 
     private void Awake()
@@ -78,6 +82,10 @@ public class Btn : MonoBehaviour
             }
         }
     }
+
+    public void OnPointerUp(PointerEventData eventData) => onPointerDown?.Invoke();
+
+    public void OnPointerDown(PointerEventData eventData) => onPointerUp?.Invoke();
 
     public void Select()
     {
