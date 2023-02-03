@@ -75,6 +75,7 @@ public class TankMovement : BaseTankMovement
         if (!_isJumpButtonPressed && !_isJumped && _wheelColliderController.IsPartiallyGrounded() && _playerTurn.IsMyTurn)
         {
             _rigidBody.AddForce(Vector3.up * 2500, ForceMode.Impulse);
+            SecondarySoundController.PlaySound(7, 0);
             _isJumpButtonPressed = true;
         }
     }
