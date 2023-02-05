@@ -1,17 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerDamageCameraFX : BaseCameraFX
 {
-    private Animator _animator;  
+    [SerializeField] 
+    private Animator _animator;
+
+    [SerializeField] 
     private GameManager _gameManager;
+
     private HealthController _localHp;
+
     private const string _damageFX = "PPImageFilteringAnim";
+
+    public event Action<int> onDamageFX;
+
 
     protected override void Awake()
     {
         base.Awake();
-        _animator = Get<Animator>.From(transform.parent.gameObject);
-        _gameManager = FindObjectOfType<GameManager>();
     }
 
     private void OnEnable()
@@ -38,5 +45,6 @@ public class PlayerDamageCameraFX : BaseCameraFX
     public void PlayerDamageFX(BasePlayer basePlayer,int damage)
     {
         _animator.Play(_damageFX);
+        onDamageFX?.Invoke(damage);
     }
 }
