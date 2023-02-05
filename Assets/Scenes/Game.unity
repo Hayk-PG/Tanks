@@ -19657,7 +19657,7 @@ MonoBehaviour:
   Blur: 1
   BlurAmount: 0
   BlurMask: {fileID: 0}
-  Bloom: 0
+  Bloom: 1
   BloomColor: {r: 1, g: 0.5019608, b: 0, a: 1}
   BloomAmount: 0.9
   BloomDiffuse: 0
@@ -31574,6 +31574,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PostProcessVolume
       objectReference: {fileID: 0}
+    - target: {fileID: 2588781877194287677, guid: ca4c2b861f427ac4fa737f31a204134d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca4c2b861f427ac4fa737f31a204134d, type: 3}
 --- !u!1 &1562069058
@@ -39046,6 +39051,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _turnController: {fileID: 2025759514}
   _windSystemController: {fileID: 2025759510}
+  _gameManagerBulletSerializer: {fileID: 0}
+  _photonNetworkAALauncher: {fileID: 0}
 --- !u!1 &2090463658
 GameObject:
   m_ObjectHideFlags: 0
