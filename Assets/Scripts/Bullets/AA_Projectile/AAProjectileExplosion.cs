@@ -1,32 +1,31 @@
+using UnityEngine;
+
 public class AAProjectileExplosion : BulletSensorExplosion
 {
-    private IAATargetDetector<BulletController.VelocityData> _iAATargetDetector;
+    [SerializeField] [Space]
+    protected AAProjectileVelocity _aAProjectileVelocity;
 
 
-    protected override void Awake()
+
+    protected override void Start()
     {
-        base.Awake();
-        _iAATargetDetector = Get<IAATargetDetector<BulletController.VelocityData>>.From(gameObject);
+        Invoke("DestroyOnTimeLimit", 4);
     }
 
     protected override void OnEnable()
     {
-        base.OnEnable();
-
-        if (_iAATargetDetector != null)
-            _iAATargetDetector.OnTargetDetected += delegate { Hit(default); };
+        _aAProjectileVelocity.onVerticalLimit += DestroyOnVerticalLimit;
+        _aAProjectileVelocity.onTargetDetected += delegate { Explode(null); };
     }
 
     protected override void OnDisable()
     {
-        base.OnDisable();
-
-        if (_iAATargetDetector != null)
-            _iAATargetDetector.OnTargetDetected -= delegate { Hit(default); };
+        _aAProjectileVelocity.onVerticalLimit -= DestroyOnVerticalLimit;
+        _aAProjectileVelocity.onTargetDetected -= delegate { Explode(null); };
     }
 
-    public override void DestroyBullet()
+    protected override void SetTurnToTransition()
     {
-        Destroy(gameObject);
+        
     }
 }

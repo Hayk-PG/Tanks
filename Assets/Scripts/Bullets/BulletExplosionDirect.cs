@@ -2,34 +2,20 @@ using System;
 using UnityEngine;
 
 
-public class BulletExplosionDirect : BulletExplosion, IBulletExplosionDirect
+public class BulletExplosionDirect : BaseBulletExplosion
 {
-    private IBulletCollisionDirect _iBulletCollisionDirect;
+    [SerializeField]
+    protected BaseBulletController _baseBulletController;
+
+    [SerializeField]
+    protected BulletCollisionDirect _bulletCollisionDirect;
 
     public event Action<Collider, IScore, float> onBulletExplosion;
 
 
 
-
-    protected override void GetIBulletCollision()
+    protected override void RaiseOnExplode(Collider collider)
     {
-        _iBulletCollisionDirect = Get<IBulletCollisionDirect>.From(gameObject);
-    }
-
-    protected override void ListenIBulletCollision(bool isSubscribing)
-    {
-        if (_iBulletCollisionDirect == null)
-            return;
-
-        if(isSubscribing)
-            _iBulletCollisionDirect.onHit += OnExplodeOnCollision;
-        else
-            _iBulletCollisionDirect.onHit -= OnExplodeOnCollision;
-    }
-
-    private void OnExplodeOnCollision(Collider collider, IScore iScore, float distance)
-    {
-        onBulletExplosion?.Invoke(collider, iScore, distance);
-        DestroyBullet();
+        onBulletExplosion?.Invoke(collider, _baseBulletController.OwnerScore, _baseBulletController.Distance);
     }
 }

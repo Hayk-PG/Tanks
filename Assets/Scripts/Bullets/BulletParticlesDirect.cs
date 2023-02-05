@@ -1,23 +1,22 @@
 using UnityEngine;
 
-public class BulletParticlesDirect : BulletParticles
+public class BulletParticlesDirect : BaseBulletParticles
 {
-    private IBulletExplosionDirect _iBulletExplosionDirect;
+    [SerializeField]
+    [Space]
+    protected BulletExplosionDirect _bulletExplosionDirect;
 
 
-
-
-    protected override void GetIBulletExplosion() => _iBulletExplosionDirect = Get<IBulletExplosionDirect>.From(gameObject);
-
-    protected override void ListenIBulletExplosion(bool isSubscribing)
+    protected override void OnEnable()
     {
-        if (_iBulletExplosionDirect == null)
-            return;
+        _baseBulletVelocity.onTrail += base.InstantiateTrail;
+        _bulletExplosionDirect.onBulletExplosion += OnExplosion;
+    }
 
-        if(isSubscribing)
-            _iBulletExplosionDirect.onBulletExplosion += OnExplosion;
-        else
-            _iBulletExplosionDirect.onBulletExplosion -= OnExplosion;
+    protected override void OnDisable()
+    {
+        _baseBulletVelocity.onTrail -= base.InstantiateTrail;
+        _bulletExplosionDirect.onBulletExplosion -= OnExplosion;
     }
 
     private void OnExplosion(Collider collider, IScore ownerScore, float distance)

@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable objects/Weapons/New weapon")]
-public class WeaponProperties : BaseWeaponProperties<BulletController>
+public class WeaponProperties : BaseWeaponProperties<BaseBulletController>
 {
     protected struct RandomType
     {
@@ -51,23 +51,23 @@ public class WeaponProperties : BaseWeaponProperties<BulletController>
 
     protected virtual void SetCollisionValues()
     {
-        BulletCollision bulletCollision = Get<BulletCollision>.From(_prefab.gameObject);
+        BaseBulletCollision baseBulletCollision = Get<BaseBulletCollision>.From(_prefab.gameObject);
 
-        if (bulletCollision != null)
+        if (baseBulletCollision != null)
         {
-            bulletCollision.DestructDamage = _destructDamage;
-            bulletCollision.TileParticleIndex = _tileParticleIndex;
+            baseBulletCollision.DestructDamage = _destructDamage;
+            baseBulletCollision.TileParticleIndex = _tileParticleIndex;
         }
     }
 
     protected virtual void SetForcePercentages()
     {
-        BulletVelocity bulletVelocity = Get<BulletVelocity>.From(_prefab.gameObject);
+        BaseBulletVelocity baseBulletVelocity = Get<BaseBulletVelocity>.From(_prefab.gameObject);
 
-        if(bulletVelocity != null)
+        if(baseBulletVelocity != null)
         {
-            bulletVelocity.GravityForcePercentage = _gravityForcePercentage;
-            bulletVelocity.WindForcePercentage = _windForcePercentage;
+            baseBulletVelocity.GravityForcePercentage = _gravityForcePercentage;
+            baseBulletVelocity.WindForcePercentage = _windForcePercentage;
         }
     }
 

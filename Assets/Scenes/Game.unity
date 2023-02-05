@@ -13681,7 +13681,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1e-45, y: 9e-44, z: 9e-44, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 3.6e-43, z: 1.8e-44, w: 4.0455e-41}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -38584,6 +38584,7 @@ GameObject:
   - component: {fileID: 2025759509}
   - component: {fileID: 2025759513}
   - component: {fileID: 2025759508}
+  - component: {fileID: 2025759543}
   - component: {fileID: 2025759511}
   - component: {fileID: 2025759539}
   - component: {fileID: 2025759538}
@@ -39031,6 +39032,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 198f82004f32098418226599972a5b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2025759543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025759507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e505f3fc50a5564fa9fae01fd6676c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _turnController: {fileID: 2025759514}
+  _windSystemController: {fileID: 2025759510}
 --- !u!1 &2090463658
 GameObject:
   m_ObjectHideFlags: 0

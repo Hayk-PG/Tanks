@@ -2,12 +2,16 @@
 using UnityEngine;
 
 public class Explosion : BaseExplosion
-{
-    [SerializeField] protected float _radius, _maxDamageValue;
-    protected int _currentDamageValue;
+{   
+    [SerializeField] 
+    protected float _radius, _maxDamageValue;
     protected float _percentage;
     protected float _distanceFactorPercentage;
     protected float _magnitude;
+
+    protected int _currentDamageValue;
+    
+    
     protected Collider[] _colliders;
     protected List<IDamage> _iDamages;
 

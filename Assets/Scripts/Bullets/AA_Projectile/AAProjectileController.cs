@@ -1,7 +1,4 @@
-public class AAProjectileController : BulletSensorController
+public class AAProjectileController : BaseBulletController
 {
-    protected override void Start()
-    {
-        StartCoroutine(DestroyOnTimeLimit(4));
-    }
+    
 }

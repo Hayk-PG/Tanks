@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ExplosionDirect : BaseExplosion
 {
-    [SerializeField] private int _damage;
-    [SerializeField] private int _destructDamage;
+    [SerializeField] 
+    private int _damage, _destructDamage;
 
     public override float DamageValue { get => _damage; set => _damage = Mathf.RoundToInt(value); }
     public override float DestructDamageValue { get => _destructDamage; set => _destructDamage = Mathf.RoundToInt(value); }
@@ -56,6 +56,6 @@ public class ExplosionDirect : BaseExplosion
 
     private void DamageTileAndGetScoredInOnlineMode()
     {
-        _gameManagerBulletSerializer.CallOnCollisionRPC(Collider, OwnerScore, _destructDamage);
+        _gameManagerBulletSerializer.CallOnCollisionRPC(Collider, _destructDamage);
     }
 }

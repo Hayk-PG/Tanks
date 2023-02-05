@@ -5,7 +5,7 @@ public class Bomber : MonoBehaviour
     [SerializeField] private Transform _propeller, _bombSpwnPoint;
     [SerializeField] private BombController _bombPrefab;
 
-    private BombController _bomb;
+    private BaseBulletController _bomb;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
     private MainCameraController _mainCameraController;
 
@@ -50,7 +50,7 @@ public class Bomber : MonoBehaviour
         if (!IsBombDropped)
         {
             _bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
-            _gameManagerBulletSerializer.BulletController = _bomb;
+            _gameManagerBulletSerializer.BaseBulletController = _bomb;
             _bomb.OwnerScore = OwnerScore;
             IsBombDropped = true;
         }

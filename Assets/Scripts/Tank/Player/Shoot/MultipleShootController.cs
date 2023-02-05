@@ -20,7 +20,7 @@ public class MultipleShootController : ShootController
             Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._prefab, _shootPoint.position, _canonPivotPoint.rotation);
             Bullet.OwnerScore = _iScore;
             Bullet.RigidBody.velocity = Bullet.transform.forward * randomForce;
-            _gameManagerBulletSerializer.BulletController = Bullet;
+            _gameManagerBulletSerializer.BaseBulletController = Bullet;
             
             if (i == lastIndex)
             {

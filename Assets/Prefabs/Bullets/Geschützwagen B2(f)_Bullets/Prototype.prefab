@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6672226379024829272}
   - component: {fileID: 465195278674726440}
   - component: {fileID: 1352565610704002435}
-  - component: {fileID: 8728058139718447981}
-  - component: {fileID: 957142614107478491}
+  - component: {fileID: 1994911184245375372}
+  - component: {fileID: 8197935197261867272}
   - component: {fileID: 6392731286410595255}
   - component: {fileID: 1887242440445776756}
   - component: {fileID: 3434868230587219180}
@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2179aa618d903744b92079e50222c106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8728058139718447981
+--- !u!114 &1994911184245375372
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,11 +93,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7989973506247139125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a2f915b8086d7743a08dfd0e15df650, type: 3}
+  m_Script: {fileID: 11500000, guid: efb2070ec6bd59042a736830980a9081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dontDestroyOnTimeLimit: 0
---- !u!114 &957142614107478491
+  _rigidbody: {fileID: 465195278674726440}
+--- !u!114 &8197935197261867272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,11 +106,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7989973506247139125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be55be163a95b7f4b8f07ae332d3303e, type: 3}
+  m_Script: {fileID: 11500000, guid: 3cfdc7fb032cda64dab259a222acd25f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gravityForcePercentage: 31
-  _windForcePercentage: 76
+  _baseBulletController: {fileID: 1994911184245375372}
+  _gravityForcePercentage: 0
+  _windForcePercentage: 0
+  _trailTime: 0
 --- !u!114 &6392731286410595255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,6 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cf8149809c3c994db4c5fd057e68c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseBulletController: {fileID: 1994911184245375372}
   _destructDamage: 0
   _tileParticleIndex: 0
 --- !u!114 &1887242440445776756
@@ -137,6 +140,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 545bbb87ef6fef245ae83f9c7fb1e9b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseBulletVelocity: {fileID: 8197935197261867272}
+  _baseBulletCollision: {fileID: 6392731286410595255}
+  _dontDestroyOnTimeLimit: 0
+  _baseBulletController: {fileID: 1994911184245375372}
+  _bulletCollisionDirect: {fileID: 6392731286410595255}
 --- !u!114 &3434868230587219180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,17 +157,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 884d3152fcd484f40a33a8d4a0a2bca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseBulletController: {fileID: 1994911184245375372}
+  _baseBulletVelocity: {fileID: 8197935197261867272}
+  _baseBulletExplosion: {fileID: 1887242440445776756}
   _assetReferenceTrail:
-    m_AssetGUID: 45b16c244f66947419f8511f12a01ee4
+    m_AssetGUID: ab95f8e78f772d540bb10ba62b8043ba
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   _assetReferenceMuzzleFlash:
-    m_AssetGUID: 60439dd2be2f41149879a54d967ea605
+    m_AssetGUID: 12d13e56bc45b6847b84c94412bae85b
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   _explosion: {fileID: 8290691149653551186}
+  _bulletExplosionDirect: {fileID: 1887242440445776756}
 --- !u!1 &8539396785219521403
 GameObject:
   m_ObjectHideFlags: 0

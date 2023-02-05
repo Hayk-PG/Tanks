@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 6672226379024829272}
   - component: {fileID: 465195278674726440}
   - component: {fileID: 1352565610704002435}
-  - component: {fileID: 363675318997359537}
-  - component: {fileID: 957142614107478491}
+  - component: {fileID: -3960287961246974719}
+  - component: {fileID: 5631532484322255230}
   - component: {fileID: 9153367664073216703}
   - component: {fileID: 1164196919677135750}
-  - component: {fileID: 3305094699231359355}
+  - component: {fileID: 1185730480892109392}
   m_Layer: 0
   m_Name: First
   m_TagString: Untagged
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2179aa618d903744b92079e50222c106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &363675318997359537
+--- !u!114 &-3960287961246974719
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,11 +94,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7989973506247139125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e562cbcaafe1b0943b9f39c779c9d4b8, type: 3}
+  m_Script: {fileID: 11500000, guid: efb2070ec6bd59042a736830980a9081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dontDestroyOnTimeLimit: 0
---- !u!114 &957142614107478491
+  _rigidbody: {fileID: 465195278674726440}
+--- !u!114 &5631532484322255230
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,11 +107,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7989973506247139125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be55be163a95b7f4b8f07ae332d3303e, type: 3}
+  m_Script: {fileID: 11500000, guid: 3cfdc7fb032cda64dab259a222acd25f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gravityForcePercentage: 55
-  _windForcePercentage: 59
+  _baseBulletController: {fileID: -3960287961246974719}
+  _gravityForcePercentage: 0
+  _windForcePercentage: 0
+  _trailTime: 0
 --- !u!114 &9153367664073216703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,8 +126,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314de377ae1d4ee489a67986af0a51a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseBulletController: {fileID: -3960287961246974719}
   _destructDamage: 36
   _tileParticleIndex: 1000
+  _bulletSensor: {fileID: 0}
 --- !u!114 &1164196919677135750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,7 +142,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a26af5fc1e80bb14288cc7fda3b663e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3305094699231359355
+  _baseBulletVelocity: {fileID: 5631532484322255230}
+  _baseBulletCollision: {fileID: 9153367664073216703}
+  _dontDestroyOnTimeLimit: 0
+  _baseBulletController: {fileID: -3960287961246974719}
+--- !u!114 &1185730480892109392
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,16 +155,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 7989973506247139125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8ec17f6e1c50a9488eea345535637be, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b5442a23a640b640b5c4c82ec1af073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseBulletController: {fileID: -3960287961246974719}
+  _baseBulletVelocity: {fileID: 5631532484322255230}
+  _baseBulletExplosion: {fileID: 1164196919677135750}
   _assetReferenceTrail:
-    m_AssetGUID: 8c2d85dd624908d4eafd9a54ed459218
+    m_AssetGUID: ab95f8e78f772d540bb10ba62b8043ba
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   _assetReferenceMuzzleFlash:
-    m_AssetGUID: 18ce8d95c53bab34bb2f4a13946f48db
+    m_AssetGUID: 12d13e56bc45b6847b84c94412bae85b
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
@@ -409,7 +420,7 @@ PrefabInstance:
     - target: {fileID: 394251247559085346, guid: d7c928b4128ddd141a95e6dabfce4b60,
         type: 3}
       propertyPath: _assetReferenceParticles.m_AssetGUID
-      value: d3ce87a3e91541b46896d0a6b2ea99e9
+      value: 0d0f8074c7b8d6d4da75ccc19a5776a7
       objectReference: {fileID: 0}
     - target: {fileID: 1763212378401922882, guid: d7c928b4128ddd141a95e6dabfce4b60,
         type: 3}

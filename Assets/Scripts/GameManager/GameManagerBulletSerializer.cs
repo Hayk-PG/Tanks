@@ -6,17 +6,17 @@ using UnityEngine;
 
 public class GameManagerBulletSerializer : MonoBehaviourPun
 {
-    [SerializeField] 
-    BulletController _bulletController;
-    [SerializeField] 
-    BulletController[] _multipleBulletsController = new BulletController[10];
+    [SerializeField]
+    BaseBulletController _bulletController;
+    [SerializeField]
+    BaseBulletController[] _multipleBulletsController = new BaseBulletController[10];
 
-    public BulletController BulletController
+    public BaseBulletController BaseBulletController
     {
         get => _bulletController;
         set => _bulletController = value;
     }
-    public BulletController[] MultipleBulletsController
+    public BaseBulletController[] MultipleBaseBulletController
     {
         get => _multipleBulletsController;
         set => _multipleBulletsController = value;
@@ -26,29 +26,25 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
 
     #region Collison
-    public void CallOnCollisionRPC(Collider collider, IScore iScore, int destructDamage)
+    public void CallOnCollisionRPC(Collider collider, int destructDamage)
     {
         if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
         {
             string colliderName = collider.name;
-            string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(score => score.GetComponent<IScore>() == iScore).name;
             Vector3 colliderPosition = collider.transform.position;
 
-            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, colliderName, ownerName, colliderPosition, destructDamage);
+            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, colliderName, colliderPosition, destructDamage);
         }
     }
 
     [PunRPC]
-    private void OnCollisionRPC(string colliderName, string ownerName, Vector3 colliderPosition, int destructDamage)
+    private void OnCollisionRPC(string colliderName, Vector3 colliderPosition, int destructDamage)
     {
         GlobalFunctions.Loop<Collider>.Foreach(FindObjectsOfType<Collider>(), collider => 
         {
             if (collider.name == colliderName && collider.transform.position == colliderPosition)
                 Get<IDestruct>.From(collider.gameObject)?.Destruct(destructDamage, 0);
         });
-
-        IScore iScore = GameObject.Find(ownerName)?.GetComponent<IScore>();
-        iScore?.GetScore(10, null);
     }
     #endregion
 

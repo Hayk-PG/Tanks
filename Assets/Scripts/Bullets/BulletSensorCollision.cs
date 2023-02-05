@@ -1,26 +1,33 @@
 using UnityEngine;
 
-public class BulletSensorCollision : BulletCollision
+public class BulletSensorCollision : BaseBulletCollision
 {
-    private IBulletSensor _iBulletSensor;
-    private IBulletID _iBulletId;
+    [SerializeField] [Space]
+    protected BulletSensor _bulletSensor;
 
 
-
-
-    protected override void Awake()
+    protected virtual void OnEnable()
     {
-        base.Awake();
-        _iBulletSensor = Get<IBulletSensor>.FromChild(gameObject);
-        _iBulletId = Get<IBulletID>.From(gameObject);
+        _bulletSensor.OnHit += OnHit;
     }
 
-    protected override void OnEnable() => _iBulletSensor.OnHit += Hit;
-
-    protected override void OnDisable() => _iBulletSensor.OnHit -= Hit;
-
-    protected virtual void Hit(RaycastHit hit)
+    protected virtual void OnDisable()
     {
-        OnCollision(hit.collider, _iBulletId.OwnerScore, _iBulletId.Distance);
+        _bulletSensor.OnHit -= OnHit;
+    }
+
+    protected override void OnCollisionEnter(Collision collision)
+    {
+        
+    }
+
+    protected virtual void OnHit(RaycastHit raycastHit)
+    {
+        if (!_isCollided)
+        {
+            RaiseOnCollision(raycastHit.collider);
+            OnCollision(raycastHit.collider);
+            _isCollided = true;
+        }
     }
 }

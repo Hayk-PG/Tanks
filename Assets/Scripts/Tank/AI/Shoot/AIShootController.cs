@@ -246,11 +246,11 @@ public class AIShootController : BaseShootController
 
         if (HaveEnoughBulletsCount(_activeBulletIndex))
         {
-            BulletController bullet = Instantiate(_cachedBulletsList[_activeBulletIndex]._weaponProperties._prefab, _shootPoint.position, _canonPivotPoint.rotation);
-            bullet.OwnerScore = _iScore;
-            bullet.RigidBody.velocity = _target;
+            BaseBulletController baseBulletController = Instantiate(_cachedBulletsList[_activeBulletIndex]._weaponProperties._prefab, _shootPoint.position, _canonPivotPoint.rotation);
+            baseBulletController.OwnerScore = _iScore;
+            baseBulletController.RigidBody.velocity = _target;
             _rigidBody.AddForce(transform.forward * _target.magnitude * _shoot._rigidbodyForceMultiplier, ForceMode.Impulse);
-            mainCameraController.CameraOffset(_playerTurn, bullet.RigidBody, null, null);
+            mainCameraController.CameraOffset(_playerTurn, baseBulletController.RigidBody, null, null);
             _currentTrajectoryTime = _defaultTrajectoryTime;
             OnShoot?.Invoke();
             OnDash(_aiTankMovement.Direction);

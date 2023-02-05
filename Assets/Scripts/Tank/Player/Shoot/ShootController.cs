@@ -28,10 +28,10 @@ public class ShootController : BaseShootController
     protected PlayerAmmoType _playerAmmoType;
     protected GameplayAnnouncer _gameplayAnnouncer;
     
-    [HideInInspector] [SerializeField] protected BulletController _instantiatedBullet;
+    [HideInInspector] [SerializeField] protected BaseBulletController _instantiatedBullet;
     [HideInInspector] [SerializeField] protected int _activeAmmoIndex;
 
-    public BulletController Bullet
+    public BaseBulletController Bullet
     {
         get => _instantiatedBullet;
         set => _instantiatedBullet = value;
@@ -168,7 +168,7 @@ public class ShootController : BaseShootController
         Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._prefab, _shootPoint.position, _canonPivotPoint.rotation);
         Bullet.OwnerScore = _iScore;
         Bullet.RigidBody.velocity = Bullet.transform.forward * force;
-        _gameManagerBulletSerializer.BulletController = Bullet;
+        _gameManagerBulletSerializer.BaseBulletController = Bullet;
         mainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
     }
 

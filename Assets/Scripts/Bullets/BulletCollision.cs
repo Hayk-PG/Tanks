@@ -45,5 +45,8 @@ public class BulletCollision : MonoBehaviour
         Get<IDestruct>.From(collider.gameObject)?.Destruct(_destructDamage, _tileParticleIndex);
     }
 
-    protected virtual void OnCollisionInOnlineMode(Collider collider, IScore ownerScore) => _gameManagerBulletSerializer.CallOnCollisionRPC(collider, ownerScore, _destructDamage);
+    protected virtual void OnCollisionInOnlineMode(Collider collider, IScore ownerScore)
+    {
+        _gameManagerBulletSerializer.CallOnCollisionRPC(collider, _destructDamage);
+    }
 }

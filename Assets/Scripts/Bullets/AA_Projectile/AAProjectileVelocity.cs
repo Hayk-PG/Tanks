@@ -1,68 +1,61 @@
 using System;
 using UnityEngine;
 
-public class AAProjectileVelocity : BulletVelocity, IAATargetDetector<BulletController.VelocityData>
+public class AAProjectileVelocity : BaseBulletVelocity
 {
-    private PhotonNetworkAALauncher _photonNetworkAALauncher;
+    private BaseBulletController _target;
 
-    private bool _isTrailActive;
+    private bool _isTrailActive; 
 
-    public BulletController Target { get; set; }
-    public Action OnTargetDetected { get; set; }
-
+    public event Action onTargetDetected;
 
 
-    protected override void Awake()
+
+    protected override void FixedUpdate()
     {
-        base.Awake();
-        _photonNetworkAALauncher = FindObjectOfType<PhotonNetworkAALauncher>();
-    }
-
-    protected override void OnBulletVelocity(BulletController.VelocityData velocityData)
-    {
-        bool isMissileActive = velocityData._rigidBody.velocity.y <= 1 && !_isTrailActive;
-        bool isTargetDetected = _isTrailActive && Target != null;
-        bool isTargetClose = isTargetDetected && Vector3.Distance(velocityData._rigidBody.position, Target.RigidBody.position) <= 0.5f;
-
-        BulletLookRotation(velocityData);
+        bool isMissileActive = _baseBulletController.RigidBody.velocity.y <= 1 && !_isTrailActive;
+        bool isTargetDetected = _isTrailActive && _target != null;
+        bool isTargetClose = isTargetDetected && Vector3.Distance(_baseBulletController.RigidBody.position, _target.RigidBody.position) <= 0.5f;
+        
         ScanTarget(isMissileActive);
-        MoveTowardsTarget(isTargetDetected, velocityData);
+        MoveTowardsTarget(isTargetDetected);
         DestroyTarget(isTargetClose);
+        base.ControlLookRotation();
     }
 
     public virtual void ScanTarget(bool isConditionMet)
     {
         if (isConditionMet)
         {
-            Target = GlobalFunctions.ObjectsOfType<BulletController>.Find(bullet => bullet.transform.position != transform.position);
             ActivateTrail();
+            _target = GlobalFunctions.ObjectsOfType<BaseBulletController>.Find(bullet => bullet.transform.position != transform.position);
             _isTrailActive = true;
         }
     }
 
-    public void MoveTowardsTarget(bool isConditionMet, BulletController.VelocityData parameter)
+    public void MoveTowardsTarget(bool isConditionMet)
     {
         if (isConditionMet)
-            parameter._rigidBody.position = Vector3.MoveTowards(parameter._rigidBody.position, Target.RigidBody.position, 10 * Time.fixedDeltaTime);
+            _baseBulletController.RigidBody.position = Vector3.MoveTowards(_baseBulletController.RigidBody.position, _target.RigidBody.position, 10 * Time.fixedDeltaTime);
     }
 
     public void DestroyTarget(bool isConditionMet)
     {
         if (isConditionMet)
         {
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, DestroyTarget, () => DestroyTarget(Target.OwnerScore.PlayerTurn.gameObject.name));
-            OnTargetDetected?.Invoke();
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, DestroyTarget, () => DestroyTarget(_target.OwnerScore.PlayerTurn.gameObject.name));
+            onTargetDetected?.Invoke();
         }
     }
 
     private void DestroyTarget()
     {
-        IBulletExplosion iBulletExplosion = Get<IBulletExplosion>.From(Target.gameObject);
+        IBulletExplosion iBulletExplosion = Get<IBulletExplosion>.From(_target.gameObject);
         iBulletExplosion?.DestroyBullet();
     }
 
     private void DestroyTarget(string targetOwnerName)
     {
-        _photonNetworkAALauncher.DestroyTarget(targetOwnerName);
+        GameSceneObjectsReferences.PhotonNetworkAALauncher.DestroyTarget(targetOwnerName);
     }
 }
