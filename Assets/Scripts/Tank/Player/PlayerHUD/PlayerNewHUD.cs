@@ -2,10 +2,9 @@
 
 public class PlayerNewHUD : PlayerHUD
 {
-    protected override void Awake()
+    private void Awake()
     {
-        _canvas = GetComponent<Canvas>();
-        _mainCanvasGroup = GetComponent<CanvasGroup>();
+        EnablePlayerHUD();
     }
 
     protected override void OnEnable()

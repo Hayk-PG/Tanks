@@ -11,4 +11,11 @@ public class BaseBulletController : MonoBehaviour
     public Vector3 ID { get; protected set; }
     public float Distance => Vector3.Distance(StartPosition, transform.position);
     public bool IsLastShellOfBarrage { get; set; }
+
+
+
+    protected virtual void Awake()
+    {
+        GameSceneObjectsReferences.TurnController.SetNextTurn(TurnState.Other);
+    }
 }
