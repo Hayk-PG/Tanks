@@ -2,15 +2,25 @@
 
 public class MainCameraController : MonoBehaviour
 {
-    private Camera _camera;
-    private Camera _hudCamera;
+    [SerializeField]
+    private Camera _camera, _hudCamera, _noPPCamera;
+
+    [SerializeField][Space] 
+    private Rigidbody _rb;
+
+    [SerializeField][Space] 
     private GameManager _gameManager;
+
+    [SerializeField][Space] 
     private TurnController _turnController;
+
+    [SerializeField][Space] 
     private MapPoints _mapPoints;
+    
     private Rigidbody _player1, _player2;
 
-    [SerializeField] private Rigidbody _rb;
-    [SerializeField] private float _smoothTime, _maxTime;
+    [SerializeField] [Space]
+    private float _smoothTime, _maxTime;
     private float _currentVelocityfloat;
     private float _ortographicSize;  
     private float _minPosX, _maxPosX, _newPosX;
@@ -48,15 +58,6 @@ public class MainCameraController : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        _camera = Get<Camera>.From(gameObject);
-        _hudCamera = Get<Camera>.From(transform.Find("HUDCamera").gameObject);
-        _gameManager = FindObjectOfType<GameManager>();
-        _turnController = FindObjectOfType<TurnController>();
-        _mapPoints = FindObjectOfType<MapPoints>();
-    }
-
     private void OnEnable()
     {
         _gameManager.OnGameStarted += OnGameStarted;
@@ -79,6 +80,7 @@ public class MainCameraController : MonoBehaviour
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
             _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 10);
             _hudCamera.orthographicSize = _camera.orthographicSize;
+            _noPPCamera.orthographicSize = _camera.orthographicSize;
         }
     }
 

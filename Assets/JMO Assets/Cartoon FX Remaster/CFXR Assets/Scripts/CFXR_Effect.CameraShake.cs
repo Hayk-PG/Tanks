@@ -198,7 +198,10 @@ namespace CartoonFX
 
 				if (useMainCamera && Camera.main != null)
 				{
-					cameras.Add(Camera.main);
+                    foreach (var item in MyCameras.Cameras)
+                    {
+						cameras.Add(item);
+                    }
 				}
 
 				foreach (var cam in cameras)
