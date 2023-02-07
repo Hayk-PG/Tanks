@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class WoodBoxSerializer : MonoBehaviourPun
 {
-    [SerializeField] private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
-    [SerializeField] private WoodBox _woodBox;
+    [SerializeField] 
+    private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
+
+    [SerializeField] [Space]
+    private WoodBox _woodBox;
 
     public ParachuteWithWoodBoxController ParachuteWithWoodBoxController
     {

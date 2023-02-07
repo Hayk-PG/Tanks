@@ -1060,6 +1060,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1516637601 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 747125108453221659, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6951fc4f36b57548a6cd5c9f13937df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1516637602 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4689909064225728853, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 068ae7076a125654f8d18d1839df67f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1545578713
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2079,8 +2103,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _turnController: {fileID: 2025759514}
   _windSystemController: {fileID: 2025759510}
-  _gameManagerBulletSerializer: {fileID: 0}
-  _photonNetworkAALauncher: {fileID: 0}
+  _gameManagerBulletSerializer: {fileID: 2025759518}
+  _photonNetworkAALauncher: {fileID: 2025759541}
+  _woodBoxSerializer: {fileID: 2025759526}
+  _woodBoxSerializeView: {fileID: 2025759535}
+  _tabWoodboxContent: {fileID: 1516637602}
+  _newWeaponFromWoodBox: {fileID: 1516637601}
+  _tilesData: {fileID: 1950072985}
 --- !u!114 &2025759544
 MonoBehaviour:
   m_ObjectHideFlags: 0

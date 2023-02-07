@@ -5,28 +5,31 @@ using UnityEngine;
 
 public class ParachuteWithWoodBoxController : MonoBehaviour
 {
-    [SerializeField] private GameObject _parachute, _sparkles, _woodBoxExplosion;
-
+    [SerializeField]
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
+
+    [SerializeField] [Space]
+    private Rigidbody _rigidbody;
+
+    [SerializeField] [Space]
     private BoxTrigger _boxTrigger;
-    private WoodBoxSerializer _woodenBoxSerializer;
-    private LavaSplash _lavaSplash;
+
+    [SerializeField] [Space]
+    private GameObject _sparkles, _woodBoxExplosion;
 
     private delegate float Value();
     private Value _gravity;
 
-    public Rigidbody RigidBody { get; set; }
+    internal GameObject ParachuteObj { get; set; }
+    public Rigidbody RigidBody => _rigidbody;
     public float RandomDestroyTime { get; set; }
+
+
 
 
     private void Awake()
     {
-        RigidBody = Get<Rigidbody>.From(gameObject);
-        _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
-        _boxTrigger = Get<BoxTrigger>.FromChild(gameObject);
         _gravity = delegate { return 30 * Time.fixedDeltaTime; };
-        _woodenBoxSerializer = FindObjectOfType<WoodBoxSerializer>();
-        _lavaSplash = FindObjectOfType<LavaSplash>();
 
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, SetInitValues, AllocateWoodBoxController);
     }
@@ -45,7 +48,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
     private void FixedUpdate() => Rigidbody();
 
-    private void AllocateWoodBoxController() => _woodenBoxSerializer.AllocateWoodBoxController();
+    private void AllocateWoodBoxController() => GameSceneObjectsReferences.WoodBoxSerializer.AllocateWoodBoxController();
 
     public void SetInitValues()
     {
@@ -82,16 +85,19 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
         if (RigidBody.position.y <= VerticalLimit.Min)
         {
-            _lavaSplash.ActivateSmallSplash(RigidBody.position);
+            GameSceneObjectsReferences.LavaSplash.ActivateSmallSplash(RigidBody.position);
             DestroyGameobject();
         }
     }
 
     private void OnLand()
     {
-        if (_parachute.activeInHierarchy)
+        if (ParachuteObj == null)
+            return;
+
+        if (ParachuteObj.activeInHierarchy)
         {
-            _parachute.SetActive(false);
+            ParachuteObj.SetActive(false);
             _sparkles.SetActive(true);
             _gravity = delegate { return 1; };
         }
@@ -106,7 +112,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
         }
         else
         {
-            _woodenBoxSerializer.DestroyParachuteWithWoodBoxController();
+            GameSceneObjectsReferences.WoodBoxSerializer.DestroyParachuteWithWoodBoxController();
         }       
     }
 

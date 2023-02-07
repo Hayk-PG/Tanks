@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class WoodBoxDrop : MonoBehaviour
 {
+    [SerializeField]
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
-    [SerializeField] private GameObject _particles;
+
+    [SerializeField] [Space]
+    private GameObject _particles;
 
     private bool _isSoundPlayed;
     private bool _isParticlesActivated;
 
 
-    private void Awake()
-    {
-        _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
-    }
+
 
     private void OnEnable()
     {

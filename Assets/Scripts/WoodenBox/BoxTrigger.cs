@@ -8,8 +8,6 @@ public class BoxTrigger : MonoBehaviour
 {
     private Tile _triggerEnteredTile;
     private TileProps _triggerEnteredTilesProps;
-    private WoodBoxSerializer _woodBoxSerializer;
-    private TilesData _tilesData;
 
     private Vector3 _triggerEnteredObjectsPosition;
 
@@ -20,16 +18,11 @@ public class BoxTrigger : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        _woodBoxSerializer = FindObjectOfType<WoodBoxSerializer>();
-        _tilesData = FindObjectOfType<TilesData>();
-    }
-
+   
     private void OnEnable()
     {
         if (MyPhotonNetwork.IsOfflineMode)
-            _woodBoxSerializer.OnBoxTriggerEnteredSerializer += OnBoxTriggerEnteredSerializer;
+            GameSceneObjectsReferences.WoodBoxSerializer.OnBoxTriggerEnteredSerializer += OnBoxTriggerEnteredSerializer;
         else
             PhotonNetwork.NetworkingClient.EventReceived += OnBoxTriggerEnteredSerializer;
     }
@@ -37,7 +30,7 @@ public class BoxTrigger : MonoBehaviour
     private void OnDisable()
     {
         if (MyPhotonNetwork.IsOfflineMode)
-            _woodBoxSerializer.OnBoxTriggerEnteredSerializer -= OnBoxTriggerEnteredSerializer;
+            GameSceneObjectsReferences.WoodBoxSerializer.OnBoxTriggerEnteredSerializer -= OnBoxTriggerEnteredSerializer;
         else
             PhotonNetwork.NetworkingClient.EventReceived -= OnBoxTriggerEnteredSerializer;
     }
@@ -45,7 +38,7 @@ public class BoxTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag(Tags.AI) && !other.CompareTag(Tags.Player) && !other.CompareTag(Tags.Platform))
-            _woodBoxSerializer.BoxTriggerEntered(other);
+            GameSceneObjectsReferences.WoodBoxSerializer.BoxTriggerEntered(other);
     }
 
     private IEnumerator CompleteInteractions()
@@ -62,10 +55,10 @@ public class BoxTrigger : MonoBehaviour
     {
         _triggerEnteredObjectsPosition = (Vector3)data[0];
 
-        if (_tilesData.TilesDict.ContainsKey(_triggerEnteredObjectsPosition))
+        if (GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(_triggerEnteredObjectsPosition))
         {
-            _triggerEnteredTile = Get<Tile>.From(_tilesData.TilesDict[_triggerEnteredObjectsPosition]);
-            _triggerEnteredTilesProps = Get<TileProps>.From(_tilesData.TilesDict[_triggerEnteredObjectsPosition]);
+            _triggerEnteredTile = Get<Tile>.From(GameSceneObjectsReferences.TilesData.TilesDict[_triggerEnteredObjectsPosition]);
+            _triggerEnteredTilesProps = Get<TileProps>.From(GameSceneObjectsReferences.TilesData.TilesDict[_triggerEnteredObjectsPosition]);
         }
 
         if (_triggerEnteredTile != null && _triggerEnteredTilesProps != null && !_triggerEnteredTile.IsProtected && !_isTilePropsDetected)

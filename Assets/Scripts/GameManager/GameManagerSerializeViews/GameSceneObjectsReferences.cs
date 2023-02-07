@@ -6,16 +6,49 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static GameSceneObjectsReferences Instance { get; private set; }
 
     [Header("GameManager")]
-    [SerializeField] private TurnController _turnController;
-    [SerializeField] private WindSystemController _windSystemController;
-    [SerializeField] private GameManagerBulletSerializer _gameManagerBulletSerializer;
-    [SerializeField] private PhotonNetworkAALauncher _photonNetworkAALauncher;
+    [SerializeField] 
+    private TurnController _turnController;
+
+    [SerializeField] 
+    private WindSystemController _windSystemController;
+
+    [SerializeField] 
+    private GameManagerBulletSerializer _gameManagerBulletSerializer;
+
+    [SerializeField] 
+    private PhotonNetworkAALauncher _photonNetworkAALauncher;
+
+    [SerializeField]
+    private WoodBoxSerializer _woodBoxSerializer;
+
+    [SerializeField]
+    private WoodBoxSerializeView _woodBoxSerializeView;
+
+    [Header("Tab_Ammo")]
+    [SerializeField] [Space]
+    private Tab_WoodboxContent _tabWoodboxContent;
+
+    [SerializeField]
+    private NewWeaponFromWoodBox _newWeaponFromWoodBox;
+
+    [Header("TileGenerator")]
+    [SerializeField] [Space]
+    private TilesData _tilesData;
 
     //GameManager
     public static TurnController TurnController => Instance._turnController;
     public static WindSystemController WindSystemController => Instance._windSystemController;
     public static GameManagerBulletSerializer GameManagerBulletSerializer => Instance._gameManagerBulletSerializer;
     public static PhotonNetworkAALauncher PhotonNetworkAALauncher => Instance._photonNetworkAALauncher;
+    public static WoodBoxSerializer WoodBoxSerializer => Instance._woodBoxSerializer;
+    public static WoodBoxSerializeView WoodBoxSerializeView => Instance._woodBoxSerializeView;
+
+    //Tab_Ammo
+    public static Tab_WoodboxContent Tab_WoodboxContent => Instance._tabWoodboxContent;
+    public static NewWeaponFromWoodBox NewWeaponFromWoodBox => Instance._newWeaponFromWoodBox;
+
+    //TileGenerator
+    public static TilesData TilesData => Instance._tilesData;
 
     //LavaSplash
     public static LavaSplash LavaSplash { get; private set; }

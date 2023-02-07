@@ -6,12 +6,11 @@ public class WoodBox : MonoBehaviour
     [SerializeField]
     private WeaponProperties[] _newWeapon;
 
+    [SerializeField] [Space]
     private ParachuteWithWoodBoxController _woodBoxController;
+
+    [SerializeField] [Space]
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
-    private WoodBoxSerializer _woodBoxSerializer;
-    private Tab_WoodboxContent _tabWoodboxContent;
-    private TurnController _turnController;
-    private NewWeaponFromWoodBox _newWeaponFromWoodBox;
 
     private IWoodBoxContent[] _iWoodBoxContents;
     private IWoodBoxContent[] _iWoodBoxWeapons;
@@ -28,26 +27,21 @@ public class WoodBox : MonoBehaviour
     public int WeaponIndex { get; set; }
 
 
+
+
     private void Awake()
     {
-        _woodBoxController = Get<ParachuteWithWoodBoxController>.From(gameObject);
-        _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
-        _woodBoxSerializer = FindObjectOfType<WoodBoxSerializer>();
-        _tabWoodboxContent = FindObjectOfType<Tab_WoodboxContent>();
-        _turnController = FindObjectOfType<TurnController>();
-        _newWeaponFromWoodBox = FindObjectOfType<NewWeaponFromWoodBox>();
-
         _iWoodBoxContents = new IWoodBoxContent[]
         {
             new AddScoreContent(),
             new AddMoreHPContent(),
             new AddMoreShellsContent(),
-            new GiveTurnContent(_turnController), 
+            new GiveTurnContent(GameSceneObjectsReferences.TurnController), 
             new AALauncherContent()
         };
         _iWoodBoxWeapons = new IWoodBoxContent[]
         {
-            new AddNewWeaponContent(_newWeapon[0], _newWeaponFromWoodBox)
+            new AddNewWeaponContent(_newWeapon[0], GameSceneObjectsReferences.NewWeaponFromWoodBox)
         };
 
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, SetInitValues, AllocateWoodBox);
@@ -57,12 +51,11 @@ public class WoodBox : MonoBehaviour
 
     private void OnDisable() => _parachuteWithWoodBoxCollision.onCollisionEnter -= GetCollisions;
 
-    private void AllocateWoodBox() => _woodBoxSerializer.AllocateWoodBox();
+    private void AllocateWoodBox() => GameSceneObjectsReferences.WoodBoxSerializer.AllocateWoodBox();
 
     public void SetInitValues()
     {
-        //ContentIndex = Random.Range(0, ContentsCount);
-        ContentIndex = 4;
+        ContentIndex = Random.Range(0, ContentsCount);
         WeaponIndex = Random.Range(0, WeaponsCount);
     }
 
@@ -78,11 +71,11 @@ public class WoodBox : MonoBehaviour
     {      
         if (ContentIndex < _iWoodBoxContents.Length)
         {
-            _iWoodBoxContents[ContentIndex].Use(tankController, _tabWoodboxContent);
+            _iWoodBoxContents[ContentIndex].Use(tankController, GameSceneObjectsReferences.Tab_WoodboxContent);
         }
         else
         {
-            _iWoodBoxWeapons[WeaponIndex].Use(tankController, _tabWoodboxContent);
+            _iWoodBoxWeapons[WeaponIndex].Use(tankController, GameSceneObjectsReferences.Tab_WoodboxContent);
         }
     }
 }
