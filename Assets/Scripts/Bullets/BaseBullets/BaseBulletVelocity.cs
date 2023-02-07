@@ -5,12 +5,9 @@ public class BaseBulletVelocity : MonoBehaviour
 {
     [SerializeField]
     protected BaseBulletController _baseBulletController;
-    [Space]
 
-    [SerializeField] protected float _gravityForcePercentage;
-    [SerializeField] protected float _windForcePercentage;
-    [Space]
-    [SerializeField] protected float _trailTime;
+    [SerializeField] [Space]  
+    protected float _gravityForcePercentage, _windForcePercentage, _trailTime;
 
     protected bool _isWindForceApplied;
     

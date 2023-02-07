@@ -5,25 +5,23 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 //ADDRESSABLE
 public class AALauncher : MonoBehaviour
 {
-    [SerializeField] private AssetReference _assetReferenceMesh;
-    [SerializeField] private AssetReference _assetReferenceGunMesh;
-    [SerializeField] private AssetReference _assetReferenceAaGun;
-    [SerializeField] private AssetReference _assetReferenceSpawnParticles;
-    [SerializeField] private AssetReference _assetReferenceDespawnEffect;
+    [SerializeField] 
+    private AssetReference _assetReferenceMesh, _assetReferenceGunMesh, _assetReferenceAaGun, _assetReferenceSpawnParticles, _assetReferenceDespawnEffect;
 
-    [Space]
-    [SerializeField] private Transform _meshTransform;
-    [SerializeField] private Transform _gunMeshTrasnform;
-    [SerializeField] private Transform[] _points;    
+    [SerializeField] [Space]
+    private Transform _meshTransform, _gunMeshTrasnform;
+
+    [SerializeField] [Space]
+    private Transform[] _points;    
+    
+    [SerializeField] [Space]
+    private Animator _animator;
 
     private GameObject _meshObj;
     private GameObject _gunMeshObj;
    
-    private Animator _animator;
-    private TurnController _turnController;
-    private PhotonNetworkAALauncher _photonNetworkAALauncher;
     private IScore _ownerScore;
-    private BulletController _enemyProjectile;
+    private BaseBulletController _enemyProjectile;
     private AAGun _aAGun;
 
     [Space]
@@ -37,16 +35,10 @@ public class AALauncher : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        _animator = Get<Animator>.From(gameObject);
-        _turnController = FindObjectOfType<TurnController>();
-        _photonNetworkAALauncher = FindObjectOfType<PhotonNetworkAALauncher>();
-    }
 
-    private void OnEnable() => _turnController.OnTurnChanged += OnTurnChanged;
+    private void OnEnable() => GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
 
-    private void OnDisable() => _turnController.OnTurnChanged -= OnTurnChanged;
+    private void OnDisable() => GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnChanged;
 
     private void FixedUpdate() => LaunchMissile();
 
@@ -60,8 +52,6 @@ public class AALauncher : MonoBehaviour
 
         ID = transform.position;
         _ownerScore = Get<IScore>.From(ownerTankController.gameObject);
-
-        print(_ownerScore);
     }
 
     private void InstantiateMeshesAsync()
@@ -81,14 +71,14 @@ public class AALauncher : MonoBehaviour
         {
             if (_index < _points.Length)
             {
-                Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, InstantiateGun, () => InstantiateGun(_photonNetworkAALauncher));
+                Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, InstantiateGun, () => InstantiateGun(GameSceneObjectsReferences.PhotonNetworkAALauncher));
                 _launched = true;
             }
             else
             {
                 if (!_isDeactivated)
                 {
-                    Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, Deactivate, () => Deactivate(_photonNetworkAALauncher));
+                    Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, Deactivate, () => Deactivate(GameSceneObjectsReferences.PhotonNetworkAALauncher));
                     _isDeactivated = true;
                 }
             }
@@ -97,7 +87,7 @@ public class AALauncher : MonoBehaviour
 
     public void InstantiateGun()
     {
-        DestroyAAGun();
+        DestroyAAGun();       
         _assetReferenceAaGun.InstantiateAsync(_points[_index]).Completed += InitProjectile;
     }
 
@@ -146,13 +136,13 @@ public class AALauncher : MonoBehaviour
     {
         if(turnState == TurnState.Other)
         {
-            _enemyProjectile = GlobalFunctions.ObjectsOfType<BulletController>.Find(bullet => bullet.OwnerScore != _ownerScore);
+            _enemyProjectile = GlobalFunctions.ObjectsOfType<BaseBulletController>.Find(bullet => bullet.OwnerScore != _ownerScore);
             _launched = false;
         }
     }
 
     private bool IsTargetDetected()
     {
-        return _enemyProjectile != null && Vector3.Distance(_enemyProjectile.transform.position, transform.position) <= 10 ? true : false;
+        return _enemyProjectile != null && _enemyProjectile.OwnerScore != _ownerScore && Vector3.Distance(_enemyProjectile.transform.position, transform.position) <= 10 ? true : false;
     }
 }

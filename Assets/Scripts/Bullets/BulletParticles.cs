@@ -52,10 +52,10 @@ public class BulletParticles : MonoBehaviour
         if (_iBulletExplosion == null)
             return;
 
-        if (isSubscribing)
-            _iBulletExplosion.OnBulletExplosion += OnExplosion;
-        else
-            _iBulletExplosion.OnBulletExplosion -= OnExplosion;
+        //if (isSubscribing)
+        //    _iBulletExplosion.OnBulletExplosion += OnExplosion;
+        //else
+        //    _iBulletExplosion.OnBulletExplosion -= OnExplosion;
     }
 
     protected virtual void InstantiateMuzzleFlashAsync(Vector3 position)

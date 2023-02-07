@@ -1,16 +1,15 @@
 using UnityEngine;
 using System;
 
-public class BaseBulletExplosion : MonoBehaviour
+public class BaseBulletExplosion : MonoBehaviour, IBulletExplosion
 {
     [SerializeField]
     protected BaseBulletVelocity _baseBulletVelocity;
 
-    [SerializeField] 
+    [SerializeField] [Space]
     protected BaseBulletCollision _baseBulletCollision;
-    [Space]
 
-    [SerializeField]
+    [SerializeField] [Space]
     protected bool _dontDestroyOnTimeLimit;
 
     public event Action onExplode;

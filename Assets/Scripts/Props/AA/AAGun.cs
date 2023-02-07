@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class AAGun : MonoBehaviour
 {
-    [SerializeField] private BulletController _projectile;
+    [SerializeField] 
+    private BaseBulletController _projectile;
 
-    public BulletController Projectile => _projectile;
+    public BaseBulletController Projectile => _projectile;
 }

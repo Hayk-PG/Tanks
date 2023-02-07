@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AAProjectileExplosion : BulletSensorExplosion
 {
-    [SerializeField] [Space]
+    [SerializeField] 
     protected AAProjectileVelocity _aAProjectileVelocity;
 
 

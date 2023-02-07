@@ -5,10 +5,9 @@ public class BaseBulletCollision : MonoBehaviour
 {
     [SerializeField]
     protected BaseBulletController _baseBulletController;
-    [Space]
 
-    [SerializeField] protected int _destructDamage;
-    [SerializeField] protected int _tileParticleIndex;
+    [SerializeField] [Space]
+    protected int _destructDamage, _tileParticleIndex;
 
     protected bool _isCollided;
 

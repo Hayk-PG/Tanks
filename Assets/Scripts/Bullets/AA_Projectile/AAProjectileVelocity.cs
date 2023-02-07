@@ -21,6 +21,7 @@ public class AAProjectileVelocity : BaseBulletVelocity
         MoveTowardsTarget(isTargetDetected);
         DestroyTarget(isTargetClose);
         base.ControlLookRotation();
+        base.OnVerticalLimit();
     }
 
     public virtual void ScanTarget(bool isConditionMet)

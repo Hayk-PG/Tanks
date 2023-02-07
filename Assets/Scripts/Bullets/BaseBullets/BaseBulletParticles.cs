@@ -6,19 +6,16 @@ public class BaseBulletParticles : MonoBehaviour
     [SerializeField]
     protected BaseBulletController _baseBulletController;
 
-    [SerializeField]
+    [SerializeField] 
     protected BaseBulletVelocity _baseBulletVelocity;
 
-    [SerializeField]
+    [SerializeField] 
     protected BaseBulletExplosion _baseBulletExplosion;
 
-    [Space]
-    [SerializeField] 
-    protected AssetReference _assetReferenceTrail;
-    [SerializeField] 
-    protected AssetReference _assetReferenceMuzzleFlash;
-    [Space]
-    [SerializeField] 
+    [SerializeField] [Space]
+    protected AssetReference _assetReferenceTrail, _assetReferenceMuzzleFlash;
+
+    [SerializeField] [Space]
     protected BaseExplosion _explosion;
 
 
