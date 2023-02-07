@@ -35,7 +35,7 @@ public class InstantiatePickables : MonoBehaviourPun
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(5, 15));
+            yield return new WaitForSeconds(Random.Range(30, 90));
 
             if (FindObjectOfType<ParachuteWithWoodBoxController>() == null)
             {
