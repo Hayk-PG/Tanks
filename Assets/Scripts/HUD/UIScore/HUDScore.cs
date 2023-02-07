@@ -2,23 +2,28 @@
 
 public class HUDScore : MonoBehaviour
 {
-    [SerializeField] private ScoreText _scoreText;
-    [SerializeField] private RectTransform _tempPointsStartPoint;
+    [SerializeField]
+    private CanvasGroup _canvasGroup;
+
+    [SerializeField] [Space]
+    private ScoreText _scoreText;
+
+    [SerializeField] [Space]
+    private RectTransform _tempPointsStartPoint;
+
+    [SerializeField] [Space]
     private TempPoints _tempPoints;
+
+    public CanvasGroup CanvasGroup => _canvasGroup;
 
     public RectTransform TempPointsStartPoint
     {
         get => _tempPointsStartPoint;
     }
     public Transform ScoreTextTransform => _scoreText.transform;
-    public CanvasGroup CanvasGroup { get; private set; }
 
 
-    private void Awake()
-    {
-        CanvasGroup = Get<CanvasGroup>.From(gameObject);
-        _tempPoints = FindObjectOfType<TempPoints>();
-    }
+
 
     private void OnEnable() => _tempPoints.OnScoreTextUpdated += UpdateScore;
 

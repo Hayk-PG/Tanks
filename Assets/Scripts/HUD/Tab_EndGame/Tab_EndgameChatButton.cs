@@ -2,20 +2,23 @@
 
 public class Tab_EndgameChatButton : MonoBehaviour
 {
+    [SerializeField]
     private CanvasGroup _canvasGroup;
+
+    [SerializeField] [Space]
     private Chat _chat;
+
+    [SerializeField] [Space]
     private GameResultProcessor _gameResultProcessor;
-    private Tab_EndgameChat _tabEndgameChat;   
-    [SerializeField] private GameObject _notification;
+
+    [SerializeField] [Space]
+    private Tab_EndgameChat _tabEndgameChat;  
+    
+    [SerializeField] [Space]
+    private GameObject _notification;
 
 
-    private void Awake()
-    {
-        _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _chat = FindObjectOfType<Chat>();
-        _gameResultProcessor = FindObjectOfType<GameResultProcessor>();
-        _tabEndgameChat = FindObjectOfType<Tab_EndgameChat>();
-    }
+
 
     private void OnEnable()
     {

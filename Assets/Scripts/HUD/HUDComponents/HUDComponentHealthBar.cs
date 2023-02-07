@@ -3,10 +3,18 @@ using UnityEngine.UI;
 
 public class HUDComponentHealthBar : MonoBehaviour
 {
-    [SerializeField] protected TurnState _turnState;
-    [SerializeField] protected Image _imgFillLayer1, _imgFillLayer2;
+    [SerializeField] [Space]
+    protected TurnState _turnState;
+
+    [SerializeField] [Space]
+    protected Image _imgFillLayer1, _imgFillLayer2;
+
+    [SerializeField] [Space]
     protected Animator _animator;
+
+    [SerializeField] [Space]
     protected TurnController _turnController;
+
     protected PlayerTurn _playerTurn;
     protected HealthController _healthController;
 
@@ -16,12 +24,6 @@ public class HUDComponentHealthBar : MonoBehaviour
     protected virtual int AnimationLayer => 0;
 
 
-
-    protected virtual void Awake()
-    {
-        _animator = Get<Animator>.From(gameObject);
-        _turnController = FindObjectOfType<TurnController>();
-    }
 
     protected virtual void OnEnable()
     {

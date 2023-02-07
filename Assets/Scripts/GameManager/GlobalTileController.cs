@@ -4,18 +4,19 @@ using System;
 
 public class GlobalTileController : MonoBehaviourPun
 {
-    [SerializeField] private GameObject _prefab;
+    [SerializeField] 
+    private GameObject _prefab;
+
+    [SerializeField] [Space]
     private TilesData _tilesData;
+
+    [SerializeField] [Space]
     private ChangeTiles _changeTiles;
 
     public Action<Vector3> OnCreateNewTile { get; set; }
 
 
-    private void Awake()
-    {
-        _tilesData = FindObjectOfType<TilesData>();
-        _changeTiles = FindObjectOfType<ChangeTiles>();
-    }
+   
 
     public void Modify(Vector3 newTilePosition)
     {  

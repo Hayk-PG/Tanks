@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class EndOfflineGame : BaseEndGame
+﻿public class EndOfflineGame : BaseEndGame
 {
     protected override void OnEnable()
     {

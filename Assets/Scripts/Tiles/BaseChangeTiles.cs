@@ -2,22 +2,23 @@
 
 public class BaseChangeTiles : MonoBehaviour
 {
-    protected Tile _newTile;
+    [SerializeField]
     protected TilesData _tileData;
+
+    [SerializeField] [Space]
     protected MapPoints _mapPoints;
+
+    [SerializeField] [Space]
     protected GlobalTileController _globalTileController;
+
+    protected Tile _newTile;    
+    
     protected Vector3 _thisTilePos;
 
     public Vector3 Vertical { get => new Vector3(0, _tileData.Size, 0); }
     public Vector3 Horizontal { get => new Vector3(_tileData.Size, 0, 0); }
 
-
-    protected virtual void Awake()
-    {
-        _tileData = Get<TilesData>.From(gameObject);
-        _mapPoints = Get<MapPoints>.From(gameObject);
-        _globalTileController = FindObjectOfType<GlobalTileController>();
-    }
+  
 
     protected virtual void OnEnable()
     {

@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class NewWeaponFromWoodBox : MonoBehaviour
 {
+    [SerializeField]
     private AmmoTabCustomization _ammoTabCustomization;
+
+    [SerializeField] [Space]
     private AmmoTabButtonNotification _ammoTabButtonNotification;
+
+    [SerializeField] [Space]
     private GameManager _gameManager;
 
     private ScoreController _localPlayerScoreController;
@@ -14,12 +19,7 @@ public class NewWeaponFromWoodBox : MonoBehaviour
     public Action<WeaponProperties> OnAddNewWeaponFromWoodBox { get; set; }
 
 
-    private void Awake()
-    {
-        _ammoTabCustomization = Get<AmmoTabCustomization>.From(gameObject);
-        _ammoTabButtonNotification = FindObjectOfType<AmmoTabButtonNotification>();
-        _gameManager = FindObjectOfType<GameManager>();
-    }
+
 
     private void OnEnable()
     {

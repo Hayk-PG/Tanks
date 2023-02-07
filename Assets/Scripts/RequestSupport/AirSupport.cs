@@ -1,13 +1,19 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class AirSupport : MonoBehaviour, ITurnController
+public class AirSupport : MonoBehaviour
 {
-    [SerializeField] private Bomber _bomber;
+    [SerializeField] 
+    private Bomber _bomber;
+    
+    [SerializeField] [Space]
+    private MapPoints _mapPoints;
+
+    [SerializeField] [Space]
+    private MainCameraController _mainCameraController;
 
     private Rigidbody _rb;
-    private MapPoints _mapPoints;
-    private MainCameraController _mainCameraController;
+
     private float StartPointX
     {
         get
@@ -22,15 +28,9 @@ public class AirSupport : MonoBehaviour, ITurnController
             return _mapPoints.HorizontalMax + 2;
         }
     }
-    public TurnController TurnController { get; set; }
 
 
-    private void Awake()
-    {
-        _mapPoints = FindObjectOfType<MapPoints>();
-        _mainCameraController = FindObjectOfType<MainCameraController>();
-        TurnController = FindObjectOfType<TurnController>();
-    }
+
 
     private Vector3 StartPosition(PlayerTurn playerTurn)
     {
@@ -55,7 +55,7 @@ public class AirSupport : MonoBehaviour, ITurnController
         _bomber.OwnerTurn = ownerTurn;
         _bomber.DropPoint = dropPoint;
         bomber = _bomber;
-        TurnController.SetNextTurn(TurnState.Other);
+        GameSceneObjectsReferences.TurnController.SetNextTurn(TurnState.Other);
         StartCoroutine(ActivateBomber(ownerTurn));
     }
 

@@ -3,17 +3,22 @@ using UnityEngine.UI;
 
 public class TerritoryOccupiedIndicator : MonoBehaviour
 {
+    [SerializeField]
     private MapPoints _mapPoints;
+
+    [SerializeField] [Space]
     private GameManager _gameManager;
+
+    [SerializeField] [Space]
+    private RectTransform _player1, _player2;
+
     private Transform _tank1Transform;
     private Transform _tank2Transform;
 
-    [SerializeField] private RectTransform _player1;
-    [SerializeField] private RectTransform _player2;
-    [SerializeField] private Text _textPlayer1Percentage;
-    [SerializeField] private Text _textPlayer2Percentage;
+    [SerializeField] [Space]
+    private Text _textPlayer1Percentage, _textPlayer2Percentage;
 
-    private float _zeroValue;
+    private float _zeroValue = 1589;
     private float _player1Value;
     private float _player2Value;
 
@@ -21,13 +26,8 @@ public class TerritoryOccupiedIndicator : MonoBehaviour
     public int Player2Percentage { get; private set; }
 
 
-    private void Awake()
-    {
-        _mapPoints = FindObjectOfType<MapPoints>();
-        _gameManager = FindObjectOfType<GameManager>();
+ 
 
-        _zeroValue = 1589;
-    }
 
     private void OnEnable()
     {

@@ -7,13 +7,17 @@ public class AmmoTabButtonNotification : MonoBehaviour
     public List<AmmoTypeButton> _weapons = new List<AmmoTypeButton>();
     public List<AmmoTypeButton> _availableWeapons;
 
+    [SerializeField]
     private AmmoTabCustomization _ammoTabCustomization;
-    private ScoreController _playerScoreController;
+
+    [SerializeField] [Space]
     private AmmoTypeController _ammoTypeController;
 
-    [SerializeField]
+    [SerializeField] [Space]
     private GameObject _notificationsIcon;
 
+    private ScoreController _playerScoreController;
+    
     private bool _isNewWeaponAvailable;
     private bool _isAmmoTabOpen;
 
@@ -21,11 +25,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
     public Action<List<AmmoTypeButton>, bool> OnDisplayAvailableWeapons { get; set; }
 
 
-    private void Awake()
-    {
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-        _ammoTypeController = FindObjectOfType<AmmoTypeController>();
-    }
+    
 
     private void OnEnable()
     {

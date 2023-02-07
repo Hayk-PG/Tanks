@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 {
-    [Header("Props")] [SerializeField] private PropsProperties[] _props;
+    [Header("Props")] [SerializeField] 
+    private PropsProperties[] _props;
 
     public AmmoTypeButton[] InstantiatedTypeButtons
     {
@@ -25,10 +26,7 @@ public class PropsTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
  
 
-    private void Start()
-    {
-        InstantiateProps();
-    }
+    private void Start() => Invoke("InstantiateProps", 1);
 
     protected override void OnDisable()
     {

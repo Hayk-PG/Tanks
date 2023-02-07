@@ -5,10 +5,17 @@ using TMPro;
 
 public class CurrentWeaponStatus : MonoBehaviour
 {
+    [SerializeField]
+    private CanvasGroup _canvasGroup;
+
+    [SerializeField]
     private AmmoTabCustomization _ammoTabCustomization;
+
+    [SerializeField] [Space]
     private Animator _animator;
 
-    [Serializable] private struct Properties
+    [Serializable] 
+    private struct Properties
     {
         [SerializeField] private Image _currentWeaponIcon;
 
@@ -25,17 +32,15 @@ public class CurrentWeaponStatus : MonoBehaviour
             set => _bulletsLeftText.text = value;
         }
     }
-    [SerializeField] private Properties _properties;
 
-    public CanvasGroup CanvasGroup { get; private set; }
-   
+    [SerializeField] 
+    private Properties _properties;
 
-    private void Awake()
-    {
-        CanvasGroup = Get<CanvasGroup>.From(gameObject);
-        _animator = Get<Animator>.FromChild(gameObject);
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-    }
+    public CanvasGroup CanvasGroup => _canvasGroup;
+
+
+
+  
 
     private void OnEnable()
     {

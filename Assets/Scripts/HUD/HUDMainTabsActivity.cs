@@ -2,17 +2,19 @@
 
 public class HUDMainTabsActivity : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup[] _canvasGroups;
+    [SerializeField] 
+    private CanvasGroup[] _canvasGroups;
+
+    [SerializeField] [Space]
     private GameplayAnnouncer _gameplayAnnouncer;
+
+    [SerializeField] [Space]
     private AmmoTypeController _ammoTypeController;
 
 
-    private void Awake()
-    {
-        _gameplayAnnouncer = FindObjectOfType<GameplayAnnouncer>();
-        _ammoTypeController = FindObjectOfType<AmmoTypeController>();
-        CanvasGroupsActivity(false);
-    }
+
+
+    private void Start() => CanvasGroupsActivity(false);
 
     private void OnEnable()
     {

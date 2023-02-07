@@ -3,29 +3,36 @@ using UnityEngine;
 
 public class AmmoTypeController : MonoBehaviour
 {    
+    [SerializeField]
     private Animator _animator;
+
+    [SerializeField] [Space]
     private RectTransform _rectTransform;
+
+    [SerializeField] [Space]
     private AmmoTabCustomization _ammoTabCustomization;
+
+    [SerializeField] [Space]
     private SupportsTabCustomization _supportTabCustomization;
+
+    [SerializeField] [Space]
     private PropsTabCustomization _propsTabCustomization;
+
+    [SerializeField] [Space]
     private AmmoTabButton _ammoTabButton;
+
+    [SerializeField] [Space]
     private CameraBlur _cameraBlur;
+
     private const string _play = "play";
     private const string _direction = "speed";
-    private float _animatorSpeed;   
+    private float _animatorSpeed;  
+    
     public Action<bool> OnInformAboutTabActivityToTabsCustomization { get; set; }
 
 
-    private void Awake()
-    {
-        _animator = GetComponent<Animator>();
-        _rectTransform = GetComponent<RectTransform>();
-        _ammoTabCustomization = Get<AmmoTabCustomization>.From(gameObject);
-        _supportTabCustomization = Get<SupportsTabCustomization>.From(gameObject);
-        _propsTabCustomization = Get<PropsTabCustomization>.From(gameObject);
-        _ammoTabButton = FindObjectOfType<AmmoTabButton>();
-        _cameraBlur = FindObjectOfType<CameraBlur>();
-    }
+
+
 
     private void OnEnable()
     {

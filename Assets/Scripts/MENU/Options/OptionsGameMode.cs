@@ -15,15 +15,15 @@ public class OptionsGameMode : OptionsController
 
     protected override void GetOptionsActivity(bool isActive)
     {
-        _myPhotonCallbacks.onDisconnect -= GoOffline;
-        _myPhotonCallbacks._OnConnectedToMaster -= FinishGoingOnline;
+        _options.MyPhotonCallbacks.onDisconnect -= GoOffline;
+        _options.MyPhotonCallbacks._OnConnectedToMaster -= FinishGoingOnline;
     }
 
     private void Disconnect()
     {      
         MyPhoton.Disconnect();
         OpenTabLoad();
-        _myPhotonCallbacks.onDisconnect += GoOffline;
+        _options.MyPhotonCallbacks.onDisconnect += GoOffline;
     }
 
     private void GoOffline()
@@ -38,7 +38,7 @@ public class OptionsGameMode : OptionsController
         MyPhotonNetwork.OfflineMode(false);
         OpenTabLoad();
         onJumpTabSignUp?.Invoke();
-        _myPhotonCallbacks._OnConnectedToMaster += FinishGoingOnline;       
+        _options.MyPhotonCallbacks._OnConnectedToMaster += FinishGoingOnline;       
     }
 
     private void FinishGoingOnline()

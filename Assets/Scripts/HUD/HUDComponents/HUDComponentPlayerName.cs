@@ -6,18 +6,18 @@ using Photon.Realtime;
 
 public class HUDComponentPlayerName : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _txtPlayerName;
-    [SerializeField] private TurnState _turnState;
+    [SerializeField] 
+    private TMP_Text _txtPlayerName;
+
+    [SerializeField] [Space]
+    private TurnState _turnState;
+
+    [SerializeField] [Space]
     private TurnController _turnController;
 
     private bool _isPlayerNameAssigned;
 
 
-
-    private void Awake()
-    {
-        _turnController = FindObjectOfType<TurnController>();
-    }
 
     private void OnEnable()
     {

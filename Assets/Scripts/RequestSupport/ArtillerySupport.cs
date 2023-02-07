@@ -3,18 +3,19 @@ using UnityEngine;
 
 public class ArtillerySupport : MonoBehaviour
 {
-    [SerializeField] private BulletController _artillerPrefab;
-    [SerializeField] private float _deviation;
+    [SerializeField] 
+    private BulletController _artillerPrefab;
 
-    private Rigidbody _rb;
+    [SerializeField] [Space]
     private MainCameraController _mainCameraController;
 
+    [SerializeField] [Space]
+    private float _deviation;
+
+    private Rigidbody _rb;
+    
 
 
-    private void Awake()
-    {
-        _mainCameraController = FindObjectOfType<MainCameraController>();
-    }
 
     public void Call(Vector3 coordinate, IScore ownerScore, PlayerTurn ownerTurn)
     {

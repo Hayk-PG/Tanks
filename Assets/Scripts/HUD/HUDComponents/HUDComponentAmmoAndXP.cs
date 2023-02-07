@@ -2,14 +2,22 @@ using UnityEngine;
 
 public class HUDComponentAmmoAndXP : MonoBehaviour
 {
-    [SerializeField] private TurnState _turnState;
-    [SerializeField] private HUDScore _hudScore;
-    [SerializeField] private CurrentWeaponStatus _currentWeaponStatus;
+    [SerializeField] 
+    private TurnState _turnState;
+
+    [SerializeField] [Space]
+    private HUDScore _hudScore;
+
+    [SerializeField] [Space]
+    private CurrentWeaponStatus _currentWeaponStatus;
+
+    [SerializeField] [Space]
     private TurnController _turnController;
+
     private bool _isAssigned;
 
 
-    private void Awake() => _turnController = FindObjectOfType<TurnController>();
+
 
     private void OnEnable() => _turnController.OnTurnChanged += OnTurnChanged;
 

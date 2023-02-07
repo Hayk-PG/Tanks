@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class BaseEndGame : MonoBehaviourPun
 {
+    [SerializeField]
     protected GameManager _gameManager;
+
     protected MyPlugins _myPlugins;
 
     protected HealthController _healthTank1;
@@ -14,11 +16,9 @@ public class BaseEndGame : MonoBehaviourPun
     public Action<string, string> OnEndGameTab { get; set; }
 
 
-    protected virtual void Awake()
-    {
-        _gameManager = Get<GameManager>.From(gameObject);
-        _myPlugins = FindObjectOfType<MyPlugins>();      
-    }
+
+
+    protected virtual void Awake() => _myPlugins = FindObjectOfType<MyPlugins>();
 
     protected virtual void OnEnable()
     {

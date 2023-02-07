@@ -13,9 +13,8 @@ public class ChangeTiles : BaseChangeTiles
     public event Action<TilesData> OnTilesUpdated;
 
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         _coroutine = UpdateTilesCoroutine(second, null);
     }
 

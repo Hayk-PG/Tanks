@@ -2,26 +2,18 @@
 
 public class Tab_GameStart : MonoBehaviour
 {
-    [SerializeField] private Tab_GameStartPlayerInfo[] _tabGameStartPlayersInfo;
+    [SerializeField] 
+    private Tab_GameStartPlayerInfo[] _tabGameStartPlayersInfo;
+
+    [SerializeField] [Space]
     private GameManager _gameManager;
 
 
-    private void Awake()
-    {
-        _gameManager = FindObjectOfType<GameManager>();
+    private void Awake() => InitializePlayesrInfoTab();
 
-        InitializePlayesrInfoTab();
-    }
+    private void OnEnable() => _gameManager.OnGameStarted += OnGameStarted;
 
-    private void OnEnable()
-    {
-        _gameManager.OnGameStarted += OnGameStarted;
-    }
-
-    private void OnDisable()
-    {
-        _gameManager.OnGameStarted -= OnGameStarted;
-    }
+    private void OnDisable() => _gameManager.OnGameStarted -= OnGameStarted;
 
     public void InitializePlayesrInfoTab()
     {

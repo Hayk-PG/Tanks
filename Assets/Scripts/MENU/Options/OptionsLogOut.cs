@@ -9,13 +9,13 @@ public class OptionsLogOut : OptionsController
     protected override void OnEnable()
     {
         base.OnEnable();
-        _myPhotonCallbacks.onDisconnect += OpenTabSignUp;
+        _options.MyPhotonCallbacks.onDisconnect += OpenTabSignUp;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        _myPhotonCallbacks.onDisconnect -= OpenTabSignUp;
+        _options.MyPhotonCallbacks.onDisconnect -= OpenTabSignUp;
     }
 
     protected override void Select()

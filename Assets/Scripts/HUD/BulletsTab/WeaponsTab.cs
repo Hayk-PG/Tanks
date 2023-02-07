@@ -3,36 +3,39 @@ using UnityEngine;
 
 public class WeaponsTab : MonoBehaviour
 {
+    [SerializeField]
+    private WeaponsTabButton[] _weaponsTabButtons;
+
+    [SerializeField] [Space]
+    private CanvasGroup[] _tabs;
+
+    [SerializeField] [Space]
+    private AmmoTabCustomization _ammoTabCustomization;
+
+    [SerializeField] [Space]
+    private SupportsTabCustomization _supportsTabCustomization;
+    
+    [SerializeField] [Space]
+    private Color _pressedColor, _releasedColor;
+    
+    private CanvasGroup[] _containers;
+
     private const int _length = 2;
     private const string WeaponsTabButton = "Weapons";
     private const string SupportTabButton = "Support";
-
-    [SerializeField]
-    private WeaponsTabButton[] _weaponsTabButtons;
+  
     private string[] _weaponsTabButtonsName;
-    private CanvasGroup[] _containers;
-
-    [SerializeField]
-    private CanvasGroup[] _tabs;
-
-    [SerializeField]
-    private Color _pressedColor, _releasedColor;
-
-    private AmmoTabCustomization _ammoTabCustomization;
-    private SupportsTabCustomization _supportsTabCustomization;
+    
+    
 
 
     private void Awake()
     {
-        _ammoTabCustomization = Get<AmmoTabCustomization>.From(gameObject);
-        _supportsTabCustomization = Get<SupportsTabCustomization>.From(gameObject);
-
         _weaponsTabButtonsName = new string[_length] 
         {
             WeaponsTabButton,
             SupportTabButton
         };
-
         _containers = new CanvasGroup[_length]
         {
             _ammoTabCustomization._container,
