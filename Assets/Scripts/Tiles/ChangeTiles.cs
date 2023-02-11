@@ -81,12 +81,14 @@ public class ChangeTiles : BaseChangeTiles
 
                 if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical) && !HasTile(_thisTilePos - Vertical + Horizontal))
                 {
-                    CreateTopRightTile();
+                    //CreateTopRightTile();
+                    CreateLeftSlope();
                 }
 
                 if (HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos - Vertical) && !HasTile(_thisTilePos - Vertical - Horizontal))
                 {
-                    CreateTopLeftTile();
+                    //CreateTopLeftTile();
+                    CreateRightSlope();
                 }
 
                 if (!HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical) && HasTile(_thisTilePos - Vertical - Horizontal))
@@ -98,8 +100,6 @@ public class ChangeTiles : BaseChangeTiles
                 {
                     CreateLeftSlope();
                 }
-
-                
             }
             else
             {

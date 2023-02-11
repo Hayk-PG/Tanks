@@ -147,14 +147,6 @@ public class AiMovementPlanner : MonoBehaviour
         }
     }
 
-    private void SetDestinationAndDirection()
-    {
-        _initializedValues._destination = _updatedValues._nextTilePos;
-        _initializedValues._direction = _updatedValues._desiredDirection > 0 ? 1 : -1;
-
-        //GlobalFunctions.DebugLog("SetDestinationAndDirection: " + _initializedValues._destination + "/" + _initializedValues._direction);
-    }
-
     private void IncreaseY(float i)
     {
         _updatedValues._y += -0.5f;
@@ -164,6 +156,14 @@ public class AiMovementPlanner : MonoBehaviour
     private void DecreaseY()
     {
         _updatedValues._y -= -0.5f;
+    }
+
+    private void SetDestinationAndDirection()
+    {
+        _initializedValues._destination = _updatedValues._nextTilePos;
+        _initializedValues._direction = _updatedValues._desiredDirection > 0 ? 1 : -1;
+
+        //GlobalFunctions.DebugLog("SetDestinationAndDirection: " + _initializedValues._destination + "/" + _initializedValues._direction);
     }
 
     private bool Slope(Vector3 nextTilePos, string name)
