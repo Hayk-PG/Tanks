@@ -37,7 +37,7 @@ public class AIShootController : BaseShootController
         }
     }
 
-
+    public event System.Action<GameObject> onAiShoot;
 
 
     protected override void Awake()
@@ -66,7 +66,7 @@ public class AIShootController : BaseShootController
     {
         base.OnDisable();
         _aiTankMovement.Shoot -= ShootBullet;
-        _aiCanonRaycast.OnAICanonRaycast -= OnAICanonRaycast;
+        _aiCanonRaycast.onRayCast -= OnAICanonRaycast;
     }
 
     private void Update()
@@ -160,7 +160,7 @@ public class AIShootController : BaseShootController
     private void SubscribeToAICanonRaycast()
     {
         if (_aiCanonRaycast != null)
-            _aiCanonRaycast.OnAICanonRaycast += OnAICanonRaycast; 
+            _aiCanonRaycast.onRayCast += OnAICanonRaycast; 
     }
 
     private void AIShootBehaviour(SingleGameDifficultyLevel singleGameDifficultyLevel)
@@ -248,14 +248,18 @@ public class AIShootController : BaseShootController
         {
             BaseBulletController baseBulletController = Instantiate(_cachedBulletsList[_activeBulletIndex]._weaponProperties._prefab, _shootPoint.position, _canonPivotPoint.rotation);
             baseBulletController.OwnerScore = _iScore;
+            baseBulletController.IsOwnerAI = true;
             baseBulletController.RigidBody.velocity = _target;
+
             _rigidBody.AddForce(transform.forward * _target.magnitude * _shoot._rigidbodyForceMultiplier, ForceMode.Impulse);
             mainCameraController.CameraOffset(_playerTurn, baseBulletController.RigidBody, null, null);
-            _currentTrajectoryTime = _defaultTrajectoryTime;
-            OnShoot?.Invoke();
+            _currentTrajectoryTime = _defaultTrajectoryTime;           
             OnDash(_aiTankMovement.Direction);
             UsedActiveWeapon();
             ActivateRandomWeapon();
+
+            OnShoot?.Invoke();
+            onAiShoot?.Invoke(baseBulletController.gameObject);
         }
     }
 }

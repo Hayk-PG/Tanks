@@ -6,6 +6,10 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static GameSceneObjectsReferences Instance { get; private set; }
 
     [Header("GameManager")]
+
+    [SerializeField]
+    private GameManager _gameManager;
+
     [SerializeField] 
     private TurnController _turnController;
 
@@ -25,6 +29,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private WoodBoxSerializeView _woodBoxSerializeView;
 
     [Header("Tab_Ammo")]
+
     [SerializeField] [Space]
     private Tab_WoodboxContent _tabWoodboxContent;
 
@@ -32,10 +37,15 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private NewWeaponFromWoodBox _newWeaponFromWoodBox;
 
     [Header("TileGenerator")]
+
     [SerializeField] [Space]
     private TilesData _tilesData;
 
+    [SerializeField]
+    private ChangeTiles _changeTiles;
+
     //GameManager
+    public static GameManager GameManager => Instance._gameManager;
     public static TurnController TurnController => Instance._turnController;
     public static WindSystemController WindSystemController => Instance._windSystemController;
     public static GameManagerBulletSerializer GameManagerBulletSerializer => Instance._gameManagerBulletSerializer;
@@ -49,6 +59,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     //TileGenerator
     public static TilesData TilesData => Instance._tilesData;
+    public static ChangeTiles ChangeTiles => Instance._changeTiles;
 
     //LavaSplash
     public static LavaSplash LavaSplash { get; private set; }

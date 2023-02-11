@@ -32,7 +32,7 @@ public class AITankMovement : BaseTankMovement
     {
         base.OnEnable();
 
-        _aiMovementPlanner.OnAIMovementPlanner += OnGetDestination;
+        _aiMovementPlanner.onAiMovementPlanner += OnGetDestination;
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
    
@@ -40,7 +40,7 @@ public class AITankMovement : BaseTankMovement
     {
         base.OnDisable();
 
-        _aiMovementPlanner.OnAIMovementPlanner -= OnGetDestination;
+        _aiMovementPlanner.onAiMovementPlanner -= OnGetDestination;
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
 

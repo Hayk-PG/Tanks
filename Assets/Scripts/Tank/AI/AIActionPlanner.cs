@@ -4,7 +4,9 @@ using UnityEngine;
 public class AIActionPlanner : MonoBehaviour
 {
     private enum AINextAction { Move, CallBomber, CallArtillery}
-    [SerializeField] private AINextAction _aINextAction;
+
+    [SerializeField] 
+    private AINextAction _aINextAction;
 
     private TurnController _turnController;
     private PlayerTurn _playerTurn;
@@ -46,43 +48,59 @@ public class AIActionPlanner : MonoBehaviour
     private UpdatedValues _updatedValues;
 
 
-    private void Awake()
-    {
-        _turnController = FindObjectOfType<TurnController>();
-        _playerTurn = GetComponent<PlayerTurn>();
-        _aiMovementPlanner = Get<AiMovementPlanner>.From(gameObject);
-        _aIRequestBomber = Get<AIRequestBomber>.From(gameObject);
-        _aiRequestArtillery = Get<AIRequestArtillery>.From(gameObject);
-    }
+    //private void Awake()
+    //{
+    //    _turnController = FindObjectOfType<TurnController>();
+    //    _playerTurn = GetComponent<PlayerTurn>();
+    //    _aiMovementPlanner = Get<AiMovementPlanner>.From(gameObject);
+    //    _aIRequestBomber = Get<AIRequestBomber>.From(gameObject);
+    //    _aiRequestArtillery = Get<AIRequestArtillery>.From(gameObject);
+    //}
 
-    private void OnEnable()
-    {
-        _turnController.OnTurnChanged += OnTurnChanged;    
-    }
+    //private void OnEnable()
+    //{
+    //    //_turnController.OnTurnChanged += OnTurnChanged;    
+    //}
 
-    private void OnDisable()
-    {
-        _turnController.OnTurnChanged -= OnTurnChanged;
-    }
+    //private void OnDisable()
+    //{
+    //    //_turnController.OnTurnChanged -= OnTurnChanged;
+    //}
 
-    private void OnTurnChanged(TurnState turnState)
-    {
-        if(turnState == _playerTurn.MyTurn)
-        {
-            int randomAction = UnityEngine.Random.Range(0, Enum.GetValues(typeof(AINextAction)).Length);
-            //_aINextAction = (AINextAction)randomAction;
-            _aINextAction = AINextAction.Move;
+    //private void OnTurnChanged(TurnState turnState)
+    //{
+    //    if(turnState == _playerTurn.MyTurn)
+    //    {
+    //        int randomAction = UnityEngine.Random.Range(0, Enum.GetValues(typeof(AINextAction)).Length);
+    //        //_aINextAction = (AINextAction)randomAction;
+    //        _aINextAction = AINextAction.Move;
 
-            switch (_aINextAction)
-            {
-                case AINextAction.Move: _aiMovementPlanner.MovementPlanner();break;
-                case AINextAction.CallBomber:
-                    _aIRequestBomber.Use(out bool canCallArSupport);
-                    if(!canCallArSupport) _aiMovementPlanner.MovementPlanner(); break;
-                case AINextAction.CallArtillery:
-                    _aiRequestArtillery.Use(out bool canCallArtillery);
-                    if (!canCallArtillery) _aiMovementPlanner.MovementPlanner(); break;
-            } 
-        }
-    }   
+    //        switch (_aINextAction)
+    //        {
+    //            case AINextAction.Move:
+
+    //                StartCoroutine(_aiMovementPlanner.Execute());
+
+    //                break;
+
+    //            case AINextAction.CallBomber:
+
+    //                _aIRequestBomber.Use(out bool canCallArSupport);
+
+    //                if(!canCallArSupport)
+    //                    StartCoroutine(_aiMovementPlanner.Execute()); 
+                    
+    //                break;
+
+    //            case AINextAction.CallArtillery:
+
+    //                _aiRequestArtillery.Use(out bool canCallArtillery);
+
+    //                if (!canCallArtillery)
+    //                    StartCoroutine(_aiMovementPlanner.Execute()); 
+                    
+    //                break;
+    //        } 
+    //    }
+    //}   
 }
