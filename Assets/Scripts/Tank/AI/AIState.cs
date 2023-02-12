@@ -216,10 +216,10 @@ public class AIState : MonoBehaviour
     {
         yield return null;
 
-        int stepsLenth = 0;
-        int direction = 0;
+        int stepsLenth = Random.Range(0, 10);
+        int direction = Random.Range(-1, 2) <= 0 ? -1 : 1;
 
-        if(WoodBoxDistance != 0)
+        if (WoodBoxDistance != 0)
         {
             stepsLenth = Mathf.Abs(Mathf.RoundToInt(WoodBoxDistance));
             direction = WoodBoxDistance < 0 ? 1 : -1;
@@ -234,7 +234,6 @@ public class AIState : MonoBehaviour
         if (IsHit)
         {
             stepsLenth = Random.Range(7, 15);
-            direction = Random.Range(-1, 2) < 0 ? -1 : 1;
 
             RaiseOnMoveEvent(stepsLenth, direction);
 
