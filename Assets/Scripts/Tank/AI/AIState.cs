@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AIState : MonoBehaviour
@@ -16,9 +15,7 @@ public class AIState : MonoBehaviour
     [SerializeField]
     private AICanonRaycast _aiCanonRayCast;
 
-    private Dictionary<int, float> MissileLandData { get; set; } = new Dictionary<int, float>();
-
-    public enum MovementStates { MoveForward, MoveBackward, DoNotMove}
+    public enum MovementStates { MoveForward, MoveBackward, DoNotMove }
     public MovementStates AiMovementStates { get; private set; }
 
     public int MissedShotsCount { get; private set; }
@@ -26,27 +23,19 @@ public class AIState : MonoBehaviour
     public int ReceivedHitCounts { get; private set; }
 
     public float Distance { get; private set; }
-    public float MissileDistance { get; private set; }
     public float RaycastHitDistance { get; private set; }
     public float WoodBoxDistance { get; private set; }
 
     public bool IsHit { get; private set; }
-    public bool IsRaycastHit { get; private set; } 
-    public bool IsLastShotMissed { get; private set; }
+    public bool IsRaycastHit { get; private set; }
 
     public Vector3 PreviousPosition { get; private set; }
     public Vector3 CurrentPosition { get; private set; }
     public Vector3 NextPosition { get; private set; }
     public Vector3 EnemyCurrentPosition { get; private set; }
     public Vector3 EnemyPreviousPosition { get; private set; }
-    
-    public Vector3 HitPosition { get; private set; }
-    public Vector3 EnemyHitPosition { get; private set; }
-    public Vector3 MissileLandingPosition { get; private set; }
-    public Vector3 MissilePosition { get; private set; }
    
-    public GameObject MissileObj { get; private set; }
-    public GameObject EnemyTankObj { get; private set; }    
+    public GameObject EnemyTankObj { get; private set; }
     public HealthController HealthController { get; private set; }
 
     public event System.Action<int, int> onMove;
@@ -59,7 +48,6 @@ public class AIState : MonoBehaviour
         GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStart;
         GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnController;
 
-        _aiShootController.onAiShoot += OnShoot;
         _healthController.OnTakeDamage += OnTakeDamage;
         _healthController.onUpdateArmorBar += (int damage) => { OnTakeDamage(null, damage); };
         _aiCanonRayCast.onRayCast += OnRayCast;
@@ -70,15 +58,9 @@ public class AIState : MonoBehaviour
         GameSceneObjectsReferences.GameManager.OnGameStarted -= OnGameStart;
         GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnController;
 
-        _aiShootController.onAiShoot -= OnShoot;
         _healthController.OnTakeDamage -= OnTakeDamage;
         _healthController.onUpdateArmorBar -= (int damage) => { OnTakeDamage(null, damage); };
         _aiCanonRayCast.onRayCast -= OnRayCast;
-    }
-
-    private void FixedUpdate()
-    {
-        GetMissilePosition();
     }
 
     private void OnGameStart()
@@ -89,12 +71,7 @@ public class AIState : MonoBehaviour
 
     private void OnTurnController(TurnState turnState)
     {
-        OnAITurn(turnState);
-    }
-
-    private void OnShoot(GameObject gameObject)
-    {
-        MissileObj = gameObject;
+        GetTurnState(turnState);
     }
 
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
@@ -109,46 +86,32 @@ public class AIState : MonoBehaviour
         RaycastHitDistance = distance;
     }
 
-    private void GetMissilePosition()
+    private void GetTurnState(TurnState turnState)
     {
-        if (MissileObj != null)
-        {
-            MissilePosition = MissileObj.transform.position;
-        }
-    }
-
-    private void OnAITurn(TurnState turnState)
-    {
-        if(turnState == _playerTurn.MyTurn)
-        {
+        if (turnState == _playerTurn.MyTurn)
             StartCoroutine(ExecuteOnAITurn());
-        }
 
-        if(turnState == TurnState.Player1)
-        {
+        if (turnState == TurnState.Player1)
             StartCoroutine(ExecuteOnEnemyTurn());
-        }
     }
 
     private IEnumerator ExecuteOnAITurn()
     {
         yield return StartCoroutine(CalculateEnemyCurrentPosition());
-        yield return StartCoroutine(CalculateEnemyHitPositions());
         yield return StartCoroutine(CalculateCurrentPosition());
         yield return StartCoroutine(CalculateWoodBoxDistance());
         yield return StartCoroutine(CalculateTanksDistance());
-        yield return StartCoroutine(CalculateShootControllerUpdatedTargetX());
+        yield return StartCoroutine(CalculateShootControllerTargetFixingValue());
         yield return StartCoroutine(CalculateNextPosition());
     }
 
     private IEnumerator ExecuteOnEnemyTurn()
     {
         IsHit = false;
-        IsLastShotMissed = false;
 
         WoodBoxDistance = 0;
 
-        yield return StartCoroutine(CalculateEnemyPreviousPosition());             
+        yield return StartCoroutine(CalculateEnemyPreviousPosition());
     }
 
     private IEnumerator CalculateWoodBoxDistance()
@@ -188,27 +151,11 @@ public class AIState : MonoBehaviour
         //GlobalFunctions.DebugLog("Distance: " + Distance);
     }
 
-    private IEnumerator CalculateEnemyHitPositions()
+    private IEnumerator CalculateShootControllerTargetFixingValue()
     {
         yield return null;
 
-        if (MissilePosition != Vector3.zero)
-        {
-            MissileLandingPosition = MissilePosition;
-
-            MissileDistance = (MissileLandingPosition - EnemyCurrentPosition).x < 0 ?
-                               Mathf.Abs((MissileLandingPosition - EnemyCurrentPosition).x) : -((MissileLandingPosition - EnemyCurrentPosition).x);
-
-            IsLastShotMissed = Vector3.Distance(EnemyCurrentPosition, MissileLandingPosition) <= 1 ? false : true;
-
-            UpdateMissilesLandData(Mathf.RoundToInt(Distance * 10), MissileDistance);
-
-            GlobalFunctions.DebugLog("CalculateEnemyHitPositions: " + Mathf.RoundToInt(Distance * 10) + "/" + MissileDistance);
-        }
-        else
-        {
-            IsLastShotMissed = true;
-        }
+        _aiShootController.ControlTargetFixingValue(Distance > 6 ? 0.5f : 0);
     }
 
     private IEnumerator CalculateCurrentPosition()
@@ -218,15 +165,6 @@ public class AIState : MonoBehaviour
         CurrentPosition = transform.position;
 
         //GlobalFunctions.DebugLog("CurrentPosition: " + CurrentPosition);
-    }
-
-    private IEnumerator CalculateShootControllerUpdatedTargetX()
-    {
-        yield return null;
-
-        _aiShootController.UpdateTargetX(MissileDistance);
-
-        GlobalFunctions.DebugLog("CalculateShootControllerUpdatedTargetX: " + MissileDistance);
     }
 
     private IEnumerator CalculateNextPosition()
@@ -247,7 +185,7 @@ public class AIState : MonoBehaviour
 
             yield break;
         }
- 
+
         if (IsHit)
         {
             stepsLenth = Random.Range(7, 15);
@@ -279,13 +217,5 @@ public class AIState : MonoBehaviour
     private void RaiseOnMoveEvent(int stepsLength, int direction)
     {
         onMove?.Invoke(stepsLength, direction);
-    }
-
-    private void UpdateMissilesLandData(int distance, float targetX)
-    {
-        if (MissileLandData.ContainsKey(distance))
-            MissileLandData[distance] = targetX;
-        else
-            MissileLandData.Add(distance, targetX);
     }
 }
