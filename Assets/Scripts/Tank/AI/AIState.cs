@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AIState : MonoBehaviour
@@ -15,6 +16,8 @@ public class AIState : MonoBehaviour
     [SerializeField]
     private AICanonRaycast _aiCanonRayCast;
 
+    private Dictionary<int, float> MissileLandData { get; set; } = new Dictionary<int, float>();
+
     public enum MovementStates { MoveForward, MoveBackward, DoNotMove}
     public MovementStates AiMovementStates { get; private set; }
 
@@ -23,6 +26,7 @@ public class AIState : MonoBehaviour
     public int ReceivedHitCounts { get; private set; }
 
     public float Distance { get; private set; }
+    public float MissileDistance { get; private set; }
     public float RaycastHitDistance { get; private set; }
     public float WoodBoxDistance { get; private set; }
 
@@ -133,6 +137,7 @@ public class AIState : MonoBehaviour
         yield return StartCoroutine(CalculateCurrentPosition());
         yield return StartCoroutine(CalculateWoodBoxDistance());
         yield return StartCoroutine(CalculateTanksDistance());
+        yield return StartCoroutine(CalculateShootControllerUpdatedTargetX());
         yield return StartCoroutine(CalculateNextPosition());
     }
 
@@ -191,16 +196,19 @@ public class AIState : MonoBehaviour
         {
             MissileLandingPosition = MissilePosition;
 
-            float distance = Vector3.Distance(EnemyCurrentPosition, MissileLandingPosition);
+            MissileDistance = (MissileLandingPosition - EnemyCurrentPosition).x < 0 ?
+                               Mathf.Abs((MissileLandingPosition - EnemyCurrentPosition).x) : -((MissileLandingPosition - EnemyCurrentPosition).x);
 
-            IsLastShotMissed = distance <= 1 ? false : true;           
+            IsLastShotMissed = Vector3.Distance(EnemyCurrentPosition, MissileLandingPosition) <= 1 ? false : true;
+
+            UpdateMissilesLandData(Mathf.RoundToInt(Distance * 10), MissileDistance);
+
+            GlobalFunctions.DebugLog("CalculateEnemyHitPositions: " + Mathf.RoundToInt(Distance * 10) + "/" + MissileDistance);
         }
         else
         {
             IsLastShotMissed = true;
         }
-
-        //GlobalFunctions.DebugLog("IsLastShotMissed: " + IsLastShotMissed);
     }
 
     private IEnumerator CalculateCurrentPosition()
@@ -210,6 +218,15 @@ public class AIState : MonoBehaviour
         CurrentPosition = transform.position;
 
         //GlobalFunctions.DebugLog("CurrentPosition: " + CurrentPosition);
+    }
+
+    private IEnumerator CalculateShootControllerUpdatedTargetX()
+    {
+        yield return null;
+
+        _aiShootController.UpdateTargetX(MissileDistance);
+
+        GlobalFunctions.DebugLog("CalculateShootControllerUpdatedTargetX: " + MissileDistance);
     }
 
     private IEnumerator CalculateNextPosition()
@@ -262,5 +279,13 @@ public class AIState : MonoBehaviour
     private void RaiseOnMoveEvent(int stepsLength, int direction)
     {
         onMove?.Invoke(stepsLength, direction);
+    }
+
+    private void UpdateMissilesLandData(int distance, float targetX)
+    {
+        if (MissileLandData.ContainsKey(distance))
+            MissileLandData[distance] = targetX;
+        else
+            MissileLandData.Add(distance, targetX);
     }
 }

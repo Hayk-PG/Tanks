@@ -27,6 +27,7 @@ public class AIShootController : BaseShootController
     private float _desiredTrajectoryTime = 1;
     private float _currentTrajectoryTime = 1;
     private float _currentOffsetX = 0;
+    private float _updatedTargetX = 0;
 
     private bool CanRotateCanon
     {
@@ -38,6 +39,7 @@ public class AIShootController : BaseShootController
     }
 
     public event System.Action<GameObject> onAiShoot;
+
 
 
     protected override void Awake()
@@ -225,13 +227,18 @@ public class AIShootController : BaseShootController
 
     public void RotateCanon()
     {
-        _target = _trajectory.PredictedTrajectory(new Vector3(_aiEnemyDataGetter.Enemy.position.x - _currentOffsetX, _aiEnemyDataGetter.Enemy.position.y, _aiEnemyDataGetter.Enemy.position.z), transform.position, _currentTrajectoryTime);
+        _target = _trajectory.PredictedTrajectory(new Vector3(_aiEnemyDataGetter.Enemy.position.x - _currentOffsetX + _updatedTargetX, _aiEnemyDataGetter.Enemy.position.y, _aiEnemyDataGetter.Enemy.position.z), transform.position, _currentTrajectoryTime);
         _lookRot = Quaternion.LookRotation(Vector3.forward, _target);
         _rot = _lookRot * Quaternion.Euler(_canon._rotationStabilizer.x, _canon._rotationStabilizer.y, _canon._rotationStabilizer.z);
         _desiredRotation = Quaternion.Slerp(_desiredRotation, _rot, _canon._rotationSpeed);
         _canon._rotationSpeed = 2 * Time.deltaTime;
         _canon._currentEulerAngleX = _desiredRotation.eulerAngles.x;
         _canonPivotPoint.rotation = _desiredRotation;
+    }
+
+    public void UpdateTargetX(float newTargetX)
+    {
+        _updatedTargetX = newTargetX;
     }
 
     private void ShootBullet()
