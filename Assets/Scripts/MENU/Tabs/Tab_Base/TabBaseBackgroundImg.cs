@@ -12,14 +12,19 @@ public class TabBaseBackgroundImg : MonoBehaviour
     [SerializeField] [Space]
     private AssetReferenceSprite _assetReferenceSprite;
 
+    private Sprite _sprt;
+
 
     private void Awake() => LoadSpriteAsync();
+
+    private void OnDestroy() => Addressables.Release(_sprt);
 
     private void LoadSpriteAsync()
     {
         _assetReferenceSprite.LoadAssetAsync().Completed += (asset) =>
         {
-            _img.sprite = asset.Result;
+            _sprt = asset.Result;
+            _img.sprite = _sprt;
         };
     }
 }
