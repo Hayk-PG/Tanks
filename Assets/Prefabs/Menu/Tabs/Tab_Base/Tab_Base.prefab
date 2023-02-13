@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 647559390219277691}
   - component: {fileID: 7911943243722371646}
   - component: {fileID: 9191547063338564142}
+  - component: {fileID: 4613391006887649646}
   m_Layer: 5
   m_Name: Tab_Base
   m_TagString: Untagged
@@ -232,14 +233,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.028969381, g: 0.08182682, b: 0.1981132, a: 1}
+  m_Color: {r: 0.4509804, g: 0.4509804, b: 0.4509804, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a67a3900a69a34ef886967c4a8f56aed, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -261,6 +262,25 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &4613391006887649646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909179907689859205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9e533af6ecae02469aa9c05c6208d4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _img: {fileID: 7911943243722371646}
+  _assetReferenceSprite:
+    m_AssetGUID: 4791db63458bf834e909994e7221db05
+    m_SubObjectName: CoverImage2
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_EditorAssetChanged: 0
 --- !u!1 &1933298835465566522
 GameObject:
   m_ObjectHideFlags: 0
@@ -1782,6 +1802,7 @@ GameObject:
   - component: {fileID: 1109095751058772892}
   - component: {fileID: 6896047020779670083}
   - component: {fileID: 3216678147443979438}
+  - component: {fileID: 1048231682499508542}
   m_Layer: 5
   m_Name: TabTransition
   m_TagString: Untagged
@@ -1832,14 +1853,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.028969381, g: 0.08182682, b: 0.1981132, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a67a3900a69a34ef886967c4a8f56aed, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1873,6 +1894,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad0a51e7aebbd49f6a90f2aea90409f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1048231682499508542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3466643555835315643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28f7f681904e0b341ae9579793945897, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _img: {fileID: 1109095751058772892}
+  _assetReferenceSprite:
+    m_AssetGUID: 4791db63458bf834e909994e7221db05
+    m_SubObjectName: CoverImage2
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_EditorAssetChanged: 0
 --- !u!1 &3506213362348751768
 GameObject:
   m_ObjectHideFlags: 0
