@@ -46,7 +46,6 @@ public class Options : MonoBehaviour, IReset
 
         if (MyScene.Manager.CurrentScene.name == MyScene.Manager.MenuSceneName)
         {
-            print("aa");
             SetBtnActivity(_btnHome.gameObject, false);
             SetBtnActivity(_btnGameMode.gameObject, true);
             SetBtnActivity(_btnLogOut.gameObject, !MyPhotonNetwork.IsOfflineMode);
