@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public abstract class OptionsController : MonoBehaviour, IReset
 {
     [SerializeField]
@@ -8,6 +9,9 @@ public abstract class OptionsController : MonoBehaviour, IReset
 
     [SerializeField]
     protected Image _icon;
+
+    [SerializeField]
+    protected BtnTxt _btnTxt;
 
     [SerializeField]
     protected Options _options;

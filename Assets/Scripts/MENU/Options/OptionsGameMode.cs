@@ -30,6 +30,7 @@ public class OptionsGameMode : OptionsController
     {
         MyPhotonNetwork.OfflineMode(true);
         ChangeIcon(true);
+        ChangeText(true);
         SetOptionsActivity(false);
     }
 
@@ -44,10 +45,20 @@ public class OptionsGameMode : OptionsController
     private void FinishGoingOnline()
     {
         ChangeIcon(false);
+        ChangeText(false);
         SetOptionsActivity(false);
     }
 
     private void ChangeIcon(bool isOffline) => _icon.sprite = isOffline ? _sprtOnline : _sprtOffline;
 
-    public override void SetDefault() => ChangeIcon(MyPhotonNetwork.IsOfflineMode);
+    private void ChangeText(bool isOffline)
+    {
+        _btnTxt.SetButtonTitle(isOffline ? GlobalFunctions.TextWithColorCode("#1EFDB6", "go online") : GlobalFunctions.TextWithColorCode("#FD1E40", "go offline"));
+    }
+
+    public override void SetDefault()
+    {
+        ChangeIcon(MyPhotonNetwork.IsOfflineMode);
+        ChangeText(MyPhotonNetwork.IsOfflineMode);
+    }
 }

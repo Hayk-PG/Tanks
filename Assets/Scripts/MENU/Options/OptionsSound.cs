@@ -23,6 +23,7 @@ public class OptionsSound : OptionsController
         _isOn = PlayerPrefsGetInt() < 1 ? false : true;
         SetSoundController();
         ChangeIcon();
+        ChangeText("Sound: ");
     }
 
     protected virtual void Set()
@@ -31,6 +32,7 @@ public class OptionsSound : OptionsController
         SetSoundController();
         PlayerPrefsSetInt();
         ChangeIcon();
+        ChangeText("Sound: ");
     }
 
     protected virtual int PlayerPrefsGetInt()
@@ -47,4 +49,11 @@ public class OptionsSound : OptionsController
     protected virtual void SetSoundController() => SoundController.SoundSRCCondition(_isOn);
 
     protected virtual void ChangeIcon() => _icon.sprite = _isOn ? _sprtOn : _sprtOff;
+
+    protected virtual void ChangeText(string title)
+    {
+        string txt = _isOn ? GlobalFunctions.TextWithColorCode("#1EFDB6", "On") : GlobalFunctions.TextWithColorCode("#FD1E40", "Off");
+
+        _btnTxt.SetButtonTitle(title + txt);
+    }
 }

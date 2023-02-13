@@ -1,9 +1,14 @@
 using UnityEngine;
+using TMPro;
+
 
 public class Tab_Options : MonoBehaviour
 {
     private CanvasGroup _canvasGroup;
     private Options _options;
+
+    [SerializeField]
+    private TMP_Text _txtTitle;
 
 
     private void Awake()
@@ -25,5 +30,12 @@ public class Tab_Options : MonoBehaviour
     private void GetOptionsActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+        SetTitle(isActive);
+    }
+
+    private void SetTitle(bool isActive)
+    {
+        if (isActive)
+            _txtTitle.text = MyPhotonNetwork.IsOfflineMode ? "offline" : "online";
     }
 }
