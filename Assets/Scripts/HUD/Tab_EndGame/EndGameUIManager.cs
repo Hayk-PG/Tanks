@@ -18,7 +18,7 @@ public class EndGameUIManager : MonoBehaviour
    
 
 
-    private void Awake()
+    private void Start()
     {
         _txtCurrentXP.text = "0";
         _txtReceivedXP.text = "0";
@@ -57,6 +57,7 @@ public class EndGameUIManager : MonoBehaviour
     public void SetReceivedXP(int points)
     {
         _animReceivedXP.SetTrigger(Names.Play);
+
         SecondarySoundController.PlaySound(0, 3);
 
         if (_animReceivedXP.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)

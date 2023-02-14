@@ -28,6 +28,7 @@ public class BaseEndGame : MonoBehaviourPun
     protected virtual void OnDisable()
     {
         _gameManager.OnGameStarted -= OnGameStarted;
+
         UnsubscribeFromPluginService();
     }
 
@@ -52,6 +53,7 @@ public class BaseEndGame : MonoBehaviourPun
         while (!_gameManager.IsGameEnded)
         {
             GameEndChecker();
+
             yield return new WaitForSeconds(1);
         }
     }
@@ -76,10 +78,14 @@ public class BaseEndGame : MonoBehaviourPun
         if (TanksSet())
         {
             if (FirstPlayerWon())
+            {
                 OnGameEnded(_healthTank1.name, _healthTank2.name);
+            }
 
             if (SecondPlayerWon())
+            {
                 OnGameEnded(_healthTank2.name, _healthTank1.name);
+            }
         }
     }
 
@@ -101,8 +107,11 @@ public class BaseEndGame : MonoBehaviourPun
     protected virtual void OnGameEnded(string successedPlayerName, string defeatedPlayerName)
     {
         UnsubscribeFromPluginService();
-        _gameManager.OnGameEnded?.Invoke();
-        OnEndGameTab?.Invoke(successedPlayerName, defeatedPlayerName);
+       
         _gameManager.IsGameEnded = true;
+
+        _gameManager.OnGameEnded?.Invoke();
+
+        OnEndGameTab?.Invoke(successedPlayerName, defeatedPlayerName);
     }
 }

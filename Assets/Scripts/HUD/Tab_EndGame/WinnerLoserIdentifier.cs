@@ -8,11 +8,21 @@ public class WinnerLoserIdentifier : MonoBehaviour
     public event Action<ScoreController, bool> onIdentified;
 
 
-    private void Awake() => _baseEndGame = MyPhotonNetwork.IsOfflineMode ? FindObjectOfType<EndOfflineGame>() : FindObjectOfType<EndOnlineGame>();
 
-    private void OnEnable() => _baseEndGame.OnEndGameTab += GetGameResult;
+    private void Awake()
+    {
+        _baseEndGame = MyPhotonNetwork.IsOfflineMode ? FindObjectOfType<EndOfflineGame>() : FindObjectOfType<EndOnlineGame>();
+    }
 
-    private void OnDisable() => _baseEndGame.OnEndGameTab -= GetGameResult;
+    private void OnEnable()
+    {
+        _baseEndGame.OnEndGameTab += GetGameResult;
+    }
+
+    private void OnDisable()
+    {
+        _baseEndGame.OnEndGameTab -= GetGameResult;
+    }
 
     private void GetGameResult(string successedPlayerName, string defeatedPlayerName)
     {
@@ -26,17 +36,6 @@ public class WinnerLoserIdentifier : MonoBehaviour
         }
     }
 
-    private bool IsLocalPlayer(TankController tankController)
-    {
-        return tankController?.BasePlayer != null;
-    }
-
-    private void Process(GameObject tank, bool isWin)
-    {
-        ScoreController scoreController = Get<ScoreController>.From(tank);
-        onIdentified?.Invoke(scoreController, isWin);
-    }
-
     private void DetermineWinner(GameObject successedTank)
     {
         if (IsLocalPlayer(Get<TankController>.From(successedTank)))
@@ -47,5 +46,17 @@ public class WinnerLoserIdentifier : MonoBehaviour
     {
         if (IsLocalPlayer(Get<TankController>.From(defeatedTank)))
             Process(defeatedTank, false);
+    }
+
+    private bool IsLocalPlayer(TankController tankController)
+    {
+        return tankController?.BasePlayer != null;
+    }
+
+    private void Process(GameObject tank, bool isWin)
+    {
+        ScoreController scoreController = Get<ScoreController>.From(tank);
+
+        onIdentified?.Invoke(scoreController, isWin);
     }
 }

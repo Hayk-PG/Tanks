@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class GameResultProcessor : MonoBehaviour
 {
+    [SerializeField] 
     private WinnerLoserIdentifier _winnerLoserIdentifier;
+
+    [SerializeField] [Space]
     private EndGameUIManager _endGameUIManager;
 
     private bool _isGameResultCalculated;
@@ -13,15 +16,18 @@ public class GameResultProcessor : MonoBehaviour
     public event Action onFinishResultProcess;
 
 
-    private void Awake()
+ 
+
+    private void OnEnable()
     {
-        _winnerLoserIdentifier = Get<WinnerLoserIdentifier>.From(gameObject);
-        _endGameUIManager = Get<EndGameUIManager>.From(gameObject);
+        if (!MyPhotonNetwork.IsOfflineMode)
+            _winnerLoserIdentifier.onIdentified += ProcessLocalPlayerGameResult;
     }
 
-    private void OnEnable() => _winnerLoserIdentifier.onIdentified += ProcessLocalPlayerGameResult;
-
-    private void OnDisable() => _winnerLoserIdentifier.onIdentified -= ProcessLocalPlayerGameResult;
+    private void OnDisable()
+    {
+        _winnerLoserIdentifier.onIdentified -= ProcessLocalPlayerGameResult;
+    }
 
     private void ProcessLocalPlayerGameResult(ScoreController scoreController, bool isWin)
     {
@@ -31,8 +37,11 @@ public class GameResultProcessor : MonoBehaviour
     private IEnumerator ProcessLocalPlayerGameResultCoroutine(ScoreController scoreController, bool isWin)
     {
         InitializeEndGameUIManagerValues(isWin);
+
         GameResultValues gameResultValues = GameResultValues(scoreController, isWin);
+
         DeactivateTanks();
+
         yield return StartCoroutine(DelayCalculations());
         yield return StartCoroutine(AnnounceGameResult(isWin));
 
@@ -41,7 +50,9 @@ public class GameResultProcessor : MonoBehaviour
             yield return StartCoroutine(CalculateScores(gameResultValues._playPoints, gameResultValues._stageFirst));
             yield return StartCoroutine(CalculateScores(gameResultValues._experiencePoints, gameResultValues._stageSecond));
             yield return StartCoroutine(CalculateScores(gameResultValues._newPoints, gameResultValues._stageThird));
+
             _isGameResultCalculated = true;
+
             onFinishResultProcess?.Invoke();
         }
     }
@@ -86,15 +97,19 @@ public class GameResultProcessor : MonoBehaviour
     private IEnumerator DelayCalculations()
     {
         yield return new WaitForSeconds(1);
+
         onBeginResultProcess?.Invoke();
     }
 
     private IEnumerator AnnounceGameResult(bool isWin)
     {
         int clipIndex = isWin ? Indexes.Combat_Announcer_Male_Effect_You_Win_1 : Indexes.Combat_Announcer_Male_Effect_You_Lose;
+
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
         SoundController.PlaySound(0, clipIndex, out float clipLength);
+
         yield return new WaitForSeconds(clipLength);
+
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
     }
 
@@ -115,6 +130,7 @@ public class GameResultProcessor : MonoBehaviour
                 yield return new WaitForSeconds(2);
             }
         }
+
         yield return new WaitUntil(() => _endGameUIManager.SliderValue >= stage);
         yield return new WaitForSeconds(1);
     }
@@ -122,9 +138,11 @@ public class GameResultProcessor : MonoBehaviour
     private void LevelUpAndResetSlider()
     {
         int newLevel = _endGameUIManager.Level + 1;
+
         _endGameUIManager.SetLevel(newLevel);
         _endGameUIManager.SetSliderLimits(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0], Data.Manager.PointsSliderMinAndMaxValues[newLevel, 1]);
         _endGameUIManager.SetSliderValueAndCurrentXP(Data.Manager.PointsSliderMinAndMaxValues[newLevel, 0]);
+
         SecondarySoundController.PlaySound(0, 4);
     }
 }
