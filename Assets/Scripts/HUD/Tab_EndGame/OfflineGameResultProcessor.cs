@@ -14,6 +14,16 @@ public class OfflineGameResultProcessor : MonoBehaviour
 
     private void OnWinnerLoserIdentified(ScoreController scoreController, bool isWin)
     {
+        PrepareGameResultPopup(isWin);
 
-    }        
+        MyScene.Manager.LoadScene(MyScene.SceneName.Menu);
+    }
+
+    private void PrepareGameResultPopup(bool isWin)
+    {
+        if (PopupManager.Instance == null)
+            return;
+
+        PopupManager.Instance.PrepareGameResultPopup(isWin);
+    }
 }
