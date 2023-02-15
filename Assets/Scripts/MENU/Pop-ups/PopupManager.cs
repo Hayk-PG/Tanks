@@ -30,8 +30,8 @@ public class PopupManager : MonoBehaviour
         }
     }
 
-    public void PrepareGameResultPopup(bool isWin)
+    public void PrepareGameResultPopup()
     {
-        _offlineGameResultPopup.PrepareGameResultPopup(isWin);
+        _offlineGameResultPopup.PrepareGameResultPopup();
     }
 }

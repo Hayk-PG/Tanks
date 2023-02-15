@@ -15,12 +15,12 @@ public class OfflineGameResultProcessor : MonoBehaviour
 
     private void OnWinnerLoserIdentified(ScoreController scoreController, bool isWin)
     {
-        StartCoroutine(PrepareGameResultPopup(isWin));
+        StartCoroutine(PrepareGameResultPopup());
     }
 
-    private IEnumerator PrepareGameResultPopup(bool isWin)
+    private IEnumerator PrepareGameResultPopup()
     {
-        PopupManager.Instance?.PrepareGameResultPopup(isWin);
+        PopupManager.Instance?.PrepareGameResultPopup();
 
         yield return new WaitForSeconds(1);
 

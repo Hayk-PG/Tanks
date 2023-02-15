@@ -2,14 +2,8 @@ using UnityEngine.SceneManagement;
 
 public class OfflineGameResultPopup 
 {
-    private string _txtGameResult;
-
-
-
-    public void PrepareGameResultPopup(bool isWin)
+    public void PrepareGameResultPopup()
     {
-        _txtGameResult = isWin ? "You win" : "You lose";
-
         SceneManager.activeSceneChanged += OnActiveSceneChanged;
     }
 
@@ -25,6 +19,6 @@ public class OfflineGameResultPopup
 
     private void Execute()
     {
-        GlobalFunctions.DebugLog(_txtGameResult);
+        UnityEngine.MonoBehaviour.FindObjectOfType<Tab_PopUp>().Display(Tab_PopUp.PopUpType.OfflineModeReminder);
     }
 }
