@@ -4,15 +4,30 @@ public class HitTextManager : MonoBehaviour
 {
     public enum TextType { None, Hint, Warning, Hit, CriticalHit, HitCombo, Damage, CriticalDamage, CriticalStun, FatalStun }
 
-    [SerializeField] private HitText[] _hitTexts;
+    [SerializeField] 
+    private HitText[] _hitTexts;
 
-    [SerializeField] private Sprite _sprtHint;
-    [SerializeField] private Sprite _sprtWarning;
-    [SerializeField] private Sprite _sprtHit;
-    [SerializeField] private Sprite _sprtCriticalHit;
-    [SerializeField] private Sprite _sprtHitCombo;
-    [SerializeField] private Sprite _sprtDamage;
-    [SerializeField] private Sprite _sprtCriticalDamage;
+    [SerializeField] [Space]
+    private Sprite _sprtHint;
+
+    [SerializeField] 
+    private Sprite _sprtWarning;
+
+    [SerializeField] 
+    private Sprite _sprtHit;
+
+    [SerializeField] 
+    private Sprite _sprtCriticalHit;
+
+    [SerializeField] 
+    private Sprite _sprtHitCombo;
+
+    [SerializeField] 
+    private Sprite _sprtDamage;
+
+    [SerializeField] 
+    private Sprite _sprtCriticalDamage;
+
 
 
 
@@ -25,6 +40,7 @@ public class HitTextManager : MonoBehaviour
                 UnhideHitText(hitText);
                 SetComboHitTextAsFirstSibling(textType, hitText);
                 DisplayHitText(textType, hitText, other);
+
                 break;
             }
         }

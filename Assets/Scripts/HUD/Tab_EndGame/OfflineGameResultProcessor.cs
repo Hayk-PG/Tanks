@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 
@@ -14,16 +15,15 @@ public class OfflineGameResultProcessor : MonoBehaviour
 
     private void OnWinnerLoserIdentified(ScoreController scoreController, bool isWin)
     {
-        PrepareGameResultPopup(isWin);
-
-        MyScene.Manager.LoadScene(MyScene.SceneName.Menu);
+        StartCoroutine(PrepareGameResultPopup(isWin));
     }
 
-    private void PrepareGameResultPopup(bool isWin)
+    private IEnumerator PrepareGameResultPopup(bool isWin)
     {
-        if (PopupManager.Instance == null)
-            return;
+        PopupManager.Instance?.PrepareGameResultPopup(isWin);
 
-        PopupManager.Instance.PrepareGameResultPopup(isWin);
+        yield return new WaitForSeconds(1);
+
+        MyScene.Manager.LoadScene(MyScene.SceneName.Menu);
     }
 }

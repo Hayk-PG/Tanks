@@ -4,25 +4,28 @@ using System.Collections;
 
 public class StunEffectTimer : MonoBehaviour
 {
+    [SerializeField]
     private CanvasGroup _canvasGroup;
+
+    [SerializeField] [Space]
     private Animator _animator;
+
+    [SerializeField] [Space]
     private TMP_Text _txtTimer;
+
+    [SerializeField] [Space]
     private GameManager _gameManager;
-    private TankController[] _tanks;
-    private Stun[] _stuns = new Stun[2];
+
+    private TankController _localTankController;
+
+    private Stun _stun;
 
     private int _seconds;
+
     private bool _isCoroutineRunning;
 
 
 
-    private void Awake()
-    {
-        _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _animator = Get<Animator>.From(gameObject);
-        _txtTimer = Get<TMP_Text>.FromChild(gameObject);
-        _gameManager = FindObjectOfType<GameManager>();
-    }
 
     private void OnEnable()
     {
@@ -33,35 +36,43 @@ public class StunEffectTimer : MonoBehaviour
     {
         _gameManager.OnGameStarted -= OnGameStarted;
 
-        GlobalFunctions.Loop<Stun>.Foreach(_stuns, stun => 
-        {
-            if (stun != null)
-                stun.OnStunEffect -= OnStunEffect;
-        });
+        UnsubscribeFromStunEffectEvent();
     }
 
     private void OnGameStarted()
     {
-        _tanks = FindObjectsOfType<TankController>(true);
+        SubscribeToStunEffectEvent();
+    }
 
-        for (int i = 0; i < _tanks.Length; i++)
-        {
-            _stuns[i] = Get<Stun>.FromChild(_tanks[i].gameObject);
+    private void SubscribeToStunEffectEvent()
+    {
+        _localTankController = GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.BasePlayer != null);
 
-            if (_stuns[i] != null)
-                _stuns[i].OnStunEffect += OnStunEffect;
-        }
+        if (_localTankController == null)
+            return;
+
+        _stun = Get<Stun>.FromChild(_localTankController.gameObject);
+
+        if (_stun != null)
+            _stun.OnStunEffect += OnStunEffect;
+    }
+
+    private void UnsubscribeFromStunEffectEvent()
+    {
+        if (_stun == null)
+            return;
+
+        _stun.OnStunEffect -= OnStunEffect;
     }
 
     private void OnStunEffect(bool isActive)
     {
         _isCoroutineRunning = isActive;
+
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, _isCoroutineRunning);
 
         if (_isCoroutineRunning)
-        {
             StartCoroutine(RunCoroutine());
-        }
     }
 
     private IEnumerator RunCoroutine()
@@ -71,6 +82,7 @@ public class StunEffectTimer : MonoBehaviour
         while (_isCoroutineRunning)
         {
             _animator.SetTrigger("play");
+
             yield return new WaitForSeconds(1);
         }
     }
@@ -79,6 +91,7 @@ public class StunEffectTimer : MonoBehaviour
     public void Increment()
     {
         _seconds--;
+
         _txtTimer.text = _seconds.ToString();
     }
 }

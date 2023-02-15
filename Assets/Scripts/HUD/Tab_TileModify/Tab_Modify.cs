@@ -44,6 +44,7 @@ public class Tab_Modify : MonoBehaviour
         if (LocalPlayerTransform != null)
         {
             LocalPlayerTurn = Get<PlayerTurn>.From(LocalPlayerTransform.gameObject);
+
             LocalPlayerScoreController = Get<ScoreController>.From(LocalPlayerTransform.gameObject);
         }
     }
@@ -57,8 +58,10 @@ public class Tab_Modify : MonoBehaviour
         if ((bool)LocalPlayerTurn?.IsMyTurn)
         {
             _hudMainTabsActivity.CanvasGroupsActivity(false);
+
             GlobalFunctions.Loop<IReset>.Foreach(_iResets, iReset => { iReset.SetDefault(); });
             GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
+
             _isTabOpen = true;
         }
     }
@@ -68,8 +71,10 @@ public class Tab_Modify : MonoBehaviour
         if (_isTabOpen)
         {
             _hudMainTabsActivity.CanvasGroupsActivity(true);
+
             GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
             GlobalFunctions.Loop<TileModifyGUI>.Foreach(FindObjectsOfType<TileModifyGUI>(), tileModifyGUI => { tileModifyGUI.DisableGUI(); });
+
             _isTabOpen = false;
         }
     }

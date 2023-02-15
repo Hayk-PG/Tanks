@@ -35,6 +35,7 @@ public class PlayerFeedback : BaseAnnouncer
         _scoreController = scoreController;
         _playerTurn = playerTurn;
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
+
         StartCoroutine(GetHitTextManager(playerTurn));
 
         if (_playerHealthController != null) 
@@ -50,6 +51,7 @@ public class PlayerFeedback : BaseAnnouncer
     private IEnumerator GetHitTextManager(PlayerTurn playerTurn)
     {
         yield return new WaitUntil(() => playerTurn.MyTurn != TurnState.None);
+
         _hitTextManager = playerTurn.MyTurn == TurnState.Player1 ? FindObjectOfType<Tab_HitText>().HitTexManagerForPlayer1 : FindObjectOfType<Tab_HitText>().HitTextManagerForPlayer2;
     }
 
@@ -59,6 +61,7 @@ public class PlayerFeedback : BaseAnnouncer
         {
             HitTextManager.TextType textType = damage <= 15 ? HitTextManager.TextType.Damage : damage > 15 && damage < 30 ? HitTextManager.TextType.CriticalDamage :
                                                damage >= 30 && damage < 40 ? HitTextManager.TextType.CriticalStun : damage >= 40 ? HitTextManager.TextType.FatalStun : HitTextManager.TextType.None;
+
             string colorCode = textType == HitTextManager.TextType.Damage ? "#D45719" : textType == HitTextManager.TextType.CriticalDamage ? "#EB4C28" :
                                textType == HitTextManager.TextType.CriticalStun ? "#D42019" : textType == HitTextManager.TextType.FatalStun ? "#F61E74" : "#F6861E";
 
@@ -73,6 +76,7 @@ public class PlayerFeedback : BaseAnnouncer
         int total = 0;
 
         GlobalFunctions.Loop<int>.Foreach(scores, value => { total += value; });
+
         Conditions<bool>.Compare(_playerHitsIndex < 3, () => OnSingleHit(total), ()=> OnBackToBackHit(total));
     }
 
@@ -83,6 +87,7 @@ public class PlayerFeedback : BaseAnnouncer
             if (_soundController.SoundsList[1]._clips[i]._score >= total)
             {
                 DisplayHitText(HitTextManager.TextType.Hit, "");
+
                 break;
             }
         }
@@ -95,7 +100,9 @@ public class PlayerFeedback : BaseAnnouncer
             if (_soundController.SoundsList[2]._clips[i]._score >= _playerHitsIndex)
             {
                 GetComboScore(total, i);
+
                 DisplayHitText(HitTextManager.TextType.HitCombo, GlobalFunctions.BlueColorText("+" + (_playerHitsIndex - 2)));
+
                 break;
             }
         }

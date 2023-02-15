@@ -35,21 +35,18 @@ public class Stun : MonoBehaviour
     private void ParticlesActivity(bool isActive)
     {
         if (isActive && _particles.isStopped)
-        {
             _particles.Play(true);
-        }
 
         if (!isActive && _particles.isPlaying)
-        {
             _particles.Stop(true);
-        }   
     }
 
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
-        if (damage >= 30)
+        if (damage >= 30 && _healthController.Health > 0)
         {
             float duration = Random.Range(1, _turnTimer.RoundTime / 2);
+
             Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => OnStunned(duration), () => _globalTankStun.OnStunned(_playerTurn.MyTurn, duration));
         }
     }
@@ -76,6 +73,7 @@ public class Stun : MonoBehaviour
     private IEnumerator DisableStunningEffect(float duration)
     {
         yield return new WaitForSeconds(duration);
+
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, OnDisableStunningEffect, () => _globalTankStun.OnDisableStunningEffect(_playerTurn.MyTurn));
     }
 }
