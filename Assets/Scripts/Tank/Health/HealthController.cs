@@ -1,7 +1,6 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamage
@@ -10,11 +9,11 @@ public class HealthController : MonoBehaviour, IDamage
     private PlayerShields _playerShields;
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
-    [SerializeField] private Collider _weakSpot;
-    [SerializeField] private Collider _center;
-    [SerializeField] private Collider _strongSpot;
+    [SerializeField]
+    private Collider _weakSpot, _center, _strongSpot;
 
-    [SerializeField][Range(0, 50)] [Tooltip("Light => 0 - 10: Medium => 15 - 30: Heavy => 35 - 50")] private int _armor;
+    [SerializeField] [Space] [Range(0, 50)] [Tooltip("Light => 0 - 10: Medium => 15 - 30: Heavy => 35 - 50")]
+    private int _armor;
 
     public int Health { get; set; }
     public int ShieldHealth { get; set; }
@@ -115,17 +114,13 @@ public class HealthController : MonoBehaviour, IDamage
 
     private void ApplyHealthDamage(int damage)
     {
-        Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;       
+        Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
+        
         OnUpdateHealthBar?.Invoke(Health);
         OnTakeDamage?.Invoke(_tankController.BasePlayer, DamageValue(DamageValue(damage)));
         OnTankDamageFire?.Invoke(Health);
-        PlayDamageSoundFX();
-    }
 
-    private void PlayDamageSoundFX()
-    {
-        if (_tankController.BasePlayer != null)
-            SecondarySoundController.PlaySound(0, 5);
+        PlayDamageSoundFX();
     }
 
     private void ApplyArmorDamage(int damage)
@@ -136,12 +131,15 @@ public class HealthController : MonoBehaviour, IDamage
             delegate 
             {
                 ShieldHealth = 0;
+
                 _playerShields.DeactivateShields();
             }, 
             delegate 
             {
                 ShieldHealth = 0;
+
                 ApplyHealthDamage(shieldHealth);
+
                 _playerShields.DeactivateShields();
             }, 
             delegate
@@ -149,7 +147,15 @@ public class HealthController : MonoBehaviour, IDamage
                 ShieldHealth = Mathf.Abs(shieldHealth);
             });
 
+        PlayDamageSoundFX();
+
         onUpdateArmorBar?.Invoke(ShieldHealth);
+    }
+
+    private void PlayDamageSoundFX()
+    {
+        if (_tankController.BasePlayer != null)
+            SecondarySoundController.PlaySound(0, 5);
     }
 
     public int DamageValue(int damage)
