@@ -5,18 +5,27 @@ using UnityEngine.AddressableAssets;
 
 public class TileProps : MonoBehaviour
 {
-    public enum PropsType { MetalCube, MetalGround, ExplosiveBarrels, AALauncher, All}
+    public enum PropsType { MetalCube, MetalGround, ExplosiveBarrels, AALauncher, Mine, All}
     public PropsType _propsType;
 
     private Tile _tile;
 
-    [SerializeField] private MetalCube _metalCube;
-    [SerializeField] private MetalTile _metalGround;
-    [SerializeField] private ExplosiveBarrels _explosiveBarrels;
+    [SerializeField] [Space]
+    private MetalCube _metalCube;
+
+    [SerializeField] [Space]
+    private MetalTile _metalGround;
+
+    [SerializeField] [Space]
+    private ExplosiveBarrels _explosiveBarrels;
+
+    [SerializeField] [Space]
+    private Mine _mine;
    
     public MetalCube MetalCube => _metalCube;
     public MetalTile MetalGround => _metalGround;
     public ExplosiveBarrels ExplosiveBarrels => _explosiveBarrels;
+    public Mine Mine => _mine;
 
     public event Action<bool, bool?> onAAProjectileLauncherActivity;
 
@@ -41,6 +50,11 @@ public class TileProps : MonoBehaviour
         onAAProjectileLauncherActivity?.Invoke(isActive, isPlayer1);
     }
 
+    private void SetMineActivity(bool isActive)
+    {
+        Mine.gameObject.SetActive(isActive);
+    }
+
     public void ActiveProps(PropsType propsType, bool isActive, bool? isPlayer1)
     {
         switch (propsType)
@@ -63,11 +77,15 @@ public class TileProps : MonoBehaviour
                 SetArmoredTileActivity(isActive);
                 break;
 
+            case PropsType.Mine: SetMineActivity(isActive);
+                break;
+
             case PropsType.All:
                 SetExplosiveBarrelsActivity(isActive);
                 SetAAProjectileLaucnherActivity(isActive, isPlayer1);
                 SetArmoredCubeActivity(isActive);
                 SetArmoredTileActivity(isActive);
+                SetMineActivity(isActive);
                 break;
         }
 

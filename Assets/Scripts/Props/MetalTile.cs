@@ -5,19 +5,21 @@ using UnityEngine.AddressableAssets;
 //ADDRESSABLE
 public class MetalTile : MonoBehaviour
 {
-    private Tile _tile;
-    private GameManager _gameManager;
+    protected Tile _tile;
 
-    [SerializeField] protected AssetReference _assetReferenceMesh;
-    [SerializeField] protected AssetReference _assetReferencePropsGUI;
+    protected GameManager _gameManager;
 
-    private GameObject _meshObj;
-    private GameObject _propsGuiObj;
+    [SerializeField]
+    protected AssetReference _assetReferenceMesh;
+
+    protected GameObject _meshObj;
+
 
 
     protected virtual void Awake()
     {
         _tile = Get<Tile>.From(transform.parent.gameObject);
+
         PlaySoundFX();
     }
 
@@ -38,7 +40,6 @@ public class MetalTile : MonoBehaviour
     protected virtual void InstantiateAddressables()
     {
         InstantiateMesh();
-        InstantiatePropsGUI();
     }
 
     protected virtual void InstantiateMesh()
@@ -48,17 +49,9 @@ public class MetalTile : MonoBehaviour
             _meshObj = asset.Result;
         };
     }
-    protected virtual void InstantiatePropsGUI()
-    {
-        _assetReferencePropsGUI.InstantiateAsync(transform).Completed += (asset) => 
-        {
-            _propsGuiObj = asset.Result;
-        };
-    }
 
     protected virtual void OnDestruction()
     {
         _assetReferenceMesh.ReleaseInstance(_meshObj);
-        _assetReferencePropsGUI.ReleaseInstance(_propsGuiObj);
     }
 }

@@ -2,17 +2,32 @@ using UnityEngine;
 
 public class LevelCreator : BaseLevelGenerator
 {
-    [SerializeField] private ColorToPrefab _colorOfArmoredTile;
-    [SerializeField] private ColorToPrefab _colorOfArmoredWall;
-    [SerializeField] private ColorToPrefab _colorOfExplosiveBarrel;
-    [SerializeField] private ColorToPrefab _colorOfBoostZoneDoubleXp;
-    [SerializeField] private ColorToPrefab _colorOfBoostZoneSafe;
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfArmoredTile;
+
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfArmoredWall;
+
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfExplosiveBarrel;
+
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfMine;
+
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfBoostZoneDoubleXp;
+
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfBoostZoneSafe;
+
+
+
 
     protected override void GetLevelGeneratorData(LevelGeneratorData levelGeneratorData)
     {
         CreateArmoredTiles(levelGeneratorData);
         CreateTilesWithArmoredWall(levelGeneratorData);
-        CreateExplosiveBarrels(levelGeneratorData);
+        CreateMines(levelGeneratorData);
         CreateTiles(levelGeneratorData);
         CreateDoubleXpBoostZone(levelGeneratorData);
         CreateSafeBoostZone(levelGeneratorData);
@@ -39,10 +54,10 @@ public class LevelCreator : BaseLevelGenerator
             ActivateProps(Tile(_colorOfArmoredWall._prefab, levelGeneratorData), TileProps.PropsType.MetalGround);
     }
 
-    private void CreateExplosiveBarrels(LevelGeneratorData levelGeneratorData)
+    private void CreateMines(LevelGeneratorData levelGeneratorData)
     {
-        if (_colorOfExplosiveBarrel._color == levelGeneratorData.MapTexturePixelColor)
-            ActivateProps(Tile(_colorOfArmoredWall._prefab, levelGeneratorData), TileProps.PropsType.ExplosiveBarrels);
+        if (_colorOfMine._color == levelGeneratorData.MapTexturePixelColor)
+            ActivateProps(Tile(_colorOfMine._prefab, levelGeneratorData), TileProps.PropsType.Mine);
     }
 
     private void CreateDoubleXpBoostZone(LevelGeneratorData levelGeneratorData)

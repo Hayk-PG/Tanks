@@ -5,7 +5,10 @@ using UnityEngine.AddressableAssets;
 //ADDRESSABLE
 public class MetalCube : MetalTile
 {
-    [SerializeField] protected AssetReference _assetReferenceParticles;
+    [SerializeField] [Space]
+    protected AssetReference _assetReferenceParticles;
+
+
 
     protected override void PlaySoundFX()
     {
@@ -21,6 +24,7 @@ public class MetalCube : MetalTile
     private void InstantiateParticles()
     {
         Vector3 position = new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z);
+
         _assetReferenceParticles.InstantiateAsync(position, Quaternion.identity, null);
     }
 }

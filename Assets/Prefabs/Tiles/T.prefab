@@ -87,10 +87,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _propsType: 0
-  _sandBags: {fileID: 46556452290259439}
   _metalCube: {fileID: 4676914304831828487}
   _metalGround: {fileID: 1739523841595223640}
   _explosiveBarrels: {fileID: 7923789292903035574}
+  _mine: {fileID: 1119624094224103984}
 --- !u!1001 &8215073717077487534
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -102,21 +102,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TileProps
-      objectReference: {fileID: 0}
-    - target: {fileID: 1586827020249733918, guid: 7117e7609a71549eaa660eef49ae3325,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2700473634903867076, guid: 7117e7609a71549eaa660eef49ae3325,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2890452611013604927, guid: 7117e7609a71549eaa660eef49ae3325,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4047569716364947869, guid: 7117e7609a71549eaa660eef49ae3325,
         type: 3}
@@ -178,23 +163,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6768746271243618877, guid: 7117e7609a71549eaa660eef49ae3325,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7117e7609a71549eaa660eef49ae3325, type: 3}
---- !u!114 &46556452290259439 stripped
+--- !u!114 &1119624094224103984 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8260913287786284609, guid: 7117e7609a71549eaa660eef49ae3325,
+  m_CorrespondingSourceObject: {fileID: 9045614179699856798, guid: 7117e7609a71549eaa660eef49ae3325,
     type: 3}
   m_PrefabInstance: {fileID: 8215073717077487534}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbf32f10d9dc5bf4b8344b9aebe4485c, type: 3}
+  m_Script: {fileID: 11500000, guid: 1cc60e46054354bad804b0fa4716629f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1739523841595223640 stripped
