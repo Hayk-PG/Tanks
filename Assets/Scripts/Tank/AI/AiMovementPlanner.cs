@@ -55,16 +55,19 @@ public class AiMovementPlanner : MonoBehaviour
     {
         Vector3 nextTilePosition = _nextTilePosition + horTile;
 
-        bool hasTile = GameSceneObjectsReferences.ChangeTiles.HasTile(nextTilePosition);
+        if (!GameSceneObjectsReferences.ChangeTiles.HasTile(nextTilePosition))
+            yield break;
+
         bool hasTileAbove = GameSceneObjectsReferences.ChangeTiles.HasTile(nextTilePosition + vertTile);
+
         bool isSlope = hasTileAbove && GameSceneObjectsReferences.TilesData.TilesDict[nextTilePosition + vertTile].name == Names.RS ||
                        hasTileAbove && GameSceneObjectsReferences.TilesData.TilesDict[nextTilePosition + vertTile].name == Names.LS;
 
-        if (hasTile)
-        {
+        bool shouldAvoid = Get<TileProps>.From(GameSceneObjectsReferences.TilesData.TilesDict[nextTilePosition])?.ShouldAvoid ?? false;
+
+        if (!shouldAvoid)
             if (isSlope || !hasTileAbove)
                 _nextTilePosition = nextTilePosition;
-        }
 
         yield return null;
     }

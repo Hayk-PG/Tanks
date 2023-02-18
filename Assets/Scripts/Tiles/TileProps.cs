@@ -1,11 +1,10 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 
 public class TileProps : MonoBehaviour
 {
-    public enum PropsType { MetalCube, MetalGround, ExplosiveBarrels, AALauncher, Mine, All}
+    public enum PropsType { None, MetalCube, MetalGround, ExplosiveBarrels, AALauncher, Mine, All}
     public PropsType _propsType;
 
     private Tile _tile;
@@ -26,6 +25,8 @@ public class TileProps : MonoBehaviour
     public MetalTile MetalGround => _metalGround;
     public ExplosiveBarrels ExplosiveBarrels => _explosiveBarrels;
     public Mine Mine => _mine;
+
+    public bool ShouldAvoid { get; private set; }
 
     public event Action<bool, bool?> onAAProjectileLauncherActivity;
 
@@ -61,23 +62,34 @@ public class TileProps : MonoBehaviour
         {
             case PropsType.MetalCube:
                 SetArmoredCubeActivity(isActive);
+
+                ShouldAvoid = true;
                 break;
 
             case PropsType.MetalGround:
                 SetArmoredTileActivity(isActive);
+
+                ShouldAvoid = false;
                 break;
 
             case PropsType.ExplosiveBarrels:
                 SetExplosiveBarrelsActivity(isActive);
                 SetArmoredTileActivity(isActive);
+
+                ShouldAvoid = true;
                 break;
 
             case PropsType.AALauncher:
                 SetAAProjectileLaucnherActivity(isActive, isPlayer1);
                 SetArmoredTileActivity(isActive);
+
+                ShouldAvoid = false;
                 break;
 
-            case PropsType.Mine: SetMineActivity(isActive);
+            case PropsType.Mine:
+                SetMineActivity(isActive);
+
+                ShouldAvoid = true;
                 break;
 
             case PropsType.All:
@@ -86,8 +98,12 @@ public class TileProps : MonoBehaviour
                 SetArmoredCubeActivity(isActive);
                 SetArmoredTileActivity(isActive);
                 SetMineActivity(isActive);
+
+                ShouldAvoid = false;
                 break;
         }
+
+        _propsType = propsType;
 
         OnTileProtection(isActive);
     }
