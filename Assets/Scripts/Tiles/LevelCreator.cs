@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelCreator : BaseLevelGenerator
@@ -20,6 +21,7 @@ public class LevelCreator : BaseLevelGenerator
     [SerializeField] [Space]
     private ColorToPrefab _colorOfBoostZoneSafe;
 
+    public Dictionary<Vector3, DynamicTileType> DynamicTilesData = new Dictionary<Vector3, DynamicTileType>();
 
 
 
@@ -31,6 +33,14 @@ public class LevelCreator : BaseLevelGenerator
         CreateTiles(levelGeneratorData);
         CreateDoubleXpBoostZone(levelGeneratorData);
         CreateSafeBoostZone(levelGeneratorData);
+    }
+
+    public void StoreDynamicTilesData(Vector3 position, DynamicTileType dynamicTileType)
+    {
+        if (DynamicTilesData.ContainsKey(position))
+            DynamicTilesData[position] = dynamicTileType;
+        else
+            DynamicTilesData.Add(position, dynamicTileType);
     }
 
     private void CreateTiles(LevelGeneratorData levelGeneratorData)
@@ -89,7 +99,9 @@ public class LevelCreator : BaseLevelGenerator
     private GameObject Tile(GameObject tile, LevelGeneratorData levelGeneratorData)
     {
         GameObject newTile = Instantiate(tile, levelGeneratorData.MapTexturePixelsCoordinate, Quaternion.identity, transform);
+
         _tilesData.TilesDict.Add(levelGeneratorData.MapTexturePixelsCoordinate, newTile);
+
         return newTile;
     }
 }

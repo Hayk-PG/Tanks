@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1018570927273335517}
   - component: {fileID: 5429093826888858887}
   - component: {fileID: 3363089635279147841}
+  - component: {fileID: 2182274760227315249}
   - component: {fileID: 6068824112099817856}
   m_Layer: 0
   m_Name: T
@@ -62,6 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileProps: {fileID: 6068824112099817856}
+  _dynamicTiles: {fileID: 0}
   _assetReferenceMesh:
     m_AssetGUID: 2742da4773cc8684390be43395933acd
     m_SubObjectName: 
@@ -74,6 +76,23 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   _isSuspended: 0
   _isProtected: 0
+--- !u!114 &2182274760227315249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4069539943661971662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bc75202eb673b74a8532b995aecff64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dynamicTileType: 0
+  _tile: {fileID: 3363089635279147841}
+  _clrLava: {r: 0, g: 0, b: 0, a: 0}
+  _clrFire: {r: 0, g: 0, b: 0, a: 0}
+  _clrIce: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &6068824112099817856
 MonoBehaviour:
   m_ObjectHideFlags: 0

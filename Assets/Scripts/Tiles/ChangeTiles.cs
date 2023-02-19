@@ -7,10 +7,12 @@ using UnityEngine;
 public class ChangeTiles : BaseChangeTiles
 {
     private List<Vector3> _optimizedTilesList;
-    private float second;
     private IEnumerator _coroutine;
 
+    private float second;  
+
     public event Action<TilesData> OnTilesUpdated;
+
 
 
     private void Awake()

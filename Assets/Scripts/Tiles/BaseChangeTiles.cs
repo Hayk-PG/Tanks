@@ -32,41 +32,35 @@ public class BaseChangeTiles : MonoBehaviour
 
     protected void SetTile(Vector3 pos, Tile tile)
     {
-        if(tile != null)
-        {
+        if (tile != null)
             UpdateTile(pos, tile);
-        }
     }
 
     protected void UpdateTile(Vector3 pos, Tile tile)
     {
         if (_tileData.TilesDict[pos].name != tile.name)
-        {
             OnTileUpdates(pos, tile);
-        }
     }
 
     private void OnTileUpdates(Vector3 pos, Tile tile)
     {
         if (!_tileData.TilesDict[pos].GetComponent<Tile>().IsProtected)
-        {
             InstantiateNewTile(pos, tile);
-        }
     }
 
     private void InstantiateNewTile(Vector3 pos, Tile tile)
     {
         Destroy(_tileData.TilesDict[pos]);
+
         _tileData.TilesDict.Remove(pos);
+
         Tile newTile = Instantiate(tile, pos, Quaternion.identity, transform);
         newTile.name = tile.name;
+
         _tileData.TilesDict.Add(pos, newTile.gameObject);
     }
 
-    protected virtual void OnGlobalTileController(Vector3 newTilePosition)
-    {
-        ModifyTiles(newTilePosition);
-    }
+    protected virtual void OnGlobalTileController(Vector3 newTilePosition) => ModifyTiles(newTilePosition);
 
     private void ModifyTiles(Vector3 newTilePosition)
     {
