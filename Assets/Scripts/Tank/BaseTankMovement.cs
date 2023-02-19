@@ -9,6 +9,18 @@ public class BaseTankMovement : MonoBehaviour
     [Range(0, 1000)] public float _maxBrake;
     [Range(0, 3000)] public float _accelerated;
     [Range(0, 100)] [Tooltip("Light => 0 - 40: Medium => 45 - 75: Heavy => 80 - 100")] public int _damageFactor;
+
+    [Header("Movement factors")]
+    public float _speedOnNormal;
+    public float _speedOnRain;
+    public float _speedOnSnow;
+
+    [Space]
+    public float _breakeOnNormal;
+    public float _breakeOnRain;
+    public float _breakeOnSnow;
+
+    [Space]
     public Vector3 _normalCenterOfMass;
     protected float _currentBrake;
     protected float _currentSpeed;
@@ -66,6 +78,8 @@ public class BaseTankMovement : MonoBehaviour
     {
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
 
+        GameSceneObjectsReferences.RainManager.onRainActivity += OnRainActivity;
+
         if (_stun != null)
             _stun.OnStunEffect += OnStunEffect;
     }
@@ -73,6 +87,8 @@ public class BaseTankMovement : MonoBehaviour
     protected virtual void OnDisable()
     {
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
+
+        GameSceneObjectsReferences.RainManager.onRainActivity -= OnRainActivity;
 
         if (_stun != null)
             _stun.OnStunEffect -= OnStunEffect;
@@ -84,6 +100,7 @@ public class BaseTankMovement : MonoBehaviour
 
         string right = InitialRotationYAxis > 0 ? "RS" : "LS";
         string left = InitialRotationYAxis > 0 ? "LS" : "RS";
+
         _slopesNames = new string[2] { right, left };
 
         _vectorRight = InitialRotationYAxis > 0 ? Vector3.right : Vector3.left;
@@ -93,6 +110,22 @@ public class BaseTankMovement : MonoBehaviour
     protected virtual void OnAllowingPlayerToMoveOnlyFromLeftToRight(bool? mustMoveFromLeftToRightOnly)
     {
 
+    }
+
+    protected virtual void OnRainActivity(bool isRaining)
+    {
+        Conditions<bool>.Compare(isRaining, 
+            () => 
+            {
+                _normalSpeed = _speedOnRain;
+                _maxBrake = _breakeOnRain;
+            }, 
+
+            () => 
+            {
+                _normalSpeed = _speedOnNormal;
+                _maxBrake = _breakeOnNormal;
+            });
     }
 
     protected virtual void OnStunEffect(bool isStunned)

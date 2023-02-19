@@ -7,8 +7,12 @@ public class TankMovement : BaseTankMovement
 
     private bool _isEnoughFuel = true;
     private bool _isSandbagsTriggered;
-    [SerializeField] private bool _isJumpButtonPressed;
-    [SerializeField] private bool _isJumped;
+
+    [SerializeField] [Space] 
+    private bool _isJumpButtonPressed;
+
+    [SerializeField] 
+    private bool _isJumped;
 
     public float SpeedInSandbags
     {
@@ -129,7 +133,6 @@ public class TankMovement : BaseTankMovement
 
         if (_isOnLeftSlope) 
             RigidbodyPush(_vectorLeft, 2500);
-
 
         if (_isOnRightSlope || _isOnLeftSlope) 
             Speed = _accelerated;

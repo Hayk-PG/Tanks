@@ -30,7 +30,16 @@ public class TankProperties : ScriptableObject
     public float _normalSpeed;
     public float _maxBrake;
     public float _accelerated;
+
+    [Space]
+    public float _speedOnNormal;
+    public float _speedOnRain;
+    public float _speedOnSnow;
+    public float _breakeOnNormal;
+    public float _breakeOnRain;
+    public float _breakeOnSnow;
     public int _damageFactor;
+      
     public Vector3 _normalCenterOfMass;
 
     [Header("Tank prefab canon parameters")]
@@ -95,6 +104,13 @@ public class TankProperties : ScriptableObject
             _accelerated = baseTankMovement._accelerated;
             _damageFactor = baseTankMovement._damageFactor;
             _normalCenterOfMass = baseTankMovement._normalCenterOfMass;
+
+            _speedOnNormal = baseTankMovement._speedOnNormal;
+            _speedOnRain = baseTankMovement._speedOnRain;
+            _speedOnSnow = baseTankMovement._speedOnSnow;
+            _breakeOnNormal = baseTankMovement._breakeOnNormal;
+            _breakeOnRain = baseTankMovement._breakeOnRain;
+            _breakeOnSnow = baseTankMovement._breakeOnSnow;
         }
 
         if(baseShootController != null)
@@ -164,6 +180,13 @@ public class TankProperties : ScriptableObject
                 baseTankMovement._accelerated = _accelerated;
                 baseTankMovement._maxBrake = _maxBrake;
                 baseTankMovement._normalCenterOfMass = _normalCenterOfMass;
+
+                baseTankMovement._speedOnNormal = _speedOnNormal;
+                baseTankMovement._speedOnRain = _speedOnRain;
+                baseTankMovement._speedOnSnow = _speedOnSnow;
+                baseTankMovement._breakeOnNormal = _breakeOnNormal;
+                baseTankMovement._breakeOnRain = _breakeOnRain;
+                baseTankMovement._breakeOnSnow = _breakeOnSnow;
             }
 
             if (baseShootController != null)

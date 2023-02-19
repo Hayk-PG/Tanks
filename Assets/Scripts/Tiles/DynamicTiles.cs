@@ -85,8 +85,6 @@ public class DynamicTiles : MonoBehaviour
         if (materialColor.r == newColor.r && materialColor.g == newColor.g && materialColor.b == newColor.b)
             _isChangingColor = false;
 
-        print("Changing the material color...");
-
         yield return null;
     }
 }
