@@ -1,76 +1,42 @@
-using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 
 public class LevelCreator : BaseLevelGenerator
 {
-    [SerializeField] [Space]
+    [SerializeField]
+    [Space]
     private ColorToPrefab _colorOfArmoredTile;
 
-    [SerializeField] [Space]
-    private ColorToPrefab _colorOfLavaTiles;
-
-    [SerializeField] [Space]
-    private ColorToPrefab _colorOfFireTiles;
-
-    [SerializeField] [Space]
-    private ColorToPrefab _colorOfIceTiles;
-
-    [SerializeField] [Space]
+    [SerializeField]
+    [Space]
     private ColorToPrefab _colorOfArmoredWall;
 
-    [SerializeField] [Space]
+    [SerializeField]
+    [Space]
     private ColorToPrefab _colorOfExplosiveBarrel;
 
-    [SerializeField] [Space]
+    [SerializeField]
+    [Space]
     private ColorToPrefab _colorOfMine;
 
-    [SerializeField] [Space]
+    [SerializeField]
+    [Space]
     private ColorToPrefab _colorOfBoostZoneDoubleXp;
 
-    [SerializeField] [Space]
+    [SerializeField]
+    [Space]
     private ColorToPrefab _colorOfBoostZoneSafe;
 
-    public Dictionary<Vector3, DynamicTileType> DynamicTilesData = new Dictionary<Vector3, DynamicTileType>();
 
 
 
     protected override void GetLevelGeneratorData(LevelGeneratorData levelGeneratorData)
     {
-        CreateDynamicTiles(levelGeneratorData);
         CreateArmoredTiles(levelGeneratorData);
         CreateTilesWithArmoredWall(levelGeneratorData);
         CreateMines(levelGeneratorData);
         CreateTiles(levelGeneratorData);
         CreateDoubleXpBoostZone(levelGeneratorData);
         CreateSafeBoostZone(levelGeneratorData);
-    }
-
-    private void CreateDynamicTiles(LevelGeneratorData levelGeneratorData)
-    {
-        if (DynamicTileType(levelGeneratorData) == global::DynamicTileType.None)
-            return;
-
-        print(DynamicTileType(levelGeneratorData) + "/" + (Color32)levelGeneratorData.MapTexturePixelColor);
-
-        StoreDynamicTilesData(levelGeneratorData.MapTexturePixelsCoordinate, DynamicTileType(levelGeneratorData));
-
-        Get<DynamicTiles>.From(Tile(_colorToPrefabs[9]._prefab, levelGeneratorData));
-    }
-
-    private DynamicTileType DynamicTileType(LevelGeneratorData levelGeneratorData)
-    {
-        return levelGeneratorData.MapTexturePixelColor == _colorOfLavaTiles._color ? global::DynamicTileType.Lava :
-               levelGeneratorData.MapTexturePixelColor == _colorOfFireTiles._color ? global::DynamicTileType.Fire :
-               levelGeneratorData.MapTexturePixelColor == _colorOfIceTiles._color ? global::DynamicTileType.Ice : global::DynamicTileType.None;
-    }
-
-    public void StoreDynamicTilesData(Vector3 position, DynamicTileType dynamicTileType)
-    {
-        if (DynamicTilesData.ContainsKey(position))
-            DynamicTilesData[position] = dynamicTileType;
-        else
-            DynamicTilesData.Add(position, dynamicTileType);
     }
 
     private void CreateTiles(LevelGeneratorData levelGeneratorData)
@@ -107,7 +73,7 @@ public class LevelCreator : BaseLevelGenerator
             GameObject boostZone = Instantiate(_colorOfBoostZoneDoubleXp._prefab, levelGeneratorData.MapTexturePixelsCoordinate, Quaternion.identity, transform);
             BoostZoneManager boostZoneManager = Get<BoostZoneManager>.From(boostZone);
             boostZoneManager.Init(BoostZoneManager.Feature.XpBoost);
-        }           
+        }
     }
 
     private void CreateSafeBoostZone(LevelGeneratorData levelGeneratorData)
@@ -129,9 +95,7 @@ public class LevelCreator : BaseLevelGenerator
     private GameObject Tile(GameObject tile, LevelGeneratorData levelGeneratorData)
     {
         GameObject newTile = Instantiate(tile, levelGeneratorData.MapTexturePixelsCoordinate, Quaternion.identity, transform);
-
         _tilesData.TilesDict.Add(levelGeneratorData.MapTexturePixelsCoordinate, newTile);
-
         return newTile;
     }
 }
