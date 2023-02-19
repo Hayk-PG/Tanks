@@ -1,10 +1,20 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class LevelCreator : BaseLevelGenerator
 {
     [SerializeField] [Space]
     private ColorToPrefab _colorOfArmoredTile;
+
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfLavaTiles;
+
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfFireTiles;
+
+    [SerializeField] [Space]
+    private ColorToPrefab _colorOfIceTiles;
 
     [SerializeField] [Space]
     private ColorToPrefab _colorOfArmoredWall;
@@ -27,12 +37,32 @@ public class LevelCreator : BaseLevelGenerator
 
     protected override void GetLevelGeneratorData(LevelGeneratorData levelGeneratorData)
     {
+        CreateDynamicTiles(levelGeneratorData);
         CreateArmoredTiles(levelGeneratorData);
         CreateTilesWithArmoredWall(levelGeneratorData);
         CreateMines(levelGeneratorData);
         CreateTiles(levelGeneratorData);
         CreateDoubleXpBoostZone(levelGeneratorData);
         CreateSafeBoostZone(levelGeneratorData);
+    }
+
+    private void CreateDynamicTiles(LevelGeneratorData levelGeneratorData)
+    {
+        if (DynamicTileType(levelGeneratorData) == global::DynamicTileType.None)
+            return;
+
+        print(DynamicTileType(levelGeneratorData) + "/" + (Color32)levelGeneratorData.MapTexturePixelColor);
+
+        StoreDynamicTilesData(levelGeneratorData.MapTexturePixelsCoordinate, DynamicTileType(levelGeneratorData));
+
+        Get<DynamicTiles>.From(Tile(_colorToPrefabs[9]._prefab, levelGeneratorData));
+    }
+
+    private DynamicTileType DynamicTileType(LevelGeneratorData levelGeneratorData)
+    {
+        return levelGeneratorData.MapTexturePixelColor == _colorOfLavaTiles._color ? global::DynamicTileType.Lava :
+               levelGeneratorData.MapTexturePixelColor == _colorOfFireTiles._color ? global::DynamicTileType.Fire :
+               levelGeneratorData.MapTexturePixelColor == _colorOfIceTiles._color ? global::DynamicTileType.Ice : global::DynamicTileType.None;
     }
 
     public void StoreDynamicTilesData(Vector3 position, DynamicTileType dynamicTileType)

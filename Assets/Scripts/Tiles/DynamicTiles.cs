@@ -17,16 +17,12 @@ public class DynamicTiles : MonoBehaviour
     [SerializeField] [Space]
     private Tile _tile;
 
+    [SerializeField] [Space]
+    private LayerMask _layerMask;
 
-    private Color _clrLava = new Color(190f, 83f, 4f, 255f); //BE5304
-    private Color _clrFire = new Color(190f, 130f, 4f, 255f); //BE8204
-    private Color _clrIce = new Color(42f, 173f, 167f, 255f); //2AADA7
-
-    public DynamicTileType Type
-    {
-        get => _dynamicTileType;
-        private set => _dynamicTileType = value;
-    }
+    private Color _clrLava = new Color(0.7450981f, 0.3254902f, 0.01568628f, 1f); //BE5304
+    private Color _clrFire = new Color(0.7450981f, 0.509804f, 0.01568628f, 1f); //BE8204
+    private Color _clrIce = new Color(0.1367925f, 1f, 0.9607843f, 1f); //2AADA7
 
 
 
@@ -45,15 +41,39 @@ public class DynamicTiles : MonoBehaviour
     {
         MeshRenderer meshRenderer = Get<MeshRenderer>.From(meshObj);
 
-        if (meshRenderer == null || _dynamicTileType == DynamicTileType.None)
+        if (meshRenderer == null)
             return;
 
-        ChangeMaterialColor(meshRenderer);
+        GetDynamicType(meshRenderer, meshObj);
     }
 
-    private void ChangeMaterialColor(MeshRenderer meshRenderer)
+    private void GetDynamicType(MeshRenderer meshRenderer, GameObject meshObj)
     {
-        meshRenderer.material.color = _dynamicTileType == DynamicTileType.Lava ? _clrLava :
-                                _dynamicTileType == DynamicTileType.Fire ? _clrFire : _clrIce;
-    }    
+        if (!GameSceneObjectsReferences.LevelCreator.DynamicTilesData.ContainsKey(transform.position))
+            return;
+
+        ChangeMaterialColor(meshRenderer, GameSceneObjectsReferences.LevelCreator.DynamicTilesData[transform.position]);
+
+        ChangeMeshLayer(meshObj);
+    }
+
+    private void ChangeMaterialColor(MeshRenderer meshRenderer, DynamicTileType dynamicTileType)
+    {
+        GlobalFunctions.Loop<Material>.Foreach(meshRenderer.materials, material => 
+        {
+            material.color = dynamicTileType == DynamicTileType.Lava ? _clrLava :
+                                dynamicTileType == DynamicTileType.Fire ? _clrFire : _clrIce;
+        });
+    } 
+
+    private void ChangeMeshLayer(GameObject meshObj)
+    {
+        meshObj.layer = 0;
+    }
+    
+    private int MaterialIndex()
+    {
+        return name == Names.B || name == Names.BL || name == Names.BR || name == Names.L || name == Names.R || name == Names.BL || name == Names.RBL ||
+               name == Names.RL ? 1 : 0;
+    }
 }

@@ -5,6 +5,14 @@ public static class Names
     public static string HorizontalJoystick = "HorizontalJoystick";
     public static string VerticalJoystick = "VerticalJoystick";
 
+    public static string B { get; private set; } = "B";
+    public static string BL { get; private set; } = "BL";
+    public static string BR { get; private set; } = "BR";
+    public static string RBL { get; private set; } = "RBL";
+    public static string RTLB { get; private set; } = "RTLB";
+    public static string TB { get; private set; } = "TB";
+    public static string TLB { get; private set; } = "TLB";
+    public static string TRB { get; private set; } = "TRB";
     public static string L { get; private set; } = "L";
     public static string LS { get; private set; } = "LS";
     public static string M { get; private set; } = "M";
