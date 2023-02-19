@@ -47,6 +47,11 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField] 
     private LevelCreator _levelCreator;
 
+    [Header("Camera")]
+
+    [SerializeField] [Space]
+    private RainManager _rainManager;
+
     //GameManager
     public static GameManager GameManager => Instance._gameManager;
     public static TurnController TurnController => Instance._turnController;
@@ -64,6 +69,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static TilesData TilesData => Instance._tilesData;
     public static ChangeTiles ChangeTiles => Instance._changeTiles;
     public static LevelCreator LevelCreator => Instance._levelCreator;
+
+    //Camera
+    public static RainManager RainManager => Instance._rainManager;
 
     //LavaSplash
     public static LavaSplash LavaSplash { get; private set; }

@@ -42,7 +42,12 @@ public class TileProps : MonoBehaviour
 
     private void SetArmoredCubeActivity(bool isActive) => MetalCube.gameObject.SetActive(isActive);
 
-    private void SetArmoredTileActivity(bool isActive) => MetalGround.gameObject.SetActive(isActive);
+    private void SetArmoredTileActivity(bool isActive)
+    {
+        MetalGround.gameObject.SetActive(isActive);
+
+        _tile.DetectingOverlap();
+    }
 
     private void SetExplosiveBarrelsActivity(bool isActive) => ExplosiveBarrels.gameObject.SetActive(isActive);
 
@@ -54,6 +59,8 @@ public class TileProps : MonoBehaviour
     private void SetMineActivity(bool isActive)
     {
         Mine.gameObject.SetActive(isActive);
+
+        _tile.DetectingOverlap();
     }
 
     public void ActiveProps(PropsType propsType, bool isActive, bool? isPlayer1)

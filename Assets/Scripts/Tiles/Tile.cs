@@ -9,9 +9,6 @@ public class Tile : MonoBehaviour, IDestruct
     private TileProps _tileProps;
 
     [SerializeField] [Space]
-    private DynamicTiles _dynamicTiles;
-
-    [SerializeField] [Space]
     private AssetReference _assetReferenceMesh, _assetReferenceParticles;
 
     [SerializeField] [Space]
@@ -29,11 +26,14 @@ public class Tile : MonoBehaviour, IDestruct
         get => _isProtected;
         set => _isProtected = value;
     }
+    public bool IsOverlapped { get; private set; }
     public float Health { get; set; } = 100;
 
     public Action<float> OnTileHealth { get; set; }
 
     public event Action<GameObject> onMeshInstantiated;
+
+    public event Action onDestroyingMesh;
 
     public event Action onDestruction;
 
@@ -51,8 +51,25 @@ public class Tile : MonoBehaviour, IDestruct
             {
                 _cachedMesh = asset.Result;
 
+                if (IsOverlapped)
+                {
+                    DestroyMesh();
+
+                    return;
+                }
+
                 onMeshInstantiated?.Invoke(asset.Result);
             };
+        }
+    }
+
+    private void DestroyMesh()
+    {
+        if (_cachedMesh != null)
+        {
+            Addressables.Release(_cachedMesh);
+
+            Destroy(_cachedMesh);
         }
     }
 
@@ -65,9 +82,9 @@ public class Tile : MonoBehaviour, IDestruct
         {
             asset.Result.transform.position = transform.position;
 
-            Addressables.Release(_cachedMesh);
-
             onDestruction?.Invoke();
+
+            DestroyMesh();
 
             Destroy(gameObject);
         };
@@ -85,5 +102,17 @@ public class Tile : MonoBehaviour, IDestruct
 
             Destruction();
         }
+    }
+
+    public void DetectingOverlap()
+    {
+        IsOverlapped = true;
+
+        if (_cachedMesh == null)
+            return;
+
+        onDestroyingMesh?.Invoke();
+
+        DestroyMesh();
     }
 }
