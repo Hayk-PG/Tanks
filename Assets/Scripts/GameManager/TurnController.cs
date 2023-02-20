@@ -42,6 +42,8 @@ public class TurnController : MonoBehaviourPun
             SetCurrentTurnState(turnState);
             Invoke("NextTurnFromTransition", 2);
             photonView.RPC("OnTurnChangedRPC", RpcTarget.AllViaServer, (int)_turnState);
+
+            MyPhotonNetwork.SendAllOutgoingCommands();
         }
         if (MyPhotonNetwork.IsOfflineMode)
         {

@@ -48,6 +48,7 @@ public class BaseShootController: MonoBehaviour
     protected virtual void Awake()
     {
         FindCanonPivotPoint();
+
         _shootPoint = Get<BaseTrajectory>.FromChild(_canonPivotPoint.gameObject, true).transform;
         _trajectory = Get<BaseTrajectory>.From(_shootPoint.gameObject);
         _aiCanonRaycast = Get<AICanonRaycast>.From(_trajectory.gameObject);
@@ -73,8 +74,10 @@ public class BaseShootController: MonoBehaviour
     {
         if (transform.Find("CanonPivotPoint") != null)
             _canonPivotPoint = transform.Find("CanonPivotPoint");
+
         else if (transform.Find("Turret") != null)
             _canonPivotPoint = transform.Find("Turret").Find("CanonPivotPoint");
+
         else
             _canonPivotPoint = transform.Find("Body").Find("Turret").Find("CanonPivotPoint");
     }

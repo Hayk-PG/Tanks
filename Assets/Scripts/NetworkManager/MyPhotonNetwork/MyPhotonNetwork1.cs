@@ -16,4 +16,9 @@ public static partial class MyPhotonNetwork
     {
         return photonView.IsMine && photonView.AmOwner;
     }
+
+    public static void SendAllOutgoingCommands()
+    {
+        PhotonNetwork.SendAllOutgoingCommands();
+    }
 }

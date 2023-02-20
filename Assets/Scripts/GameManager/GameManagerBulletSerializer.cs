@@ -55,6 +55,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
         {
             string iDamageOwnerName = GlobalFunctions.ObjectsOfType<HealthController>.Find(health => health.GetComponent<IDamage>() == iDamage).name;
             string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(score => score.GetComponent<IScore>() == iScore).name;
+
             object[] data = new object[]
             {
                 iDamageOwnerName,
@@ -73,10 +74,14 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     {
         if(data != null)
         {
-            IDamage iDamage = GameObject.Find((string)data[0])?.GetComponent<IDamage>();
-            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>();
+            IDamage iDamage = GameObject.Find((string)data[0]).GetComponent<IDamage>() ?? default;
+
+            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>() ?? default;
+
             iDamage?.Damage((int)data[2]);
+
             int[] scoreValues = (int[])data[3];
+
             iScore?.GetScore(scoreValues[0] + scoreValues[1], iDamage);
             iScore?.HitEnemyAndGetScore(scoreValues, iDamage);
 

@@ -28,8 +28,13 @@ public class ShootController : BaseShootController
     protected PlayerAmmoType _playerAmmoType;
     protected GameplayAnnouncer _gameplayAnnouncer;
     
-    [HideInInspector] [SerializeField] protected BaseBulletController _instantiatedBullet;
-    [HideInInspector] [SerializeField] protected int _activeAmmoIndex;
+    [HideInInspector] [SerializeField] 
+    protected BaseBulletController _instantiatedBullet;
+
+    [HideInInspector] [SerializeField] 
+    protected int _activeAmmoIndex;
+
+    protected bool _hasShot;
 
     public BaseBulletController Bullet
     {
@@ -66,12 +71,16 @@ public class ShootController : BaseShootController
 
     public Action<bool> OnCanonRotation { get; set; }
     public Action<PlayerHUDValues> OnUpdatePlayerHUDValues { get; set; }
+
+
    
 
     protected override void Awake()
     {
         base.Awake();
+
         ShootPointGameobjectActivity(false);
+
         _tankController = Get<TankController>.From(gameObject);
         _tankMovement = Get<TankMovement>.From(gameObject);
         _rigidBody = GetComponent<Rigidbody>();       
@@ -84,21 +93,31 @@ public class ShootController : BaseShootController
     protected override void OnEnable()
     {
         base.OnEnable();
+
         _tankController.OnInitialize += OnInitialize;
         _tankController.OnControllers += OnControllers;
         _tankController.OnShootButtonClick += OnShootButtonClick;
+
         _tankMovement.OnDirectionValue += OnMovementDirectionValue;
+
         _gameplayAnnouncer.OnGameStartAnnouncement += delegate { _isGameplayAnnounced = true; };
+
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+
         _tankController.OnInitialize -= OnInitialize;
         _tankController.OnControllers -= OnControllers;
         _tankController.OnShootButtonClick -= OnShootButtonClick;
+
         _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
+
         _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { _isGameplayAnnounced = true; };
+
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
     protected virtual void FixedUpdate()
@@ -154,12 +173,17 @@ public class ShootController : BaseShootController
             _trajectory?.PredictedTrajectory(CurrentForce);
     }
 
+    protected virtual void OnTurnChanged(TurnState turnState) => _hasShot = false;
+
     protected virtual void OnShootButtonClick(bool isTrue)
     {
-        if (_playerTurn.IsMyTurn && !_isStunned)
+        if (_playerTurn.IsMyTurn && !_isStunned && !_hasShot)
         {
-            _iShoot?.Shoot(CurrentForce);           
+            _iShoot?.Shoot(CurrentForce); 
+            
             AmmoUpdate();
+
+            _hasShot = true;
         }
     }
 

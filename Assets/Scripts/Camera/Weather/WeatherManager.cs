@@ -6,14 +6,10 @@ public class WeatherManager : MonoBehaviour
     [SerializeField]
     private ParticleSystem _rain, _snow;
 
-    [SerializeField] [Space]
-    private bool _isRaining, _isSnowing;
-
     private float _delay;
 
-    public bool IsRaining => _rain.isPlaying;
-
-    public bool IsSnowing => _snow.isPlaying;
+    public bool IsRaining { get; set; }
+    public bool IsSnowing { get; set; }
 
     public event System.Action<bool, bool> onWeatherActivity;
 
@@ -59,18 +55,18 @@ public class WeatherManager : MonoBehaviour
 
     public void RaiseWeatherActivity()
     {
-        Conditions<bool>.Compare(_isRaining, () => { _rain.Play(); }, () => { _rain.Stop(); });
-        Conditions<bool>.Compare(_isSnowing, () => { _snow.Play(); }, () => { _snow.Stop(); });
+        Conditions<bool>.Compare(IsRaining, () => { _rain.Play(); }, () => { _rain.Stop(); });
+        Conditions<bool>.Compare(IsSnowing, () => { _snow.Play(); }, () => { _snow.Stop(); });
 
-        onWeatherActivity?.Invoke(_isRaining, _isSnowing);
+        onWeatherActivity?.Invoke(IsRaining, IsSnowing);
     }
 
     public void ChangeWeather()
     {
-        _isRaining = !_isSnowing && Random.Range(0, 5) < 2 ? true : false;
-        _isSnowing = !_isRaining && Random.Range(0, 5) > 2 ? true : false;
+        IsRaining = !IsSnowing && Random.Range(0, 5) < 2 ? true : false;
+        IsSnowing = !IsRaining && Random.Range(0, 5) > 2 ? true : false;
 
-        _delay = Random.Range(5, 60);
+        _delay = Random.Range(5, 100);
     }
 
     private void PhotonNetworkRaiseWeatherActivity() => GameSceneObjectsReferences.PhotonNetworkWeatherManager.RaiseWeatherActivity();

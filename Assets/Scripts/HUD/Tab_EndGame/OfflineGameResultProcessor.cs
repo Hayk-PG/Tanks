@@ -15,7 +15,8 @@ public class OfflineGameResultProcessor : MonoBehaviour
 
     private void OnWinnerLoserIdentified(ScoreController scoreController, bool isWin)
     {
-        StartCoroutine(PrepareGameResultPopup());
+        if (MyPhotonNetwork.IsOfflineMode)
+            StartCoroutine(PrepareGameResultPopup());
     }
 
     private IEnumerator PrepareGameResultPopup()
