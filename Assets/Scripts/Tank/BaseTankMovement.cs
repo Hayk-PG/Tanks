@@ -16,9 +16,9 @@ public class BaseTankMovement : MonoBehaviour
     public float _speedOnSnow;
 
     [Space]
-    public float _breakeOnNormal;
-    public float _breakeOnRain;
-    public float _breakeOnSnow;
+    public float _brakeOnNormal;
+    public float _brakeOnRain;
+    public float _brakeOnSnow;
 
     [Space]
     public Vector3 _normalCenterOfMass;
@@ -78,7 +78,7 @@ public class BaseTankMovement : MonoBehaviour
     {
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
 
-        GameSceneObjectsReferences.RainManager.onRainActivity += OnRainActivity;
+        GameSceneObjectsReferences.WeatherManager.onWeatherActivity += OnWeatherActivity;
 
         if (_stun != null)
             _stun.OnStunEffect += OnStunEffect;
@@ -88,7 +88,7 @@ public class BaseTankMovement : MonoBehaviour
     {
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
 
-        GameSceneObjectsReferences.RainManager.onRainActivity -= OnRainActivity;
+        GameSceneObjectsReferences.WeatherManager.onWeatherActivity -= OnWeatherActivity;
 
         if (_stun != null)
             _stun.OnStunEffect -= OnStunEffect;
@@ -112,20 +112,25 @@ public class BaseTankMovement : MonoBehaviour
 
     }
 
-    protected virtual void OnRainActivity(bool isRaining)
+    protected virtual void OnWeatherActivity(bool isRaining, bool isSnowing)
     {
-        Conditions<bool>.Compare(isRaining, 
-            () => 
-            {
-                _normalSpeed = _speedOnRain;
-                _maxBrake = _breakeOnRain;
-            }, 
+        if (isRaining)
+        {
+            _normalSpeed = _speedOnRain;
+            _maxBrake = _brakeOnRain;
+        }
 
-            () => 
-            {
-                _normalSpeed = _speedOnNormal;
-                _maxBrake = _breakeOnNormal;
-            });
+        else if (isSnowing)
+        {
+            _normalSpeed = _speedOnSnow;
+            _maxBrake = _brakeOnSnow;
+        }
+
+        else
+        {
+            _normalSpeed = _speedOnNormal;
+            _maxBrake = _brakeOnNormal;
+        }
     }
 
     protected virtual void OnStunEffect(bool isStunned)

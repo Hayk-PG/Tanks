@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class DynamicTiles : MonoBehaviour
 {
+    private enum Weather { None, Rain, Snow}
+
     [SerializeField] [Space]
     private Tile _tile;
 
@@ -23,7 +25,7 @@ public class DynamicTiles : MonoBehaviour
         _tile.onMeshInstantiated += OnMeshInstantiated;
         _tile.onDestroyingMesh += OnDestroyingMesh;
 
-        GameSceneObjectsReferences.RainManager.onRainActivity += OnRainActivity;
+        GameSceneObjectsReferences.WeatherManager.onWeatherActivity += OnWeatherActivity;
     }
 
     private void OnDisable()
@@ -31,28 +33,30 @@ public class DynamicTiles : MonoBehaviour
         _tile.onMeshInstantiated -= OnMeshInstantiated;
         _tile.onDestroyingMesh -= OnDestroyingMesh;
 
-        GameSceneObjectsReferences.RainManager.onRainActivity -= OnRainActivity;
+        GameSceneObjectsReferences.WeatherManager.onWeatherActivity -= OnWeatherActivity;
     }
 
     private void OnMeshInstantiated(GameObject gameObject)
     {
         _meshRenderer = Get<MeshRenderer>.From(gameObject);
 
-        OnRainActivity(GameSceneObjectsReferences.RainManager.IsRaining);
+        OnWeatherActivity(GameSceneObjectsReferences.WeatherManager.IsRaining, GameSceneObjectsReferences.WeatherManager.IsSnowing);
     }
 
     private void OnDestroyingMesh()
     {
         _isChangingColor = false;
 
-        GameSceneObjectsReferences.RainManager.onRainActivity -= OnRainActivity;
+        GameSceneObjectsReferences.WeatherManager.onWeatherActivity -= OnWeatherActivity;
     }
 
-    private void OnRainActivity(bool isRaining)
+    private void OnWeatherActivity(bool isRaining, bool isSnowing)
     {
         _isChangingColor = false;
 
-        StartCoroutine(ControlMaterialColor(isRaining ? _clrRain: _clrNormal));
+        Weather weather = isRaining ? Weather.Rain : isSnowing ? Weather.Snow : Weather.None;
+
+        StartCoroutine(ControlMaterialColor(weather == Weather.Rain ? _clrRain : weather == Weather.Snow ? _clrSnow : _clrNormal));
     }
 
     private IEnumerator ControlMaterialColor(Color32 color)
@@ -84,6 +88,8 @@ public class DynamicTiles : MonoBehaviour
 
         if (materialColor.r == newColor.r && materialColor.g == newColor.g && materialColor.b == newColor.b)
             _isChangingColor = false;
+
+        print("Changing color...");
 
         yield return null;
     }

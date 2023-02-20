@@ -35,9 +35,9 @@ public class TankProperties : ScriptableObject
     public float _speedOnNormal;
     public float _speedOnRain;
     public float _speedOnSnow;
-    public float _breakeOnNormal;
-    public float _breakeOnRain;
-    public float _breakeOnSnow;
+    public float _brakeOnNormal;
+    public float _brakeOnRain;
+    public float _brakeOnSnow;
     public int _damageFactor;
       
     public Vector3 _normalCenterOfMass;
@@ -108,9 +108,9 @@ public class TankProperties : ScriptableObject
             _speedOnNormal = baseTankMovement._speedOnNormal;
             _speedOnRain = baseTankMovement._speedOnRain;
             _speedOnSnow = baseTankMovement._speedOnSnow;
-            _breakeOnNormal = baseTankMovement._breakeOnNormal;
-            _breakeOnRain = baseTankMovement._breakeOnRain;
-            _breakeOnSnow = baseTankMovement._breakeOnSnow;
+            _brakeOnNormal = baseTankMovement._brakeOnNormal;
+            _brakeOnRain = baseTankMovement._brakeOnRain;
+            _brakeOnSnow = baseTankMovement._brakeOnSnow;
         }
 
         if(baseShootController != null)
@@ -184,9 +184,9 @@ public class TankProperties : ScriptableObject
                 baseTankMovement._speedOnNormal = _speedOnNormal;
                 baseTankMovement._speedOnRain = _speedOnRain;
                 baseTankMovement._speedOnSnow = _speedOnSnow;
-                baseTankMovement._breakeOnNormal = _breakeOnNormal;
-                baseTankMovement._breakeOnRain = _breakeOnRain;
-                baseTankMovement._breakeOnSnow = _breakeOnSnow;
+                baseTankMovement._brakeOnNormal = _brakeOnNormal;
+                baseTankMovement._brakeOnRain = _brakeOnRain;
+                baseTankMovement._brakeOnSnow = _brakeOnSnow;
             }
 
             if (baseShootController != null)
