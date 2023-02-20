@@ -7,10 +7,10 @@ public class BaseAnnouncer : MonoBehaviour
     [SerializeField] 
     protected TMP_Text[] texts;
 
-    [SerializeField]
+    [SerializeField] [Space]
     protected GameManager _gameManager;
 
-    [SerializeField]
+    [SerializeField] [Space]
     protected TurnController _turnController;
 
     protected SoundController _soundController;

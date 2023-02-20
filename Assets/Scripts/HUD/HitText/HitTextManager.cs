@@ -54,7 +54,10 @@ public class HitTextManager : MonoBehaviour
             hitText.transform.SetAsFirstSibling();
     }
 
-    private void DisplayHitText(TextType textType, HitText hitText, string other) => hitText.Display(Icon(textType), Text(textType, other));
+    private void DisplayHitText(TextType textType, HitText hitText, string other)
+    {
+        hitText.Display(Icon(textType), Text(textType, other));
+    }
 
     private Sprite Icon(TextType textType)
     {

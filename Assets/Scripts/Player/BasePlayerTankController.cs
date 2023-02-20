@@ -3,7 +3,8 @@ using UnityEngine;
 
 public abstract class BasePlayerTankController<T> : MonoBehaviourPun
 {
-    [SerializeField] protected TankController _tankController;
+    [SerializeField] 
+    protected TankController _tankController;
 
     public TankController OwnTank
     {
@@ -37,7 +38,9 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
     public virtual void CacheTank(TankController tank)
     {
         OwnTank = tank;
+
         GetTankControl();
+
         _tankMovement = OwnTank?.GetComponent<TankMovement>();       
         _tankRigidbody = OwnTank?.GetComponent<Rigidbody>();
         _shootController = OwnTank?.GetComponent<ShootController>();
