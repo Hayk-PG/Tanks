@@ -42,28 +42,37 @@ public class WeatherManager : MonoBehaviour
 
     private IEnumerator ControlParticleSystems()
     {
-        Conditions<bool>.Compare(_isRaining, () => { _rain.Play(); }, () => { _rain.Stop(); });
-        Conditions<bool>.Compare(_isSnowing, () => { _snow.Play(); }, () => { _snow.Stop(); });
-
-        RaiseWeatherActivity();
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer), RaiseWeatherActivity, PhotonNetworkRaiseWeatherActivity, null, null);
 
         yield return null;
     }
 
     private IEnumerator ControlIteration()
     {
-        _isRaining = !_isSnowing && Random.Range(0, 5) < 2 ? true : !_isSnowing && Random.Range(0, 5) >= 2 ? false : false;
-        _isSnowing = !_isRaining && Random.Range(0, 5) < 2 ? true : !_isRaining && Random.Range(0, 5) >= 2 ? false : false;
+        if (!MyPhotonNetwork.IsOfflineMode && !MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+            yield break;
 
-        _delay = Random.Range(5, 60);
-
-        print(_isRaining + "/" + _isSnowing + ": " + _delay);
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer), ChangeWeather, PhotonNetworkChangeWeather, null, null);
 
         yield return new WaitForSeconds(_delay);
     }
 
-    private void RaiseWeatherActivity()
+    public void RaiseWeatherActivity()
     {
+        Conditions<bool>.Compare(_isRaining, () => { _rain.Play(); }, () => { _rain.Stop(); });
+        Conditions<bool>.Compare(_isSnowing, () => { _snow.Play(); }, () => { _snow.Stop(); });
+
         onWeatherActivity?.Invoke(_isRaining, _isSnowing);
     }
+
+    public void ChangeWeather()
+    {
+        _isRaining = !_isSnowing && Random.Range(0, 5) < 2 ? true : false;
+        _isSnowing = !_isRaining && Random.Range(0, 5) > 2 ? true : false;
+
+        _delay = Random.Range(5, 60);
+    }
+
+    private void PhotonNetworkRaiseWeatherActivity() => GameSceneObjectsReferences.PhotonNetworkWeatherManager.RaiseWeatherActivity();
+    private void PhotonNetworkChangeWeather() => GameSceneObjectsReferences.PhotonNetworkWeatherManager.ChangeWeather();
 }

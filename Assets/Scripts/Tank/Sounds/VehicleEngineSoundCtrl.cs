@@ -2,8 +2,11 @@
 
 public class VehicleEngineSoundCtrl : MonoBehaviour
 {
-    [SerializeField] private AudioSource audioSRC;  
-    [SerializeField] private AudioClip _engineSound, _stopSound;
+    [SerializeField] 
+    private AudioSource audioSRC;
+    
+    [SerializeField] [Space]
+    private AudioClip _engineSound, _stopSound;
 
     private BaseTankMovement _baseTankMovement;
 
@@ -41,6 +44,7 @@ public class VehicleEngineSoundCtrl : MonoBehaviour
     private void OnAudioSourceMute(bool isMuted)
     {
         audioSRC.mute = isMuted;
+
         RemoveListener();
 
         if (!isMuted)
@@ -50,13 +54,17 @@ public class VehicleEngineSoundCtrl : MonoBehaviour
     private void OnVehicleEngineSound(float rpm)
     {
         Conditions<bool>.Compare(IsSoundEnded(), IsEngineSoundPlaying(), OnSetVehicleSrcVolumeToZero, OnIncreaseVehicleSrcVolume, null, null);
-        Conditions<bool>.Compare(rpm == 0, rpm != 0,
-            () => audioSRC.pitch = 1,
-            () => IncreaseVehSrcPitch(rpm)
-            , null, null);
+
+        Conditions<bool>.Compare(IsTankStopped(rpm), () => { audioSRC.pitch = 1; }, () => { IncreaseVehSrcPitch(rpm); });
+
         Conditions<bool>.Compare(IsStopSoundPlayingOnBrake(rpm), IsEngineSoundPlayingOnMovement(rpm),
-            () => SwitchAudioClips(audioSRC, _stopSound, false),
-            () => SwitchAudioClips(audioSRC, _engineSound, true), null, null);
+                                () => SwitchAudioClips(audioSRC, _stopSound, false),
+                                () => SwitchAudioClips(audioSRC, _engineSound, true), null, null);
+    }
+
+    private bool IsTankStopped(float rpm)
+    {
+        return Mathf.Abs(rpm) <= 1;
     }
 
     private bool IsSoundEnded()
@@ -71,12 +79,12 @@ public class VehicleEngineSoundCtrl : MonoBehaviour
 
     private bool IsStopSoundPlayingOnBrake(float rpm)
     {
-        return rpm == 0 && audioSRC.clip != _stopSound;
+        return IsTankStopped(rpm) && audioSRC.clip != _stopSound;
     }
 
     private bool IsEngineSoundPlayingOnMovement(float rpm)
     {
-        return rpm != 0 && audioSRC.clip != _engineSound;
+        return !IsTankStopped(rpm) && audioSRC.clip != _engineSound;
     }
 
     private void OnSetVehicleSrcVolumeToZero() => audioSRC.volume = 0;
