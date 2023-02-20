@@ -68,8 +68,8 @@ public class PlayerFeedback : BaseAnnouncer
         float b = a * 0.1f;
         float c = (total * b);
 
-        ScoreController scoreController = Get<ScoreController>.From(GameObject.Find("tankName"));
-        scoreController?.GetScore(Mathf.RoundToInt(c), null);
+        ScoreController sc = GlobalFunctions.ObjectsOfType<ScoreController>.Find(s => s.gameObject.name == tankName);
+        sc?.GetScore(Mathf.RoundToInt(c), null);
     }
 
     public void DisplayWeaponChangeText(string tankName, string weaponType)
