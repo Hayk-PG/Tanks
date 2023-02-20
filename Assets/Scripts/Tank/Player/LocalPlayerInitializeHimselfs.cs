@@ -4,8 +4,6 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
 {
     private TankController _tankController;
     private ScoreController _scoreController;
-    private HealthController _healthController;
-    private PlayerTurn _playerTurn;
     private TankMovement _tankMovement;
 
     private AmmoTabButtonNotification _ammoTabButtonNotification;
@@ -17,8 +15,6 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
     {
         _tankController = Get<TankController>.From(gameObject);
         _scoreController = Get<ScoreController>.From(gameObject);
-        _healthController = Get<HealthController>.From(gameObject);
-        _playerTurn = Get<PlayerTurn>.From(gameObject);
         _tankMovement = Get<TankMovement>.From(gameObject);
 
         _ammoTabButtonNotification = FindObjectOfType<AmmoTabButtonNotification>();
@@ -26,15 +22,9 @@ public class LocalPlayerInitializeHimselfs : MonoBehaviour
         _fuel = FindObjectOfType<Fuel>(); 
     }
 
-    private void OnEnable()
-    {
-        _tankController.OnInitialize += OnInitializeHimself;
-    }
+    private void OnEnable() => _tankController.OnInitialize += OnInitializeHimself;
 
-    private void OnDisable()
-    {
-        _tankController.OnInitialize -= OnInitializeHimself;
-    }
+    private void OnDisable() => _tankController.OnInitialize -= OnInitializeHimself;
 
     private void OnInitializeHimself()
     {

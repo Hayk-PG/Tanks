@@ -6,7 +6,7 @@ public class OfflinePlayerFeedbacksController : PlayerFeedbackController
     {
         _playerHitsIndex = _playerTurnIndex + 1;
 
-        _playerFeedback.OnHitEnemy(_playerController.OwnTank.name, scores);
+        _playerFeedback.OnHitEnemy(_playerController.OwnTank.name, _playerHitsIndex, scores);
     }
 
     protected override void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)

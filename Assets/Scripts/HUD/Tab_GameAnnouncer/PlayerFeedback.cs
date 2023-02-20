@@ -6,8 +6,6 @@ public class PlayerFeedback : BaseAnnouncer
     [SerializeField] [Space]
     private HitTextManager _hitTextManager1, _hitTextManager2;
 
-    private int _playerHitsIndex;
-    private int _playerTurnIndex;
 
 
 
@@ -27,15 +25,13 @@ public class PlayerFeedback : BaseAnnouncer
         DisplayHitText(CurrentHitTextManager(tankName), textType, GlobalFunctions.TextWithColorCode(colorCode, (-damage).ToString()));
     }
 
-    public void OnHitEnemy(string tankName, int[] scores)
+    public void OnHitEnemy(string tankName, int playerHitsIndex, int[] scores)
     {
-        _playerHitsIndex = _playerTurnIndex + 1;
-
         int total = 0;
 
         GlobalFunctions.Loop<int>.Foreach(scores, value => { total += value; });
 
-        Conditions<bool>.Compare(_playerHitsIndex < 3, () => OnSingleHit(tankName, total), () => OnBackToBackHit(tankName, total));
+        Conditions<bool>.Compare(playerHitsIndex < 3, () => OnSingleHit(tankName, total), () => OnBackToBackHit(tankName, playerHitsIndex, total));
     }
 
     private void OnSingleHit(string tankName, int total)
@@ -51,15 +47,15 @@ public class PlayerFeedback : BaseAnnouncer
         }
     }
 
-    private void OnBackToBackHit(string tankName, int total)
+    private void OnBackToBackHit(string tankName, int playerHitsIndex, int total)
     {
         for (int i = 0; i < _soundController.SoundsList[2]._clips.Length; i++)
         {
-            if (_soundController.SoundsList[2]._clips[i]._score >= _playerHitsIndex)
+            if (_soundController.SoundsList[2]._clips[i]._score >= playerHitsIndex)
             {
                 GetComboScore(tankName, total, i);
 
-                DisplayHitText(CurrentHitTextManager(tankName), HitTextManager.TextType.HitCombo, GlobalFunctions.BlueColorText("+" + (_playerHitsIndex - 2)));
+                DisplayHitText(CurrentHitTextManager(tankName), HitTextManager.TextType.HitCombo, GlobalFunctions.BlueColorText("+" + (playerHitsIndex - 2)));
 
                 break;
             }
