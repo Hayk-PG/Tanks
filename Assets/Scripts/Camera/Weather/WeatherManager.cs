@@ -6,6 +6,8 @@ public class WeatherManager : MonoBehaviour
     [SerializeField]
     private ParticleSystem _rain, _snow;
 
+    private ParticleSystem.ShapeModule _rainShape, _snowShape;
+
     private float _delay;
 
     public bool IsRaining { get; set; }
@@ -15,14 +17,22 @@ public class WeatherManager : MonoBehaviour
 
 
 
+    private void Awake()
+    {
+        _rainShape = _rain.shape;
+        _snowShape = _snow.shape;
+    }
+
     private void OnEnable()
     {
         GameSceneObjectsReferences.GameManager.OnGameStarted += delegate { StartCoroutine(StartCoroutines()); };
+        GameSceneObjectsReferences.WindSystemController.onWindForce += OnWindForce;
     }
 
     private void OnDisable()
     {
         GameSceneObjectsReferences.GameManager.OnGameStarted -= delegate { StartCoroutine(StartCoroutines()); };
+        GameSceneObjectsReferences.WindSystemController.onWindForce += OnWindForce;
     }
 
     private IEnumerator StartCoroutines()
@@ -34,6 +44,12 @@ public class WeatherManager : MonoBehaviour
             yield return StartCoroutine(ChangeWeatherCoroutine());
             yield return StartCoroutine(RaiseWeatherActivityCoroutine());
         }
+    }
+
+    private void OnWindForce(int force)
+    {
+        _rainShape.rotation = new Vector3(180, -(force * 10), 0);
+        _snowShape.rotation = new Vector3(180, -(force * 10), 0);
     }
 
     private IEnumerator ChangeWeatherCoroutine()
