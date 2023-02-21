@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public abstract class PlayerFeedbackController : MonoBehaviour
 {
@@ -59,13 +60,18 @@ public abstract class PlayerFeedbackController : MonoBehaviour
     protected virtual void SubscribeToEvents()
     {
         _healthController.OnTakeDamage += OnTakeDamage;
-        _scoreController.OnHitEnemy += OnHitEnemy;
+        _scoreController.OnHitEnemy += scores => { OnHitEnemy(scores, hitsCount); };
         _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
     }
 
     protected abstract void OnTakeDamage(BasePlayer basePlayer, int damage);
 
-    protected abstract void OnHitEnemy(int[] scores);
+    protected abstract void OnHitEnemy(int[] scores, Func<int> hitsCount);
+
+    protected virtual int hitsCount()
+    {
+        return _playerHitsIndex = _playerTurnIndex + 1;
+    }
 
     protected abstract void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton);
 
@@ -74,7 +80,12 @@ public abstract class PlayerFeedbackController : MonoBehaviour
         if (_playerTurn == null)
             return;
 
-        if(turnState == _playerTurn.MyTurn)
+        ResetHitsCount(turnState);
+    }
+
+    protected virtual void ResetHitsCount(TurnState turnState)
+    {
+        if (turnState == _playerTurn.MyTurn)
         {
             _playerTurnIndex++;
 

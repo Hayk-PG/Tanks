@@ -1,12 +1,12 @@
+using System;
+
 public class OfflinePlayerFeedbacksController : PlayerFeedbackController
 {
     protected override bool IsAllowed => _playerController != null;
 
-    protected override void OnHitEnemy(int[] scores)
+    protected override void OnHitEnemy(int[] scores, Func<int> hitsCount)
     {
-        _playerHitsIndex = _playerTurnIndex + 1;
-
-        _playerFeedback.OnHitEnemy(_playerController.OwnTank.name, _playerHitsIndex, scores);
+        _playerFeedback.OnHitEnemy(_playerController.OwnTank.name, hitsCount(), scores);
     }
 
     protected override void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
@@ -16,9 +16,7 @@ public class OfflinePlayerFeedbacksController : PlayerFeedbackController
 
     protected override void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
-        if(damage > 0)
-        {
+        if (damage > 0)
             _playerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
-        }
     }
 }
