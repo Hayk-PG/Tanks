@@ -31,6 +31,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private PhotonNetworkWeatherManager _photonNetworkWeatherManager;
 
+    [SerializeField]
+    private PhotonNetworkMineController _photonNetworkMineController;
+
     [Header("Tab_Ammo")]
 
     [SerializeField] [Space]
@@ -64,6 +67,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static WoodBoxSerializer WoodBoxSerializer => Instance._woodBoxSerializer;
     public static WoodBoxSerializeView WoodBoxSerializeView => Instance._woodBoxSerializeView;
     public static PhotonNetworkWeatherManager PhotonNetworkWeatherManager => Instance._photonNetworkWeatherManager;
+    public static PhotonNetworkMineController PhotonNetworkMineController => Instance._photonNetworkMineController;
 
     //Tab_Ammo
     public static Tab_WoodboxContent Tab_WoodboxContent => Instance._tabWoodboxContent;

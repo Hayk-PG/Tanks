@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: beb1457d375110e468b8d8e1f29fccea, type: 3}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.36240247, g: 0.5655266, b: 0.84377646, a: 1}
+  m_IndirectSpecularColor: {r: 0.36311492, g: 0.5663884, b: 0.84380317, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1683,6 +1683,7 @@ GameObject:
   - component: {fileID: 2025759541}
   - component: {fileID: 2025759542}
   - component: {fileID: 2025759545}
+  - component: {fileID: 2025759547}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2117,6 +2118,7 @@ MonoBehaviour:
   _woodBoxSerializer: {fileID: 2025759526}
   _woodBoxSerializeView: {fileID: 2025759535}
   _photonNetworkWeatherManager: {fileID: 2025759545}
+  _photonNetworkMineController: {fileID: 2025759547}
   _tabWoodboxContent: {fileID: 1516637602}
   _newWeaponFromWoodBox: {fileID: 1516637601}
   _tilesData: {fileID: 1950072985}
@@ -2161,6 +2163,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d790d05038e0674dbf4764367be5f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2025759547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025759507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9753adcef19144ea18f1b78fe066afee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2090463658
