@@ -19,6 +19,14 @@ public class BaseBulletVelocity : MonoBehaviour
     {
         get => _baseBulletController.RigidBody.velocity.y + (_baseBulletController.RigidBody.velocity.y / 100 * GravityForcePercentage) * Time.fixedDeltaTime;
     }
+    protected virtual float WeatherFactor
+    {
+        get
+        {
+            return GameSceneObjectsReferences.WeatherManager.IsRaining ? 1.05f :
+                   GameSceneObjectsReferences.WeatherManager.IsRaining ? 1.12f : 1f;
+        }
+    }
     public virtual float GravityForcePercentage
     { 
         get => _gravityForcePercentage; 
@@ -74,7 +82,7 @@ public class BaseBulletVelocity : MonoBehaviour
     protected virtual void ControlGravitation()
     {
         if (_baseBulletController.RigidBody.velocity.y <= 0)
-            _baseBulletController.RigidBody.velocity = new Vector3(_baseBulletController.RigidBody.velocity.x, GravityForce, _baseBulletController.RigidBody.velocity.z);
+            _baseBulletController.RigidBody.velocity = new Vector3(_baseBulletController.RigidBody.velocity.x, GravityForce * WeatherFactor, _baseBulletController.RigidBody.velocity.z);
     }
 
     protected virtual void OnVerticalLimit()
