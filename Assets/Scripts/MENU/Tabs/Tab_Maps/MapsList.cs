@@ -2,21 +2,22 @@ using UnityEngine;
 
 public class MapsList : MonoBehaviour
 {  
-    [SerializeField] private Transform _content;    
-    [SerializeField] private Maps _maps;
+    [SerializeField]
+    private Transform _content;
+    
+    [SerializeField] [Space]
+    private Maps _maps;
+
     private MapSelector[] _mapSelectors;
+
     private Btn[] _btns;
 
 
-    private void Awake()
-    {
-        _btns = _content.GetComponentsInChildren<Btn>();        
-    }
 
-    private void Start()
-    {
-        AddMapSelectors();
-    }
+
+    private void Awake() => _btns = _content.GetComponentsInChildren<Btn>();
+
+    private void Start() => AddMapSelectors();
 
     private void OnEnable()
     {
@@ -40,10 +41,23 @@ public class MapsList : MonoBehaviour
 
         for (int i = 0; i < _mapSelectors.Length; i++)
         {
+            int mapIndex = i - 1;
+
             _mapSelectors[i] = Get<MapSelector>.From(_btns[i].gameObject);
 
-            if (i < _maps.All.Length)
-                _mapSelectors[i].Initialize(_maps.All[i], i);
+            if (i == 0)
+            {
+                _mapSelectors[i].Initialize();
+                _mapSelectors[i].AssignMapSelector(true, _maps);
+
+                continue;
+            }
+
+            if (mapIndex < _maps.All.Length)
+            {
+                _mapSelectors[i].Initialize(_maps.All[mapIndex], mapIndex);
+                _mapSelectors[i].AssignMapSelector(false, null);
+            }
         }
     }
 

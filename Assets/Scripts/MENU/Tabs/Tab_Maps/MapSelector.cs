@@ -2,10 +2,19 @@ using UnityEngine;
 
 public class MapSelector : MonoBehaviour, IReset
 {
-    [SerializeField] private Btn _btn;
-    [SerializeField] private BtnTxt _btnTxt;
-    [SerializeField] private Btn_Icon _bntIconLock;
+    [SerializeField]
+    private Btn _btn;
+
+    [SerializeField] [Space]
+    private BtnTxt _btnTxt;
+
+    [SerializeField] [Space]
+    private Btn_Icon _bntIconLock;
+
     private Map _map;
+
+    private System.Action _onSelect;
+
     private int _mapIndex;
 
     public bool IsLocked
@@ -19,34 +28,51 @@ public class MapSelector : MonoBehaviour, IReset
     }
 
 
-    private void OnEnable()
+
+
+    private void OnEnable() => _btn.onSelect += () => { _onSelect(); };
+
+    private void OnDisable() => _btn.onSelect -= () => { _onSelect(); };
+
+    private void SelectRandomMap(Maps maps)
     {
-        _btn.onSelect += Select;
+        int randomMap = Random.Range(0, maps.All.Length);
+
+        Data.Manager.SetMap(randomMap);
     }
 
-    private void OnDisable()
+    private void SelectMap() => Data.Manager.SetMap(_mapIndex);
+
+    public void AssignMapSelector(bool isRandomMapSelector, Maps maps)
     {
-        _btn.onSelect -= Select;
+        _onSelect = isRandomMapSelector ? () => { SelectRandomMap(maps); } : SelectMap;
     }
 
-    private void Select()
+    public void Initialize()
     {
-        Data.Manager.SetMap(_mapIndex);
+        _btnTxt.SetButtonTitle("?");
+
+        Lock(false);
     }
 
     public void Initialize(Map map, int index)
     {
         GetMap(map);
+
         GetMapIndex(index);
+
         Lock(false);
     }
 
     private void GetMap(Map map) => _map = map;
+
     private void GetMapIndex(int index)
     {
         _mapIndex = index;
+
         _btnTxt.SetButtonTitle((_mapIndex + 1).ToString());
     }
+
     public void Lock(bool isLocked) => IsLocked = isLocked;
 
     public void SetDefault()
