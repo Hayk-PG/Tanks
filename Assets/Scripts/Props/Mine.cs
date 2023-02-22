@@ -28,6 +28,9 @@ public class Mine : MetalTile
 
     private void OnTriggerEnter(Collider other)
     {
+        if (Get<TankController>.From(other.gameObject) == null)
+            return;
+
         if (!_isTriggered)
         {
             onTriggerEnter();
