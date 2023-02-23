@@ -4,14 +4,13 @@
 public class PlayerFeedback : BaseAnnouncer
 {
     [SerializeField] [Space]
-    private HitTextManager _hitTextManager1, _hitTextManager2;
-
+    private Tab_HitText _tabHitText;
 
 
 
     public HitTextManager CurrentHitTextManager(string tankName)
     {
-        return tankName == Names.Tank_FirstPlayer ? _hitTextManager1 : _hitTextManager2;
+        return tankName == Names.Tank_FirstPlayer ? _tabHitText.HitTexManagerForPlayer1 : _tabHitText.HitTextManagerForPlayer2;
     }
 
     public void DisplayDamageText(string tankName, int damage)

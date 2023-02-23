@@ -38,7 +38,9 @@ public class HitTextManager : MonoBehaviour
             if (!hitText.gameObject.activeInHierarchy)
             {
                 UnhideHitText(hitText);
+
                 SetComboHitTextAsFirstSibling(textType, hitText);
+
                 DisplayHitText(textType, hitText, other);
 
                 break;
