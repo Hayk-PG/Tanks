@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class BaseExplosion : MonoBehaviour
 {
-    protected GameManagerBulletSerializer _gameManagerBulletSerializer;
-
     public IScore OwnerScore { get; set; }
     public Collider Collider { get; set; }
     public float Distance { get; set; }
@@ -12,8 +10,6 @@ public class BaseExplosion : MonoBehaviour
     public virtual float RadiusValue { get; set; } = 0.1f;
 
 
-
-    protected virtual void Awake() => _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
 
     protected virtual void Score(IDamage iDamage, int[] scores)
     {

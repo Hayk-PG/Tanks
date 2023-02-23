@@ -6,7 +6,7 @@
         iDamage.CameraChromaticAberrationFX();
     }
 
-    protected override void DamageAndScoreInOlineMode(IDamage iDamage, int[] scoreValues)
+    protected override void DamageAndScoreInOlineMode(IDamage iDamage, int damageValue, int[] scoreValues)
     {
         _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scoreValues, 1);
     }
