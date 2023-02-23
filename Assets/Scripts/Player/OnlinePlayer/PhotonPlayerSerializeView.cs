@@ -18,13 +18,10 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
         if (stream.IsWriting)
         {
             if (_photonPlayerTankController._tankMovement != null)
-                stream.SendNext(_photonPlayerTankController._tankMovement.Direction);
-           
-            if (_photonPlayerTankController._tankRigidbody != null)
             {
-                stream.SendNext(_photonPlayerTankController._tankRigidbody.position);
-                stream.SendNext(_photonPlayerTankController._tankRigidbody.velocity);
-                stream.SendNext(_photonPlayerTankController._tankRigidbody.rotation);
+                stream.SendNext(_photonPlayerTankController._tankMovement.Direction);
+                stream.SendNext(_photonPlayerTankController._tankMovement.SynchedPosition);
+                stream.SendNext(_photonPlayerTankController._tankMovement.SynchedRotation);
             }
 
             if (_photonPlayerTankController._shootController != null)
@@ -65,17 +62,11 @@ public class PhotonPlayerSerializeView : MonoBehaviourPun, IPunObservable
         else
         {
             if (_photonPlayerTankController._tankMovement != null)
-                _photonPlayerTankController._tankMovement.Direction = (float)stream.ReceiveNext();           
-
-            if (_photonPlayerTankController._tankRigidbody != null)
             {
-                _photonPlayerTankController._tankRigidbody.position = (Vector3)stream.ReceiveNext();
-                _photonPlayerTankController._tankRigidbody.velocity = (Vector3)stream.ReceiveNext();
-                _photonPlayerTankController._tankRigidbody.rotation = (Quaternion)stream.ReceiveNext();
-
-                _lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
-                _photonPlayerTankController._tankRigidbody.position += (_photonPlayerTankController._tankRigidbody.velocity * _lag);
-            }
+                _photonPlayerTankController._tankMovement.Direction = (float)stream.ReceiveNext();
+                _photonPlayerTankController._tankMovement.SynchedPosition = (Vector3)stream.ReceiveNext();
+                _photonPlayerTankController._tankMovement.SynchedRotation = (Quaternion)stream.ReceiveNext();
+            }         
 
             if (_photonPlayerTankController._shootController != null)
             {
