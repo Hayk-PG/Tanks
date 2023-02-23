@@ -5,11 +5,20 @@ public class ExplosionDirect : BaseExplosion
     [SerializeField] 
     private int _damage, _destructDamage;
 
+    private System.Action<IDamage, int, int[]> DamageTankAndGetScoredFunction;
+    private System.Action<IDestruct> DamageTileAndGetScoredFunction;
+
     public override float DamageValue { get => _damage; set => _damage = Mathf.RoundToInt(value); }
     public override float DestructDamageValue { get => _destructDamage; set => _destructDamage = Mathf.RoundToInt(value); }
 
 
 
+
+    private void Awake()
+    {
+        DamageTankAndGetScoredFunction = MyPhotonNetwork.IsOfflineMode ? DamageTankAndGetScored : DamageTankAndGetScoredRPC;
+        DamageTileAndGetScoredFunction = MyPhotonNetwork.IsOfflineMode ? DamageTileAndGetScored : DamageTileAndGetScoredRPC;
+    }
 
     private void Start()
     {
@@ -19,43 +28,44 @@ public class ExplosionDirect : BaseExplosion
 
     private void HitTank(IDamage iDamage)
     {
-        if (iDamage == null)
+        if (iDamage == default)
             return;
 
         int dmg = Mathf.RoundToInt(DamageValue);
         int[] scores = new int[] { Mathf.RoundToInt(DamageValue * 10) + Mathf.RoundToInt((Distance) * 100), Mathf.RoundToInt((Distance * RadiusValue) * 10) };
 
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => DamageTankAndGetScoredInOfflineMode(iDamage, dmg, scores),
-        () => DamageTankAndGetScoredInOnlineMode(iDamage, dmg, scores));
+        DamageTankAndGetScoredFunction?.Invoke(iDamage, dmg, scores);
     }
 
-    private void DamageTankAndGetScoredInOfflineMode(IDamage iDamage, int damageValue, int[] scores)
+    private void DamageTankAndGetScored(IDamage iDamage, int damageValue, int[] scores)
     {
         iDamage.Damage(Collider, damageValue);
+
         Score(null, scores);
     }
 
-    private void DamageTankAndGetScoredInOnlineMode(IDamage iDamage, int damageValue, int[] scores)
+    private void DamageTankAndGetScoredRPC(IDamage iDamage, int damageValue, int[] scores)
     {
-        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, damageValue, scores, 0);
+        GameSceneObjectsReferences.GameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, damageValue, scores, 0);
     }
 
     private void HitTile(IDestruct iDestruct)
     {
-        if (iDestruct == null)
+        if (iDestruct == default)
             return;
 
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => DamageTileAndGetScoredInOfflineMode(iDestruct), DamageTileAndGetScoredInOnlineMode);
+        DamageTileAndGetScoredFunction?.Invoke(iDestruct);
     }
 
-    private void DamageTileAndGetScoredInOfflineMode(IDestruct iDestruct)
+    private void DamageTileAndGetScored(IDestruct iDestruct)
     {
         iDestruct.Destruct(_destructDamage, 0);
+
         OwnerScore.GetScore(10, null);
     }
 
-    private void DamageTileAndGetScoredInOnlineMode()
+    private void DamageTileAndGetScoredRPC(IDestruct iDestruct)
     {
-        _gameManagerBulletSerializer.CallOnCollisionRPC(Collider, _destructDamage);
+        GameSceneObjectsReferences.GameManagerBulletSerializer.CallOnCollisionRPC(Collider, _destructDamage);
     }
 }

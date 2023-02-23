@@ -4,6 +4,7 @@ public class BaseExplosion : MonoBehaviour
 {
     public IScore OwnerScore { get; set; }
     public Collider Collider { get; set; }
+
     public float Distance { get; set; }
     public virtual float DamageValue { get; set; }
     public virtual float DestructDamageValue { get; set; }
