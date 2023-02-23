@@ -8,13 +8,11 @@ public class WeatherManager : MonoBehaviour
 
     private ParticleSystem.ShapeModule _rainShape, _snowShape;
 
-    private float _delay;
+    private System.Action<bool, bool> SetCurrentWeatherActivityFunction;
+    private System.Action<bool, bool> RaiseWeatherActivityFunction;
 
-    private System.Action ChangeWeatherFunction;
-    private System.Action RaiseWeatherActivityFunction;
-
-    public bool IsRaining { get; set; }
-    public bool IsSnowing { get; set; }
+    public bool IsRaining { get; private set; }
+    public bool IsSnowing { get; private set; }
 
     public event System.Action<bool, bool> onWeatherActivity;
 
@@ -45,9 +43,19 @@ public class WeatherManager : MonoBehaviour
 
     private void DefineChangeWeatherFunction()
     {
-        ChangeWeatherFunction = MyPhotonNetwork.IsOfflineMode ? ChangeWeather : MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer) ? ChangeWeatherRPC : null;
+        SetCurrentWeatherActivityFunction = MyPhotonNetwork.IsOfflineMode ? SetCurrentWeatherActivity :
+                                MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer) ? SetCurrentWeatherActivityRPC :
+                                null;
 
-        RaiseWeatherActivityFunction = MyPhotonNetwork.IsOfflineMode ? RaiseWeatherActivity : MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer) ? RaiseWeatherActivityRPC : null;
+        RaiseWeatherActivityFunction = MyPhotonNetwork.IsOfflineMode ? RaiseWeatherActivity :
+                                       MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer) ? RaiseWeatherActivityRPC :
+                                       null;
+    }
+
+    private void OnWindForce(int force)
+    {
+        _rainShape.rotation = new Vector3(180, -(force * 10), 0);
+        _snowShape.rotation = new Vector3(180, -(force * 10), 0);
     }
 
     private IEnumerator StartCoroutines()
@@ -61,18 +69,15 @@ public class WeatherManager : MonoBehaviour
         }
     }
 
-    private void OnWindForce(int force)
-    {
-        _rainShape.rotation = new Vector3(180, -(force * 10), 0);
-        _snowShape.rotation = new Vector3(180, -(force * 10), 0);
-    }
-
     private IEnumerator ChangeWeatherCoroutine()
     {
         if (!MyPhotonNetwork.IsOfflineMode && !MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
             yield break;
 
-        ChangeWeatherFunction?.Invoke();
+        IsRaining = !IsSnowing && Random.Range(0, 5) < 2 ? true : false;
+        IsSnowing = !IsRaining && Random.Range(0, 5) > 2 ? true : false;
+
+        SetCurrentWeatherActivityFunction?.Invoke(IsRaining, IsSnowing);
 
         yield return null;
     }
@@ -82,38 +87,32 @@ public class WeatherManager : MonoBehaviour
         if (!MyPhotonNetwork.IsOfflineMode && !MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
             yield break;
 
-        RaiseWeatherActivityFunction?.Invoke();
+        RaiseWeatherActivityFunction?.Invoke(IsRaining, IsSnowing);
 
-        yield return new WaitForSeconds(_delay);
+        yield return new WaitForSeconds(Random.Range(5, 100));
     }
 
-    public void ChangeWeather()
+    public void SetCurrentWeatherActivity(bool isRaining, bool isSnowing)
     {
-        IsRaining = !IsSnowing && Random.Range(0, 5) < 2 ? true : false;
-        IsSnowing = !IsRaining && Random.Range(0, 5) > 2 ? true : false;
+        IsRaining = isRaining;
+        IsSnowing = isSnowing;
 
         Conditions<bool>.Compare(IsRaining, () => { _rain.Play(); }, () => { _rain.Stop(); });
         Conditions<bool>.Compare(IsSnowing, () => { _snow.Play(); }, () => { _snow.Stop(); });
     }
 
-    public void RaiseWeatherActivity()
+    private void SetCurrentWeatherActivityRPC(bool isRaining, bool isSnowing)
     {
-        onWeatherActivity?.Invoke(IsRaining, IsSnowing);
-
-        _delay = Random.Range(5, 100);
+        GameSceneObjectsReferences.PhotonNetworkWeatherManager.SetCurrentWeatherActivity(IsRaining, IsSnowing);
     }
 
-    private void ChangeWeatherRPC()
+    public void RaiseWeatherActivity(bool isRaining, bool isSnowing)
     {
-        ChangeWeather();
-
-        GameSceneObjectsReferences.PhotonNetworkWeatherManager.ChangeWeather();
+        onWeatherActivity?.Invoke(isRaining, isSnowing);
     }
 
-    private void RaiseWeatherActivityRPC()
+    private void RaiseWeatherActivityRPC(bool isRaining, bool isSnowing)
     {
-        RaiseWeatherActivity();
-
-        GameSceneObjectsReferences.PhotonNetworkWeatherManager.RaiseWeatherActivity();
+        GameSceneObjectsReferences.PhotonNetworkWeatherManager.RaiseWeatherActivity(isRaining, isSnowing);
     }
 }

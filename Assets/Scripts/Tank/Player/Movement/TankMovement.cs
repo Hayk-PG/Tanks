@@ -201,13 +201,6 @@ public class TankMovement : BaseTankMovement
         {
             float distance = Vector3.Distance(transform.position, SynchedPosition);
 
-            if (gameObject.name == Names.Tank_FirstPlayer)
-            {
-                int i = Mathf.CeilToInt(distance * 100);
-                float f = i;
-                print(f / 100);
-            }
-
             if(distance >= 1)
             {
                 transform.position = SynchedPosition;
