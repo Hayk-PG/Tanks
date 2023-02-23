@@ -10,6 +10,9 @@ public class WeatherManager : MonoBehaviour
 
     private float _delay;
 
+    private System.Action ChangeWeatherFunction;
+    private System.Action RaiseWeatherActivityFunction;
+
     public bool IsRaining { get; set; }
     public bool IsSnowing { get; set; }
 
@@ -23,6 +26,11 @@ public class WeatherManager : MonoBehaviour
         _snowShape = _snow.shape;
     }
 
+    private void Start()
+    {
+        DefineChangeWeatherFunction();
+    }
+
     private void OnEnable()
     {
         GameSceneObjectsReferences.GameManager.OnGameStarted += delegate { StartCoroutine(StartCoroutines()); };
@@ -33,6 +41,13 @@ public class WeatherManager : MonoBehaviour
     {
         GameSceneObjectsReferences.GameManager.OnGameStarted -= delegate { StartCoroutine(StartCoroutines()); };
         GameSceneObjectsReferences.WindSystemController.onWindForce += OnWindForce;
+    }
+
+    private void DefineChangeWeatherFunction()
+    {
+        ChangeWeatherFunction = MyPhotonNetwork.IsOfflineMode ? ChangeWeather : MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer) ? ChangeWeatherRPC : null;
+
+        RaiseWeatherActivityFunction = MyPhotonNetwork.IsOfflineMode ? RaiseWeatherActivity : MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer) ? RaiseWeatherActivityRPC : null;
     }
 
     private IEnumerator StartCoroutines()
@@ -57,11 +72,7 @@ public class WeatherManager : MonoBehaviour
         if (!MyPhotonNetwork.IsOfflineMode && !MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
             yield break;
 
-        else if (MyPhotonNetwork.IsOfflineMode)
-            ChangeWeather();
-
-        else if(MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
-            PhotonNetworkChangeWeather();
+        ChangeWeatherFunction?.Invoke();
 
         yield return null;
     }
@@ -71,11 +82,7 @@ public class WeatherManager : MonoBehaviour
         if (!MyPhotonNetwork.IsOfflineMode && !MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
             yield break;
 
-        else if (MyPhotonNetwork.IsOfflineMode)
-            RaiseWeatherActivity();
-
-        else if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
-            PhotonNetworkRaiseWeatherActivity();
+        RaiseWeatherActivityFunction?.Invoke();
 
         yield return new WaitForSeconds(_delay);
     }
@@ -96,7 +103,17 @@ public class WeatherManager : MonoBehaviour
         _delay = Random.Range(5, 100);
     }
 
-    private void PhotonNetworkChangeWeather() => GameSceneObjectsReferences.PhotonNetworkWeatherManager.ChangeWeather();
+    private void ChangeWeatherRPC()
+    {
+        ChangeWeather();
 
-    private void PhotonNetworkRaiseWeatherActivity() => GameSceneObjectsReferences.PhotonNetworkWeatherManager.RaiseWeatherActivity();
+        GameSceneObjectsReferences.PhotonNetworkWeatherManager.ChangeWeather();
+    }
+
+    private void RaiseWeatherActivityRPC()
+    {
+        RaiseWeatherActivity();
+
+        GameSceneObjectsReferences.PhotonNetworkWeatherManager.RaiseWeatherActivity();
+    }
 }

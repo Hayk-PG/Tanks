@@ -4,7 +4,7 @@ public class PhotonNetworkWeatherManager : MonoBehaviourPun
 {
     public void RaiseWeatherActivity()
     {
-        photonView.RPC("RaiseWeatherActivityRPC", RpcTarget.AllViaServer);
+        photonView.RPC("RaiseWeatherActivityRPC", RpcTarget.Others);
     }
 
     [PunRPC]
@@ -15,7 +15,7 @@ public class PhotonNetworkWeatherManager : MonoBehaviourPun
 
     public void ChangeWeather()
     {
-        photonView.RPC("ChangeWeatherRPC", RpcTarget.AllViaServer);
+        photonView.RPC("ChangeWeatherRPC", RpcTarget.Others);
     }
 
     [PunRPC]
