@@ -4,18 +4,32 @@ using UnityEngine;
 public class Tab_Modify : MonoBehaviour
 {
     [SerializeField] private Btn _btnClose;
-    [SerializeField] private BuildModeSwitcher _buildModeSwitcher;
-    [SerializeField] private CanvasGroup _canvasGroup;
-    [SerializeField] private HUDMainTabsActivity _hudMainTabsActivity;
-    [SerializeField] private GameManager _gameManager;
-    [SerializeField] private TurnController _turnController;
+
+    [SerializeField] [Space]
+    private BuildModeSwitcher _buildModeSwitcher;
+
+    [SerializeField] [Space]
+    private CanvasGroup _canvasGroup;
+
+    [SerializeField] [Space]
+    private HUDMainTabsActivity _hudMainTabsActivity;
+
+    [SerializeField] [Space]
+    private GameManager _gameManager;
+
+    [SerializeField] [Space]
+    private TurnController _turnController;
+
     private IReset[] _iResets;
     
     private bool _isTabOpen;
 
     public Transform LocalPlayerTransform { get; private set; }
+
     public PlayerTurn LocalPlayerTurn { get; private set; }
+
     public ScoreController LocalPlayerScoreController { get; private set; }
+
 
 
 
@@ -24,16 +38,22 @@ public class Tab_Modify : MonoBehaviour
     private void OnEnable()
     {
         _buildModeSwitcher.onSelect += OpenTab;
+
         _gameManager.OnGameStarted += OnGameStarted;
+
         _turnController.OnTurnChanged += delegate { CloseTab(); };
+
         _btnClose.onSelect += CloseTab;
     }
 
     private void OnDisable()
     {
         _buildModeSwitcher.onSelect -= OpenTab;
+
         _gameManager.OnGameStarted -= OnGameStarted;
+
         _turnController.OnTurnChanged -= delegate { CloseTab(); };
+
         _btnClose.onSelect -= CloseTab;
     }
 

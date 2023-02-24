@@ -7,18 +7,25 @@ public class TileModifyManager : MonoBehaviour
 {
     public enum TileModifyType { BuildBasicTiles, ExtendBasicTiles, BuildConcreteTiles, UpgradeToConcreteTiles }
     private TileModifyType _tileModifyType;
+
     private Tab_Modify _tabModify;
-    private TileModifyTabButtonsListener _tilesModifiers;
-    private TilesData _tilesData;  
+
+    private TileModifyTabButtonsListener _tileModifyTabButtonsListener;
+
+    private TilesData _tilesData;
+
     private List<GameObject> foundTiles;
 
-    [SerializeField] private TMP_Text _txtScorePrice;
+    [SerializeField]
+    private TMP_Text _txtScorePrice;
+
     private int Price { get; set; }
 
     public bool CanModifyTiles
     {
         get => _tabModify.LocalPlayerScoreController.Score >= Price;
     }
+
     public class Prices
     {
         public string Name { get; set; }
@@ -39,24 +46,26 @@ public class TileModifyManager : MonoBehaviour
     private void Awake()
     {
         _tabModify = Get<Tab_Modify>.From(gameObject);
-        _tilesModifiers = Get<TileModifyTabButtonsListener>.From(gameObject);
+
+        _tileModifyTabButtonsListener = Get<TileModifyTabButtonsListener>.From(gameObject);
+
         _tilesData = FindObjectOfType<TilesData>();
     }
 
     private void OnEnable()
     {
-        _tilesModifiers.onBuildBasicTiles += BuildBasicTiles;
-        _tilesModifiers.onExtendBasicTiles += ExtendBasicTiles;
-        _tilesModifiers.onBuildConcreteTiles += BuildConcreteTiles;
-        _tilesModifiers.onUpgradeToConcreteTiles += UpgradeToConcreteTiles;
+        _tileModifyTabButtonsListener.onBuildBasicTiles += BuildBasicTiles;
+        _tileModifyTabButtonsListener.onExtendBasicTiles += ExtendBasicTiles;
+        _tileModifyTabButtonsListener.onBuildConcreteTiles += BuildConcreteTiles;
+        _tileModifyTabButtonsListener.onUpgradeToConcreteTiles += UpgradeToConcreteTiles;
     }
 
     private void OnDisable()
     {
-        _tilesModifiers.onBuildBasicTiles -= BuildBasicTiles;
-        _tilesModifiers.onExtendBasicTiles -= ExtendBasicTiles;
-        _tilesModifiers.onBuildConcreteTiles -= BuildConcreteTiles;
-        _tilesModifiers.onUpgradeToConcreteTiles -= UpgradeToConcreteTiles;
+        _tileModifyTabButtonsListener.onBuildBasicTiles -= BuildBasicTiles;
+        _tileModifyTabButtonsListener.onExtendBasicTiles -= ExtendBasicTiles;
+        _tileModifyTabButtonsListener.onBuildConcreteTiles -= BuildConcreteTiles;
+        _tileModifyTabButtonsListener.onUpgradeToConcreteTiles -= UpgradeToConcreteTiles;
     }
 
     private void SetScorePriceText(int score, int price)
@@ -67,28 +76,36 @@ public class TileModifyManager : MonoBehaviour
     private void BuildBasicTiles()
     {
         SetPrice(NewPrices[0].Price);
+
         SetTileModifyType(TileModifyType.BuildBasicTiles);
+
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
     private void ExtendBasicTiles()
     {
         SetPrice(NewPrices[3].Price);
+
         SetTileModifyType(TileModifyType.ExtendBasicTiles);
+
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
     private void BuildConcreteTiles()
     {
         SetPrice(NewPrices[1].Price);
+
         SetTileModifyType(TileModifyType.BuildConcreteTiles);
+
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
     private void UpgradeToConcreteTiles()
     {
         SetPrice(NewPrices[2].Price);
+
         SetTileModifyType(TileModifyType.UpgradeToConcreteTiles);
+
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
@@ -105,12 +122,14 @@ public class TileModifyManager : MonoBehaviour
     private IEnumerator StartFindTilesAroundPlayer()
     {
         yield return new WaitForSeconds(0.1f);
+
         FindTilesAroundPlayer();
     }
 
     public void FindTilesAroundPlayer()
     {
         SetScorePriceText(_tabModify.LocalPlayerScoreController.Score, Price);
+
         foundTiles = new List<GameObject>();
 
         foreach (var tile in _tilesData.TilesDict)
@@ -124,6 +143,7 @@ public class TileModifyManager : MonoBehaviour
                 StoreFoundTiles(haveLeftTilesBeenFound, tile.Value);
                 StoreFoundTiles(haveRIghtTilesBeenFound, tile.Value);
             }
+
             if (_tileModifyType == TileModifyType.UpgradeToConcreteTiles || _tileModifyType == TileModifyType.ExtendBasicTiles)
             {
                 StoreFoundTiles(foundNearTiles, tile.Value);
@@ -140,7 +160,9 @@ public class TileModifyManager : MonoBehaviour
     public void SubtractScore()
     {
         SetScorePriceText(_tabModify.LocalPlayerScoreController.Score - Price, Price);
+
         _tabModify.LocalPlayerScoreController.GetScore(-Price, null);
+
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 }

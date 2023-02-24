@@ -8,14 +8,22 @@
 
 public class TileModifyGUI : MonoBehaviour
 {
-    [SerializeField] private TileModifyGUIElement _tileModifyGUIElement;
-    [SerializeField] private TileModifyGUIElement _bridgeModifyGUIElement;
+    [SerializeField]
+    private TileModifyGUIElement _tileModifyGUIElement;
+
+    [SerializeField] [Space]
+    private TileModifyGUIElement _bridgeModifyGUIElement;
 
     private Canvas _canvas;
+
     private GlobalTileController _globalTileController;
+
     private TilesData _tilesData;
+
     private ChangeTiles _changeTiles;
-    private TileModifyManager _tileModifyManager;   
+
+    private TileModifyManager _tileModifyManager;
+    
     private delegate void CustomDelegate();
 
     private Vector3 CurrentTilePosition
@@ -23,6 +31,8 @@ public class TileModifyGUI : MonoBehaviour
         get => transform.parent.position;
     }
     private CustomDelegate OnClickAction { get; set; }
+
+
 
     
 
@@ -32,10 +42,15 @@ public class TileModifyGUI : MonoBehaviour
             return;
 
         _canvas = FindObjectOfType<Canvas>();
+
         _canvas.worldCamera = Camera.main;
+
         _globalTileController = FindObjectOfType<GlobalTileController>();
+
         _tilesData = FindObjectOfType<TilesData>();
+
         _changeTiles = FindObjectOfType<ChangeTiles>();
+
         _tileModifyManager = FindObjectOfType<TileModifyManager>();
     }
 
@@ -44,14 +59,17 @@ public class TileModifyGUI : MonoBehaviour
         switch (tileModifyType)
         {
             case TileModifyManager.TileModifyType.BuildBasicTiles:
+
                 OnClickAction = delegate
                 {
                     Vector3 newTilePosition = CurrentTilePosition + _tileModifyGUIElement._corespondentPosition;
+
                     _globalTileController.Modify(newTilePosition);
                 };
                 break;
 
             case TileModifyManager.TileModifyType.BuildConcreteTiles:
+
                 OnClickAction = delegate
                 {
                     _globalTileController.Modify(CurrentTilePosition, TileModifyManager.TileModifyType.BuildConcreteTiles);
@@ -59,15 +77,19 @@ public class TileModifyGUI : MonoBehaviour
                 break;
 
             case TileModifyManager.TileModifyType.UpgradeToConcreteTiles:
+
                 OnClickAction = delegate
                 {
                     _globalTileController.Modify(CurrentTilePosition, TileModifyManager.TileModifyType.UpgradeToConcreteTiles);
                 };
                 break;
+
             case TileModifyManager.TileModifyType.ExtendBasicTiles:
+
                 OnClickAction = delegate
                 {
                     int random = Random.Range(0, 2);
+
                     bool hasTileOnRight = _changeTiles.HasTile(CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition) && _tilesData.TilesDict.ContainsKey(CurrentTilePosition + _bridgeModifyGUIElement._corespondentPosition);
                     bool hasTileOnLeft = _changeTiles.HasTile(CurrentTilePosition - _bridgeModifyGUIElement._corespondentPosition) && _tilesData.TilesDict.ContainsKey(CurrentTilePosition - _bridgeModifyGUIElement._corespondentPosition);
 
@@ -136,6 +158,7 @@ public class TileModifyGUI : MonoBehaviour
     private bool IsAbleToExtendBasicTiles()
     {
         float tileSize = _bridgeModifyGUIElement._corespondentPosition.x;
+
         Vector3 right = new Vector3(tileSize, 0, 0);
         Vector3 left = new Vector3(-tileSize, 0, 0);
         Vector3 bottom = new Vector3(0, -tileSize, 0);
@@ -168,14 +191,18 @@ public class TileModifyGUI : MonoBehaviour
     public void EnableGUI(TileModifyManager.TileModifyType tileModifyType)
     {
         GetObjects();
+
         DefineOnClickAction(tileModifyType);
+
         TileModifyGUIElementActivity(CanGUIElementBeActive(tileModifyType) ? true : false);
+
         BridgeModifyGUIElementActivity(CanBridgeGUIElementBeActive(tileModifyType) ? true : false);
     }
 
     public void DisableGUI()
     {
         TileModifyGUIElementActivity(false);
+
         BridgeModifyGUIElementActivity(false);
     }
 
@@ -184,8 +211,11 @@ public class TileModifyGUI : MonoBehaviour
         if (_tileModifyManager.CanModifyTiles)
         {
             DisableGUI();
+
             _tileModifyManager.SubtractScore();
+
             SecondarySoundController.PlaySound(3, 0);
+
             OnClickAction?.Invoke();                    
         }
     }
