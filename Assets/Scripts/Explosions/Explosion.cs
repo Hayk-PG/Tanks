@@ -10,6 +10,8 @@ public class Explosion : BaseExplosion
     protected float _magnitude;
 
     protected int _currentDamageValue;
+
+    protected System.Action<IDamage, int, int[]> DamageAndScoreFunction;
     
     
     protected Collider[] _colliders;
@@ -28,10 +30,13 @@ public class Explosion : BaseExplosion
 
 
 
-    protected override void Awake()
+    protected virtual void Awake()
     {
         _iDamages = new List<IDamage>();
+
         _colliders = Physics.OverlapSphere(transform.position, _radius);
+
+        DefineDamageAndScoreFunction();
     }
 
     protected virtual void Start()
@@ -39,8 +44,14 @@ public class Explosion : BaseExplosion
         for (int i = 0; i < _colliders.Length; i++)
         {
             _magnitude = (transform.position - _colliders[i].transform.position).magnitude;
+
             GetIDamage(Get<IDamage>.From(_colliders[i].gameObject));           
         }
+    }
+
+    protected virtual void DefineDamageAndScoreFunction()
+    {
+        DamageAndScoreFunction = MyPhotonNetwork.IsOfflineMode ? DamageAndScoreInOfflineMode : DamageAndScoreInOlineMode;
     }
 
     protected virtual void GetIDamage(IDamage iDamage)
@@ -58,8 +69,11 @@ public class Explosion : BaseExplosion
         _iDamages.Add(iDamage);
 
         _percentage = 100 - Mathf.InverseLerp(0, _radius, _magnitude) * 100;
+
         _distanceFactorPercentage = 100 - Distance;
+
         _currentDamageValue = Mathf.RoundToInt((_maxDamageValue / 100 * _percentage) / 100 * _distanceFactorPercentage);
+
         Conditions<bool>.Compare(_currentDamageValue * 10 > 0, ()=> DamageAndScore(iDamage), null);
     }
 
@@ -67,19 +81,19 @@ public class Explosion : BaseExplosion
     {
         int hitScore = (_currentDamageValue * 100);
         int distanceBonus = Mathf.FloorToInt(Distance * 10);
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode,
-        () => DamageAndScoreInOfflineMode(iDamage, _currentDamageValue, new int[2] { hitScore, distanceBonus }),
-        () => DamageAndScoreInOlineMode(iDamage, new int[2] { hitScore, distanceBonus }));
+
+        DamageAndScoreFunction?.Invoke(iDamage, _currentDamageValue, new int[2] { hitScore, distanceBonus });
     }
 
     protected virtual void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int[] scores)
     {
         iDamage.Damage(damageValue);
+
         Score(iDamage, scores);
     }
 
-    protected virtual void DamageAndScoreInOlineMode(IDamage iDamage, int[] scores)
+    protected virtual void DamageAndScoreInOlineMode(IDamage iDamage, int damageValue, int[] scores)
     {
-        _gameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scores, 0);
+        GameSceneObjectsReferences.GameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scores, 0);
     }
 }

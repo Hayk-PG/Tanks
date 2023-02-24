@@ -78,16 +78,34 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
             IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>() ?? default;
 
-            iDamage?.Damage((int)data[2]);
+            Damage(iDamage, (int)data[2], (int)data[4]);
 
-            int[] scoreValues = (int[])data[3];
-
-            iScore?.GetScore(scoreValues[0] + scoreValues[1], iDamage);
-            iScore?.HitEnemyAndGetScore(scoreValues, iDamage);
-
-            if ((int)data[4] == 1)
-                iDamage.CameraChromaticAberrationFX();
+            Score(iScore, iDamage, (int[])data[3]);
         }
+    }
+
+    private void Damage(IDamage iDamage, int damage, int damagetypeIndex)
+    {
+        print(iDamage);
+
+        if (iDamage == default)
+            return;
+
+        iDamage.Damage(damage);
+
+        if (damagetypeIndex == 1)
+            iDamage.CameraChromaticAberrationFX();
+    }
+
+    private void Score(IScore iScore, IDamage iDamage, int[] scoreValues)
+    {
+        print(iScore + "/" + iDamage);
+
+        if (iScore == default)
+            return;
+
+        iScore.GetScore(scoreValues[0] + scoreValues[1], iDamage);
+        iScore.HitEnemyAndGetScore(scoreValues, iDamage);
     }
     #endregion
 

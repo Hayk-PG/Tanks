@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class TankMovement : BaseTankMovement
 {
     private TankController _tankController;
     private Fuel _fuel;
+    private IPhotonPlayerJumpExecuter _iPhotonPlayerJumpExecuter;
 
     private bool _isEnoughFuel = true;
     private bool _isSandbagsTriggered;
@@ -13,6 +15,9 @@ public class TankMovement : BaseTankMovement
 
     [SerializeField] 
     private bool _isJumped;
+
+    private Action FixedUpdateFunction;
+    private Action JumpFunction;
 
     public float SpeedInSandbags
     {
@@ -30,15 +35,26 @@ public class TankMovement : BaseTankMovement
         } 
     }
 
-    
+    public Vector3 SynchedPosition { get; set; }
+    public Quaternion SynchedRotation { get; set; }
+
+
 
 
     protected override void Awake()
     {
-        base.Awake();      
+        base.Awake();    
+        
         RigidbodyCenterOfMass();
-        _tankController = Get<TankController>.From(gameObject);
+
+        GetTankController();
+
+        GetIPhotonPlayerJumpExecuter();
+
+        SynchVariables(false);
     }
+
+    private void Start() => DefineFunctions();
 
     protected override void OnEnable()
     {
@@ -59,10 +75,40 @@ public class TankMovement : BaseTankMovement
         _tankController.onSelectJumpButton -= OnJump;
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() => FixedUpdateFunction();
+
+    private void GetTankController() => _tankController = Get<TankController>.From(gameObject);
+
+    private void GetIPhotonPlayerJumpExecuter()
     {
-        Move();
-        ControlJump();
+        if (_tankController.BasePlayer == null)
+            return;
+
+        _iPhotonPlayerJumpExecuter = Get<IPhotonPlayerJumpExecuter>.From(_tankController.BasePlayer.gameObject);
+    }
+
+    private void DefineFunctions()
+    {
+        JumpFunction = MyPhotonNetwork.IsOfflineMode ? Jump : JumpRPC;
+
+        FixedUpdateFunction = MyPhotonNetwork.IsOfflineMode ?
+
+            delegate
+            {
+                Move();
+
+                ControlJump();
+            }:
+            delegate
+            {
+                Move();
+
+                ControlJump();
+
+                SynchVariables(true);
+
+                SynchTransformAndRotationOnNonLocalPlayer();
+            };
     }
 
     private void OnHorizontalJoystick(float horizontal)
@@ -78,10 +124,24 @@ public class TankMovement : BaseTankMovement
     {
         if (!_isJumpButtonPressed && !_isJumped && _wheelColliderController.IsPartiallyGrounded() && _playerTurn.IsMyTurn)
         {
-            _rigidBody.AddForce(Vector3.up * 2500, ForceMode.Impulse);
-            SecondarySoundController.PlaySound(7, 0);
+            JumpFunction();
+
             _isJumpButtonPressed = true;
         }
+    }
+
+    public void Jump()
+    {
+        _rigidBody.AddForce(Vector3.up * 2500, ForceMode.Impulse);
+
+        SecondarySoundController.PlaySound(7, 0);
+    }
+
+    private void JumpRPC()
+    {
+        Jump();
+
+        _iPhotonPlayerJumpExecuter.Jump();
     }
 
     private void ControlJump()
@@ -102,12 +162,15 @@ public class TankMovement : BaseTankMovement
     public void Move()
     {
         MotorTorque();
+
         Brake();
+
         RigidbodyEulerAngles();
 
         if (_playerTurn.IsMyTurn)
         {
             Raycasts();
+
             UpdateSpeedAndPush();
         }
     }
@@ -121,6 +184,36 @@ public class TankMovement : BaseTankMovement
         OnDirectionValue?.Invoke(Direction);
         OnFuel?.Invoke(_wheelColliderController.WheelRPM(), _playerTurn.IsMyTurn);
         OnRigidbodyPosition?.Invoke(_rigidBody);       
+    }
+
+    private void SynchVariables(bool onlyOnLocalPlayer)
+    {
+        if (onlyOnLocalPlayer && _tankController.BasePlayer == null)
+            return;
+
+        SynchedPosition = transform.position;
+        SynchedRotation = transform.rotation;
+    }
+
+    private void SynchTransformAndRotationOnNonLocalPlayer()
+    {
+        if(_tankController.BasePlayer == null)
+        {
+            float distance = Vector3.Distance(transform.position, SynchedPosition);
+
+            if(distance >= 1)
+            {
+                transform.position = SynchedPosition;
+                transform.rotation = SynchedRotation;
+            }
+            else
+            {
+                float lerp = distance >= 0.5f ? 5 : 1;
+
+                transform.position = Vector3.Lerp(transform.position, SynchedPosition, lerp * Time.fixedDeltaTime);
+                transform.rotation = Quaternion.Lerp(transform.rotation, SynchedRotation, lerp * Time.fixedDeltaTime);
+            }
+        }
     }
 
     private void UpdateSpeedAndPush()

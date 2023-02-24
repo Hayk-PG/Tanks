@@ -10,6 +10,8 @@ public class PhotonPlayerFeedbacksController : PlayerFeedbackController
     protected override bool IsAllowed => _playerController.OwnTank?.BasePlayer != null;
 
 
+
+
     protected override void OnHitEnemy(int[] scores, Func<int> hitsCount)
     {
         _photonPlayerController.PhotonView.RPC("OnHitEnemyRPC", RpcTarget.AllViaServer, _playerController.OwnTank.name, scores, hitsCount());

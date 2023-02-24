@@ -2,25 +2,25 @@ using Photon.Pun;
 
 public class PhotonNetworkWeatherManager : MonoBehaviourPun
 {
-    public void RaiseWeatherActivity()
+    public void SetCurrentWeatherActivity(bool isRaining, bool isSnowing)
     {
-        photonView.RPC("RaiseWeatherActivityRPC", RpcTarget.AllViaServer);
+        photonView.RPC("SetCurrentWeatherActivityRPC", RpcTarget.AllViaServer, isRaining, isSnowing);
     }
 
     [PunRPC]
-    private void RaiseWeatherActivityRPC()
+    private void SetCurrentWeatherActivityRPC(bool isRaining, bool isSnowing)
     {
-        GameSceneObjectsReferences.WeatherManager.RaiseWeatherActivity();
+        GameSceneObjectsReferences.WeatherManager.SetCurrentWeatherActivity(isRaining, isSnowing);
     }
 
-    public void ChangeWeather()
+    public void RaiseWeatherActivity(bool isRaining, bool isSnowing)
     {
-        photonView.RPC("ChangeWeatherRPC", RpcTarget.AllViaServer);
+        photonView.RPC("RaiseWeatherActivityRPC", RpcTarget.AllViaServer, isRaining, isSnowing);
     }
 
     [PunRPC]
-    private void ChangeWeatherRPC()
+    private void RaiseWeatherActivityRPC(bool isRaining, bool isSnowing)
     {
-        GameSceneObjectsReferences.WeatherManager.ChangeWeather();
+        GameSceneObjectsReferences.WeatherManager.RaiseWeatherActivity(isRaining, isSnowing);
     }
 }
