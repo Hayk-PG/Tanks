@@ -53,6 +53,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField] 
     private LevelCreator _levelCreator;
 
+    [SerializeField]
+    private MapPoints _mapPoints;
+
     [Header("Camera")]
 
     [SerializeField] [Space]
@@ -77,6 +80,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static TilesData TilesData => Instance._tilesData;
     public static ChangeTiles ChangeTiles => Instance._changeTiles;
     public static LevelCreator LevelCreator => Instance._levelCreator;
+    public static MapPoints MapPoints => Instance._mapPoints;
 
     //Camera
     public static WeatherManager WeatherManager => Instance._weatherManager;
