@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    [SerializeField] 
-    private Maps _maps;
-
-    [SerializeField] [Space]
-    private int _currentMapIndex;
+    [SerializeField] private Maps _maps;
+    [SerializeField] private int _currentMapIndex;
    
     public int CurrentMapIndex
     {
