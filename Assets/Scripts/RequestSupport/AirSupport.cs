@@ -34,15 +34,12 @@ public class AirSupport : MonoBehaviour
 
     private Vector3 StartPosition(PlayerTurn playerTurn)
     {
-        return playerTurn.MyTurn == TurnState.Player1 ? 
-            new Vector3(StartPointX, 5, 0) :
-            new Vector3(EndPointX, 5, 0);
+        return playerTurn.MyTurn == TurnState.Player1 ? new Vector3(StartPointX, 5, 0) : new Vector3(EndPointX, 5, 0);
     }
 
     private Quaternion StartRotation(PlayerTurn playerTurn)
     {
-        return playerTurn.MyTurn == TurnState.Player1 ? 
-            Quaternion.Euler(-90, 90, 0) : Quaternion.Euler(-90, -90, 0);
+        return playerTurn.MyTurn == TurnState.Player1 ? Quaternion.Euler(-90, 90, 0) : Quaternion.Euler(-90, -90, 0);   
     }
 
     public void Call(out Bomber bomber, PlayerTurn ownerTurn, IScore ownerScore, Vector3 dropPoint)
@@ -54,17 +51,22 @@ public class AirSupport : MonoBehaviour
         _bomber.OwnerScore = ownerScore;
         _bomber.OwnerTurn = ownerTurn;
         _bomber.DropPoint = dropPoint;
+
         bomber = _bomber;
+
         GameSceneObjectsReferences.TurnController.SetNextTurn(TurnState.Other);
+
         StartCoroutine(ActivateBomber(ownerTurn));
     }
 
     private IEnumerator ActivateBomber(PlayerTurn playerTurn)
     {
         StartCoroutine(PlayAirSirenSound());
+
         yield return new WaitForSeconds(1);
 
         _bomber.gameObject.SetActive(true);
+
         _mainCameraController.CameraOffset(playerTurn, _rb, _bomber.transform.position.y - 2, 2);
     }
 
@@ -72,7 +74,9 @@ public class AirSupport : MonoBehaviour
     {
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
         SoundController.PlaySound(3, 0, out float clipLength);
+
         yield return new WaitForSeconds(clipLength);
+
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
     }
 }
