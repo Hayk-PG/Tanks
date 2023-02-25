@@ -11,13 +11,9 @@ public class ControllerButton : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private Color[] _clrs;
 
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        _img.color = _clrs[1];
-    }
+    private void Awake() => Get<Image>.From(gameObject).alphaHitTestMinimumThreshold = 1;
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        _img.color = _clrs[0];
-    }
+    public void OnPointerDown(PointerEventData eventData) => _img.color = _clrs[1];
+
+    public void OnPointerUp(PointerEventData eventData) => _img.color = _clrs[0];
 }
