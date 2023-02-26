@@ -4,6 +4,6 @@ public class DropBoxSelectionPanelTornadoWeapon : BaseDropBoxSelectionPanelEleme
 {
     protected override void Use()
     {
-        
+        CanUse = false;
     }
 }

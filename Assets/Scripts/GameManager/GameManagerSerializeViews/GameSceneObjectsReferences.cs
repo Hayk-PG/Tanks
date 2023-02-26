@@ -16,6 +16,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField] 
     private WindSystemController _windSystemController;
 
+    [SerializeField]
+    private AirSupport _airSupport;
+
     [SerializeField] 
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
@@ -34,6 +37,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private PhotonNetworkMineController _photonNetworkMineController;
 
+
     [Header("Tab_Ammo")]
 
     [SerializeField] [Space]
@@ -41,6 +45,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     [SerializeField]
     private NewWeaponFromWoodBox _newWeaponFromWoodBox;
+
 
     [Header("TileGenerator")]
 
@@ -53,21 +58,36 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField] 
     private LevelCreator _levelCreator;
 
+    [SerializeField]
+    private MapPoints _mapPoints;
+
+
     [Header("Camera")]
 
     [SerializeField] [Space]
+    private MainCameraController _mainCameraController;
+
+    [SerializeField] 
     private WeatherManager _weatherManager;
+
+
+    [Header("DropBoxSelectionPanel")]
+
+    [SerializeField]
+    private DropBoxSelectionPanelBomber[] _dropBoxSelectionPanelBombers;
+
 
     //GameManager
     public static GameManager GameManager => Instance._gameManager;
     public static TurnController TurnController => Instance._turnController;
     public static WindSystemController WindSystemController => Instance._windSystemController;
+    public static AirSupport AirSupport => Instance._airSupport;
     public static GameManagerBulletSerializer GameManagerBulletSerializer => Instance._gameManagerBulletSerializer;
     public static PhotonNetworkAALauncher PhotonNetworkAALauncher => Instance._photonNetworkAALauncher;
     public static WoodBoxSerializer WoodBoxSerializer => Instance._woodBoxSerializer;
     public static WoodBoxSerializeView WoodBoxSerializeView => Instance._woodBoxSerializeView;
     public static PhotonNetworkWeatherManager PhotonNetworkWeatherManager => Instance._photonNetworkWeatherManager;
-    public static PhotonNetworkMineController PhotonNetworkMineController => Instance._photonNetworkMineController;
+    public static PhotonNetworkMineController PhotonNetworkMineController => Instance._photonNetworkMineController;  
 
     //Tab_Ammo
     public static Tab_WoodboxContent Tab_WoodboxContent => Instance._tabWoodboxContent;
@@ -77,9 +97,15 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static TilesData TilesData => Instance._tilesData;
     public static ChangeTiles ChangeTiles => Instance._changeTiles;
     public static LevelCreator LevelCreator => Instance._levelCreator;
+    public static MapPoints MapPoints => Instance._mapPoints;
 
     //Camera
+    public static MainCameraController MainCameraController => Instance._mainCameraController;
     public static WeatherManager WeatherManager => Instance._weatherManager;
+
+    //DropBoxSelectionPanel
+    public static DropBoxSelectionPanelBomber[] DropBoxSelectionPanelBombers => Instance._dropBoxSelectionPanelBombers;
+
 
     //LavaSplash
     public static LavaSplash LavaSplash { get; private set; }

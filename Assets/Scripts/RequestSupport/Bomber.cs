@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 
+public enum BomberType { Light, Medium, Heavy, Nuke }
+
+
 public class Bomber : MonoBehaviour
 {
-    [SerializeField] private Transform _propeller, _bombSpwnPoint;
-    [SerializeField] private BombController _bombPrefab;
+    [SerializeField] 
+    private Transform _propeller, _bombSpwnPoint;
 
-    private BaseBulletController _bomb;
-    private GameManagerBulletSerializer _gameManagerBulletSerializer;
-    private MainCameraController _mainCameraController;
+    [SerializeField] [Space]
+    private BombController _bombPrefab;
+
 
     public IScore OwnerScore { get; set; }
     public PlayerTurn OwnerTurn { get; set; }
@@ -21,11 +24,6 @@ public class Bomber : MonoBehaviour
     private bool IsBombDropped { get; set; }
 
 
-    private void Awake()
-    {
-        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
-        _mainCameraController = FindObjectOfType<MainCameraController>();
-    }
 
     private void Update()
     {
@@ -42,6 +40,7 @@ public class Bomber : MonoBehaviour
     private void Movement()
     {
         transform.Translate(-transform.forward * 2 * Time.deltaTime);
+
         _propeller.Rotate(Vector3.right, -1000 * Time.deltaTime);
     }
 
@@ -49,9 +48,12 @@ public class Bomber : MonoBehaviour
     {
         if (!IsBombDropped)
         {
-            _bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
-            _gameManagerBulletSerializer.BaseBulletController = _bomb;
-            _bomb.OwnerScore = OwnerScore;
+            BaseBulletController bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
+
+            GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = bomb;
+
+            bomb.OwnerScore = OwnerScore;
+
             IsBombDropped = true;
         }
     }
@@ -59,7 +61,9 @@ public class Bomber : MonoBehaviour
     private void Deactivate()
     {
         gameObject.SetActive(false);
+
         IsBombDropped = false;
-        _mainCameraController.ResetTargets();
+
+        GameSceneObjectsReferences.MainCameraController.ResetTargets();
     }
 }

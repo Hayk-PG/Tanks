@@ -4,6 +4,6 @@ public class DropBoxSelectionPanelHomingMissile : BaseDropBoxSelectionPanelEleme
 {
     protected override void Use()
     {
-        
+        CanUse = false;
     }
 }

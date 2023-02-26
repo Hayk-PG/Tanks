@@ -14,6 +14,21 @@ public class DropBoxItemSelectionPanel : MonoBehaviour
 
 
 
+    private void Awake()
+    {
+        for (int i = 0; i < _elements.Length; i++)
+        {
+            if (Random.Range(0, 2) < 1)
+            {
+                SetElementActivity(false, i);
+
+                continue;
+            }
+
+            SetElementActivity(true, i);
+        }
+    }
+
     public void Execute()
     {
         StartCoroutine(LoopThroughElements());

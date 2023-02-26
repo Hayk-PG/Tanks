@@ -3,18 +3,30 @@ using UnityEngine;
 
 public class BaseRemoteControlTarget : MonoBehaviour
 {
-    [SerializeField] protected RectTransform _canvasRectransform;
-    [SerializeField] protected CanvasGroup _mainTabCanvasGroup;
+    [SerializeField] 
+    protected RectTransform _canvasRectransform;
+
+    [SerializeField] [Space]
+    protected CanvasGroup _mainTabCanvasGroup;
 
     protected RectTransform _rectTransform;
+
     protected Animator _animator;
+
     protected CanvasGroup _canvasGroup;
+
     protected Ray _ray;
+
     protected RaycastHit _raycastHit;
+
     protected Camera _mainCamera;
+
     protected TurnController _turnController;
+
     protected GameplayAnnouncer _gameplayAnnouncer;
+
     protected MainCameraController _mainCameraController;
+
     protected bool _hasGameStartBeenAnnounced;   
     protected bool _isPlayingAnimation;
 
