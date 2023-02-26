@@ -6,6 +6,7 @@ public class AirSupport : MonoBehaviour
     [SerializeField] 
     private Bomber _bomber; 
 
+    [SerializeField] [Space]
     private Rigidbody _rb;
 
     private float StartPointX
@@ -56,6 +57,8 @@ public class AirSupport : MonoBehaviour
         yield return StartCoroutine(PlayAirSirenSound());
 
         _bomber.gameObject.SetActive(true);
+
+        _rb.velocity = transform.right * 2;
 
         GameSceneObjectsReferences.MainCameraController.CameraOffset(playerTurn, _rb, _bomber.transform.position.y - 2, 2);
     }

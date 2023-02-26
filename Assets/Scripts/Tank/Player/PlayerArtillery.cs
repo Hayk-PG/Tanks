@@ -30,22 +30,22 @@ public class PlayerArtillery : PlayerDeployProps
     {
         _tankController.OnInitialize -= OnInitialize;
         _propsTabCustomization.OnArtillery -= OnArtillery;
-        _remoteControlArtilleryTargets.OnSet -= OnGiveCoordinates;
+        //_remoteControlArtilleryTargets.OnSet -= OnGiveCoordinates;
     }
 
     protected override void OnInitialize()
     {
         _propsTabCustomization.OnArtillery += OnArtillery;
-        _remoteControlArtilleryTargets.OnSet += OnGiveCoordinates;
+        //_remoteControlArtilleryTargets.OnSet += OnGiveCoordinates;
     }
 
     private void OnArtillery()
     {
-        if (_playerTurn.IsMyTurn)
-        {
-            _remoteControlArtilleryTargets.RemoteControlTargetActivity(true);
-            _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
-        }         
+        //if (_playerTurn.IsMyTurn)
+        //{
+        //    _remoteControlArtilleryTargets.RemoteControlTargetActivity(true);
+        //    _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
+        //}         
     }
 
     private void OnGiveCoordinates(Vector3 coordinate)

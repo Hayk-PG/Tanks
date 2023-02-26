@@ -73,8 +73,16 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     [Header("DropBoxSelectionPanel")]
 
+    [SerializeField] [Space]
+    private Tab_DropBoxItemSelection _tabDropBoxItemSelection;
+
     [SerializeField]
     private DropBoxSelectionPanelBomber[] _dropBoxSelectionPanelBombers;
+
+
+    [Header("HUD")]
+    [SerializeField] [Space]
+    private BaseRemoteControlTarget _baseRemoteControlTarget;
 
 
     //GameManager
@@ -104,7 +112,11 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static WeatherManager WeatherManager => Instance._weatherManager;
 
     //DropBoxSelectionPanel
+    public static Tab_DropBoxItemSelection Tab_DropBoxItemSelection => Instance._tabDropBoxItemSelection;
     public static DropBoxSelectionPanelBomber[] DropBoxSelectionPanelBombers => Instance._dropBoxSelectionPanelBombers;
+
+    //HUD
+    public static BaseRemoteControlTarget BaseRemoteControlTarget => Instance._baseRemoteControlTarget;
 
 
     //LavaSplash

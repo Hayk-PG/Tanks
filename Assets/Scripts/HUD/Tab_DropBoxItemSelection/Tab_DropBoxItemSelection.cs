@@ -19,6 +19,4 @@ public class Tab_DropBoxItemSelection :MonoBehaviour
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
     }
-
-
 }

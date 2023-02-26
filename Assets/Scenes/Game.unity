@@ -313,6 +313,18 @@ MonoBehaviour:
   VignetteAmount: 0.12
   VignetteSoftness: 0.391
   material: {fileID: 2100000, guid: 3aeedadbfc1ffb644834cb2b7d57aa77, type: 2}
+--- !u!114 &150762624 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 400004712, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c785064ddf14b41e5a137c12fe41f397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &194454900
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,7 +701,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 9.1835e-41, y: 5.113411e-37, z: 2.892818e-39, w: 7.34685e-40}
+  m_BoundingSphereOverride: {x: 0, y: 1e-45, z: NaN, w: -453.0359}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -940,6 +952,18 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!114 &1220509570 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2421112072003297648, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff64349351336048b99b553ef83035b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1298562269
 GameObject:
   m_ObjectHideFlags: 0
@@ -1888,6 +1912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bomber: {fileID: 1759631946}
+  _rb: {fileID: 6881935320404064988}
 --- !u!114 &2025759523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2124,11 +2149,13 @@ MonoBehaviour:
   _mapPoints: {fileID: 1950072990}
   _mainCameraController: {fileID: 963194236}
   _weatherManager: {fileID: 9149140056536914899}
+  _tabDropBoxItemSelection: {fileID: 150762624}
   _dropBoxSelectionPanelBombers:
   - {fileID: 279360527758376174}
   - {fileID: 279360527758376173}
   - {fileID: 279360527758376172}
   - {fileID: 279360527758376171}
+  _baseRemoteControlTarget: {fileID: 1220509570}
 --- !u!114 &2025759544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2211,6 +2238,22 @@ PrefabInstance:
       propertyPath: _gameManager
       value: 
       objectReference: {fileID: 2025759508}
+    - target: {fileID: 400004710, guid: 8bb47859066a5bf46b4be5e41db5feb7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004713, guid: 8bb47859066a5bf46b4be5e41db5feb7, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004713, guid: 8bb47859066a5bf46b4be5e41db5feb7, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004713, guid: 8bb47859066a5bf46b4be5e41db5feb7, type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 563932262, guid: 8bb47859066a5bf46b4be5e41db5feb7, type: 3}
       propertyPath: _mapPoints
       value: 
@@ -2972,6 +3015,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2421112072003297648, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _mainCamera
+      value: 
+      objectReference: {fileID: 963194227}
     - target: {fileID: 2498598157769176609, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -19187,7 +19235,7 @@ PrefabInstance:
     - target: {fileID: 376927705172816834, guid: 12d0a0d75d7faa640aac48ba98ee4354,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 376927705172816834, guid: 12d0a0d75d7faa640aac48ba98ee4354,
         type: 3}
@@ -19241,6 +19289,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d0a0d75d7faa640aac48ba98ee4354, type: 3}
+--- !u!54 &6881935320404064988 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 7780249197364765547, guid: 12d0a0d75d7faa640aac48ba98ee4354,
+    type: 3}
+  m_PrefabInstance: {fileID: 6881935320404064987}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9145918320877550346
 Transform:
   m_ObjectHideFlags: 0

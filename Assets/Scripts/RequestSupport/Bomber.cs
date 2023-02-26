@@ -5,12 +5,14 @@ public enum BomberType { Light, Medium, Heavy, Nuke }
 
 public class Bomber : MonoBehaviour
 {
-    [SerializeField] 
+    [SerializeField] [Space]
     private Transform _propeller, _bombSpwnPoint;
 
     [SerializeField] [Space]
-    private BombController _bombPrefab;
+    private Rigidbody _rigidbody;
 
+    [SerializeField] [Space]
+    private BombController _bombPrefab;
 
     public IScore OwnerScore { get; set; }
     public PlayerTurn OwnerTurn { get; set; }
@@ -19,28 +21,23 @@ public class Bomber : MonoBehaviour
     public float MaxX { get; set; }
     private bool isOutOfBoundaries
     {
-        get => transform.position.x < MinX || transform.position.x > MaxX;
+        get => _rigidbody.position.x < MinX || _rigidbody.position.x > MaxX;
     }
     private bool IsBombDropped { get; set; }
 
 
 
-    private void Update()
+    private void FixedUpdate()
     {
         Movement();
 
-        if (transform.position.x >= DropPoint.x - 0.1f && transform.position.x <= DropPoint.x + 0.1f)
-        {
-            DropBomb();
-        }
+        DropBomb();
 
         Conditions<bool>.Compare(isOutOfBoundaries, Deactivate, null);
     }
 
     private void Movement()
     {
-        transform.Translate(-transform.forward * 2 * Time.deltaTime);
-
         _propeller.Rotate(Vector3.right, -1000 * Time.deltaTime);
     }
 
@@ -48,13 +45,16 @@ public class Bomber : MonoBehaviour
     {
         if (!IsBombDropped)
         {
-            BaseBulletController bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
+            if (_rigidbody.position.x >= DropPoint.x - 0.1f && _rigidbody.position.x <= DropPoint.x + 0.1f)
+            {
+                BaseBulletController bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
 
-            GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = bomb;
+                GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = bomb;
 
-            bomb.OwnerScore = OwnerScore;
+                bomb.OwnerScore = OwnerScore;
 
-            IsBombDropped = true;
+                IsBombDropped = true;
+            }
         }
     }
 

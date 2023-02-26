@@ -134,7 +134,6 @@ public class MainCameraController : MonoBehaviour
 
     public void CameraOffset(PlayerTurn playerTurn, Rigidbody target, float? yOffset, float? desiredHeightOffset)
     {
-        //bool isDistanceAcceptable = Vector3.Distance(Target1 != null ? Target1.position: _player1.position, Target1 != null ? Target2.position : _player2.position) >= 5;
         bool isPlayerOnesTurn = playerTurn?.MyTurn == TurnState.Player1;
 
         if (playerTurn != null)
@@ -144,14 +143,14 @@ public class MainCameraController : MonoBehaviour
                 SetTargets(target, _player2);
                 OffsetY(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target2.position.y, 0.5f));
             }
+
             if (!isPlayerOnesTurn)
             {
                 SetTargets(_player1, target);
                 OffsetY(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target1.position.y, 0.5f));
             }
-            //if (!isDistanceAcceptable)
-            //    SetTargets(_player1, target);
         }
+
         else
             SetTargets(_player1, _player2);
 

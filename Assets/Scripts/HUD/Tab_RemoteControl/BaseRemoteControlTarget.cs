@@ -1,98 +1,111 @@
 ﻿using System;
 using UnityEngine;
 
+
 public class BaseRemoteControlTarget : MonoBehaviour
 {
-    [SerializeField] 
-    protected RectTransform _canvasRectransform;
+    [SerializeField] [Space]
+    protected RectTransform _canvas, _targetIcon;
 
     [SerializeField] [Space]
-    protected CanvasGroup _mainTabCanvasGroup;
+    protected CanvasGroup _mainTabCanvasGroup, _canvasGroup;
 
-    protected RectTransform _rectTransform;
-
+    [SerializeField] [Space]
     protected Animator _animator;
 
-    protected CanvasGroup _canvasGroup;
+    [SerializeField] [Space]
+    protected Camera _mainCamera;
 
     protected Ray _ray;
 
-    protected RaycastHit _raycastHit;
-
-    protected Camera _mainCamera;
-
-    protected TurnController _turnController;
-
-    protected GameplayAnnouncer _gameplayAnnouncer;
-
-    protected MainCameraController _mainCameraController;
-
-    protected bool _hasGameStartBeenAnnounced;   
     protected bool _isPlayingAnimation;
 
-    public Action<bool> OnRemoteControlTargetActivity { get; set; }
-    public Action<Vector3> OnSet { get; set; }
+    private object[] _data = new object[4];
+
+    public event Action<object[]> onBomberTargetSet;
+
+   
 
 
-
-    protected virtual void Awake()
-    {
-        _rectTransform = Get<RectTransform>.From(gameObject);
-        _animator = Get<Animator>.From(gameObject);
-        _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _mainCamera = Camera.main;
-        _turnController = FindObjectOfType<TurnController>();
-        _gameplayAnnouncer = FindObjectOfType<GameplayAnnouncer>();
-        _mainCameraController = FindObjectOfType<MainCameraController>();
-    }
 
     private void OnEnable()
     {
-        _turnController.OnTurnChanged += OnTurnChanged;
-        _gameplayAnnouncer.OnGameStartAnnouncement += delegate { _hasGameStartBeenAnnounced = true; };
+        GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber += OnSelectBomber; });
+
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
     private void OnDisable()
     {
-        _turnController.OnTurnChanged -= OnTurnChanged;
-        _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { _hasGameStartBeenAnnounced = true; };
+        GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber -= OnSelectBomber; });
+
+        GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnChanged;
     }
 
     protected virtual void Update()
     {
-        _ray = CameraPoint.ScreenPointToRay(_mainCamera, Input.mousePosition);
+        ControlTargetIcon();
 
-        if (Physics.Raycast(_ray, out _raycastHit) && Input.GetMouseButton(0) && _canvasGroup.interactable)
-        {
-            _rectTransform.anchoredPosition = Input.mousePosition / _canvasRectransform.localScale.x;
-            _isPlayingAnimation = true;
-        }
-        else
-        {
-            _isPlayingAnimation = false;
-        }
-
-        _animator.SetBool("isPlaying", _isPlayingAnimation);
+        PlayAnimation();
     }
 
-    public virtual void RemoteControlTargetActivity(bool isActive)
+    private void OnSelectBomber(BomberType bomberType, int price, int quantity)
     {
-        if (isActive)
-            _mainCameraController.CameraOffset(null, null, null, 1);
+        _data[0] = bomberType;
+        _data[1] = price;
+        _data[2] = quantity;
 
+        SetActivity(true);
+    }
+
+    private void ControlTargetIcon()
+    {
+        if (!Input.GetMouseButton(0) || !_canvasGroup.interactable)
+        {
+            _isPlayingAnimation = false;
+
+            return;
+        }
+
+        print("ControlTargetIcon");
+
+        _ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        _targetIcon.position = _mainCamera.WorldToScreenPoint(_ray.direction + _ray.origin);
+
+        _isPlayingAnimation = true;
+    }
+
+    private void PlayAnimation() => _animator.SetBool("isPlaying", _isPlayingAnimation);
+
+    protected virtual void SetActivity(bool isActive)
+    {
+        if (_canvasGroup.interactable == isActive)
+            return;
+        
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
-        GlobalFunctions.CanvasGroupActivity(_mainTabCanvasGroup, !isActive && _hasGameStartBeenAnnounced);
-        OnRemoteControlTargetActivity?.Invoke(isActive);
+        GlobalFunctions.CanvasGroupActivity(_mainTabCanvasGroup, !isActive);
+
+        if (isActive)
+            GameSceneObjectsReferences.MainCameraController.CameraOffset(null, null, null, 1);
     }
 
     public void OnAnimationEnd()
     {
-        OnSet?.Invoke(_raycastHit.point);
-        RemoteControlTargetActivity(false);
+        RaiseBomberTargetEvent();
+
+        SetActivity(false);
+    }
+
+    private void RaiseBomberTargetEvent()
+    {
+        _data[3] = (_ray.direction + _ray.origin);
+
+        onBomberTargetSet?.Invoke(_data);
     }
 
     private void OnTurnChanged(TurnState turnState)
     {
-        RemoteControlTargetActivity(false);
+        SetActivity(false);
     }
 }

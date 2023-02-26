@@ -43,9 +43,13 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
             return;
 
         Use();
+
+        CloseTab();
     }
 
     protected abstract void Use();
+
+    protected virtual void CloseTab() => GameSceneObjectsReferences.Tab_DropBoxItemSelection.SetActivity(false);
 
     protected virtual void DisplayPrice()
     {
