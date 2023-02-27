@@ -19,6 +19,7 @@ public class Shields : MonoBehaviour
     public void Activity(int index, bool isActive)
     {
         _shields[index].SetActive(isActive);
+
         SecondarySoundController.PlaySound(1, isActive ? 0 : 1);
     }
 }

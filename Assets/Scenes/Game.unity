@@ -1042,6 +1042,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff64349351336048b99b553ef83035b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1245829704 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 764957105906874226, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4bbd000a7d4496aaf675d23a55d795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1298562269
 GameObject:
   m_ObjectHideFlags: 0
@@ -2250,6 +2262,7 @@ MonoBehaviour:
   - {fileID: 1417429131}
   _dropBoxSelectionPanelAmmo: {fileID: 54369525}
   _dropBoxSelectionPanelDoubleXp: {fileID: 743729802}
+  _dropBoxSelectionPanelShield: {fileID: 1245829704}
   _dropBoxItemSelectionPanelOwner: {fileID: 583500467}
   _baseRemoteControlTarget: {fileID: 1220509570}
 --- !u!114 &2025759544
@@ -2651,6 +2664,11 @@ PrefabInstance:
       propertyPath: _gameManager
       value: 
       objectReference: {fileID: 2025759508}
+    - target: {fileID: 764957105906874226, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _price
+      value: 1200
+      objectReference: {fileID: 0}
     - target: {fileID: 827185744369915591, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: _turnTimer
