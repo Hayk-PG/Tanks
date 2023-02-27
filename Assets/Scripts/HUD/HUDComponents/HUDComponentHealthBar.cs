@@ -12,10 +12,8 @@ public class HUDComponentHealthBar : MonoBehaviour
     [SerializeField] [Space]
     protected Animator _animator;
 
-    [SerializeField] [Space]
-    protected TurnController _turnController;
-
     protected PlayerTurn _playerTurn;
+
     protected HealthController _healthController;
 
     protected bool _isSubscribed;
@@ -25,14 +23,11 @@ public class HUDComponentHealthBar : MonoBehaviour
 
 
 
-    protected virtual void OnEnable()
-    {
-        _turnController.OnTurnChanged += delegate { Initialize(); };
-    }
+    protected virtual void OnEnable() => GameSceneObjectsReferences.TurnController.OnTurnChanged += delegate { Initialize(); };
 
     protected virtual void OnDisable()
     {
-        _turnController.OnTurnChanged -= delegate { Initialize(); };
+        GameSceneObjectsReferences.TurnController.OnTurnChanged -= delegate { Initialize(); };
 
         UnsubscribeFromHealthController();
     }
@@ -73,6 +68,7 @@ public class HUDComponentHealthBar : MonoBehaviour
     protected virtual void OnUpdateBar(int value)
     {
         _imgFillLayer1.fillAmount = (float)value / 100;
+
         _animator.Play(AnimationStateName, AnimationLayer, 0);
     }
 

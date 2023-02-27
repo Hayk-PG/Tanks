@@ -12,9 +12,6 @@ public class HUDComponentPlayerName : MonoBehaviour
     [SerializeField] [Space]
     private TurnState _turnState;
 
-    [SerializeField] [Space]
-    private TurnController _turnController;
-
     private bool _isPlayerNameAssigned;
 
 
@@ -22,26 +19,27 @@ public class HUDComponentPlayerName : MonoBehaviour
     private void OnEnable()
     {
         if (MyPhotonNetwork.IsOfflineMode)
-            _turnController.OnTurnChanged += delegate { AssignTxtPlayerNameInOfflineMode(); };
+            GameSceneObjectsReferences.TurnController.OnTurnChanged += delegate { AssignTxtPlayerNameInOfflineMode(); };
 
         if (!MyPhotonNetwork.IsOfflineMode)
-            _turnController.OnTurnChanged += delegate { AssignTxtPlayerInOnlineMode(); };
+            GameSceneObjectsReferences.TurnController.OnTurnChanged += delegate { AssignTxtPlayerInOnlineMode(); };
     }
 
     private void OnDisable()
     {
         if (MyPhotonNetwork.IsOfflineMode)
-            _turnController.OnTurnChanged -= delegate { AssignTxtPlayerNameInOfflineMode(); };
+            GameSceneObjectsReferences.TurnController.OnTurnChanged -= delegate { AssignTxtPlayerNameInOfflineMode(); };
 
         if (!MyPhotonNetwork.IsOfflineMode)
-            _turnController.OnTurnChanged -= delegate { AssignTxtPlayerInOnlineMode(); };
+            GameSceneObjectsReferences.TurnController.OnTurnChanged -= delegate { AssignTxtPlayerInOnlineMode(); };
     }
 
     private void AssignTxtPlayerNameInOfflineMode()
     {
         if (!_isPlayerNameAssigned)
         {
-            _txtPlayerName.text = _turnState == TurnState.Player1 ? "You" : "AI";
+            _txtPlayerName.text = _turnState == TurnState.Player1 ? "Player1" : "Player2";
+
             _isPlayerNameAssigned = true;
         }
     }

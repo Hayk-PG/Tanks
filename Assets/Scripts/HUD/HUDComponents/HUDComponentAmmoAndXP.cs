@@ -11,23 +11,21 @@ public class HUDComponentAmmoAndXP : MonoBehaviour
     [SerializeField] [Space]
     private CurrentWeaponStatus _currentWeaponStatus;
 
-    [SerializeField] [Space]
-    private TurnController _turnController;
-
     private bool _isAssigned;
 
 
 
 
-    private void OnEnable() => _turnController.OnTurnChanged += OnTurnChanged;
+    private void OnEnable() => GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
 
-    private void OnDisable() => _turnController.OnTurnChanged -= OnTurnChanged;
+    private void OnDisable() => GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnChanged;
 
     private void OnTurnChanged(TurnState turnState)
     {
         if (!_isAssigned)
         {
             Initialize();
+
             _isAssigned = true;
         }
     }
@@ -41,11 +39,13 @@ public class HUDComponentAmmoAndXP : MonoBehaviour
             if (Get<TankController>.From(playerTurn.gameObject).BasePlayer != null)
             {
                 GlobalFunctions.CanvasGroupActivity(_hudScore.CanvasGroup, true);
-                GlobalFunctions.CanvasGroupActivity(_currentWeaponStatus.CanvasGroup, true);       
+
+                GlobalFunctions.CanvasGroupActivity(_currentWeaponStatus.CanvasGroup, false);       
             }
             else
             {
                 _hudScore.gameObject.SetActive(false);
+
                 _currentWeaponStatus.gameObject.SetActive(false);
             }
         }

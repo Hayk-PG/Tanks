@@ -8,9 +8,6 @@ public class CurrentWeaponStatus : MonoBehaviour
     [SerializeField]
     private CanvasGroup _canvasGroup;
 
-    [SerializeField]
-    private AmmoTabCustomization _ammoTabCustomization;
-
     [SerializeField] [Space]
     private Animator _animator;
 
@@ -33,7 +30,7 @@ public class CurrentWeaponStatus : MonoBehaviour
         }
     }
 
-    [SerializeField] 
+    [SerializeField] [Space]
     private Properties _properties;
 
     public CanvasGroup CanvasGroup => _canvasGroup;
@@ -42,19 +39,14 @@ public class CurrentWeaponStatus : MonoBehaviour
 
   
 
-    private void OnEnable()
-    {
-        _ammoTabCustomization.OnUpdateDisplayedWeapon += OnUpdateDisplayedWeapon;
-    }
+    //private void OnEnable() => GameSceneObjectsReferences.AmmoTabCustomization.OnUpdateDisplayedWeapon += OnUpdateDisplayedWeapon;
 
-    private void OnDisable()
-    {
-        _ammoTabCustomization.OnUpdateDisplayedWeapon -= OnUpdateDisplayedWeapon;
-    }
+    //private void OnDisable() => GameSceneObjectsReferences.AmmoTabCustomization.OnUpdateDisplayedWeapon -= OnUpdateDisplayedWeapon;
 
     private void OnUpdateDisplayedWeapon(WeaponProperties weaponProperty, int bulletsLeft)
     {
         _properties.CurrentWeaponIcon = weaponProperty._icon;
+
         _properties.Text = bulletsLeft < 100 ? bulletsLeft.ToString() : "∞";
 
         if (_animator != null)
