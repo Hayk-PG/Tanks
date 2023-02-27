@@ -159,7 +159,9 @@ public class ScoreController : MonoBehaviour, IScore
     {
         if (_tankController.BasePlayer != null)
         {
-            int score = Score <= 100 ? 100 * multiplier : Score * multiplier;
+            int m = multiplier <= 2 ? 1 : multiplier - 1;
+
+            int score = Score <= 100 ? 100 * m : Score * m;
 
             GetScore(score, null);
         }

@@ -8,6 +8,8 @@ public class PlayerAmmoType : MonoBehaviour
     private TankController _tankController;
 
     private ShootController _shootController;
+
+    private ScoreController _scoreController;
     
     [Header("Scriptable objects")]
 
@@ -37,6 +39,8 @@ public class PlayerAmmoType : MonoBehaviour
         _tankController = Get<TankController>.From(gameObject);
 
         _shootController = Get<ShootController>.From(gameObject);
+
+        _scoreController = Get<ScoreController>.From(gameObject);
     }
 
     private void OnEnable()
@@ -121,7 +125,7 @@ public class PlayerAmmoType : MonoBehaviour
             GameSceneObjectsReferences.AmmoTabCustomization.SetDefaultAmmo(null);
     }
 
-    private void UpdateAmmoFromDropBoxPanel()
+    private void UpdateAmmoFromDropBoxPanel(int price)
     {
         if (_tankController.BasePlayer != null)
         {
@@ -130,6 +134,8 @@ public class PlayerAmmoType : MonoBehaviour
             int bulletsCount = _weapons[active]._value / 4 > 0 ? _weapons[active]._value / 4 : 1;
 
             _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += bulletsCount;
+
+            _scoreController.GetScore(price, null);
 
             UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
         }

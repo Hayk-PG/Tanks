@@ -2,10 +2,10 @@ using System;
 
 public class DropBoxSelectionPanelAmmo : BaseDropBoxSelectionPanelElement
 {
-    public event Action onAmmo;
+    public event Action<int> onAmmo;
 
     protected override void Use()
     {
-        onAmmo?.Invoke();
+        onAmmo?.Invoke(-_price);
     }
 }
