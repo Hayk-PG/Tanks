@@ -1,32 +1,31 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class DropBoxItemSelectionPanel : MonoBehaviour
 {
     [SerializeField]
-    private GridLayoutGroup _gridLayoutGroup;
+    private Tab_DropBoxItemSelection _dropBoxSelectionTab;
 
     [SerializeField] [Space]
     private BaseDropBoxSelectionPanelElement[] _elements;
 
 
 
-
-    private void Awake()
+    private void OnEnable()
     {
-        for (int i = 0; i < _elements.Length; i++)
-        {
-            if (Random.Range(0, 2) < 1)
-            {
-                SetElementActivity(false, i);
+        _dropBoxSelectionTab.onDropBoxItemSelectionTabActivity += OnDropBoxItemSelectionTabActivity;
+    }
 
-                continue;
-            }
+    private void OnDisable()
+    {
+        _dropBoxSelectionTab.onDropBoxItemSelectionTabActivity -= OnDropBoxItemSelectionTabActivity;
+    }
 
-            SetElementActivity(true, i);
-        }
+    private void OnDropBoxItemSelectionTabActivity(bool isActive)
+    {
+        if (isActive)
+            Execute();
     }
 
     public void Execute()
@@ -40,7 +39,10 @@ public class DropBoxItemSelectionPanel : MonoBehaviour
 
         for (int i = 0; i < _elements.Length; i++)
         {
-            if(Random.Range(0, 2) < 1)
+            if (i == 0)
+                continue;
+
+            if(Random.Range(0, 2) < 1 )
             {
                 SetElementActivity(false, i);
 
