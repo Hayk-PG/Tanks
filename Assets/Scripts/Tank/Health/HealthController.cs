@@ -6,7 +6,9 @@ using UnityEngine;
 public class HealthController : MonoBehaviour, IDamage
 {
     private TankController _tankController;
+
     private PlayerShields _playerShields;
+
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
 
     [SerializeField]
@@ -36,6 +38,7 @@ public class HealthController : MonoBehaviour, IDamage
 
     public Action<BasePlayer, int> OnTakeDamage { get; set; }
     public Action<int> OnUpdateHealthBar { get; set; }
+
     public event Action<int> onUpdateArmorBar;
     public Action<int> OnTankDamageFire { get; set; }
 
@@ -45,7 +48,9 @@ public class HealthController : MonoBehaviour, IDamage
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
+
         _playerShields = Get<PlayerShields>.From(gameObject);
+
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
 
         Health = 100;
@@ -53,22 +58,54 @@ public class HealthController : MonoBehaviour, IDamage
 
     private void OnEnable()
     {
-        if (MyPhotonNetwork.IsOfflineMode)
-            _gameManagerBulletSerializer.OnTornado += OnTornadoDamage;
-        else
-            PhotonNetwork.NetworkingClient.EventReceived += OnTornadoDamage;
+        ManageTornadoEventSubscription(true);
 
-        _playerShields.onShieldActivity += OnShieldActivity;
+        ManageShieldActivityEventSubscription(true);
+
+        ManageDropBoxSelectionPanelHealthEventSubscription(true);
     }
 
     private void OnDisable()
     {
-        if (MyPhotonNetwork.IsOfflineMode)
-            _gameManagerBulletSerializer.OnTornado -= OnTornadoDamage;
-        else
-            PhotonNetwork.NetworkingClient.EventReceived -= OnTornadoDamage;
+        ManageTornadoEventSubscription(false);
 
-        _playerShields.onShieldActivity -= OnShieldActivity;
+        ManageShieldActivityEventSubscription(false);
+
+        ManageDropBoxSelectionPanelHealthEventSubscription(false);
+    }
+
+    private void ManageTornadoEventSubscription(bool isSubscribing)
+    {
+        if (isSubscribing)
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => _gameManagerBulletSerializer.OnTornado += OnTornadoDamage, () => PhotonNetwork.NetworkingClient.EventReceived += OnTornadoDamage);
+        else
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => _gameManagerBulletSerializer.OnTornado -= OnTornadoDamage, () => PhotonNetwork.NetworkingClient.EventReceived -= OnTornadoDamage);
+    }
+
+    private void ManageShieldActivityEventSubscription(bool isSubscribing)
+    {
+        if (isSubscribing)
+            _playerShields.onShieldActivity += OnShieldActivity;
+        else
+            _playerShields.onShieldActivity -= OnShieldActivity;
+    }
+
+    private void ManageDropBoxSelectionPanelHealthEventSubscription(bool isSubscribing)
+    {
+        if (isSubscribing)
+        {
+            GlobalFunctions.Loop<DropBoxSelectionPanelHealth>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelHealth, dropBoxSelectionPanelHealth =>
+            {
+                dropBoxSelectionPanelHealth.onUpdateHealth += GetHealthFromDropBoxSelectionPanel;
+            });
+        }
+        else
+        {
+            GlobalFunctions.Loop<DropBoxSelectionPanelHealth>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelHealth, dropBoxSelectionPanelHealth =>
+            {
+                dropBoxSelectionPanelHealth.onUpdateHealth -= GetHealthFromDropBoxSelectionPanel;
+            });
+        }
     }
 
     public void BoostSafeZone(bool isSafeZone) => IsSafeZone = isSafeZone;
@@ -100,12 +137,14 @@ public class HealthController : MonoBehaviour, IDamage
         if(collider == _center)
         {
             newDamage = fixedDamage;
+
             SecondarySoundController.PlaySound(0, 2);
         }
 
         if(collider == _strongSpot)
         {
             newDamage = fixedDamage / 1.5f;
+
             SecondarySoundController.PlaySound(0, 2);
         }
 
@@ -163,6 +202,7 @@ public class HealthController : MonoBehaviour, IDamage
         float d = damage;
         float d1 = d / 100;
         float a = 100 - Armor;
+
         return Mathf.FloorToInt(d1 * a);        
     }
 
@@ -187,22 +227,17 @@ public class HealthController : MonoBehaviour, IDamage
         }
     }
 
-    public void GetHealthFromWoodBox(out bool isDone, out string text)
+    private void GetHealthFromDropBoxSelectionPanel(int health)
     {
-        isDone = false;
-        text = "";
-
         if (_tankController.BasePlayer != null)
         {
-            if (Health + 20 <= 100)
-                Health += 20;
+            if (Health + health <= 100)
+                Health += health;
             else
                 Health = 100;
 
-            isDone = true;
-            text = "+" + 20;
-
             OnUpdateHealthBar?.Invoke(Health);
+
             OnTankDamageFire?.Invoke(Health);
         }
     }
@@ -220,6 +255,7 @@ public class HealthController : MonoBehaviour, IDamage
         if(isActive)
         {
             ShieldHealth = 100;
+
             onUpdateArmorBar?.Invoke(ShieldHealth);
         }
     }

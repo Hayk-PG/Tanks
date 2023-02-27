@@ -154,12 +154,15 @@ public class ScoreController : MonoBehaviour, IScore
     public void GetScoreFromWoodBox(out bool isDone, out string text)
     {
         isDone = false;
+
         text = "";
 
         if (_tankController.BasePlayer != null)
         {
             GetScore(500, null);
+
             isDone = true;
+
             text = "+" + 500;
         }
     }
