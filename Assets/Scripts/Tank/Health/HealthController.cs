@@ -9,8 +9,6 @@ public class HealthController : MonoBehaviour, IDamage
 
     private PlayerShields _playerShields;
 
-    private GameManagerBulletSerializer _gameManagerBulletSerializer;
-
     [SerializeField]
     private Collider _weakSpot, _center, _strongSpot;
 
@@ -51,8 +49,6 @@ public class HealthController : MonoBehaviour, IDamage
 
         _playerShields = Get<PlayerShields>.From(gameObject);
 
-        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
-
         Health = 100;
     }
 
@@ -77,9 +73,9 @@ public class HealthController : MonoBehaviour, IDamage
     private void ManageTornadoEventSubscription(bool isSubscribing)
     {
         if (isSubscribing)
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => _gameManagerBulletSerializer.OnTornado += OnTornadoDamage, () => PhotonNetwork.NetworkingClient.EventReceived += OnTornadoDamage);
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado += OnTornadoDamage, () => PhotonNetwork.NetworkingClient.EventReceived += OnTornadoDamage);
         else
-            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => _gameManagerBulletSerializer.OnTornado -= OnTornadoDamage, () => PhotonNetwork.NetworkingClient.EventReceived -= OnTornadoDamage);
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado -= OnTornadoDamage, () => PhotonNetwork.NetworkingClient.EventReceived -= OnTornadoDamage);
     }
 
     private void ManageShieldActivityEventSubscription(bool isSubscribing)

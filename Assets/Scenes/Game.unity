@@ -669,6 +669,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 800b1d01202da124496e8c18fcbf7efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &627108446 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9146340756443406090, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14e9d95f2d0e6ff418e54ed5cc94a6e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &627108447 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 279360527388715767, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7122b8d9113d069478a40004f6807153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,6 +787,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &743729802 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3872438942806086979, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e86491b814d7b406f8db649557431131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &894893971 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5212517298145562396, guid: 8bb47859066a5bf46b4be5e41db5feb7,
@@ -2195,6 +2231,8 @@ MonoBehaviour:
   _tabWoodboxContent: {fileID: 1516637602}
   _newWeaponFromWoodBox: {fileID: 1516637601}
   _ammoTabCustomization: {fileID: 4275548}
+  _propsTabCustomization: {fileID: 627108446}
+  _supportTabCustomization: {fileID: 627108447}
   _tilesData: {fileID: 1950072985}
   _changeTiles: {fileID: 1950072987}
   _levelCreator: {fileID: 1950072989}
@@ -2211,6 +2249,7 @@ MonoBehaviour:
   - {fileID: 1417429132}
   - {fileID: 1417429131}
   _dropBoxSelectionPanelAmmo: {fileID: 54369525}
+  _dropBoxSelectionPanelDoubleXp: {fileID: 743729802}
   _dropBoxItemSelectionPanelOwner: {fileID: 583500467}
   _baseRemoteControlTarget: {fileID: 1220509570}
 --- !u!114 &2025759544
@@ -3331,6 +3370,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3872438942806086979, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _multiplier
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4101505986254809120, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}

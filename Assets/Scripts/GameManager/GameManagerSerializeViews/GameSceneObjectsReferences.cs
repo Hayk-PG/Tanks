@@ -49,6 +49,12 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private AmmoTabCustomization _ammoTabCustomization;
 
+    [SerializeField]
+    private PropsTabCustomization _propsTabCustomization;
+
+    [SerializeField]
+    private SupportsTabCustomization _supportTabCustomization;
+
 
     [Header("TileGenerator")]
 
@@ -89,6 +95,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private DropBoxSelectionPanelAmmo _dropBoxSelectionPanelAmmo;
 
     [SerializeField]
+    private DropBoxSelectionPanelDoubleXp _dropBoxSelectionPanelDoubleXp;
+
+    [SerializeField]
     private DropBoxItemSelectionPanelOwner _dropBoxItemSelectionPanelOwner;
 
 
@@ -115,6 +124,8 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static Tab_WoodboxContent Tab_WoodboxContent => Instance._tabWoodboxContent;
     public static NewWeaponFromWoodBox NewWeaponFromWoodBox => Instance._newWeaponFromWoodBox;
     public static AmmoTabCustomization AmmoTabCustomization => Instance._ammoTabCustomization;
+    public static PropsTabCustomization PropsTabCustomization => Instance._propsTabCustomization;
+    public static SupportsTabCustomization SupportsTabCustomization => Instance._supportTabCustomization;
 
     //TileGenerator
     public static TilesData TilesData => Instance._tilesData;
@@ -131,10 +142,12 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static DropBoxSelectionPanelBomber[] DropBoxSelectionPanelBombers => Instance._dropBoxSelectionPanelBombers;
     public static DropBoxSelectionPanelHealth[] DropBoxSelectionPanelHealth => Instance._dropBoxSelectionPanelHealth;
     public static DropBoxSelectionPanelAmmo DropBoxSelectionPanelAmmo => Instance._dropBoxSelectionPanelAmmo;
+    public static DropBoxSelectionPanelDoubleXp DropBoxSelectionPanelDoubleXp => Instance._dropBoxSelectionPanelDoubleXp;
     public static DropBoxItemSelectionPanelOwner DropBoxItemSelectionPanelOwner => Instance._dropBoxItemSelectionPanelOwner;
 
     //HUD
     public static BaseRemoteControlTarget BaseRemoteControlTarget => Instance._baseRemoteControlTarget;
+
 
 
     //LavaSplash

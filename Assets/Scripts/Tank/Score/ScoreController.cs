@@ -5,16 +5,13 @@ using UnityEngine;
 
 public class ScoreController : MonoBehaviour, IScore
 {
-    public IDamage IDamage { get; set; }
     private TankController _tankController;
-    private AmmoTabCustomization _ammoTabCustomization;
-    private PropsTabCustomization _propsTabCustomization;
-    private SupportsTabCustomization _supportTabCustomization;
-    private GetScoreFromTerOccInd _getScoreFromTerOccInd;
-    private GameManagerBulletSerializer _gameManagerBulletSerializer;
+
+    private ScoreFromTerOccIndController _scoreFromTerOccIndController;
 
     private int _score;
-
+    
+    public IDamage IDamage { get; set; }
     public PlayerTurn PlayerTurn { get; set; }
     public int Score
     {
@@ -34,15 +31,15 @@ public class ScoreController : MonoBehaviour, IScore
     private void Awake()
     {       
         IDamage = Get<IDamage>.From(gameObject);
+
         PlayerTurn = Get<PlayerTurn>.From(gameObject);
+
         _tankController = Get<TankController>.From(gameObject);
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-        _propsTabCustomization = FindObjectOfType<PropsTabCustomization>();
-        _supportTabCustomization = FindObjectOfType<SupportsTabCustomization>();
-        _getScoreFromTerOccInd = GetComponent<GetScoreFromTerOccInd>();
-        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
+
+        _scoreFromTerOccIndController = Get<ScoreFromTerOccIndController>.From(gameObject);
 
         Score = 0;
+
         MainScore = 0;
     }
 
@@ -51,35 +48,44 @@ public class ScoreController : MonoBehaviour, IScore
         _tankController.OnInitialize += OnInitialize;
 
         if (MyPhotonNetwork.IsOfflineMode)
-            _gameManagerBulletSerializer.OnTornado += OnTornado;
+            GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado += OnTornado;
         else
             PhotonNetwork.NetworkingClient.EventReceived += OnTornado;
+
+        GameSceneObjectsReferences.DropBoxSelectionPanelDoubleXp.onDoubleXp += GetScoreFromDropBoxPanel;
     }
 
     private void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
-        _ammoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
-        _propsTabCustomization.OnSupportOrPropsChanged -= OnSupportOrPropsChanged;
-        _supportTabCustomization.OnSupportOrPropsChanged -= OnSupportOrPropsChanged;
 
-        if (_getScoreFromTerOccInd != null)
-            _getScoreFromTerOccInd.OnGetScoreFromTerOccInd -= OnGetScoreFromTerOccInd;
+        GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
+
+        GameSceneObjectsReferences.PropsTabCustomization.OnSupportOrPropsChanged -= OnSupportOrPropsChanged;
+
+        GameSceneObjectsReferences.SupportsTabCustomization.OnSupportOrPropsChanged -= OnSupportOrPropsChanged;
+
+        if (_scoreFromTerOccIndController != null)
+            _scoreFromTerOccIndController.OnGetScoreFromTerOccInd -= OnGetScoreFromTerOccInd;
 
         if (MyPhotonNetwork.IsOfflineMode)
-            _gameManagerBulletSerializer.OnTornado -= OnTornado;
+            GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado -= OnTornado;
         else
             PhotonNetwork.NetworkingClient.EventReceived -= OnTornado;
+
+        GameSceneObjectsReferences.DropBoxSelectionPanelDoubleXp.onDoubleXp -= GetScoreFromDropBoxPanel;
     }
 
     private void OnInitialize()
     {
-        _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
-        _propsTabCustomization.OnSupportOrPropsChanged += OnSupportOrPropsChanged;
-        _supportTabCustomization.OnSupportOrPropsChanged += OnSupportOrPropsChanged;
+        GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
 
-        if (_getScoreFromTerOccInd != null)
-            _getScoreFromTerOccInd.OnGetScoreFromTerOccInd += OnGetScoreFromTerOccInd;
+        GameSceneObjectsReferences.PropsTabCustomization.OnSupportOrPropsChanged += OnSupportOrPropsChanged;
+
+        GameSceneObjectsReferences.SupportsTabCustomization.OnSupportOrPropsChanged += OnSupportOrPropsChanged;
+
+        if (_scoreFromTerOccIndController != null)
+            _scoreFromTerOccIndController.OnGetScoreFromTerOccInd += OnGetScoreFromTerOccInd;
     }
 
     public void BoostXp(bool isXpBoost) => IsXpBoost = isXpBoost;
@@ -151,19 +157,13 @@ public class ScoreController : MonoBehaviour, IScore
         UpdateScore(100, 0.5f);
     }
 
-    public void GetScoreFromWoodBox(out bool isDone, out string text)
+    public void GetScoreFromDropBoxPanel(int multiplier)
     {
-        isDone = false;
-
-        text = "";
-
         if (_tankController.BasePlayer != null)
         {
-            GetScore(500, null);
+            int score = Score <= 100 ? 100 * multiplier : Score * multiplier;
 
-            isDone = true;
-
-            text = "+" + 500;
+            GetScore(score, null);
         }
     }
 }

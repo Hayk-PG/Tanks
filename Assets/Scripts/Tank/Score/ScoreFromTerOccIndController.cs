@@ -2,11 +2,14 @@
 using System.Collections;
 using UnityEngine;
 
-public class GetScoreFromTerOccInd : MonoBehaviour
+public class ScoreFromTerOccIndController : MonoBehaviour
 {
     private PlayerTurn _playerTurn;
+
     private TankController _tankController;
+
     private MyPlugins _myPlugins;
+
     private TerritoryOccupiedIndicator _terrOccInd;
 
     private int _sec;
@@ -19,6 +22,7 @@ public class GetScoreFromTerOccInd : MonoBehaviour
     private void Awake()
     {
         _playerTurn = Get<PlayerTurn>.From(gameObject);
+
         _tankController = Get<TankController>.From(gameObject);
     }
 
@@ -30,7 +34,9 @@ public class GetScoreFromTerOccInd : MonoBehaviour
     private void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
-        if (_myPlugins != null) _myPlugins.OnPluginService -= OnPluginService;
+
+        if (_myPlugins != null) 
+            _myPlugins.OnPluginService -= OnPluginService;
     }
 
     private void OnInitialize()
@@ -50,16 +56,22 @@ public class GetScoreFromTerOccInd : MonoBehaviour
 
     private void OnPluginService()
     {
-        if (_playerTurn.MyTurn == TurnState.Player1) RunSeconds(IsPlayer1PercentHigh);
-        if (_playerTurn.MyTurn == TurnState.Player2) RunSeconds(IsPlayer2PercentHigh);
+        if (_playerTurn.MyTurn == TurnState.Player1) 
+            RunSeconds(IsPlayer1PercentHigh);
+
+        if (_playerTurn.MyTurn == TurnState.Player2) 
+            RunSeconds(IsPlayer2PercentHigh);
 
         GetScore(_sec);
     }
 
     private void RunSeconds(bool isPercentHigh)
     {
-        if (isPercentHigh)  _sec++;
-        if (!isPercentHigh) _sec = 0;
+        if (isPercentHigh)  
+            _sec++;
+
+        if (!isPercentHigh) 
+            _sec = 0;
     }
 
     private void GetScore(int sec)
@@ -67,6 +79,7 @@ public class GetScoreFromTerOccInd : MonoBehaviour
         if (sec >= 60)
         {
             OnGetScoreFromTerOccInd?.Invoke();
+
             _sec = 0;
         }
     }
@@ -76,6 +89,7 @@ public class GetScoreFromTerOccInd : MonoBehaviour
         while (true)
         {
             OnPluginService();
+
             yield return new WaitForSeconds(1);
         }
     }

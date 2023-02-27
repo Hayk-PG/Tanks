@@ -5,15 +5,14 @@ using System;
 
 public class PlayerAmmoType : MonoBehaviour
 {
-    [SerializeField]
     private TankController _tankController;
 
-    [SerializeField] [Space]
     private ShootController _shootController;
     
     [Header("Scriptable objects")]
 
     public WeaponProperties[] _weapons;
+
     private WeaponProperties[] _tempWeaponsIncludedNewFromWoodBox;
 
     [Header("Cached bullets count from scriptable objects")]
