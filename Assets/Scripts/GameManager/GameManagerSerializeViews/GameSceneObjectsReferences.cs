@@ -46,6 +46,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private NewWeaponFromWoodBox _newWeaponFromWoodBox;
 
+    [SerializeField]
+    private AmmoTabCustomization _ammoTabCustomization;
+
 
     [Header("TileGenerator")]
 
@@ -83,6 +86,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private DropBoxSelectionPanelHealth[] _dropBoxSelectionPanelHealth;
 
     [SerializeField]
+    private DropBoxSelectionPanelAmmo _dropBoxSelectionPanelAmmo;
+
+    [SerializeField]
     private DropBoxItemSelectionPanelOwner _dropBoxItemSelectionPanelOwner;
 
 
@@ -108,6 +114,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     //Tab_Ammo
     public static Tab_WoodboxContent Tab_WoodboxContent => Instance._tabWoodboxContent;
     public static NewWeaponFromWoodBox NewWeaponFromWoodBox => Instance._newWeaponFromWoodBox;
+    public static AmmoTabCustomization AmmoTabCustomization => Instance._ammoTabCustomization;
 
     //TileGenerator
     public static TilesData TilesData => Instance._tilesData;
@@ -123,6 +130,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static Tab_DropBoxItemSelection Tab_DropBoxItemSelection => Instance._tabDropBoxItemSelection;
     public static DropBoxSelectionPanelBomber[] DropBoxSelectionPanelBombers => Instance._dropBoxSelectionPanelBombers;
     public static DropBoxSelectionPanelHealth[] DropBoxSelectionPanelHealth => Instance._dropBoxSelectionPanelHealth;
+    public static DropBoxSelectionPanelAmmo DropBoxSelectionPanelAmmo => Instance._dropBoxSelectionPanelAmmo;
     public static DropBoxItemSelectionPanelOwner DropBoxItemSelectionPanelOwner => Instance._dropBoxItemSelectionPanelOwner;
 
     //HUD

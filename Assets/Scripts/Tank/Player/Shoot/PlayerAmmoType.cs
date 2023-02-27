@@ -5,16 +5,19 @@ using System;
 
 public class PlayerAmmoType : MonoBehaviour
 {
+    [SerializeField]
     private TankController _tankController;
+
+    [SerializeField] [Space]
     private ShootController _shootController;
-    private AmmoTabCustomization _ammoTabCustomization;
-    private NewWeaponFromWoodBox _newWeaponFromWoodBox;
     
     [Header("Scriptable objects")]
+
     public WeaponProperties[] _weapons;
     private WeaponProperties[] _tempWeaponsIncludedNewFromWoodBox;
 
     [Header("Cached bullets count from scriptable objects")]
+
     public List<int> _weaponsBulletsCount;
 
     //Serialized
@@ -27,32 +30,38 @@ public class PlayerAmmoType : MonoBehaviour
     internal Action<int> OnWeaponChanged { get; set; }
 
 
+
+
+
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
+
         _shootController = Get<ShootController>.From(gameObject);
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-        _newWeaponFromWoodBox = FindObjectOfType<NewWeaponFromWoodBox>();
     }
 
     private void OnEnable()
     {
         _tankController.OnInitialize += OnInitialize;
+
+        GameSceneObjectsReferences.DropBoxSelectionPanelAmmo.onAmmo += UpdateAmmoFromDropBoxPanel;
     }
    
     private void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
-        _ammoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
-        _newWeaponFromWoodBox.OnAddNewWeaponFromWoodBox -= OnAddNewWeaponFromWoodBox;
+
+        GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
+
+        GameSceneObjectsReferences.DropBoxSelectionPanelAmmo.onAmmo -= UpdateAmmoFromDropBoxPanel;
     }
 
     private void OnInitialize()
     {
-        _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
-        _newWeaponFromWoodBox.OnAddNewWeaponFromWoodBox += OnAddNewWeaponFromWoodBox;
+        GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
 
         InitializeBulletsCountList();
+
         InstantiateAmmoTypeButton();       
     }
 
@@ -67,7 +76,7 @@ public class PlayerAmmoType : MonoBehaviour
         {
             for (int i = 0; i < _weapons.Length; i++)
             {
-                _ammoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
+                GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
             }
         }
     }
@@ -80,7 +89,9 @@ public class PlayerAmmoType : MonoBehaviour
             _shootController.ActiveAmmoIndex = _weapons.Length - 1;
 
         GetMoreBullets(ammoTypeButton);
+
         UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
+
         SetBulletSpecs(ammoTypeButton);
 
         OnWeaponChanged?.Invoke(_shootController.ActiveAmmoIndex);
@@ -94,7 +105,7 @@ public class PlayerAmmoType : MonoBehaviour
 
     public void UpdateDisplayedWeapon(int index)
     {
-        _ammoTabCustomization.OnUpdateDisplayedWeapon?.Invoke(_weapons[index], _weaponsBulletsCount[index]); 
+        GameSceneObjectsReferences.AmmoTabCustomization.OnUpdateDisplayedWeapon?.Invoke(_weapons[index], _weaponsBulletsCount[index]); 
     }
 
     public void SetBulletSpecs(AmmoTypeButton ammoTypeButton)
@@ -108,22 +119,20 @@ public class PlayerAmmoType : MonoBehaviour
     public void SwitchToDefaultWeapon(int index)
     {
         if (_weaponsBulletsCount[index] <= 0)
-            _ammoTabCustomization.SetDefaultAmmo(null);
+            GameSceneObjectsReferences.AmmoTabCustomization.SetDefaultAmmo(null);
     }
 
-    public void GetMoreBulletsFromWoodBox(out bool isDone, out string text)
+    private void UpdateAmmoFromDropBoxPanel()
     {
-        isDone = false;
-        text = "";
-
         if (_tankController.BasePlayer != null)
         {
             int active = _shootController.ActiveAmmoIndex;
+
             int bulletsCount = _weapons[active]._value / 4 > 0 ? _weapons[active]._value / 4 : 1;
+
             _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += bulletsCount;
+
             UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
-            isDone = true;
-            text = "+" + bulletsCount;
         }
     }
 
@@ -135,9 +144,11 @@ public class PlayerAmmoType : MonoBehaviour
         {
             _tempWeaponsIncludedNewFromWoodBox[i] = _weapons[i];
         }
+
         _tempWeaponsIncludedNewFromWoodBox[_weapons.Length] = newWeaponProperty;
 
         _weapons = _tempWeaponsIncludedNewFromWoodBox;
+
         _weaponsBulletsCount.Add(0);
     }
 }
