@@ -79,10 +79,15 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private DropBoxSelectionPanelBomber[] _dropBoxSelectionPanelBombers;
 
+    [SerializeField]
+    private DropBoxItemSelectionPanelOwner _dropBoxItemSelectionPanelOwner;
+
 
     [Header("HUD")]
+
     [SerializeField] [Space]
     private BaseRemoteControlTarget _baseRemoteControlTarget;
+
 
 
     //GameManager
@@ -114,6 +119,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     //DropBoxSelectionPanel
     public static Tab_DropBoxItemSelection Tab_DropBoxItemSelection => Instance._tabDropBoxItemSelection;
     public static DropBoxSelectionPanelBomber[] DropBoxSelectionPanelBombers => Instance._dropBoxSelectionPanelBombers;
+    public static DropBoxItemSelectionPanelOwner DropBoxItemSelectionPanelOwner => Instance._dropBoxItemSelectionPanelOwner;
 
     //HUD
     public static BaseRemoteControlTarget BaseRemoteControlTarget => Instance._baseRemoteControlTarget;

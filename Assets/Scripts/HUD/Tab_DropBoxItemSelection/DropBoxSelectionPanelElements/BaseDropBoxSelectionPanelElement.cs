@@ -25,7 +25,7 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
 
     public virtual void Activate()
     {
-        if (!CanUse)
+        if (!CanUse || !GameSceneObjectsReferences.DropBoxItemSelectionPanelOwner.HasEnoughPoints(_price))
         {
             gameObject.SetActive(false);
 
