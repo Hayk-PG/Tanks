@@ -8,10 +8,12 @@ public class PhotonPlayerShieldController : OfflinePlayerShieldController
 
 
 
-    protected override void OnActivateShield()
+    protected override void OnActivateShield(int price)
     {
         if (_playerTankController?.OwnTank.BasePlayer == null)
             return;
+
+        _playerTankController._scoreController.GetScore(price, null);
 
         _photonPlayerController.PhotonView.RPC("ActivateShieldRPC", RpcTarget.AllViaServer, ShieldIndex());
     }

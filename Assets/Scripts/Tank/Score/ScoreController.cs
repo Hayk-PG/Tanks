@@ -40,7 +40,7 @@ public class ScoreController : MonoBehaviour, IScore
 
         Score = 0;
 
-        MainScore = 0;
+        MainScore = Score;
     }
 
     private void OnEnable()
@@ -92,10 +92,8 @@ public class ScoreController : MonoBehaviour, IScore
 
     private void ReceiveTornadoScore(object[] data)
     {
-        if((string)data[2] == name && (string)data[0] != name)
-        {
+        if ((string)data[2] == name && (string)data[0] != name)
             GetScore(150, null);
-        }
     }
 
     private void OnTornado(object[] data)
@@ -105,10 +103,8 @@ public class ScoreController : MonoBehaviour, IScore
 
     private void OnTornado(EventData data)
     {
-        if(data.Code == EventInfo.Code_TornadoDamage)
-        {
+        if (data.Code == EventInfo.Code_TornadoDamage)
             ReceiveTornadoScore((object[])data.CustomData);
-        }
     }
 
     private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
@@ -123,6 +119,7 @@ public class ScoreController : MonoBehaviour, IScore
     private void OnSupportOrPropsChanged(AmmoTypeButton supportOrPropsTypeButton)
     {
         UpdateScore(-supportOrPropsTypeButton._properties.RequiredScoreAmmount, 0);
+
         supportOrPropsTypeButton.StartTimerCoroutine();
     }
 
@@ -133,6 +130,9 @@ public class ScoreController : MonoBehaviour, IScore
 
     private void UpdateScore(int score, float waitForSeconds)
     {
+        if (score == 0)
+            return;
+
         int sc = IsXpBoost && score > 0 ? score * 2 : score;
 
         Score += sc;
@@ -141,6 +141,7 @@ public class ScoreController : MonoBehaviour, IScore
             MainScore += sc;
 
         OnDisplayTempPoints?.Invoke(sc, waitForSeconds);
+
         OnPlayerGetsPoints?.Invoke(Score);
     }
 
@@ -152,10 +153,7 @@ public class ScoreController : MonoBehaviour, IScore
         }
     }
 
-    private void OnGetScoreFromTerOccInd()
-    {
-        UpdateScore(100, 0.5f);
-    }
+    private void OnGetScoreFromTerOccInd() => UpdateScore(100, 0.5f);
 
     public void GetScoreFromDropBoxPanel(int multiplier)
     {

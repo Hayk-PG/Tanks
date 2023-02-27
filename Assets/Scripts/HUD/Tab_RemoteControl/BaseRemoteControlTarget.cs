@@ -52,7 +52,7 @@ public class BaseRemoteControlTarget : MonoBehaviour
     private void OnSelectBomber(BomberType bomberType, int price, int quantity)
     {
         _data[0] = bomberType;
-        _data[1] = price;
+        _data[1] = -price;
         _data[2] = quantity;
 
         SetActivity(true);

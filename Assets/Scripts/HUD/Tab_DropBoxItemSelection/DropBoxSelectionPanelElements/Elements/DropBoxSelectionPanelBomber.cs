@@ -13,7 +13,7 @@ public class DropBoxSelectionPanelBomber : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        onCallBomber?.Invoke(_bomberType, _price, _quantity);
+        onCallBomber?.Invoke(_bomberType, -_price, _quantity);
 
         CanUse = false;
     }

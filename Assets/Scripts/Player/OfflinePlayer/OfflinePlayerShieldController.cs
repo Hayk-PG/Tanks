@@ -11,7 +11,12 @@ public class OfflinePlayerShieldController : MonoBehaviour
 
     protected virtual void OnDisable() => GameSceneObjectsReferences.DropBoxSelectionPanelShield.onShield -= OnActivateShield;
 
-    protected virtual void OnActivateShield() => _playerTankController._playerShields.ActivateShields(ShieldIndex());
+    protected virtual void OnActivateShield(int price)
+    {
+        _playerTankController._scoreController.GetScore(price, null);
+
+        _playerTankController._playerShields.ActivateShields(ShieldIndex());
+    }
 
     protected virtual int ShieldIndex()
     {

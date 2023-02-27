@@ -7,6 +7,8 @@ public class HealthController : MonoBehaviour, IDamage
 {
     private TankController _tankController;
 
+    private ScoreController _scoreController;
+
     private PlayerShields _playerShields;
 
     [SerializeField]
@@ -46,6 +48,8 @@ public class HealthController : MonoBehaviour, IDamage
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
+
+        _scoreController = Get<ScoreController>.From(gameObject);
 
         _playerShields = Get<PlayerShields>.From(gameObject);
 
@@ -223,7 +227,7 @@ public class HealthController : MonoBehaviour, IDamage
         }
     }
 
-    private void GetHealthFromDropBoxSelectionPanel(int health)
+    private void GetHealthFromDropBoxSelectionPanel(int price, int health)
     {
         if (_tankController.BasePlayer != null)
         {
@@ -231,6 +235,8 @@ public class HealthController : MonoBehaviour, IDamage
                 Health += health;
             else
                 Health = 100;
+
+            _scoreController.GetScore(price, null);
 
             OnUpdateHealthBar?.Invoke(Health);
 
