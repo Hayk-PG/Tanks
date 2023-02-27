@@ -19,7 +19,9 @@ public class ParachuteWithWoodBoxCollision : MonoBehaviour
         onCollisionEnter?.Invoke(new CollisionData
         {
             _collision = collision,
+
             _tankController = Get<TankController>.From(collision.gameObject),
+
             _bulletController = Get<BulletController>.From(collision.gameObject)
         });
     }

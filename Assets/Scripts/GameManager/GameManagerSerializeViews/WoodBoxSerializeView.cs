@@ -7,7 +7,6 @@ public class WoodBoxSerializeView : BaseGameManagerSerializeView
     {
         if (_woodenBoxSerializer.ParachuteWithWoodBoxController != null)
         {
-            stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RandomDestroyTime);
             stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity);
             stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position);
             stream.SendNext(_woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.rotation);          
@@ -18,7 +17,6 @@ public class WoodBoxSerializeView : BaseGameManagerSerializeView
     {
         if (_woodenBoxSerializer.ParachuteWithWoodBoxController != null)
         {
-            _woodenBoxSerializer.ParachuteWithWoodBoxController.RandomDestroyTime = (float)stream.ReceiveNext();
             _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.velocity = (Vector3)stream.ReceiveNext();
             _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.position = (Vector3)stream.ReceiveNext();
             _woodenBoxSerializer.ParachuteWithWoodBoxController.RigidBody.rotation = (Quaternion)stream.ReceiveNext();

@@ -15,31 +15,26 @@ public class WoodBoxDrop : MonoBehaviour
 
 
 
-    private void OnEnable()
-    {
-        _parachuteWithWoodBoxCollision.onCollisionEnter += OnCollision;
-    }
+    private void OnEnable() => _parachuteWithWoodBoxCollision.onCollisionEnter += OnCollision;
 
-    private void OnDisable()
-    {
-        _parachuteWithWoodBoxCollision.onCollisionEnter -= OnCollision;
-    }
+    private void OnDisable() => _parachuteWithWoodBoxCollision.onCollisionEnter -= OnCollision;
 
     private void OnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)
     {
         if (collisionData._tankController == null && collisionData._bulletController == null && !_isSoundPlayed)
-        {
             StartCoroutine(PlaySound());
-        }
     }
 
     private IEnumerator PlaySound()
     {
         SecondarySoundController.PlaySound(2, 1);
+
         ActivateParticles();
+
         _isSoundPlayed = true;
 
         yield return new WaitForSeconds(1);
+
         _isSoundPlayed = false;
     }
 

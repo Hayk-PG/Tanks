@@ -4937,7 +4937,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3997445844633819374}
   - component: {fileID: 5428674255392812459}
-  - component: {fileID: 8783798944577349850}
   m_Layer: 10
   m_Name: DropBox
   m_TagString: Untagged
@@ -4976,18 +4975,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.15, y: 0.15, z: 0.15}
   m_Center: {x: 0, y: -0.08, z: 0}
---- !u!114 &8783798944577349850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 946067369275473633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0999e6e4ce447f6408322587fac8bd53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4605450234343927144
 GameObject:
   m_ObjectHideFlags: 0
@@ -19516,7 +19503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _parachuteWithWoodBoxCollision: {fileID: 2025484964959223026}
   _rigidbody: {fileID: 5490887437498366708}
-  _boxTrigger: {fileID: 8783798944577349850}
+  _boxTrigger: {fileID: 0}
   _sparkles: {fileID: 7163356744512891308}
   _woodBoxExplosion: {fileID: 8223456312749312663}
 --- !u!114 &2025484964959223026
@@ -19543,9 +19530,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc82571c86b6cb47a7fb04c028d6062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _newWeapon:
-  - {fileID: 11400000, guid: 721830588bc10d345993d05668bb87a6, type: 2}
-  _woodBoxController: {fileID: 1071289493604564194}
   _parachuteWithWoodBoxCollision: {fileID: 2025484964959223026}
 --- !u!114 &1597267812639832941
 MonoBehaviour:
