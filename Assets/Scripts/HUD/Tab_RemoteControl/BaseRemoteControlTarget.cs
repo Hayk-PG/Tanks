@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 
@@ -8,7 +9,7 @@ public class BaseRemoteControlTarget : MonoBehaviour
     protected RectTransform _canvas, _targetIcon;
 
     [SerializeField] [Space]
-    protected CanvasGroup _mainTabCanvasGroup, _canvasGroup;
+    protected CanvasGroup _canvasGroup;
 
     [SerializeField] [Space]
     protected Animator _animator;
@@ -24,6 +25,8 @@ public class BaseRemoteControlTarget : MonoBehaviour
 
     public event Action<object[]> onBomberTargetSet;
 
+    public event Action<bool> onRemoteControlActivity;
+
    
 
 
@@ -31,15 +34,11 @@ public class BaseRemoteControlTarget : MonoBehaviour
     private void OnEnable()
     {
         GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber += OnSelectBomber; });
-
-        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
     private void OnDisable()
     {
         GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber -= OnSelectBomber; });
-
-        GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnChanged;
     }
 
     protected virtual void Update()
@@ -55,7 +54,28 @@ public class BaseRemoteControlTarget : MonoBehaviour
         _data[1] = price;
         _data[2] = quantity;
 
+        StartCoroutine(StartCloseTabTimer());
+
         SetActivity(true);
+    }
+
+    private IEnumerator StartCloseTabTimer()
+    {
+        int seconds = 0;
+
+        while (_canvasGroup.interactable)
+        {
+            seconds++;
+
+            if (seconds >= 15)
+            {
+                SetActivity(false);
+
+                print(seconds);
+            }
+
+            yield return null;
+        }
     }
 
     private void ControlTargetIcon()
@@ -66,8 +86,6 @@ public class BaseRemoteControlTarget : MonoBehaviour
 
             return;
         }
-
-        print("ControlTargetIcon");
 
         _ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -82,13 +100,18 @@ public class BaseRemoteControlTarget : MonoBehaviour
     {
         if (_canvasGroup.interactable == isActive)
             return;
-        
-        GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
-        GlobalFunctions.CanvasGroupActivity(_mainTabCanvasGroup, !isActive);
 
-        if (isActive)
-            GameSceneObjectsReferences.MainCameraController.CameraOffset(null, null, null, 1);
+        GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+
+        LockCamera(isActive);
+
+        onRemoteControlActivity?.Invoke(isActive);
     }
+
+    private void LockCamera(bool isActive)
+    {
+        GameSceneObjectsReferences.MainCameraController.CameraOffset(isActive ? gameObject : null, null, null, null, 1);
+    }  
 
     public void OnAnimationEnd()
     {
@@ -102,10 +125,5 @@ public class BaseRemoteControlTarget : MonoBehaviour
         _data[3] = (_ray.direction + _ray.origin);
 
         onBomberTargetSet?.Invoke(_data);
-    }
-
-    private void OnTurnChanged(TurnState turnState)
-    {
-        SetActivity(false);
     }
 }

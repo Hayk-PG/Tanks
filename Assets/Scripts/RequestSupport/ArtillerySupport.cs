@@ -32,7 +32,7 @@ public class ArtillerySupport : MonoBehaviour
             BulletController artillery = Instantiate(_artillerPrefab, new Vector3(coordinate.x + randomDeviation, coordinate.y + 10, coordinate.z), Quaternion.identity);
             artillery.OwnerScore = ownerScore;
             artillery.IsLastShellOfBarrage = i < shellsCount - 1 ? false : true;
-            _mainCameraController.CameraOffset(ownerTurn, _rb, null, null);
+            _mainCameraController.CameraOffset(null, ownerTurn, _rb, null, null);
             yield return new WaitForSeconds(0.5f);
         }
     }

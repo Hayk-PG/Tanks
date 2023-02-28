@@ -19,6 +19,8 @@ public class MainCameraController : MonoBehaviour
     
     private Rigidbody _player1, _player2;
 
+    private GameObject _lockedBy;
+
     [SerializeField] [Space]
     private float _smoothTime, _maxTime;
     private float _currentVelocityfloat;
@@ -132,8 +134,13 @@ public class MainCameraController : MonoBehaviour
             ResetTargets();
     }
 
-    public void CameraOffset(PlayerTurn playerTurn, Rigidbody target, float? yOffset, float? desiredHeightOffset)
+    public void CameraOffset(GameObject lockedBy, PlayerTurn playerTurn, Rigidbody target, float? yOffset, float? desiredHeightOffset)
     {
+        if (_lockedBy != null && _lockedBy != lockedBy)
+            return;
+
+        _lockedBy = lockedBy;
+
         bool isPlayerOnesTurn = playerTurn?.MyTurn == TurnState.Player1;
 
         if (playerTurn != null)

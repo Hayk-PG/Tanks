@@ -11,6 +11,10 @@ public class HUDMainTabsActivity : MonoBehaviour
     [SerializeField] [Space]
     private AmmoTypeController _ammoTypeController;
 
+    [SerializeField] [Space]
+    private BaseRemoteControlTarget _remoteControlTarget;
+
+    private bool _isLocked;
 
 
 
@@ -18,18 +22,34 @@ public class HUDMainTabsActivity : MonoBehaviour
 
     private void OnEnable()
     {
+        _remoteControlTarget.onRemoteControlActivity += Lock;
+
         _gameplayAnnouncer.OnGameStartAnnouncement += delegate { CanvasGroupsActivity(true); };
-        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
+
+        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;      
     }
 
     private void OnDisable()
     {
+        _remoteControlTarget.onRemoteControlActivity -= Lock;
+
         _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { CanvasGroupsActivity(false); };
+
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
+    }
+
+    private void Lock(bool isActive)
+    {
+        _isLocked = isActive;
+
+        CanvasGroupsActivity(!isActive);
     }
 
     public void CanvasGroupsActivity(bool isActive)
     {
+        if (_isLocked)
+            return;
+
         GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasgroup =>
         {
             GlobalFunctions.CanvasGroupActivity(canvasgroup, isActive);
@@ -38,6 +58,9 @@ public class HUDMainTabsActivity : MonoBehaviour
 
     private void OnWeaponsTabActivity(bool isOpen)
     {
+        if (_isLocked)
+            return;
+
         GlobalFunctions.CanvasGroupActivity(_canvasGroups[1], !isOpen);
     }
 }
