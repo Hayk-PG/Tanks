@@ -8,7 +8,9 @@ public class UISoundController : MonoBehaviour
 
     [Serializable] private struct ClipsList
     {
-        [SerializeField] private string _title;
+        [SerializeField]
+        private string _title;
+
         public AudioClip[] _clips;
     }
     [SerializeField] private ClipsList[] _clipsList;
@@ -22,6 +24,9 @@ public class UISoundController : MonoBehaviour
 
     public static void PlaySound(int listIndex, int clipIndex)
     {
+        if (listIndex >= _inst._clipsList.Length || clipIndex >= _inst._clipsList[listIndex]._clips.Length)
+            return;
+
         _inst._audioSRC.PlayOneShot(_inst._clipsList[listIndex]._clips[clipIndex]);
     }
 }

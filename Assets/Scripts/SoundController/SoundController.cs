@@ -4,7 +4,9 @@ using UnityEngine;
 [Serializable] public struct Clips
 {
     public AudioClip _clip;
+
     public string _clipName;
+
     public int _score;
 }
 
@@ -20,13 +22,20 @@ public class SoundController : MonoBehaviour
     public enum MusicVolume { Down, Up}
 
     private static SoundController _inst;
+
     private MyScene _myScene;
+
     private AudioSource _musicSRC;
     private AudioSource _soundSRC;
-    [SerializeField] private AudioSource[] _allAudioSources;
+
+    [SerializeField]
+    private AudioSource[] _allAudioSources;
+
     private Animator _musicAnimator;
 
-    [SerializeField] private SoundsList[] _soundsList;
+    [SerializeField]
+    private SoundsList[] _soundsList;
+
     public SoundsList[] SoundsList
     {
         get => _soundsList;
@@ -42,8 +51,11 @@ public class SoundController : MonoBehaviour
     {
         Instance();
         _myScene = FindObjectOfType<MyScene>();
+
         _musicSRC = Get<AudioSource>.From(transform.Find("MusicSRC").gameObject);
+
         _soundSRC = Get<AudioSource>.From(transform.Find("SoundSRC").gameObject);
+
         _musicAnimator = Get<Animator>.From(_musicSRC.gameObject);       
     }
 
@@ -66,6 +78,7 @@ public class SoundController : MonoBehaviour
         else
         {
             _inst = this;
+
             DontDestroyOnLoad(gameObject);
         }
     }
@@ -83,7 +96,9 @@ public class SoundController : MonoBehaviour
     public static void SoundSRCCondition(bool isMuted)
     {
         _inst._soundSRC.mute = !isMuted;
+
         GlobalFunctions.Loop<AudioSource>.Foreach(_inst._allAudioSources, audioSource => { audioSource.mute = !isMuted; });
+
         onAudioSourceMute?.Invoke(_inst._soundSRC.mute);
     }
 
@@ -94,6 +109,7 @@ public class SoundController : MonoBehaviour
         if (soundsListIndex < _inst._soundsList.Length && clipIndex < _inst._soundsList[soundsListIndex]._clips.Length)
         {
             _inst._soundSRC.PlayOneShot(_inst._soundsList[soundsListIndex]._clips[clipIndex]._clip);
+
             clipLength = _inst._soundsList[soundsListIndex]._clips[clipIndex]._clip.length;
         }            
     }

@@ -4,14 +4,18 @@ using UnityEngine;
 public class ExplosionsSoundController : MonoBehaviour
 {
     private static ExplosionsSoundController _inst;
+
     private AudioSource _audioSRC;
 
     [Serializable]
     private struct ClipsList
     {
-        [SerializeField] private string _title;
+        [SerializeField]
+        private string _title;
+
         public AudioClip[] _clips;
     }
+
     [SerializeField]
     private ClipsList[] _clipsList;
 
@@ -19,11 +23,15 @@ public class ExplosionsSoundController : MonoBehaviour
     private void Awake()
     {
         _inst = this;
+
         _audioSRC = Get<AudioSource>.From(transform.Find("SoundSRC_Explosions").gameObject);
     }
 
     public static void PlaySound(int listIndex, int clipIndex)
     {
+        if (listIndex >= _inst._clipsList.Length || clipIndex >= _inst._clipsList[listIndex]._clips.Length)
+            return;
+
         _inst._audioSRC.PlayOneShot(_inst._clipsList[listIndex]._clips[clipIndex]);
     }
 }
