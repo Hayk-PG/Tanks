@@ -70,7 +70,7 @@ public class MainCameraController : MonoBehaviour
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (PlayersInitialized)
         {
