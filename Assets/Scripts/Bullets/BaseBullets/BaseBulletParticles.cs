@@ -18,6 +18,9 @@ public class BaseBulletParticles : MonoBehaviour
     [SerializeField] [Space]
     protected BaseExplosion _explosion;
 
+    [SerializeField] [Space]
+    private bool _noMuzzleFlash;
+
 
 
     protected virtual void Awake()
@@ -39,7 +42,7 @@ public class BaseBulletParticles : MonoBehaviour
 
     protected virtual void InstantiateMuzzleFlash(Vector3 position)
     {
-        if (!System.String.IsNullOrEmpty(_assetReferenceMuzzleFlash.AssetGUID))
+        if (!System.String.IsNullOrEmpty(_assetReferenceMuzzleFlash.AssetGUID) && !_noMuzzleFlash)
         {
             _assetReferenceMuzzleFlash.InstantiateAsync(transform).Completed += (asset) =>
             {
