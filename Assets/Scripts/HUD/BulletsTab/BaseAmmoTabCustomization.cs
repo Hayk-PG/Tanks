@@ -78,6 +78,9 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
     {
         button._properties._buttonType = properties._buttonType;
 
+        if (properties._icon != null)
+            button._properties.Image = properties._icon;
+
         if (properties._weaponType != null)
             button._properties.Name = properties._weaponType;
 
@@ -111,8 +114,6 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         {
             for (int i = 0; i < _instantiatedButtons.Count; i++)
             {
-                print(bulletsCount[i]);
-
                 DisplayPointsToUnlock(i, playerPoints, bulletsCount[i]);
             }
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +41,12 @@ public class AmmoTypeButton : MonoBehaviour
         public CanvasGroup CanvasGroupLock => _canvasGroupLock;
         public CanvasGroup CanvasGroupPrice => _canvasGroupPrice;
 
+        public Sprite Image
+        {
+            get => _imgWeapon.sprite;
+            set => _imgWeapon.sprite = value;
+        }
+
         public string Name
         {
             get => _txtName.text;
@@ -60,12 +65,12 @@ public class AmmoTypeButton : MonoBehaviour
         {
             get
             {
-                return int.Parse(_txtQuantity.text.Substring(0));
+                return int.Parse(_txtQuantity.text.Substring(1));
             }
 
             set
             {
-                _txtQuantity.text = value.ToString();
+                _txtQuantity.text = "x" + value;
             }
         }
         public int Price

@@ -70,7 +70,7 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void InitializeBulletsCountList()
     {
-        GlobalFunctions.Loop<WeaponProperties>.Foreach(_weapons, weapon => { _weaponsBulletsCount.Add(0); });
+        GlobalFunctions.Loop<WeaponProperties>.Foreach(_weapons, weapon => { _weaponsBulletsCount.Add(weapon._value); });
     }
 
     private void InstantiateAmmoTypeButton()
@@ -78,9 +78,7 @@ public class PlayerAmmoType : MonoBehaviour
         if(_weapons != null)
         {
             for (int i = 0; i < _weapons.Length; i++)
-            {
                 GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
-            }
         }
     }
 

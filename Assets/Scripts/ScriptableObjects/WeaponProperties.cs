@@ -186,7 +186,7 @@ public class WeaponProperties : BaseWeaponProperties<BaseBulletController>
             _weaponType = fixedName;
         }
 
-        _weaponType += range;
+        //_weaponType += range;
     }
 
     protected void SetRandomUnlockTime()

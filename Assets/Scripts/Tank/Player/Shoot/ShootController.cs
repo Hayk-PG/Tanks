@@ -18,14 +18,23 @@ public class ShootController : BaseShootController
             this._maxForce = _maxForce;
         }
     }
+
     protected TankController _tankController;
+
     protected TankMovement _tankMovement;
+
     protected PhotonPlayerShootRPC _photonPlayerShootRPC;
+
     protected Rigidbody _rigidBody;
+
     protected GameManagerBulletSerializer _gameManagerBulletSerializer;
+
     protected IScore _iScore;
+
     protected IShoot _iShoot;
+
     protected PlayerAmmoType _playerAmmoType;
+
     protected GameplayAnnouncer _gameplayAnnouncer;
     
     [HideInInspector] [SerializeField] 
@@ -66,6 +75,7 @@ public class ShootController : BaseShootController
         get => _shoot._isApplyingForce;
         set => _shoot._isApplyingForce = value;
     }
+
     protected bool _isSandbagsTriggered;
     protected bool _isGameplayAnnounced;
 
@@ -82,11 +92,17 @@ public class ShootController : BaseShootController
         ShootPointGameobjectActivity(false);
 
         _tankController = Get<TankController>.From(gameObject);
+
         _tankMovement = Get<TankMovement>.From(gameObject);
-        _rigidBody = GetComponent<Rigidbody>();       
+
+        _rigidBody = GetComponent<Rigidbody>();    
+        
         _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
-        _iScore = Get<IScore>.From(gameObject);       
+
+        _iScore = Get<IScore>.From(gameObject);     
+        
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
+
         _gameplayAnnouncer = FindObjectOfType<GameplayAnnouncer>();
     }
 
@@ -125,8 +141,11 @@ public class ShootController : BaseShootController
         if (_playerTurn.IsMyTurn && !_isStunned)
         {
             RotateCanon();
+
             ApplyForce();
+
             OnUpdatePlayerHUDValues?.Invoke(new PlayerHUDValues(Converter.AngleConverter(_canonPivotPoint.localEulerAngles.x), _canon._minEulerAngleX, _canon._maxEulerAngleX, _shoot._currentForce, _shoot._minForce, _shoot._maxForce));
+
             _trajectory?.PointsOverlapSphere(_tankController.BasePlayer != null);
         }
         else
@@ -161,8 +180,8 @@ public class ShootController : BaseShootController
     {
         _canon._currentEulerAngleX = _canonPivotPoint.localEulerAngles.x;
 
-        if (Direction > 0 && Converter.AngleConverter(_canon._currentEulerAngleX) > _canon._maxEulerAngleX) return;
-        if (Direction < 0 && Converter.AngleConverter(_canon._currentEulerAngleX) < _canon._minEulerAngleX) return;
+        if (Direction > 0 && Converter.AngleConverter(_canon._currentEulerAngleX) > _canon._maxEulerAngleX || Direction < 0 && Converter.AngleConverter(_canon._currentEulerAngleX) < _canon._minEulerAngleX) 
+            return;
 
         _canonPivotPoint.localEulerAngles = new Vector3(_canon._currentEulerAngleX += (_canon._rotationSpeed * Direction * Time.deltaTime), 0, 0) + _canon._rotationStabilizer;
     }
@@ -177,7 +196,7 @@ public class ShootController : BaseShootController
 
     protected virtual void OnShootButtonClick(bool isTrue)
     {
-        if (_playerTurn.IsMyTurn && !_isStunned && !_hasShot)
+        if (HaveEnoughBullets() && _playerTurn.IsMyTurn && !_isStunned && !_hasShot)
         {
             _iShoot?.Shoot(CurrentForce); 
             
@@ -192,24 +211,26 @@ public class ShootController : BaseShootController
         Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._prefab, _shootPoint.position, _canonPivotPoint.rotation);
         Bullet.OwnerScore = _iScore;
         Bullet.RigidBody.velocity = Bullet.transform.forward * force;
+
         _gameManagerBulletSerializer.BaseBulletController = Bullet;
+
         mainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
+    }
+
+    public virtual void ShootBullet(float force)
+    {
+        InstantiateBullet(force);
+
+        AddForce(_tankMovement.Direction == 0 ? force : _tankMovement.Direction != 0 && force <= 3 ? _tankMovement.Direction * force : _tankMovement.Direction * 3);
+
+        OnShoot?.Invoke();
+
+        OnDash?.Invoke(_tankMovement.Direction);
     }
 
     protected virtual bool HaveEnoughBullets()
     {
         return _playerAmmoType._weaponsBulletsCount[ActiveAmmoIndex] > 0;
-    }
-
-    public virtual void ShootBullet(float force)
-    {
-        if(HaveEnoughBullets())
-        {
-            InstantiateBullet(force);
-            AddForce(_tankMovement.Direction == 0 ? force: _tankMovement.Direction != 0 && force <= 3 ? _tankMovement.Direction * force : _tankMovement.Direction * 3);
-            OnShoot?.Invoke();
-            OnDash?.Invoke(_tankMovement.Direction);
-        }
     }
 
     protected virtual void AmmoUpdate()
