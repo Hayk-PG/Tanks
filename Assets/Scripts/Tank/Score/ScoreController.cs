@@ -61,10 +61,6 @@ public class ScoreController : MonoBehaviour, IScore
 
         GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
 
-        GameSceneObjectsReferences.PropsTabCustomization.OnSupportOrPropsChanged -= OnSupportOrPropsChanged;
-
-        GameSceneObjectsReferences.SupportsTabCustomization.OnSupportOrPropsChanged -= OnSupportOrPropsChanged;
-
         if (_scoreFromTerOccIndController != null)
             _scoreFromTerOccIndController.OnGetScoreFromTerOccInd -= OnGetScoreFromTerOccInd;
 
@@ -79,10 +75,6 @@ public class ScoreController : MonoBehaviour, IScore
     private void OnInitialize()
     {
         GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
-
-        GameSceneObjectsReferences.PropsTabCustomization.OnSupportOrPropsChanged += OnSupportOrPropsChanged;
-
-        GameSceneObjectsReferences.SupportsTabCustomization.OnSupportOrPropsChanged += OnSupportOrPropsChanged;
 
         if (_scoreFromTerOccIndController != null)
             _scoreFromTerOccIndController.OnGetScoreFromTerOccInd += OnGetScoreFromTerOccInd;
@@ -110,17 +102,12 @@ public class ScoreController : MonoBehaviour, IScore
     private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
     {
         if (!ammoTypeButton._properties.IsUnlocked)
-            UpdateScore(-ammoTypeButton._properties.RequiredScoreAmmount, 0);    
-
-        if (ammoTypeButton._properties.Minutes > 0 || ammoTypeButton._properties.Seconds > 0)
-            ammoTypeButton.StartTimerCoroutine();
+            UpdateScore(-ammoTypeButton._properties.Price, 0);    
     }
 
     private void OnSupportOrPropsChanged(AmmoTypeButton supportOrPropsTypeButton)
     {
-        UpdateScore(-supportOrPropsTypeButton._properties.RequiredScoreAmmount, 0);
-
-        supportOrPropsTypeButton.StartTimerCoroutine();
+        UpdateScore(-supportOrPropsTypeButton._properties.Price, 0);
     }
 
     public void GetScore(int score, IDamage iDamage)

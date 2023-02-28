@@ -78,18 +78,23 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
     {
         button._properties._buttonType = properties._buttonType;
 
-        if (properties._index != null) button._properties.Index = (int)properties._index;
-        if (properties._value != null) button._properties.Value = (int)properties._value;
-        if (properties._requiredScoreAmmount != null) button._properties.RequiredScoreAmmount = (int)properties._requiredScoreAmmount;
-        if (properties._damageValue != null) button._properties.DamageValue = (int)properties._damageValue;
-        if (properties._minutes != null) button._properties.Minutes = (int)properties._minutes;
-        if (properties._seconds != null) button._properties.Seconds = (int)properties._seconds;
-        if (properties._bulletMaxForce != null) button._properties.BulletMaxForce = (float)properties._bulletMaxForce;
-        if (properties._bulletForceMaxSpeed != null) button._properties.BulletForceMaxSpeed = (float)properties._bulletForceMaxSpeed;
-        if (properties._radius != null) button._properties.Radius = (float)properties._radius;
-        if (properties._weaponType != null) button._properties.WeaponType = properties._weaponType;
-        if (properties._supportType != null) button._properties.SupportOrPropsType = properties._supportType;
-        if (properties._icon != null) button._properties.Icon = properties._icon;
+        if (properties._weaponType != null)
+            button._properties.Name = properties._weaponType;
+
+        if (properties._index.HasValue) 
+            button._properties.Index = properties._index.Value;
+
+        if (properties._value.HasValue) 
+            button._properties.Quantity = properties._value.Value;
+
+        if (properties._requiredScoreAmmount.HasValue) 
+            button._properties.Price = properties._requiredScoreAmmount.Value;
+
+        if (properties._bulletMaxForce.HasValue)
+            button._properties.BulletMaxForce = properties._bulletMaxForce.Value;
+
+        if (properties._bulletForceMaxSpeed.HasValue)
+            button._properties.BulletForceMaxSpeed = properties._bulletForceMaxSpeed.Value;
 
         button._ammoStars.OnSetStars(stars);
     }
@@ -106,15 +111,12 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         {
             for (int i = 0; i < _instantiatedButtons.Count; i++)
             {
+                print(bulletsCount[i]);
+
                 DisplayPointsToUnlock(i, playerPoints, bulletsCount[i]);
             }
         }
     }
 
     protected abstract void DisplayPointsToUnlock(int index, int playerPoints, int value);
-
-    protected virtual void SupportAndPropsTimer(T typeButton)
-    {
-        typeButton.StartTimerCoroutine();
-    }
 }

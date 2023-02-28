@@ -19,7 +19,7 @@ public class PhotonPlayerFeedbacksController : PlayerFeedbackController
 
     protected override void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
     {
-        _photonPlayerController.PhotonView.RPC("OnPlayerWeaponChangedRPC", RpcTarget.AllViaServer, _playerController.OwnTank.name, ammoTypeButton._properties.WeaponType);
+        _photonPlayerController.PhotonView.RPC("OnPlayerWeaponChangedRPC", RpcTarget.AllViaServer, _playerController.OwnTank.name, ammoTypeButton._properties.Name);
     }
 
     protected override void OnTakeDamage(BasePlayer basePlayer, int damage)

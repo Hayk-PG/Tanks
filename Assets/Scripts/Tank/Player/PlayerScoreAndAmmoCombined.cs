@@ -6,16 +6,22 @@ using UnityEngine;
 public class PlayerScoreAndAmmoCombined : MonoBehaviour
 {
     private TankController _tankController;
+
     private PlayerAmmoType _playerAmmoType;
+
     private ScoreController _scoreController;
+
     private IGetPointsAndAmmoDataFromPlayer[] _iGet;
 
 
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
+
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
+
         _scoreController = Get<ScoreController>.From(gameObject);
+
         _iGet = FindObjectsOfType<MonoBehaviour>().OfType<IGetPointsAndAmmoDataFromPlayer>().ToArray();
     }
 

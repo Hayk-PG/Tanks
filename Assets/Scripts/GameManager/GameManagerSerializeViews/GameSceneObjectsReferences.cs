@@ -44,16 +44,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private Tab_WoodboxContent _tabWoodboxContent;
 
     [SerializeField]
-    private NewWeaponFromWoodBox _newWeaponFromWoodBox;
-
-    [SerializeField]
     private AmmoTabCustomization _ammoTabCustomization;
-
-    [SerializeField]
-    private PropsTabCustomization _propsTabCustomization;
-
-    [SerializeField]
-    private SupportsTabCustomization _supportTabCustomization;
 
 
     [Header("TileGenerator")]
@@ -125,10 +116,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     //Tab_Ammo
     public static Tab_WoodboxContent Tab_WoodboxContent => Instance._tabWoodboxContent;
-    public static NewWeaponFromWoodBox NewWeaponFromWoodBox => Instance._newWeaponFromWoodBox;
     public static AmmoTabCustomization AmmoTabCustomization => Instance._ammoTabCustomization;
-    public static PropsTabCustomization PropsTabCustomization => Instance._propsTabCustomization;
-    public static SupportsTabCustomization SupportsTabCustomization => Instance._supportTabCustomization;
 
     //TileGenerator
     public static TilesData TilesData => Instance._tilesData;

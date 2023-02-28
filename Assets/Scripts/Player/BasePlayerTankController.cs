@@ -23,12 +23,7 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
     internal IScore _iScore;
     internal HealthBar _healthBar;
     internal PlayerAmmoType _playerAmmoType;
-    internal PlayerRequestAirSupport _playerRequestAirSupport;
-    internal PlayerDeployProps _playerDeployProps;
     internal PlayerShields _playerShields;
-    internal PlayerDeployMetalCube _playerDeployMetalCube;
-    internal PlayerChangeTileToMetalGround _playerChangeTileToMetalGround;
-    internal PlayerTankSkipTurn _playerTankSkipTurn;
 
 
     protected virtual void Awake()
@@ -52,12 +47,7 @@ public abstract class BasePlayerTankController<T> : MonoBehaviourPun
         _iScore = OwnTank?.GetComponent<IScore>();
         _healthBar = OwnTank?.GetComponentInChildren<HealthBar>();
         _playerAmmoType = OwnTank?.GetComponent<PlayerAmmoType>();
-        _playerRequestAirSupport = OwnTank?.GetComponent<PlayerRequestAirSupport>();
-        _playerDeployProps = OwnTank?.GetComponent<PlayerDeployProps>();
         _playerShields = OwnTank?.GetComponent<PlayerShields>();
-        _playerDeployMetalCube = OwnTank?.GetComponent<PlayerDeployMetalCube>();
-        _playerChangeTileToMetalGround = OwnTank?.GetComponent<PlayerChangeTileToMetalGround>();
-        _playerTankSkipTurn = OwnTank?.GetComponent<PlayerTankSkipTurn>();
     }
 
     protected abstract void GetTankControl();

@@ -78,7 +78,6 @@ public class TankProperties : ScriptableObject
         BaseShootController baseShootController = Get<BaseShootController>.From(_tank.gameObject);
         PlayerAmmoType playerAmmoType = Get<PlayerAmmoType>.From(_tank.gameObject);
         HealthController healthController = Get<HealthController>.From(_tank.gameObject);
-        PropsPriceByVehicle propsPriceByVehicle = Get<PropsPriceByVehicle>.From(_tank.gameObject);
 
         if (tankInfo != null)
         {
@@ -130,15 +129,6 @@ public class TankProperties : ScriptableObject
         if (healthController != null)
         {
             _armor = healthController.Armor;
-        }
-
-        if(propsPriceByVehicle != null)
-        {
-            _shieldCutPerecent = propsPriceByVehicle.ShieldPriceReducePercent;
-            _tileModifyCutPercent = propsPriceByVehicle.TileModifyPriceReducePercent;
-            _armoredCubeCutPercent = propsPriceByVehicle.ArmoredCubePriceReducePercent;
-            _armoredTileCutPercent = propsPriceByVehicle.ArmoredTilePriceReducePrecent;
-            _extendTileCutPercent = propsPriceByVehicle.ExtendTilePriceReducePercent;
         }
 
         CalculateTankBtnStats();

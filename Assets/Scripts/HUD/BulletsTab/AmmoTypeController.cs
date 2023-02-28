@@ -13,12 +13,6 @@ public class AmmoTypeController : MonoBehaviour
     private AmmoTabCustomization _ammoTabCustomization;
 
     [SerializeField] [Space]
-    private SupportsTabCustomization _supportTabCustomization;
-
-    [SerializeField] [Space]
-    private PropsTabCustomization _propsTabCustomization;
-
-    [SerializeField] [Space]
     private AmmoTabButton _ammoTabButton;
 
     [SerializeField] [Space]
@@ -38,16 +32,12 @@ public class AmmoTypeController : MonoBehaviour
     {
         _ammoTabButton.OnAmmoTabActivity += OnAmmoTabActivity;
         _ammoTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
-        _propsTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
-        _supportTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
     }
 
     private void OnDisable()
     {
         _ammoTabButton.OnAmmoTabActivity -= OnAmmoTabActivity;
         _ammoTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
-        _propsTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
-        _supportTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
     }
 
     public void OnAmmoTabActivity()

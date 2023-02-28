@@ -44,7 +44,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
 
     public void CacheWeaponsPointsToUnlock(AmmoTypeButton ammoTypeButton)
     {
-        if(ammoTypeButton._properties.RequiredScoreAmmount > 0) 
+        if(ammoTypeButton._properties.Price > 0) 
             _weapons.Add(ammoTypeButton);
     }
 
@@ -67,7 +67,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
 
         for (int i = _weapons.Count - 1; i >= 0; i--)
         {
-            if (points >= _weapons[i]._properties.RequiredScoreAmmount)
+            if (points >= _weapons[i]._properties.Price)
             {
                 _availableWeapons.Add(_weapons[i]);
                 _weapons.RemoveAt(i);
