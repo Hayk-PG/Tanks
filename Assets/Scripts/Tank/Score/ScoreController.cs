@@ -53,6 +53,8 @@ public class ScoreController : MonoBehaviour, IScore
             PhotonNetwork.NetworkingClient.EventReceived += OnTornado;
 
         GameSceneObjectsReferences.DropBoxSelectionPanelDoubleXp.onDoubleXp += GetScoreFromDropBoxPanel;
+
+        GameSceneObjectsReferences.DropBoxSelectionPanelScores.onScores += (scores) => { GetScore(scores, null); };
     }
 
     private void OnDisable()
@@ -70,6 +72,8 @@ public class ScoreController : MonoBehaviour, IScore
             PhotonNetwork.NetworkingClient.EventReceived -= OnTornado;
 
         GameSceneObjectsReferences.DropBoxSelectionPanelDoubleXp.onDoubleXp -= GetScoreFromDropBoxPanel;
+
+        GameSceneObjectsReferences.DropBoxSelectionPanelScores.onScores -= (scores) => { GetScore(scores, null); };
     }
 
     private void OnInitialize()

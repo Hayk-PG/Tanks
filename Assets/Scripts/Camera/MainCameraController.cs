@@ -72,13 +72,25 @@ public class MainCameraController : MonoBehaviour
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() => ControlMovement();
+
+    private void LateUpdate() => ControlOrtographicSize();
+
+    private void ControlMovement()
     {
         if (PlayersInitialized)
         {
             Vector3 targetPosition = new Vector3(Center.x, Center.y + _yOffset, _rb.position.z);
             Vector3 smoothPosition = Vector3.SmoothDamp(_rb.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
+
             _rb.MovePosition(smoothPosition);
+        }
+    }
+
+    private void ControlOrtographicSize()
+    {
+        if (PlayersInitialized)
+        {
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
             _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 10);
             _hudCamera.orthographicSize = _camera.orthographicSize;
