@@ -1,43 +1,53 @@
 using UnityEngine;
 
-public class BunkerBusterCollision : BulletSensorCollision
+public class BunkerBusterCollision : BaseBulletCollision
 {
-    private GameObject _collision;
-
-    private Vector3 _collisionPosition;
+    protected GameObject _collision;
 
     [SerializeField] [Space]
-    private int _maxCollisionsCount;
-    private int _collisionsCount;
+    protected int _maxCollisionsCount;
+    protected int _collisionsCount;
+
+    [SerializeField] [Space]
+    protected bool _destroyPenetratedTiles;
 
 
-    protected override void OnHit(RaycastHit raycastHit)
+
+
+    protected override void OnCollisionEnter(Collision collision)
     {
-        if (_collision == raycastHit.collider.gameObject || _collisionPosition == raycastHit.collider.transform.position || _isCollided)
+        
+    }
+
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        if (_collision == other.gameObject || _isCollided)
             return;
 
-        _collision = raycastHit.collider.gameObject;
+        _collision = other.gameObject;
 
-        _collisionPosition = raycastHit.collider.transform.position;
-
-        if (_collision.tag == Tags.Player || _collision.tag == Tags.AI)
+        if (other.tag == Tags.Player || other.tag == Tags.AI)
         {
-            OnCollision(raycastHit.collider);
-
-            _isCollided = true;
+            OnCollision(other);
 
             return;
         }
+
+        PenetrateThroughSeveralTiles(other);
+    }
+
+    protected virtual void PenetrateThroughSeveralTiles(Collider other)
+    {
+        _collisionsCount++;
+
+        if (_collisionsCount < _maxCollisionsCount)
+        {
+            if (_destroyPenetratedTiles)
+                base.OnCollision(other);
+        }
         else
         {
-            _collisionsCount++;
-
-            if (_collisionsCount >= _maxCollisionsCount)
-            {
-                OnCollision(raycastHit.collider);
-
-                _isCollided = true;
-            }
+            OnCollision(other);
         }
     }
 
@@ -46,5 +56,7 @@ public class BunkerBusterCollision : BulletSensorCollision
         RaiseOnCollision(collider);
 
         base.OnCollision(collider);
+
+        _isCollided = true;
     }
 }
