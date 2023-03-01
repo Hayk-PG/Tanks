@@ -24,18 +24,21 @@ public class BaseBulletExplosion : MonoBehaviour, IBulletExplosion
     protected virtual void OnEnable()
     {
         _baseBulletVelocity.onVerticalLimit += DestroyOnVerticalLimit;
+
         _baseBulletCollision.onCollision += Explode;
     }
 
     protected virtual void OnDisable()
     {
         _baseBulletVelocity.onVerticalLimit -= DestroyOnVerticalLimit;
+
         _baseBulletCollision.onCollision -= Explode;
     }
 
     protected virtual void DestroyOnVerticalLimit()
     {
         GameSceneObjectsReferences.LavaSplash.ActivateSmallSplash(transform.position);
+
         DestroyBullet();
     }
 
@@ -44,6 +47,7 @@ public class BaseBulletExplosion : MonoBehaviour, IBulletExplosion
         if (!_dontDestroyOnTimeLimit)
         {
             RaiseOnExplode(null);
+
             DestroyBullet();
         }
     }
@@ -51,6 +55,7 @@ public class BaseBulletExplosion : MonoBehaviour, IBulletExplosion
     protected virtual void Explode(Collider collider)
     {
         RaiseOnExplode(collider);
+
         DestroyBullet();
     }
 
@@ -62,6 +67,7 @@ public class BaseBulletExplosion : MonoBehaviour, IBulletExplosion
     public virtual void DestroyBullet()
     {
         SetTurnToTransition();
+
         Destroy(gameObject);
     }
 

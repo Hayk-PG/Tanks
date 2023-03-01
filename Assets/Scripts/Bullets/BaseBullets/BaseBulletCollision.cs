@@ -31,7 +31,9 @@ public class BaseBulletCollision : MonoBehaviour
         if (!_isCollided)
         {
             RaiseOnCollision(collision.collider);
+
             OnCollision(collision.collider);
+
             _isCollided = true;
         }
     }

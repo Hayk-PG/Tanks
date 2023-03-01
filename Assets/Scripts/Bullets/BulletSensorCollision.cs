@@ -6,15 +6,9 @@ public class BulletSensorCollision : BaseBulletCollision
     protected BulletSensor _bulletSensor;
 
 
-    protected virtual void OnEnable()
-    {
-        _bulletSensor.OnHit += OnHit;
-    }
+    protected virtual void OnEnable() => _bulletSensor.OnHit += OnHit;
 
-    protected virtual void OnDisable()
-    {
-        _bulletSensor.OnHit -= OnHit;
-    }
+    protected virtual void OnDisable() => _bulletSensor.OnHit -= OnHit;
 
     protected override void OnCollisionEnter(Collision collision)
     {
@@ -26,7 +20,9 @@ public class BulletSensorCollision : BaseBulletCollision
         if (!_isCollided)
         {
             RaiseOnCollision(raycastHit.collider);
+
             OnCollision(raycastHit.collider);
+
             _isCollided = true;
         }
     }
