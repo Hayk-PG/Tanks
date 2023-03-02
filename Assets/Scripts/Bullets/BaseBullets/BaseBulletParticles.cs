@@ -31,12 +31,14 @@ public class BaseBulletParticles : MonoBehaviour
     protected virtual void OnEnable()
     {
         _baseBulletVelocity.onTrail += InstantiateTrail;
+
         _baseBulletExplosion.onExplode += OnExplode;
     }
 
     protected virtual void OnDisable()
     {
         _baseBulletVelocity.onTrail -= InstantiateTrail;
+
         _baseBulletExplosion.onExplode -= OnExplode;
     }
 

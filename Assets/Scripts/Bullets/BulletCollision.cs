@@ -47,6 +47,6 @@ public class BulletCollision : MonoBehaviour
 
     protected virtual void OnCollisionInOnlineMode(Collider collider, IScore ownerScore)
     {
-        _gameManagerBulletSerializer.CallOnCollisionRPC(collider, _destructDamage);
+        //_gameManagerBulletSerializer.CallOnCollisionRPC(collider, _destructDamage);
     }
 }

@@ -50,11 +50,23 @@ public class BaseBulletCollision : MonoBehaviour
 
     protected virtual void OnCollisionInOfflineMode(Collider collider)
     {
-        Get<IDestruct>.From(collider.gameObject)?.Destruct(_destructDamage, _tileParticleIndex);
+        DestroyTile(collider);
     }
 
     protected virtual void OnCollisionInOnlineMode(Collider collider)
     {
-        GameSceneObjectsReferences.GameManagerBulletSerializer.CallOnCollisionRPC(collider, DestructDamage);
+        GameSceneObjectsReferences.GameManagerBulletSerializer.CallOnCollisionRPC(collider, _baseBulletController.OwnerScore, DestructDamage);
+    }
+
+    protected virtual void DestroyTile(Collider collider)
+    {
+        IDestruct iDestruct = Get<IDestruct>.From(collider.gameObject);
+
+        if(iDestruct == default)
+            return;
+
+        iDestruct.Destruct(_destructDamage, _tileParticleIndex);
+
+        _baseBulletController?.OwnerScore.GetScore(UnityEngine.Random.Range(10, 110), null);
     }
 }

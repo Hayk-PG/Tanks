@@ -2,20 +2,21 @@ using UnityEngine;
 
 public class BulletParticlesDirect : BaseBulletParticles
 {
-    [SerializeField]
-    [Space]
+    [SerializeField] [Space]
     protected BulletExplosionDirect _bulletExplosionDirect;
 
 
     protected override void OnEnable()
     {
         _baseBulletVelocity.onTrail += base.InstantiateTrail;
+
         _bulletExplosionDirect.onBulletExplosion += OnExplosion;
     }
 
     protected override void OnDisable()
     {
         _baseBulletVelocity.onTrail -= base.InstantiateTrail;
+
         _bulletExplosionDirect.onBulletExplosion -= OnExplosion;
     }
 

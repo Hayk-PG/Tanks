@@ -8,7 +8,8 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 {
     [SerializeField]
     BaseBulletController _bulletController;
-    [SerializeField]
+
+    [SerializeField] [Space]
     BaseBulletController[] _multipleBulletsController = new BaseBulletController[10];
 
     public BaseBulletController BaseBulletController
@@ -26,25 +27,34 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
 
     #region Collison
-    public void CallOnCollisionRPC(Collider collider, int destructDamage)
+    public void CallOnCollisionRPC(Collider collider, IScore iScore, int destructDamage)
     {
         if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
         {
-            string colliderName = collider.name;
+            string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(sc => Get<IScore>.From(sc.gameObject) == iScore).name;
+
             Vector3 colliderPosition = collider.transform.position;
 
-            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, colliderName, colliderPosition, destructDamage);
+            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, ownerName, colliderPosition, destructDamage);
         }
     }
 
     [PunRPC]
-    private void OnCollisionRPC(string colliderName, Vector3 colliderPosition, int destructDamage)
+    private void OnCollisionRPC(string ownerName, Vector3 colliderPosition, int destructDamage)
     {
-        GlobalFunctions.Loop<Collider>.Foreach(FindObjectsOfType<Collider>(), collider => 
+        if (GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(colliderPosition))
         {
-            if (collider.name == colliderName && collider.transform.position == colliderPosition)
-                Get<IDestruct>.From(collider.gameObject)?.Destruct(destructDamage, 0);
-        });
+            IDestruct iDestruct = Get<IDestruct>.From(GameSceneObjectsReferences.TilesData.TilesDict[colliderPosition]);
+
+            IScore iScore = Get<IScore>.From(GameObject.Find("ownerName") ?? gameObject);
+
+            if (iDestruct == default)
+                return;
+
+            iDestruct.Destruct(destructDamage, 0);
+
+            iScore?.GetScore(UnityEngine.Random.Range(10, 110), null);
+        }
     }
     #endregion
 
@@ -74,9 +84,9 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     {
         if(data != null)
         {
-            IDamage iDamage = GameObject.Find((string)data[0]).GetComponent<IDamage>() ?? default;
+            IDamage iDamage = GameObject.Find((string)data[0]).GetComponent<IDamage>() ?? null;
 
-            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>() ?? default;
+            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>() ?? null;
 
             Damage(iDamage, (int)data[2], (int)data[4]);
 
@@ -86,8 +96,6 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
     private void Damage(IDamage iDamage, int damage, int damagetypeIndex)
     {
-        print(iDamage);
-
         if (iDamage == default)
             return;
 
@@ -99,8 +107,6 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
     private void Score(IScore iScore, IDamage iDamage, int[] scoreValues)
     {
-        print(iScore + "/" + iDamage);
-
         if (iScore == default)
             return;
 

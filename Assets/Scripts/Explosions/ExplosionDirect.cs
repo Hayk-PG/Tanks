@@ -5,20 +5,12 @@ public class ExplosionDirect : BaseExplosion
     [SerializeField] 
     private int _damage, _destructDamage;
 
-    private System.Action<IDamage, int, int[]> DamageTankAndGetScoredFunction;
-    private System.Action<IDestruct> DamageTileAndGetScoredFunction;
-
     public override float DamageValue { get => _damage; set => _damage = Mathf.RoundToInt(value); }
     public override float DestructDamageValue { get => _destructDamage; set => _destructDamage = Mathf.RoundToInt(value); }
 
 
 
 
-    private void Awake()
-    {
-        DamageTankAndGetScoredFunction = MyPhotonNetwork.IsOfflineMode ? DamageTankAndGetScored : DamageTankAndGetScoredRPC;
-        DamageTileAndGetScoredFunction = MyPhotonNetwork.IsOfflineMode ? DamageTileAndGetScored : DamageTileAndGetScoredRPC;
-    }
 
     private void Start()
     {
@@ -32,9 +24,19 @@ public class ExplosionDirect : BaseExplosion
             return;
 
         int dmg = Mathf.RoundToInt(DamageValue);
+
         int[] scores = new int[] { Mathf.RoundToInt(DamageValue * 10) + Mathf.RoundToInt((Distance) * 100), Mathf.RoundToInt((Distance * RadiusValue) * 10) };
 
-        DamageTankAndGetScoredFunction?.Invoke(iDamage, dmg, scores);
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => DamageTankAndGetScored(iDamage, dmg, scores),
+                                                                () => DamageTankAndGetScoredRPC(iDamage, dmg, scores));
+    }
+
+    private void HitTile(IDestruct iDestruct)
+    {
+        if (iDestruct == default)
+            return;
+
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => DamageTileAndGetScored(iDestruct), DamageTileAndGetScoredRPC);
     }
 
     private void DamageTankAndGetScored(IDamage iDamage, int damageValue, int[] scores)
@@ -49,23 +51,15 @@ public class ExplosionDirect : BaseExplosion
         GameSceneObjectsReferences.GameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, damageValue, scores, 0);
     }
 
-    private void HitTile(IDestruct iDestruct)
-    {
-        if (iDestruct == default)
-            return;
-
-        DamageTileAndGetScoredFunction?.Invoke(iDestruct);
-    }
-
     private void DamageTileAndGetScored(IDestruct iDestruct)
     {
         iDestruct.Destruct(_destructDamage, 0);
 
-        OwnerScore.GetScore(10, null);
+        OwnerScore.GetScore(Random.Range(10, 110), null);
     }
 
-    private void DamageTileAndGetScoredRPC(IDestruct iDestruct)
+    private void DamageTileAndGetScoredRPC()
     {
-        GameSceneObjectsReferences.GameManagerBulletSerializer.CallOnCollisionRPC(Collider, _destructDamage);
+        GameSceneObjectsReferences.GameManagerBulletSerializer.CallOnCollisionRPC(Collider, OwnerScore, _destructDamage);
     }
 }
