@@ -54,28 +54,7 @@ public class BaseRemoteControlTarget : MonoBehaviour
         _data[1] = price;
         _data[2] = quantity;
 
-        StartCoroutine(StartCloseTabTimer());
-
         SetActivity(true);
-    }
-
-    private IEnumerator StartCloseTabTimer()
-    {
-        int seconds = 0;
-
-        while (_canvasGroup.interactable)
-        {
-            seconds++;
-
-            if (seconds >= 15)
-            {
-                SetActivity(false);
-
-                print(seconds);
-            }
-
-            yield return null;
-        }
     }
 
     private void ControlTargetIcon()
@@ -105,13 +84,33 @@ public class BaseRemoteControlTarget : MonoBehaviour
 
         LockCamera(isActive);
 
+        StartCoroutine(StartCloseTabTimer(isActive));
+
         onRemoteControlActivity?.Invoke(isActive);
     }
 
     private void LockCamera(bool isActive)
     {
-        GameSceneObjectsReferences.MainCameraController.CameraOffset(isActive ? gameObject : null, null, null, null, 1);
-    }  
+        GameSceneObjectsReferences.MainCameraController.CameraOffset(null, null, null, 1, MainCameraController.CameraUser.RemoteControl, isActive);
+    }
+
+    private IEnumerator StartCloseTabTimer(bool isActive)
+    {
+        if (isActive)
+        {
+            int seconds = 0;
+
+            while (_canvasGroup.interactable)
+            {
+                seconds++;
+
+                if (seconds >= 15)
+                    SetActivity(false);
+
+                yield return new WaitForSeconds(1);
+            }
+        }
+    }
 
     public void OnAnimationEnd()
     {

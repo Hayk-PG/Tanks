@@ -214,7 +214,7 @@ public class ShootController : BaseShootController
 
         _gameManagerBulletSerializer.BaseBulletController = Bullet;
 
-        mainCameraController.CameraOffset(null, _playerTurn, Bullet.RigidBody, null, null);
+        mainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
     }
 
     public virtual void ShootBullet(float force)

@@ -28,19 +28,16 @@ public class BulletMotionSoundFX : MonoBehaviour
 
     private IEnumerator SoundCoroutine()
     {
-        if (!SoundController.IsMuted)
+        _audioSrc.enabled = true;
+        _audioSrc.Play();
+
+        while (_volume > 0.05f && !SoundController.IsMuted)
         {
-            _audioSrc.enabled = true;
-            _audioSrc.Play();
+            _volume -= 0.5f * Time.deltaTime;
 
-            while (_volume > 0.05f)
-            {
-                _volume -= 0.5f * Time.deltaTime;
+            _audioSrc.volume = _volume;
 
-                _audioSrc.volume = _volume;
-
-                yield return null;
-            }
+            yield return null;
         }
     }
 }

@@ -48,7 +48,14 @@ public class HUDMainTabsActivity : MonoBehaviour
     public void CanvasGroupsActivity(bool isActive)
     {
         if (_isLocked)
+        {
+            GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasgroup =>
+            {
+                GlobalFunctions.CanvasGroupActivity(canvasgroup, false);
+            });
+
             return;
+        }
 
         GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasgroup =>
         {
@@ -59,7 +66,11 @@ public class HUDMainTabsActivity : MonoBehaviour
     private void OnWeaponsTabActivity(bool isOpen)
     {
         if (_isLocked)
+        {
+            GlobalFunctions.CanvasGroupActivity(_canvasGroups[1], false);
+
             return;
+        }
 
         GlobalFunctions.CanvasGroupActivity(_canvasGroups[1], !isOpen);
     }

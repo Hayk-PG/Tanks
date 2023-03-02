@@ -2,6 +2,10 @@
 
 public class MainCameraController : MonoBehaviour
 {
+    public enum CameraUser { None, RemoteControl}
+
+    private CameraUser _cameraUser;
+
     [SerializeField]
     private Camera _camera, _hudCamera, _noPPCamera;
 
@@ -19,8 +23,6 @@ public class MainCameraController : MonoBehaviour
     
     private Rigidbody _player1, _player2;
 
-    private GameObject _lockedBy;
-
     [SerializeField] [Space]
     private float _smoothTime, _maxTime;
     private float _currentVelocityfloat;
@@ -28,6 +30,8 @@ public class MainCameraController : MonoBehaviour
     private float _minPosX, _maxPosX, _newPosX;
     private float _yOffset = 2;
     private float _desiredHeightOffset = 0;
+
+    private bool _isLocked;
 
     private Vector3 _currentVelocity;
     private Vector3 _halfLength = new Vector3(0.5f, 0, 0);
@@ -146,12 +150,15 @@ public class MainCameraController : MonoBehaviour
             ResetTargets();
     }
 
-    public void CameraOffset(GameObject lockedBy, PlayerTurn playerTurn, Rigidbody target, float? yOffset, float? desiredHeightOffset)
+    public void CameraOffset(PlayerTurn playerTurn, Rigidbody target, float? yOffset, float? desiredHeightOffset, CameraUser cameraUser = CameraUser.None, bool isLocked = false)
     {
-        if (_lockedBy != null && _lockedBy != lockedBy)
-            return;
+        if (_cameraUser == CameraUser.None || _cameraUser == cameraUser)
+            _isLocked = isLocked;
 
-        _lockedBy = lockedBy;
+        _cameraUser = _isLocked ? cameraUser : CameraUser.None;
+
+        if (_isLocked)
+            return;
 
         bool isPlayerOnesTurn = playerTurn?.MyTurn == TurnState.Player1;
 
