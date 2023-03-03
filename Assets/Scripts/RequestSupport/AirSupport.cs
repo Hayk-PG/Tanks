@@ -16,6 +16,7 @@ public class AirSupport : MonoBehaviour
             return GameSceneObjectsReferences.MapPoints.HorizontalMin - 2;
         }
     }
+
     private float EndPointX
     {
         get

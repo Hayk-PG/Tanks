@@ -80,6 +80,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private DropBoxSelectionPanelBomber[] _dropBoxSelectionPanelBombers;
 
     [SerializeField]
+    private DropBoxSelectionPanelArtillery[] _dropBoxSelectionPanelArtillery;
+
+    [SerializeField]
     private DropBoxSelectionPanelHealth[] _dropBoxSelectionPanelHealth;
 
     [SerializeField]
@@ -134,6 +137,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     //DropBoxSelectionPanel
     public static Tab_DropBoxItemSelection Tab_DropBoxItemSelection => Instance._tabDropBoxItemSelection;
     public static DropBoxSelectionPanelBomber[] DropBoxSelectionPanelBombers => Instance._dropBoxSelectionPanelBombers;
+    public static DropBoxSelectionPanelArtillery[] DropBoxSelectionPanelArtillery => Instance._dropBoxSelectionPanelArtillery;
     public static DropBoxSelectionPanelHealth[] DropBoxSelectionPanelHealth => Instance._dropBoxSelectionPanelHealth;
     public static DropBoxSelectionPanelAmmo DropBoxSelectionPanelAmmo => Instance._dropBoxSelectionPanelAmmo;
     public static DropBoxSelectionPanelDoubleXp DropBoxSelectionPanelDoubleXp => Instance._dropBoxSelectionPanelDoubleXp;

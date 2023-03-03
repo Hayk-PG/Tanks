@@ -7,15 +7,18 @@ public class ArtillerySupport : MonoBehaviour
     private BulletController _artillerPrefab;
 
     [SerializeField] [Space]
-    private MainCameraController _mainCameraController;
-
-    [SerializeField] [Space]
     private float _deviation;
 
     private Rigidbody _rb;
     
 
 
+
+
+    public void Call(PlayerTurn ownerTurn, IScore ownerScore, Vector3 coordinates)
+    {
+
+    }
 
     public void Call(Vector3 coordinate, IScore ownerScore, PlayerTurn ownerTurn)
     {
@@ -29,10 +32,14 @@ public class ArtillerySupport : MonoBehaviour
         for (int i = 0; i < shellsCount; i++)
         {
             float randomDeviation = Random.Range(-_deviation, _deviation);
+
             BulletController artillery = Instantiate(_artillerPrefab, new Vector3(coordinate.x + randomDeviation, coordinate.y + 10, coordinate.z), Quaternion.identity);
+
             artillery.OwnerScore = ownerScore;
             artillery.IsLastShellOfBarrage = i < shellsCount - 1 ? false : true;
-            _mainCameraController.CameraOffset(ownerTurn, _rb, null, null);
+
+            GameSceneObjectsReferences.MainCameraController.CameraOffset(ownerTurn, _rb, null, null);
+
             yield return new WaitForSeconds(0.5f);
         }
     }

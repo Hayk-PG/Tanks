@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class BaseRemoteControlTarget : MonoBehaviour
 {
+    private enum Mode { None, Bomber, Artillery}
+    private Mode _mode;
+
     [SerializeField] [Space]
     protected RectTransform _canvas, _targetIcon;
 
@@ -25,22 +28,25 @@ public class BaseRemoteControlTarget : MonoBehaviour
 
     public bool IsActive => _canvasGroup.interactable;
 
-    public event Action<object[]> onBomberTargetSet;
-
     public event Action<bool> onRemoteControlActivity;
 
-   
+    public event Action<object[]> onBomberTargetSet;
+    public event Action<object[]> onArtilleryTargetSet;
+
+
 
 
 
     private void OnEnable()
     {
         GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber += OnSelectBomber; });
+        GlobalFunctions.Loop<DropBoxSelectionPanelArtillery>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelArtillery, selectArtillery => { selectArtillery.onArtillery += OnSelectArtillery; });
     }
 
     private void OnDisable()
     {
         GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber -= OnSelectBomber; });
+        GlobalFunctions.Loop<DropBoxSelectionPanelArtillery>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelArtillery, selectArtillery => { selectArtillery.onArtillery += OnSelectArtillery; });
     }
 
     protected virtual void Update()
@@ -56,8 +62,22 @@ public class BaseRemoteControlTarget : MonoBehaviour
         _data[1] = price;
         _data[2] = quantity;
 
+        SetMode(Mode.Bomber);
+
         SetActivity(true);
     }
+
+    private void OnSelectArtillery(int price, int quantity)
+    {
+        _data[1] = price;
+        _data[2] = quantity;
+
+        SetMode(Mode.Artillery);
+
+        SetActivity(true);
+    }
+
+    private void SetMode(Mode mode) => _mode = mode;
 
     private void ControlTargetIcon()
     {
@@ -125,6 +145,11 @@ public class BaseRemoteControlTarget : MonoBehaviour
     {
         _data[3] = (_ray.direction + _ray.origin);
 
-        onBomberTargetSet?.Invoke(_data);
+        if (_mode == Mode.None)
+            return;
+        else if (_mode == Mode.Bomber)
+            onBomberTargetSet?.Invoke(_data);
+        else
+            onArtilleryTargetSet?.Invoke(_data);
     }
 }
