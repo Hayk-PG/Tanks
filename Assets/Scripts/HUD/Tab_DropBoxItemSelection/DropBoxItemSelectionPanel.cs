@@ -12,15 +12,9 @@ public class DropBoxItemSelectionPanel : MonoBehaviour
 
 
 
-    private void OnEnable()
-    {
-        _dropBoxSelectionTab.onDropBoxItemSelectionTabActivity += OnDropBoxItemSelectionTabActivity;
-    }
+    private void OnEnable() => _dropBoxSelectionTab.onDropBoxItemSelectionTabActivity += OnDropBoxItemSelectionTabActivity;
 
-    private void OnDisable()
-    {
-        _dropBoxSelectionTab.onDropBoxItemSelectionTabActivity -= OnDropBoxItemSelectionTabActivity;
-    }
+    private void OnDisable() => _dropBoxSelectionTab.onDropBoxItemSelectionTabActivity -= OnDropBoxItemSelectionTabActivity;
 
     private void OnDropBoxItemSelectionTabActivity(bool isActive)
     {
@@ -28,10 +22,7 @@ public class DropBoxItemSelectionPanel : MonoBehaviour
             Execute();
     }
 
-    public void Execute()
-    {
-        StartCoroutine(LoopThroughElements());
-    }
+    public void Execute() => StartCoroutine(LoopThroughElements());
 
     private IEnumerator LoopThroughElements()
     {

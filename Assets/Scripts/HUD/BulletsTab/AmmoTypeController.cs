@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public class AmmoTypeController : MonoBehaviour
-{    
+{
     [SerializeField]
     private Animator _animator;
 
@@ -16,16 +16,14 @@ public class AmmoTypeController : MonoBehaviour
     private AmmoTabButton _ammoTabButton;
 
     [SerializeField] [Space]
-    private BaseRemoteControlTarget _remoteControl;
-
-    [SerializeField] [Space]
     private CameraBlur _cameraBlur;
 
     private const string _play = "play";
     private const string _direction = "speed";
+
     private float _animatorSpeed;
 
-    public bool IsOpen => _rectTransform.anchoredPosition.x > 0;
+    public bool WasHidden => _rectTransform.anchoredPosition.x > 0;
 
     public Action<bool> OnInformAboutTabActivityToTabsCustomization { get; set; }
 
@@ -39,10 +37,12 @@ public class AmmoTypeController : MonoBehaviour
 
         _ammoTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
 
-        _remoteControl.onRemoteControlActivity += isActive =>
+        GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity += isActive =>
         {
-            if (isActive && IsOpen)
-                OnAmmoTabActivity();
+            if (WasHidden)
+                return;
+
+            OnAmmoTabActivity();
         };
     }
 
@@ -52,24 +52,26 @@ public class AmmoTypeController : MonoBehaviour
 
         _ammoTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
 
-        _remoteControl.onRemoteControlActivity -= isActive =>
+        GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity -= isActive =>
         {
-            if (isActive && IsOpen)
-                OnAmmoTabActivity();
+            if (WasHidden)
+                return;
+
+            OnAmmoTabActivity();
         };
     }
 
     public void OnAmmoTabActivity()
     {
-        _animatorSpeed = IsOpen ? 1 : -1;
+        _animatorSpeed = WasHidden ? 1 : -1;
         _animator.SetFloat(_direction, _animatorSpeed);
         _animator.SetTrigger(_play);
 
-        OnInformAboutTabActivityToTabsCustomization?.Invoke(IsOpen);
+        _cameraBlur.ScreenBlur(WasHidden);
 
-        _cameraBlur.ScreenBlur(IsOpen);
+        PlaySoundFx(WasHidden ? 0 : 1);
 
-        PlaySoundFx(IsOpen ? 0 : 1);
+        OnInformAboutTabActivityToTabsCustomization?.Invoke(WasHidden);
     }
 
     public void PlaySoundFx(int clipIndex)

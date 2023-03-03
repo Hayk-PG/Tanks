@@ -11,9 +11,6 @@ public class HUDMainTabsActivity : MonoBehaviour
     [SerializeField] [Space]
     private AmmoTypeController _ammoTypeController;
 
-    [SerializeField] [Space]
-    private BaseRemoteControlTarget _remoteControlTarget;
-
     private bool _isLocked;
 
 
@@ -22,20 +19,20 @@ public class HUDMainTabsActivity : MonoBehaviour
 
     private void OnEnable()
     {
-        _remoteControlTarget.onRemoteControlActivity += Lock;
-
         _gameplayAnnouncer.OnGameStartAnnouncement += delegate { CanvasGroupsActivity(true); };
 
-        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;      
+        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
+
+        GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity += Lock;
     }
 
     private void OnDisable()
     {
-        _remoteControlTarget.onRemoteControlActivity -= Lock;
-
         _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { CanvasGroupsActivity(false); };
 
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
+
+        GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity -= Lock;
     }
 
     private void Lock(bool isActive)

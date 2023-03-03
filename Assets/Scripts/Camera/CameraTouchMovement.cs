@@ -4,7 +4,6 @@ using UnityEngine.EventSystems;
 public class CameraTouchMovement : MonoBehaviour
 {
     private Camera _mainCamera;
-    private BaseRemoteControlTarget[] _baseRemoteControlTargets;
     private FixedJoystick _horizontalJoystick;
     private FixedJoystick _verticalJoystick;
     
@@ -21,8 +20,9 @@ public class CameraTouchMovement : MonoBehaviour
     private void Awake()
     {
         _mainCamera = Get<Camera>.From(gameObject);
-        _baseRemoteControlTargets = FindObjectsOfType<BaseRemoteControlTarget>();
+
         _horizontalJoystick = GameObject.Find("HorizontalJoystick").GetComponent<FixedJoystick>();
+
         _verticalJoystick = GameObject.Find("VerticalJoystick").GetComponent<FixedJoystick>();
     }
 

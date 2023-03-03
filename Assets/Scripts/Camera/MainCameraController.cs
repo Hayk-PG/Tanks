@@ -67,12 +67,14 @@ public class MainCameraController : MonoBehaviour
     private void OnEnable()
     {
         _gameManager.OnGameStarted += OnGameStarted;
+
         _turnController.OnTurnChanged += OnTurnChanged;
     }
 
     private void OnDisable()
     {
         _gameManager.OnGameStarted -= OnGameStarted;
+
         _turnController.OnTurnChanged -= OnTurnChanged;
     }
 
@@ -85,6 +87,7 @@ public class MainCameraController : MonoBehaviour
         if (PlayersInitialized)
         {
             Vector3 targetPosition = new Vector3(Center.x, Center.y + _yOffset, _rb.position.z);
+
             Vector3 smoothPosition = Vector3.SmoothDamp(_rb.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
 
             _rb.MovePosition(smoothPosition);
@@ -96,8 +99,11 @@ public class MainCameraController : MonoBehaviour
         if (PlayersInitialized)
         {
             _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
+
             _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 10);
+
             _hudCamera.orthographicSize = _camera.orthographicSize;
+
             _noPPCamera.orthographicSize = _camera.orthographicSize;
         }
     }
@@ -107,6 +113,7 @@ public class MainCameraController : MonoBehaviour
         _minPosX = _mapPoints.HorizontalMin + CameraWidth - 3;
         _maxPosX = _mapPoints.HorizontalMax - CameraWidth + 3;
         _newPosX = Mathf.Clamp(position.x, _minPosX, _maxPosX);
+
         return new Vector3(_newPosX, position.y, position.z);
     }
 
@@ -140,7 +147,9 @@ public class MainCameraController : MonoBehaviour
     public void ResetTargets()
     {
         SetTargets(_player1, _player2);
+
         OffsetY(2);
+
         DesiredHeightOffset(0);
     }
 
@@ -167,12 +176,14 @@ public class MainCameraController : MonoBehaviour
             if (isPlayerOnesTurn)
             {
                 SetTargets(target, _player2);
+
                 OffsetY(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target2.position.y, 0.5f));
             }
 
             if (!isPlayerOnesTurn)
             {
                 SetTargets(_player1, target);
+
                 OffsetY(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target1.position.y, 0.5f));
             }
         }

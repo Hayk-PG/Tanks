@@ -23,6 +23,8 @@ public class BaseRemoteControlTarget : MonoBehaviour
 
     private object[] _data = new object[4];
 
+    public bool IsActive => _canvasGroup.interactable;
+
     public event Action<object[]> onBomberTargetSet;
 
     public event Action<bool> onRemoteControlActivity;
