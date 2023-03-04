@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OfflinePlayerArtilleryCaller : OfflinePlayerBomberCaller
@@ -25,6 +24,31 @@ public class OfflinePlayerArtilleryCaller : OfflinePlayerBomberCaller
 
     protected virtual void CallArtillery(object[] targetData)
     {
+        GameSceneObjectsReferences.ArtillerySupport.Call(Data(targetData));
+    }
 
+    protected virtual object[] Data(object[] targetData)
+    {
+        return new object[]
+        {
+            _playerTankController._playerTurn,
+            _playerTankController._iScore,
+
+            RandomShellSpreadValues((int)targetData[2], (float)targetData[0]),
+
+            (Vector3)targetData[3]
+        };
+    }
+
+    protected virtual float[] RandomShellSpreadValues(int shellsCount, float spreadValue)
+    {
+        float[] randomShellsSpreadValues = new float[shellsCount];
+
+        for (int i = 0; i < randomShellsSpreadValues.Length; i++)
+        {
+            randomShellsSpreadValues[i] = Random.Range(-spreadValue, spreadValue);
+        }
+
+        return randomShellsSpreadValues;
     }
 }

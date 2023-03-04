@@ -18,10 +18,7 @@ public class BaseBulletController : MonoBehaviour
 
 
 
-    protected virtual void Awake()
-    {
-        ChangeTurn();
-    }
+    protected virtual void Awake() => ChangeTurn();
 
     protected virtual void ChangeTurn() => GameSceneObjectsReferences.TurnController.SetNextTurn(TurnState.Other);
 }
