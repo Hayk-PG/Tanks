@@ -10,12 +10,14 @@ public class PlayerAmmoType : MonoBehaviour
     private ShootController _shootController;
 
     private ScoreController _scoreController;
+
     
     [Header("Scriptable objects")]
 
     public WeaponProperties[] _weapons;
 
     private WeaponProperties[] _tempWeaponsIncludedNewFromWoodBox;
+
 
     [Header("Cached bullets count from scriptable objects")]
 
@@ -121,6 +123,20 @@ public class PlayerAmmoType : MonoBehaviour
     {
         if (_weaponsBulletsCount[index] <= 0)
             GameSceneObjectsReferences.AmmoTabCustomization.SetDefaultAmmo(null);
+    }
+
+    public void AddWeapon(WeaponProperties weaponProperties)
+    {
+        WeaponProperties[] weaponsTempCollection = new WeaponProperties[_weapons.Length + 1];
+
+        for (int i = 0; i < _weapons.Length; i++)
+            weaponsTempCollection[i] = _weapons[i];
+
+        weaponsTempCollection[weaponsTempCollection.Length - 1] = weaponProperties;
+
+        _weapons = weaponsTempCollection;
+
+        _weaponsBulletsCount.Add(weaponProperties._value);
     }
 
     private void UpdateAmmoFromDropBoxPanel(int price)

@@ -6,11 +6,27 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     public AmmoTypeButton DefaultAmmoTypeButton { get; set; }
 
 
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        GlobalFunctions.Loop<DropBoxSelectionPanelRocket>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelRockets, rocket => 
+        {
+            rocket.onRocket += delegate (WeaponProperties weaponProperties, int id, int price) { InstantiateAmmoTypeButton(weaponProperties, 1); };
+        });
+    }
+
     protected override void OnDisable()
     {
         base.OnDisable();
 
         UnSubscribeFromAmmoTypeButtonEvents();
+
+        GlobalFunctions.Loop<DropBoxSelectionPanelRocket>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelRockets, rocket =>
+        {
+            rocket.onRocket -= delegate (WeaponProperties weaponProperties, int id, int price) { InstantiateAmmoTypeButton(weaponProperties, 1); };
+        });
     }
 
     public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, int loopIndex)
@@ -34,7 +50,9 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         {
             _buttonType = weaponProperty._buttonType,
 
-            _index = weaponProperty._index,
+            //_index = weaponProperty._index,
+
+            _index = Container.childCount,
 
             _value = weaponProperty._value,
 
@@ -113,8 +131,6 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
             {
                 button._properties.IsSelected = false;
             });
-
-        //ammoTypeButton._properties.IsSelected = _clicked;
 
         ammoTypeButton._properties.IsSelected = true;
     }

@@ -83,6 +83,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private DropBoxSelectionPanelBomber[] _dropBoxSelectionPanelBombers;
 
     [SerializeField]
+    private DropBoxSelectionPanelRocket[] _dropBoxSelectionPanelRockets;
+
+    [SerializeField]
     private DropBoxSelectionPanelArtillery[] _dropBoxSelectionPanelArtillery;
 
     [SerializeField]
@@ -108,6 +111,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     [SerializeField] [Space]
     private BaseRemoteControlTarget _baseRemoteControlTarget;
+
+    [SerializeField]
+    private Tab_GuidedMissileController _tabGuidedMissileController;
 
 
 
@@ -141,6 +147,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     //DropBoxSelectionPanel
     public static Tab_DropBoxItemSelection Tab_DropBoxItemSelection => Instance._tabDropBoxItemSelection;
     public static DropBoxSelectionPanelBomber[] DropBoxSelectionPanelBombers => Instance._dropBoxSelectionPanelBombers;
+    public static DropBoxSelectionPanelRocket[] DropBoxSelectionPanelRockets => Instance._dropBoxSelectionPanelRockets;
     public static DropBoxSelectionPanelArtillery[] DropBoxSelectionPanelArtillery => Instance._dropBoxSelectionPanelArtillery;
     public static DropBoxSelectionPanelHealth[] DropBoxSelectionPanelHealth => Instance._dropBoxSelectionPanelHealth;
     public static DropBoxSelectionPanelAmmo DropBoxSelectionPanelAmmo => Instance._dropBoxSelectionPanelAmmo;
@@ -151,6 +158,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     //HUD
     public static BaseRemoteControlTarget BaseRemoteControlTarget => Instance._baseRemoteControlTarget;
+    public static Tab_GuidedMissileController Tab_GuidedMissileController => Instance._tabGuidedMissileController;
 
 
 
