@@ -10,10 +10,7 @@ public class Explosion : BaseExplosion
     protected float _magnitude;
 
     protected int _currentDamageValue;
-
-    protected System.Action<IDamage, int, int[]> DamageAndScoreFunction;
-    
-    
+     
     protected Collider[] _colliders;
     protected List<IDamage> _iDamages;
 
@@ -35,8 +32,6 @@ public class Explosion : BaseExplosion
         _iDamages = new List<IDamage>();
 
         _colliders = Physics.OverlapSphere(transform.position, _radius);
-
-        DefineDamageAndScoreFunction();
     }
 
     protected virtual void Start()
@@ -47,11 +42,6 @@ public class Explosion : BaseExplosion
 
             GetIDamage(Get<IDamage>.From(_colliders[i].gameObject));           
         }
-    }
-
-    protected virtual void DefineDamageAndScoreFunction()
-    {
-        DamageAndScoreFunction = MyPhotonNetwork.IsOfflineMode ? DamageAndScoreInOfflineMode : DamageAndScoreInOlineMode;
     }
 
     protected virtual void GetIDamage(IDamage iDamage)
@@ -82,7 +72,8 @@ public class Explosion : BaseExplosion
         int hitScore = (_currentDamageValue * 100);
         int distanceBonus = Mathf.FloorToInt(Distance * 10);
 
-        DamageAndScoreFunction?.Invoke(iDamage, _currentDamageValue, new int[2] { hitScore, distanceBonus });
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => { DamageAndScoreInOfflineMode(iDamage, _currentDamageValue, new int[2] { hitScore, distanceBonus }); },
+                                                                () => { DamageAndScoreInOlineMode(iDamage, _currentDamageValue, new int[2] { hitScore, distanceBonus }); });
     }
 
     protected virtual void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int[] scores)

@@ -25,6 +25,8 @@ public class ArtillerySupport : MonoBehaviour
             shell.IsLastShellOfBarrage = i < shellSpreadValues.Length - 1 ? false : true;
 
             GameSceneObjectsReferences.MainCameraController.CameraOffset(null, shell.RigidBody, null, null);
+
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }

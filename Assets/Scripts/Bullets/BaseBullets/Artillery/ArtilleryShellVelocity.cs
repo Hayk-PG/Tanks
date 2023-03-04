@@ -1,7 +1,12 @@
 
 public class ArtilleryShellVelocity : BaseBulletVelocity
 {
-    protected override void Start()
+    protected override void ApplyWindForce()
+    {
+        
+    }
+
+    protected override void ControlGravitation()
     {
         
     }
