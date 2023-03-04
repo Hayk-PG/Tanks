@@ -33,9 +33,7 @@ public class OfflinePlayerArtilleryCaller : OfflinePlayerBomberCaller
         {
             _playerTankController._playerTurn,
             _playerTankController._iScore,
-
             RandomShellSpreadValues((int)targetData[2], (float)targetData[0]),
-
             (Vector3)targetData[3]
         };
     }
