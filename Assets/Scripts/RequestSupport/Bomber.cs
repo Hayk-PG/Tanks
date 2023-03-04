@@ -15,11 +15,15 @@ public class Bomber : MonoBehaviour
     private BombController _bombPrefab;
 
     public IScore OwnerScore { get; set; }
+
     public PlayerTurn OwnerTurn { get; set; }
+
     public Vector3 DropPoint { get; set; }
+
     public float MinX { get; set; }
     public float MaxX { get; set; }
-    private bool isOutOfBoundaries
+
+    private bool IsOutOfBoundaries
     {
         get => _rigidbody.position.x < MinX || _rigidbody.position.x > MaxX;
     }
@@ -33,7 +37,7 @@ public class Bomber : MonoBehaviour
 
         DropBomb();
 
-        Conditions<bool>.Compare(isOutOfBoundaries, Deactivate, null);
+        Conditions<bool>.Compare(IsOutOfBoundaries, Deactivate, null);
     }
 
     private void Movement()

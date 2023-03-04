@@ -67,8 +67,9 @@ public class BaseRemoteControlTarget : MonoBehaviour
         SetActivity(true);
     }
 
-    private void OnSelectArtillery(int price, int quantity)
+    private void OnSelectArtillery(float _shellsSpreadValue, int price, int quantity)
     {
+        _data[0] = _shellsSpreadValue;
         _data[1] = price;
         _data[2] = quantity;
 

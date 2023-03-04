@@ -7,7 +7,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     [Header("GameManager")]
 
-    [SerializeField]
+    [SerializeField] [Space]
     private GameManager _gameManager;
 
     [SerializeField] 
@@ -18,6 +18,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     [SerializeField]
     private AirSupport _airSupport;
+
+    [SerializeField]
+    private ArtillerySupport _artillerySupport;
 
     [SerializeField] 
     private GameManagerBulletSerializer _gameManagerBulletSerializer;
@@ -113,6 +116,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static TurnController TurnController => Instance._turnController;
     public static WindSystemController WindSystemController => Instance._windSystemController;
     public static AirSupport AirSupport => Instance._airSupport;
+    public static ArtillerySupport ArtillerySupport => Instance._artillerySupport;
     public static GameManagerBulletSerializer GameManagerBulletSerializer => Instance._gameManagerBulletSerializer;
     public static PhotonNetworkAALauncher PhotonNetworkAALauncher => Instance._photonNetworkAALauncher;
     public static WoodBoxSerializer WoodBoxSerializer => Instance._woodBoxSerializer;
@@ -173,6 +177,5 @@ public class GameSceneObjectsReferences : MonoBehaviour
         yield return new WaitUntil(() => FindObjectOfType<LavaSplash>() != null);
         LavaSplash = FindObjectOfType<LavaSplash>();
     }
-
 }
 
