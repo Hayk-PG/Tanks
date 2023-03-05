@@ -35,9 +35,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         {
             _buttonType = weaponProperty._buttonType,
 
-            //_index = weaponProperty._index,
-
-            _index = Container.childCount,
+            _index = Container.childCount - 1,
 
             _value = weaponProperty._value,
 

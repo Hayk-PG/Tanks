@@ -36,6 +36,8 @@ public class ShootController : BaseShootController
     protected PlayerAmmoType _playerAmmoType;
 
     protected GameplayAnnouncer _gameplayAnnouncer;
+
+    protected ButtonType _currentWeaponType;
     
     [HideInInspector] [SerializeField] 
     protected BaseBulletController _instantiatedBullet;
@@ -118,6 +120,8 @@ public class ShootController : BaseShootController
 
         _gameplayAnnouncer.OnGameStartAnnouncement += delegate { _isGameplayAnnounced = true; };
 
+        _playerAmmoType.onRocketSelected += OnRocketSelected;
+
         GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
@@ -156,8 +160,22 @@ public class ShootController : BaseShootController
 
     protected virtual void OnInitialize() => _iShoot = Get<IShoot>.From(_tankController.BasePlayer.gameObject);
 
-    protected virtual void ShootPointGameobjectActivity(bool isActive)
+    protected virtual void OnRocketSelected(bool isSelected, int id)
     {
+        _currentWeaponType = isSelected ? ButtonType.Rocket : ButtonType.Shell;
+
+        ShootPointGameobjectActivity();
+    }
+
+    protected virtual void ShootPointGameobjectActivity(bool isActive = false)
+    {
+        if(_currentWeaponType == ButtonType.Rocket)
+        {
+            _shootPoint.gameObject.SetActive(false);
+
+            return;
+        }
+
         if (_shootPoint.gameObject.activeInHierarchy != isActive && _isGameplayAnnounced)
             _shootPoint.gameObject.SetActive(isActive);
     }
@@ -206,17 +224,6 @@ public class ShootController : BaseShootController
         }
     }
 
-    protected virtual void InstantiateBullet(float force)
-    {
-        Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._prefab, _shootPoint.position, _canonPivotPoint.rotation);
-        Bullet.OwnerScore = _iScore;
-        Bullet.RigidBody.velocity = Bullet.transform.forward * force;
-
-        _gameManagerBulletSerializer.BaseBulletController = Bullet;
-
-        mainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
-    }
-
     public virtual void ShootBullet(float force)
     {
         InstantiateBullet(force);
@@ -226,6 +233,17 @@ public class ShootController : BaseShootController
         OnShoot?.Invoke();
 
         OnDash?.Invoke(_tankMovement.Direction);
+    }
+
+    protected virtual void InstantiateBullet(float force)
+    {
+        Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._prefab, _shootPoint.position, _canonPivotPoint.rotation);
+        Bullet.OwnerScore = _iScore;
+        Bullet.RigidBody.velocity = Bullet.transform.forward * force;
+
+        _gameManagerBulletSerializer.BaseBulletController = Bullet;
+
+        mainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
     }
 
     protected virtual bool HaveEnoughBullets()

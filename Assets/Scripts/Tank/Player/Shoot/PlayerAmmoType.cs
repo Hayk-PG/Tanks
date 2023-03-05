@@ -32,7 +32,7 @@ public class PlayerAmmoType : MonoBehaviour
 
     internal Action<int> OnWeaponChanged { get; set; }
 
-
+    internal event Action<bool, int> onRocketSelected;
 
 
 
@@ -111,7 +111,42 @@ public class PlayerAmmoType : MonoBehaviour
 
         SetBulletSpecs(ammoTypeButton);
 
+        OnPlayerSelectedRocket(ammoTypeButton);
+
         OnWeaponChanged?.Invoke(_shootController.ActiveAmmoIndex);
+    }
+
+    private void OnPlayerSelectedRocket(AmmoTypeButton ammoTypeButton)
+    {
+        if(ammoTypeButton._properties._buttonType == ButtonType.Rocket && ammoTypeButton._properties.Quantity > 0)
+        {
+            print("Rocket is selected: ");
+
+            for (int i = 0; i < GameSceneObjectsReferences.DropBoxSelectionPanelRockets.Length; i++)
+            {
+                print(ammoTypeButton._properties.Index + ") " + "Searching the ID...: ");
+
+                if (GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Weapon == _weapons[ammoTypeButton._properties.Index])
+                {
+                    int id = GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Id;
+
+                    print("Found ID: " + id);
+
+                    RaiseOnRocketSelectedEvent(true, id);
+
+                    break;
+                }
+                else
+                    RaiseOnRocketSelectedEvent(false);
+            }
+        }
+        else
+            RaiseOnRocketSelectedEvent(false);
+    }
+
+    private void RaiseOnRocketSelectedEvent(bool isSelected, int id = 0)
+    {
+        onRocketSelected?.Invoke(isSelected, id);
     }
 
     private void GetMoreBullets(AmmoTypeButton ammoTypeButton)
