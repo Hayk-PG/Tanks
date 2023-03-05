@@ -6,7 +6,9 @@ public abstract class PlayerFeedbackController : MonoBehaviour
     protected BasePlayerTankController<BasePlayer> _playerController;
 
     protected HealthController _healthController;
+
     protected ScoreController _scoreController;
+
     protected PlayerTurn _playerTurn;
 
     protected AmmoTabCustomization _ammoTabCustomization;
@@ -16,6 +18,8 @@ public abstract class PlayerFeedbackController : MonoBehaviour
     protected int _playerHitsIndex, _playerTurnIndex;
 
     protected abstract bool IsAllowed { get; }
+
+
 
 
 
@@ -32,12 +36,14 @@ public abstract class PlayerFeedbackController : MonoBehaviour
     protected virtual void OnEnable()
     {
         GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStarted;
+
         GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
     protected virtual void OnDisable()
     {
         GameSceneObjectsReferences.GameManager.OnGameStarted -= OnGameStarted;
+
         GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnChanged;
     }
 
@@ -46,6 +52,7 @@ public abstract class PlayerFeedbackController : MonoBehaviour
         if (IsAllowed)
         {
             GetTankComponents();
+
             SubscribeToEvents();
         }
     }
@@ -53,14 +60,18 @@ public abstract class PlayerFeedbackController : MonoBehaviour
     protected virtual void GetTankComponents()
     {
         _healthController = Get<HealthController>.From(_playerController.OwnTank.gameObject);
+
         _scoreController = Get<ScoreController>.From(_playerController.OwnTank.gameObject);
+
         _playerTurn = Get<PlayerTurn>.From(_playerController.OwnTank.gameObject);
     }
 
     protected virtual void SubscribeToEvents()
     {
         _healthController.OnTakeDamage += OnTakeDamage;
+
         _scoreController.OnHitEnemy += scores => { OnHitEnemy(scores, hitsCount); };
+
         _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
     }
 

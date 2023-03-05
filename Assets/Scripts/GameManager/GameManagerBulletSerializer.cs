@@ -26,6 +26,9 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     public Action<object[]> OnTornado { get; set; }
 
 
+
+
+
     #region Collison
     public void CallOnCollisionRPC(Collider collider, IScore iScore, int destructDamage)
     {
