@@ -165,6 +165,8 @@ public class ShootController : BaseShootController
         ActiveRocketId = id;
 
         ShootPointGameobjectActivity();
+
+        SetControllerButtonsVisiblity(isSelected);
     }
 
     protected virtual void ShootPointGameobjectActivity(bool isActive = false)
@@ -179,6 +181,8 @@ public class ShootController : BaseShootController
         if (_shootPoint.gameObject.activeInHierarchy != isActive && _isGameplayAnnounced)
             _shootPoint.gameObject.SetActive(isActive);
     }
+
+    protected virtual void SetControllerButtonsVisiblity(bool isActive) => GameSceneObjectsReferences.Controllers.ControlButtonsVisibility(!isActive);
 
     protected virtual void OnMovementDirectionValue(float direction)
     {

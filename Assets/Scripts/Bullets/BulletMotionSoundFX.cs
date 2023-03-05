@@ -12,21 +12,51 @@ public class BulletMotionSoundFX : MonoBehaviour
     [SerializeField] [Space]
     private float _volume;
 
+    [SerializeField] [Space]
+    private bool _noVolumeControlling;
+
     private bool _isSoundPlayed;
 
 
 
-    private void FixedUpdate()
+
+    private void Start() => PlayOnShot();
+
+    private void FixedUpdate() => PlaySoundOnDescending();
+
+    private void PlayOnShot()
     {
-        if (_rigidbody != null && _rigidbody.velocity.y < 0 && !_isSoundPlayed)
+        if (_noVolumeControlling)
+            StartCoroutine(PlayOnShotCoroutine());
+    }
+
+    private void PlaySoundOnDescending()
+    {
+        if (!_noVolumeControlling && _rigidbody != null && _rigidbody.velocity.y < 0 && !_isSoundPlayed)
         {
-            StartCoroutine(SoundCoroutine());
+            StartCoroutine(PlaySoundOnDescendingCoroutine());
 
             _isSoundPlayed = true;
         }
     }
 
-    private IEnumerator SoundCoroutine()
+    private IEnumerator PlayOnShotCoroutine()
+    {
+        _audioSrc.enabled = true;
+        _audioSrc.loop = true;
+        _audioSrc.Play();
+
+        while (!SoundController.IsMuted)
+        {
+            _audioSrc.volume = 1;
+
+            yield return null;
+        }
+
+        _audioSrc.mute = true;
+    }
+
+    private IEnumerator PlaySoundOnDescendingCoroutine()
     {
         _audioSrc.enabled = true;
         _audioSrc.Play();

@@ -115,6 +115,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private Tab_RocketController _tabRocketController;
 
+    [SerializeField]
+    private Controllers _controllers;
+
 
 
     //GameManager
@@ -159,6 +162,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     //HUD
     public static BaseRemoteControlTarget BaseRemoteControlTarget => Instance._baseRemoteControlTarget;
     public static Tab_RocketController TabRocketController => Instance._tabRocketController;
+    public static Controllers Controllers => Instance._controllers;
 
 
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: beb1457d375110e468b8d8e1f29fccea, type: 3}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.36311492, g: 0.5663884, b: 0.84380317, a: 1}
+  m_IndirectSpecularColor: {r: 0.36240247, g: 0.5655266, b: 0.84377646, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -761,7 +761,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.02e-43, y: 0, z: 0, w: -9.163801e+28}
+  m_BoundingSphereOverride: {x: 7.1542697e+22, y: NaN, z: 6.2e-44, w: 2.1509e-41}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -805,6 +805,78 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e86491b814d7b406f8db649557431131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &771536216 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2671738257796055800, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &771536217 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1851759812375609199, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &771536218 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2184082241368419130, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &771536219 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3550444653511736160, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &771536220
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771536216}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &771536221
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771536217}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &771536222
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771536218}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!225 &771536223
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771536219}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &894893971 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5212517298145562396, guid: 8bb47859066a5bf46b4be5e41db5feb7,
@@ -1125,6 +1197,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1357933347 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3737589410211983359, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40959b21b378fd944bba4d4a889cce54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1417429131 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4654267480470436947, guid: 8bb47859066a5bf46b4be5e41db5feb7,
@@ -2288,6 +2372,7 @@ MonoBehaviour:
   _dropBoxItemSelectionPanelOwner: {fileID: 583500467}
   _baseRemoteControlTarget: {fileID: 1220509570}
   _tabRocketController: {fileID: 733756324}
+  _controllers: {fileID: 1357933347}
 --- !u!114 &2025759544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3068,6 +3153,31 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3737589410211983359, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _canvasGroups.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3737589410211983359, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _canvasGroups.Array.data[0]
+      value: 
+      objectReference: {fileID: 771536223}
+    - target: {fileID: 3737589410211983359, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _canvasGroups.Array.data[1]
+      value: 
+      objectReference: {fileID: 771536222}
+    - target: {fileID: 3737589410211983359, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _canvasGroups.Array.data[2]
+      value: 
+      objectReference: {fileID: 771536221}
+    - target: {fileID: 3737589410211983359, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _canvasGroups.Array.data[3]
+      value: 
+      objectReference: {fileID: 771536220}
     - target: {fileID: 3777643197796397550, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_AnchorMax.y

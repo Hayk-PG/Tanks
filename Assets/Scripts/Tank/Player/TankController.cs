@@ -5,8 +5,6 @@ public class TankController : MonoBehaviour
 {
     private BasePlayer _basePlayer;
 
-    private Controllers _controllers; 
-
     private ShootButton _shootButton;
 
     private JumpButton _jumpButton;
@@ -28,8 +26,6 @@ public class TankController : MonoBehaviour
 
     private void Awake()
     {
-        _controllers = FindObjectOfType<Controllers>();
-
         _shootButton = FindObjectOfType<ShootButton>();
 
         _jumpButton = FindObjectOfType<JumpButton>();
@@ -46,8 +42,8 @@ public class TankController : MonoBehaviour
 
         if(BasePlayer != null)
         {
-            _controllers.OnControllers += OnControllers;
-            _controllers.OnHorizontalJoystick += OnMovementDirection;
+            GameSceneObjectsReferences.Controllers.OnControllers += OnControllers;
+            GameSceneObjectsReferences.Controllers.OnHorizontalJoystick += OnMovementDirection;
 
             _shootButton.OnClick += OnShootButtonClick;
 

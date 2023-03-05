@@ -8,8 +8,13 @@ public class Controllers : MonoBehaviour
 
     private FixedJoystick _movementJoystick;
 
+    [SerializeField]
+    private CanvasGroup[] _canvasGroups;
+
     public Action<Vector2> OnControllers { get; set; }
     public Action<float> OnHorizontalJoystick { get; set; }
+
+
 
 
     private void Awake() => _movementJoystick = Get<FixedJoystick>.From(GameObject.Find("HorizontalJoystick"));
@@ -45,4 +50,12 @@ public class Controllers : MonoBehaviour
     public void OnPointerDown(int index) => _buttons = (Buttons)index;
 
     public void OnPointerUp() => _buttons = Buttons.None;
+
+    public void ControlButtonsVisibility(bool isVisible)
+    {
+        GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasGroup =>
+        {
+            GlobalFunctions.CanvasGroupActivity(canvasGroup, isVisible);
+        });
+    }
 }
