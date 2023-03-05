@@ -7,10 +7,10 @@ using UnityEngine;
 public class GameManagerBulletSerializer : MonoBehaviourPun
 {
     [SerializeField]
-    BaseBulletController _bulletController;
+    private BaseBulletController _bulletController;
 
     [SerializeField] [Space]
-    BaseBulletController[] _multipleBulletsController = new BaseBulletController[10];
+    private BaseBulletController[] _multipleBulletsController = new BaseBulletController[10];
 
     public BaseBulletController BaseBulletController
     {

@@ -15,6 +15,7 @@ public class BaseBulletVelocity : MonoBehaviour
     {
         get => new Vector3(GameSceneObjectsReferences.WindSystemController.CurrentWindForce * Time.fixedDeltaTime, 0, 0);
     }
+
     protected virtual float GravityForce
     {
         get => _baseBulletController.RigidBody.velocity.y + (_baseBulletController.RigidBody.velocity.y / 100 * GravityForcePercentage) * Time.fixedDeltaTime;
@@ -47,14 +48,18 @@ public class BaseBulletVelocity : MonoBehaviour
     protected virtual void Start()
     {
         Invoke("ActivateTrail", _trailTime);
+
         Invoke("ApplyWindForce", 0.5f);
     }
 
     protected virtual void FixedUpdate()
     {
         ControlLookRotation();
+
         ControlMovement();
+
         ControlGravitation();
+
         OnVerticalLimit();
     }
 

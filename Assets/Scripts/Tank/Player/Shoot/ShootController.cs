@@ -27,8 +27,6 @@ public class ShootController : BaseShootController
 
     protected Rigidbody _rigidBody;
 
-    protected GameManagerBulletSerializer _gameManagerBulletSerializer;
-
     protected IScore _iScore;
 
     protected IShoot _iShoot;
@@ -100,8 +98,6 @@ public class ShootController : BaseShootController
         _tankMovement = Get<TankMovement>.From(gameObject);
 
         _rigidBody = GetComponent<Rigidbody>();    
-        
-        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
 
         _iScore = Get<IScore>.From(gameObject);     
         
@@ -245,7 +241,7 @@ public class ShootController : BaseShootController
         Bullet.OwnerScore = _iScore;
         Bullet.RigidBody.velocity = Bullet.transform.forward * force;
 
-        _gameManagerBulletSerializer.BaseBulletController = Bullet;
+        GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = Bullet;
 
         GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
     }
@@ -260,6 +256,8 @@ public class ShootController : BaseShootController
         BaseBulletController rocket = Instantiate(rocketType, _rocketSpawnPoint?.position ?? transform.position, _rocketSpawnPoint?.rotation ?? transform.rotation);
 
         rocket.OwnerScore = _iScore;
+
+        GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = rocket;
 
         GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, rocket.RigidBody, null, null);
     }

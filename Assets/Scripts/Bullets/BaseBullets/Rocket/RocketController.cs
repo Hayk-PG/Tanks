@@ -1,7 +1,7 @@
 
 public class RocketController : BaseBulletController
 {
-    protected TankController _owner;
+    public TankController Owner { get; protected set; }
 
 
 
@@ -17,12 +17,12 @@ public class RocketController : BaseBulletController
         if (OwnerScore == default)
             return;
 
-        _owner = GlobalFunctions.ObjectsOfType<TankController>.Find(tc => Get<IScore>.From(tc.gameObject) == OwnerScore);
+        Owner = GlobalFunctions.ObjectsOfType<TankController>.Find(tc => Get<IScore>.From(tc.gameObject) == OwnerScore);
     }
 
     public void SwitchRocketControllerTab(bool isActive)
     {
-        if (_owner == null || _owner?.BasePlayer == null)
+        if (Owner == null || Owner?.BasePlayer == null)
             return;
 
         GameSceneObjectsReferences.TabRocketController.SetActivity(isActive);
