@@ -781,6 +781,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &733756324 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3363431894839246586, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9821c4866e7aa3c4a840e7102f15ffc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &743729802 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3872438942806086979, guid: 8bb47859066a5bf46b4be5e41db5feb7,
@@ -2273,7 +2285,7 @@ MonoBehaviour:
   _dropBoxSelectionPanelScores: {fileID: 1287106649}
   _dropBoxItemSelectionPanelOwner: {fileID: 583500467}
   _baseRemoteControlTarget: {fileID: 1220509570}
-  _tabGuidedMissileController: {fileID: 2029476196}
+  _tabRocketController: {fileID: 733756324}
 --- !u!114 &2025759544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2312,18 +2324,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9753adcef19144ea18f1b78fe066afee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2029476196 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3850416156750287099, guid: 8bb47859066a5bf46b4be5e41db5feb7,
-    type: 3}
-  m_PrefabInstance: {fileID: 279360527758376169}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9bcad85b4b691240a4a535609cd1022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2090463658
@@ -2962,11 +2962,6 @@ PrefabInstance:
     - target: {fileID: 2498598157769176609, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2653051791818708296, guid: 8bb47859066a5bf46b4be5e41db5feb7,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3030534918239187482, guid: 8bb47859066a5bf46b4be5e41db5feb7,
@@ -3919,17 +3914,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8826413548521341988, guid: 8bb47859066a5bf46b4be5e41db5feb7,
-        type: 3}
-      propertyPath: _price
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8826413548521341988, guid: 8bb47859066a5bf46b4be5e41db5feb7,
-        type: 3}
-      propertyPath: _weapon
-      value: 
-      objectReference: {fileID: 11400000, guid: c8d96d4be0330404b852476be9db0ab0,
-        type: 2}
     - target: {fileID: 8953904713956945050, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_AnchorMax.y

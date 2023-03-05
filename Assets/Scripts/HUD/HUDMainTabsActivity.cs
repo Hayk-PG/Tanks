@@ -24,6 +24,8 @@ public class HUDMainTabsActivity : MonoBehaviour
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
 
         GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity += Lock;
+
+        GameSceneObjectsReferences.TabRocketController.onActivity += isOpen => { CanvasGroupsActivity(!isOpen); };
     }
 
     private void OnDisable()
@@ -33,6 +35,8 @@ public class HUDMainTabsActivity : MonoBehaviour
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
 
         GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity -= Lock;
+
+        GameSceneObjectsReferences.TabRocketController.onActivity -= isOpen => { CanvasGroupsActivity(!isOpen); };
     }
 
     private void Lock(bool isActive)
