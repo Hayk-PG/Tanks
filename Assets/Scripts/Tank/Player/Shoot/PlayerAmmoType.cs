@@ -16,12 +16,12 @@ public class PlayerAmmoType : MonoBehaviour
 
     public WeaponProperties[] _weapons;
 
-    private WeaponProperties[] _tempWeaponsIncludedNewFromWoodBox;
-
 
     [Header("Cached bullets count from scriptable objects")]
 
     public List<int> _weaponsBulletsCount;
+
+    private int _defaultWeaponsLength;
 
     //Serialized
     public int[] WeaponsBulletsCount
@@ -50,6 +50,11 @@ public class PlayerAmmoType : MonoBehaviour
         _tankController.OnInitialize += OnInitialize;
 
         GameSceneObjectsReferences.DropBoxSelectionPanelAmmo.onAmmo += UpdateAmmoFromDropBoxPanel;
+
+        GlobalFunctions.Loop<DropBoxSelectionPanelRocket>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelRockets, rocket =>
+        {
+            rocket.onRocket += delegate (WeaponProperties weaponProperties, int id, int price) { AddWeapon(weaponProperties, price); };
+        });
     }
    
     private void OnDisable()
@@ -59,6 +64,11 @@ public class PlayerAmmoType : MonoBehaviour
         GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
 
         GameSceneObjectsReferences.DropBoxSelectionPanelAmmo.onAmmo -= UpdateAmmoFromDropBoxPanel;
+
+        GlobalFunctions.Loop<DropBoxSelectionPanelRocket>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelRockets, rocket =>
+        {
+            rocket.onRocket -= delegate (WeaponProperties weaponProperties, int id, int price) { AddWeapon(weaponProperties, price); };
+        });
     }
 
     private void OnInitialize()
@@ -80,7 +90,11 @@ public class PlayerAmmoType : MonoBehaviour
         if(_weapons != null)
         {
             for (int i = 0; i < _weapons.Length; i++)
+            {
                 GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
+
+                _defaultWeaponsLength++;
+            }
         }
     }
 
@@ -125,8 +139,11 @@ public class PlayerAmmoType : MonoBehaviour
             GameSceneObjectsReferences.AmmoTabCustomization.SetDefaultAmmo(null);
     }
 
-    public void AddWeapon(WeaponProperties weaponProperties)
+    public void AddWeapon(WeaponProperties weaponProperties, int price = 0)
     {
+        if (_tankController.BasePlayer == null)
+            return;
+
         WeaponProperties[] weaponsTempCollection = new WeaponProperties[_weapons.Length + 1];
 
         for (int i = 0; i < _weapons.Length; i++)
@@ -137,37 +154,22 @@ public class PlayerAmmoType : MonoBehaviour
         _weapons = weaponsTempCollection;
 
         _weaponsBulletsCount.Add(weaponProperties._value);
+
+        _scoreController.GetScore(price, null);
+
+        GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(weaponProperties, 1);
     }
 
     private void UpdateAmmoFromDropBoxPanel(int price)
     {
         if (_tankController.BasePlayer != null)
         {
-            int active = _shootController.ActiveAmmoIndex;
-
-            int bulletsCount = _weapons[active]._value / 4 > 0 ? _weapons[active]._value / 4 : 1;
-
-            _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += bulletsCount;
+            for (int i = 0; i < _defaultWeaponsLength; i++)
+                _weaponsBulletsCount[i] += UnityEngine.Random.Range(0, 10);
 
             _scoreController.GetScore(price, null);
 
             UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
         }
-    }
-
-    private void OnAddNewWeaponFromWoodBox(WeaponProperties newWeaponProperty)
-    {
-        _tempWeaponsIncludedNewFromWoodBox = new WeaponProperties[_weapons.Length + 1];
-
-        for (int i = 0; i < _weapons.Length; i++)
-        {
-            _tempWeaponsIncludedNewFromWoodBox[i] = _weapons[i];
-        }
-
-        _tempWeaponsIncludedNewFromWoodBox[_weapons.Length] = newWeaponProperty;
-
-        _weapons = _tempWeaponsIncludedNewFromWoodBox;
-
-        _weaponsBulletsCount.Add(0);
     }
 }

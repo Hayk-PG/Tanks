@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public enum ButtonType { Weapon, Support, Props }
+public enum ButtonType { Shell, Rocket}
 public enum DisplayType { MainWeaponsList, AvailableWeapon}
 
 public class AmmoTypeButton : MonoBehaviour

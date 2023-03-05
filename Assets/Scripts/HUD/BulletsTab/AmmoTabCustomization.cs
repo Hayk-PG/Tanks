@@ -7,26 +7,11 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
 
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        GlobalFunctions.Loop<DropBoxSelectionPanelRocket>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelRockets, rocket => 
-        {
-            rocket.onRocket += delegate (WeaponProperties weaponProperties, int id, int price) { InstantiateAmmoTypeButton(weaponProperties, 1); };
-        });
-    }
-
     protected override void OnDisable()
     {
         base.OnDisable();
 
         UnSubscribeFromAmmoTypeButtonEvents();
-
-        GlobalFunctions.Loop<DropBoxSelectionPanelRocket>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelRockets, rocket =>
-        {
-            rocket.onRocket -= delegate (WeaponProperties weaponProperties, int id, int price) { InstantiateAmmoTypeButton(weaponProperties, 1); };
-        });
     }
 
     public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, int loopIndex)
