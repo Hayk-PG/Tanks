@@ -16,6 +16,13 @@ public class BaseBulletMeshAddressable : MonoBehaviour
         _assetReferenceMesh.InstantiateAsync(transform).Completed += asset => 
         {
             _mesh = asset.Result;
+
+            if(_mesh.transform.parent == null)
+            {
+                Addressables.Release(_mesh);
+
+                Destroy(gameObject);
+            }
         };
     }
 

@@ -5,12 +5,12 @@ public class BaseShootController: MonoBehaviour
 {
     protected Transform _canonPivotPoint;
     protected Transform _shootPoint;
+    protected Transform _rocketSpawnPoint;
     protected BaseTrajectory _trajectory;
     protected AICanonRaycast _aiCanonRaycast;
     protected PlayerTurn _playerTurn;
     protected ScoreController _scoreController;
     protected Stun _stun;
-    protected MainCameraController mainCameraController;
 
     protected bool _isStunned;
     internal Transform CanonPivotPoint => _canonPivotPoint;
@@ -50,12 +50,12 @@ public class BaseShootController: MonoBehaviour
         FindCanonPivotPoint();
 
         _shootPoint = Get<BaseTrajectory>.FromChild(_canonPivotPoint.gameObject, true).transform;
+        _rocketSpawnPoint = transform.Find("RocketSpawnPoint");
         _trajectory = Get<BaseTrajectory>.From(_shootPoint.gameObject);
         _aiCanonRaycast = Get<AICanonRaycast>.From(_trajectory.gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
         _scoreController = Get<ScoreController>.From(gameObject);
         _stun = Get<Stun>.FromChild(gameObject);
-        mainCameraController = FindObjectOfType<MainCameraController>();
     }
 
     protected virtual void OnEnable()

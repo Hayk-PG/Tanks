@@ -43,7 +43,7 @@ public class ShootController : BaseShootController
     protected BaseBulletController _instantiatedBullet;
 
     [HideInInspector] [SerializeField] 
-    protected int _activeAmmoIndex;
+    protected int _activeAmmoIndex;  
 
     protected bool _hasShot;
 
@@ -65,6 +65,8 @@ public class ShootController : BaseShootController
         get => _activeAmmoIndex;
         set => _activeAmmoIndex = value;
     }
+
+    public int ActiveRocketId { get; protected set; }
 
     public Vector3 CanonPivotPointEulerAngles
     {
@@ -164,6 +166,8 @@ public class ShootController : BaseShootController
     {
         _currentWeaponType = isSelected ? ButtonType.Rocket : ButtonType.Shell;
 
+        ActiveRocketId = id;
+
         ShootPointGameobjectActivity();
     }
 
@@ -216,7 +220,7 @@ public class ShootController : BaseShootController
     {
         if (HaveEnoughBullets() && _playerTurn.IsMyTurn && !_isStunned && !_hasShot)
         {
-            _iShoot?.Shoot(CurrentForce); 
+            Conditions<bool>.Compare(_currentWeaponType == ButtonType.Shell, () => _iShoot?.Shoot(CurrentForce), () => _iShoot.LaunchRocket(ActiveRocketId));
             
             AmmoUpdate();
 
@@ -243,7 +247,21 @@ public class ShootController : BaseShootController
 
         _gameManagerBulletSerializer.BaseBulletController = Bullet;
 
-        mainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
+        GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
+    }
+
+    public virtual void LaunchRocket(int id)
+    {
+        BaseBulletController rocketType = GlobalFunctions.ObjectsOfType<DropBoxSelectionPanelRocket>.Find(r => r.Id == id).Weapon._prefab;
+
+        if (rocketType == null)
+            return;
+
+        BaseBulletController rocket = Instantiate(rocketType, _rocketSpawnPoint?.position ?? transform.position, _rocketSpawnPoint?.rotation ?? transform.rotation);
+
+        rocket.OwnerScore = _iScore;
+
+        GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, rocket.RigidBody, null, null);
     }
 
     protected virtual bool HaveEnoughBullets()

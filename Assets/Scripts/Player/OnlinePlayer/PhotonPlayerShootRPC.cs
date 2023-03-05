@@ -2,6 +2,11 @@
 
 public class PhotonPlayerShootRPC : PhotonPlayerBaseRPC, IShoot
 {
+    public void LaunchRocket(int id)
+    {
+        
+    }
+
     public void Shoot(float force)
     {
         _photonPlayerController.PhotonView.RPC("ShootRPC", RpcTarget.AllViaServer, force);
