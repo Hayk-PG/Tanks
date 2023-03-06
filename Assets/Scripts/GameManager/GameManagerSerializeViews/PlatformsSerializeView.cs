@@ -3,18 +3,28 @@ using UnityEngine;
 
 public class PlatformsSerializeView : BaseGameManagerSerializeView
 {
-    [SerializeField] private Platform _horizPlatform;
-    [SerializeField] private Platform _vertPlatform;
+    [SerializeField] private Platform _horizPlatform, _vertPlatform;
+
+
 
     protected override void Write(PhotonStream stream)
     {
-        stream.SendNext(_horizPlatform.SynchedPosition);
-        stream.SendNext(_vertPlatform.SynchedPosition);
+        Vector3 horizPosition = _horizPlatform.SynchedPosition ?? Vector3.zero;
+        Vector3 vertPosition = _vertPlatform.SynchedPosition ?? Vector3.zero;
+
+        stream.SendNext(horizPosition);
+        stream.SendNext(vertPosition);
     }
 
     protected override void Read(PhotonStream stream, PhotonMessageInfo info)
     {
-        _horizPlatform.SynchedPosition = (Vector3)stream.ReceiveNext();
-        _vertPlatform.SynchedPosition = (Vector3)stream.ReceiveNext();
+        Vector3 horizPosition = (Vector3)stream.ReceiveNext();
+        Vector3 vertPosition = (Vector3)stream.ReceiveNext();
+
+        if (_horizPlatform != null)
+            _horizPlatform.SynchedPosition = horizPosition;
+
+        if (_vertPlatform != null)
+            _vertPlatform.SynchedPosition = vertPosition;
     }
 }

@@ -20,40 +20,26 @@ public class InstantiatePickables : MonoBehaviourPun
 
     private void OnGameStarted()
     {
-        _player1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player1).transform;
-        _player2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player2).transform;
+        GetPlayers();
 
         StartCoroutine(InstantiateCoroutine());
+    }
+
+    private void GetPlayers()
+    {
+        _player1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player1).transform;
+        _player2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player2).transform;
     }
 
     private IEnumerator InstantiateCoroutine()
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(0, 5));
+            yield return new WaitForSeconds(Random.Range(30, 90));
 
             if (FindObjectOfType<ParachuteWithWoodBoxController>() == null && _player1 != null && _player2 != null)
                 InstantiateWoodBox(WoodBoxSpawnPosition());
         }
-    }
-
-    private Vector3 WoodBoxSpawnPosition()
-    {
-        Vector3 tempPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
-
-        Vector3 tilePosition = tempPosition;
-
-        foreach (var tileDict in GameSceneObjectsReferences.TilesData.TilesDict)
-        {
-            if(tileDict.Key.x >= tempPosition.x - 1 && tileDict.Key.x <= tempPosition.x + 1)
-            {
-                tilePosition.x = tileDict.Key.x;
-
-                break;
-            } 
-        }
-
-        return tilePosition;
     }
 
     private void InstantiateWoodBox(Vector3 position)
@@ -80,5 +66,24 @@ public class InstantiatePickables : MonoBehaviourPun
     private void InstantiateWoodBoxRPC(Vector3 position, float randomTime)
     {
         InstantiateWoodBox(position, randomTime);
+    }
+
+    private Vector3 WoodBoxSpawnPosition()
+    {
+        Vector3 tempPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
+
+        Vector3 tilePosition = tempPosition;
+
+        foreach (var tileDict in GameSceneObjectsReferences.TilesData.TilesDict)
+        {
+            if (tileDict.Key.x >= tempPosition.x - 1 && tileDict.Key.x <= tempPosition.x + 1)
+            {
+                tilePosition.x = tileDict.Key.x;
+
+                break;
+            }
+        }
+
+        return tilePosition;
     }
 }
