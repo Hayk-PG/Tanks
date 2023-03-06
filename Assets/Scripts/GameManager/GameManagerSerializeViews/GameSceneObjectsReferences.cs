@@ -49,6 +49,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private AmmoTabCustomization _ammoTabCustomization;
 
+    [SerializeField]
+    private AmmoTabButtonNotification _ammoTabNotification;
+
 
     [Header("TileGenerator")]
 
@@ -136,6 +139,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     //Tab_Ammo
     public static Tab_WoodboxContent Tab_WoodboxContent => Instance._tabWoodboxContent;
     public static AmmoTabCustomization AmmoTabCustomization => Instance._ammoTabCustomization;
+    public static AmmoTabButtonNotification AmmoTabButtonNotification => Instance._ammoTabNotification;
 
     //TileGenerator
     public static TilesData TilesData => Instance._tilesData;

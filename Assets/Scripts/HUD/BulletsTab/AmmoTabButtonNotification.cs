@@ -21,7 +21,13 @@ public class AmmoTabButtonNotification : MonoBehaviour
     private bool _isNewWeaponAvailable;
     private bool _isAmmoTabOpen;
 
+    // NewAvailableWeaponNotificationHolder delegate for holding private method OnNewAvailableWeaponNotification
+    // NewAvailableWeaponNotificationHolder is used for public access to OnNewAvailableWeaponNotification
+
+    public Action NewAvailableWeaponNotificationHolder => OnNewAvailableWeaponNotification;
+
     public Action OnNewAwailableWeaponNotification { get; set; }
+
     public Action<List<AmmoTypeButton>, bool> OnDisplayAvailableWeapons { get; set; }
 
 
@@ -30,12 +36,14 @@ public class AmmoTabButtonNotification : MonoBehaviour
     private void OnEnable()
     {
         _ammoTabCustomization.OnSendWeaponPointsToUnlock += CacheWeaponsPointsToUnlock;
+
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
     }
 
     private void OnDisable()
     {
         _ammoTabCustomization.OnSendWeaponPointsToUnlock -= CacheWeaponsPointsToUnlock;
+
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
 
         if (_playerScoreController != null)
@@ -70,7 +78,9 @@ public class AmmoTabButtonNotification : MonoBehaviour
             if (points >= _weapons[i]._properties.Price)
             {
                 _availableWeapons.Add(_weapons[i]);
+
                 _weapons.RemoveAt(i);
+
                 _isNewWeaponAvailable = true;
 
                 break;
@@ -80,15 +90,19 @@ public class AmmoTabButtonNotification : MonoBehaviour
         Conditions<bool>.Compare(_isNewWeaponAvailable, OnNewAvailableWeaponNotification, null);
     }
 
+    // This method is held by NewAvailableWeaponNotificationHolder delegate for public use only
+
     private void OnNewAvailableWeaponNotification()
     {
         OnNotificationIcon(true && !_isAmmoTabOpen);
+
         OnNewAwailableWeaponNotification?.Invoke();
     }
 
     private void OnNotificationIcon(bool isActive)
     {
         _notificationsIcon.SetActive(isActive);
+
         OnDisplayAvailableWeapons?.Invoke(_availableWeapons, isActive);
     }
 
@@ -99,6 +113,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
         if (_isAmmoTabOpen)
         {
             OnNotificationIcon(false);
+
             OnDisplayAvailableWeapons?.Invoke(_availableWeapons, false);
         }
     }

@@ -193,6 +193,8 @@ public class PlayerAmmoType : MonoBehaviour
         _scoreController.GetScore(price, null);
 
         GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(weaponProperties, 1);
+
+        GameSceneObjectsReferences.AmmoTabButtonNotification.NewAvailableWeaponNotificationHolder();
     }
 
     private void UpdateAmmoFromDropBoxPanel(int price)
