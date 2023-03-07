@@ -3,9 +3,19 @@ using UnityEngine;
 
 public abstract class Tab_BaseSignUp : Tab_Base
 {
-    [SerializeField] protected CustomInputField[] _customInputFields;
+    [SerializeField] 
+    protected CustomInputField[] _customInputFields;
+
+    [SerializeField] [Space]
+    protected Tab_Options _tabOptions;
+
+    [SerializeField] [Space]
+    protected TabLoading _tabOptionsLoading;
+
     protected OptionsGameMode _optionsGameMode;
+
     protected OptionsLogOut _optionsLogOut;
+
     protected MyPhotonCallbacks _myPhotonCallbacks;
 
     protected virtual CustomInputField CustomInputFieldEmail { get; }
@@ -13,11 +23,16 @@ public abstract class Tab_BaseSignUp : Tab_Base
     protected virtual CustomInputField CustomInputFieldPassword { get; }
 
 
+
+
     protected override void Awake()
     {
         base.Awake();
+
         _optionsGameMode = FindObjectOfType<OptionsGameMode>();
+
         _optionsLogOut = FindObjectOfType<OptionsLogOut>();
+
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
     }
 
@@ -27,16 +42,21 @@ public abstract class Tab_BaseSignUp : Tab_Base
 
         MenuTabs.Tab_Initialize.onJumpTabSignUp += Authoirize;
         MenuTabs.Tab_StartGame.onPlayOnline += Authoirize;
+
         _optionsGameMode.onJumpTabSignUp += Authoirize;
+
         _optionsLogOut.onJumpTabSignUp += Authoirize;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+
         MenuTabs.Tab_Initialize.onJumpTabSignUp -= Authoirize;
         MenuTabs.Tab_StartGame.onPlayOnline -= Authoirize;
+
         _optionsGameMode.onJumpTabSignUp -= Authoirize;
+
         _optionsLogOut.onJumpTabSignUp -= Authoirize;
     }
 
@@ -46,12 +66,23 @@ public abstract class Tab_BaseSignUp : Tab_Base
     {
         MyPhoton.LeaveRoom();
         MyPhoton.LeaveLobby();
+
+        CloseOptionsTabs();
+
         base.OpenTab();
+    }
+
+    protected virtual void CloseOptionsTabs()
+    {
+        _tabOptions.GetOptionsActivityHolder(false);
+
+        _tabOptionsLoading.Close();
     }
 
     protected override void GoForward()
     {
         base.GoForward();
+
         Confirm();
     }
 

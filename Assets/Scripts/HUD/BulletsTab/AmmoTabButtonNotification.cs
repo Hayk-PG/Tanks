@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//USED COMMENTS
 public class AmmoTabButtonNotification : MonoBehaviour
 {
     public List<AmmoTypeButton> _weapons = new List<AmmoTypeButton>();
@@ -21,9 +22,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
     private bool _isNewWeaponAvailable;
     private bool _isAmmoTabOpen;
 
-    // NewAvailableWeaponNotificationHolder delegate for holding private method OnNewAvailableWeaponNotification
     // NewAvailableWeaponNotificationHolder is used for public access to OnNewAvailableWeaponNotification
-
     public Action NewAvailableWeaponNotificationHolder => OnNewAvailableWeaponNotification;
 
     public Action OnNewAwailableWeaponNotification { get; set; }

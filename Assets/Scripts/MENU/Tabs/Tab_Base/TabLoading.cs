@@ -2,7 +2,11 @@ using UnityEngine;
 
 public class TabLoading : TabTransition, IReset
 {
-    [SerializeField] private GameObject _loading;
+    [SerializeField] 
+    private GameObject _loading;
+
+
+
 
     protected override void OnEnable()
     {
@@ -20,19 +24,14 @@ public class TabLoading : TabTransition, IReset
         _tabBase.onTabClose -= Close;
     }
 
-    public void Open()
-    {
-        SetActivity(true);
-    }
+    public void Open() => SetActivity(true);
 
-    public void Close()
-    {
-        SetActivity(false);
-    }
+    public void Close() => SetActivity(false);
 
     private void SetActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+
         _loading.SetActive(isActive);
     }
 

@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class Tab_SignIn : Tab_BaseSignUp
 {
-    [SerializeField] private Btn _btnSignUp;
+    [SerializeField] [Space]
+    private Btn _btnSignUp;
+
     private CustomToggle _customToggleAutoSignIn;
 
     protected override CustomInputField CustomInputFieldID => _customInputFields[0];
@@ -17,20 +19,25 @@ public class Tab_SignIn : Tab_BaseSignUp
     protected override void Awake()
     {
         base.Awake();
+
         _customToggleAutoSignIn = Get<CustomToggle>.FromChild(gameObject);
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
+
         MenuTabs.Tab_SignUp.onOpenTabSignIn += OpenTab;
+
         _btnSignUp.onSelect += delegate { onOpenTabSignUp?.Invoke(); };
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+
         MenuTabs.Tab_SignUp.onOpenTabSignIn -= OpenTab;
+
         _btnSignUp.onSelect -= delegate { onOpenTabSignUp?.Invoke(); };
     }
 
@@ -39,8 +46,11 @@ public class Tab_SignIn : Tab_BaseSignUp
         if (Data.Manager.IsAutoSignInChecked)
         {
             CustomInputFieldID.Text = Data.Manager.Id;
+
             CustomInputFieldPassword.Text = Data.Manager.Password;
+
             IsAutoSignInChecked = true;
+
             Confirm();
         }
     }
@@ -54,10 +64,15 @@ public class Tab_SignIn : Tab_BaseSignUp
             if (result != null)
             {
                 DeleteOrEnableAutoSignInData(); 
+
                 SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
+
                 CacheUserIds(result.PlayFabId, result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
+
                 CacheUserItemsData(result.PlayFabId);
+
                 CacheUserStatisticsData(result.PlayFabId);
+
                 ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
             }
             else

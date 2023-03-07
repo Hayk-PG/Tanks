@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class OptionsGameMode : OptionsController
 {
-    [SerializeField] private Sprite _sprtOffline, _sprtOnline;
+    [SerializeField] 
+    private Sprite _sprtOffline, _sprtOnline;
 
     public event Action onJumpTabSignUp;
 
@@ -22,30 +23,40 @@ public class OptionsGameMode : OptionsController
     private void Disconnect()
     {      
         MyPhoton.Disconnect();
+
         OpenTabLoad();
+
         _options.MyPhotonCallbacks.onDisconnect += GoOffline;
     }
 
     private void GoOffline()
     {
         MyPhotonNetwork.OfflineMode(true);
+
         ChangeIcon(true);
+
         ChangeText(true);
+
         SetOptionsActivity(false);
     }
 
     private void GoThroughSignUpTab()
     {       
         MyPhotonNetwork.OfflineMode(false);
+
         OpenTabLoad();
+
         onJumpTabSignUp?.Invoke();
+
         _options.MyPhotonCallbacks._OnConnectedToMaster += FinishGoingOnline;       
     }
 
     private void FinishGoingOnline()
     {
         ChangeIcon(false);
+
         ChangeText(false);
+
         SetOptionsActivity(false);
     }
 
