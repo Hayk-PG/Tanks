@@ -25,12 +25,12 @@ public class Tab_Initialize : Tab_Base
     {
         if (MyPhoton.GameModeRegistered == MyPhoton.RegisteredGameMode.Online)
         {
-            MyPhotonNetwork.OfflineMode(false);
+            MyPhotonNetwork.ManageOfflineMode(false);
             onJumpTabSignUp?.Invoke();
         }
         else
         {
-            MyPhotonNetwork.OfflineMode(true);
+            MyPhotonNetwork.ManageOfflineMode(true);
             onJumpTabOffline?.Invoke();
         }
     }

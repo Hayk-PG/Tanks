@@ -29,7 +29,7 @@ public class OptionsLogOut : OptionsController
     {
         if (_isSelected)
         {
-            MyPhotonNetwork.OfflineMode(false);
+            MyPhotonNetwork.ManageOfflineMode(false);
             Data.Manager.DeleteData(Keys.AutoSignIn);
             SetOptionsActivity(false);
             onJumpTabSignUp?.Invoke();

@@ -54,7 +54,7 @@ public class Tab_StartGame : Tab_Base
     {
         yield return new WaitForSeconds(0.5f);
 
-        MyPhotonNetwork.OfflineMode(isOfflineMode);
+        MyPhotonNetwork.ManageOfflineMode(isOfflineMode);
 
         onPlay?.Invoke();
     }

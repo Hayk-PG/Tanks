@@ -3,10 +3,14 @@ using UnityEngine;
 
 public class TabLoading : TabTransition, IReset
 {
+    public enum LoadingState { ConnectingToMasterServer}
+
     [SerializeField] 
     private GameObject _loading;
 
     private bool _isCoroutineRunning;
+
+    private Btn[] _baseTabBtns;
 
 
 
@@ -27,23 +31,15 @@ public class TabLoading : TabTransition, IReset
         _tabBase.onTabClose -= Close;
     }
 
-    public void Open()
-    {
-        SetActivity(true);
+    public void Open() => SetActivity(true);
 
-        StartCloseDelay();
-    }
-
-    public void Close()
-    {
-        SetActivity(false);
-
-        StopCloseDelay();
-    }
+    public void Close() => SetActivity(false);
 
     private void SetActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+
+        Conditions<bool>.Compare(isActive, StartCloseDelay, StopCloseDelay);
 
         _loading.SetActive(isActive);
     }
@@ -67,8 +63,6 @@ public class TabLoading : TabTransition, IReset
         {
             seconds += Time.deltaTime;
 
-            print(seconds);
-
             yield return null;
         }
 
@@ -76,9 +70,10 @@ public class TabLoading : TabTransition, IReset
         {
             Close();
 
-            Btn[] btns = transform.parent.GetComponentsInChildren<Btn>();
+            if (_baseTabBtns == null)
+                _baseTabBtns = transform.parent.GetComponentsInChildren<Btn>();
 
-            foreach (var btn in btns)
+            foreach (var btn in _baseTabBtns)
                 btn.Deselect();
         }
     }
