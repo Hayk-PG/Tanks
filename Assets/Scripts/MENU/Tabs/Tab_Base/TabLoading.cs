@@ -5,8 +5,11 @@ public class TabLoading : TabTransition, IReset
 {
     public enum LoadingState { ConnectingToMasterServer}
 
-    [SerializeField] 
+    [SerializeField] [Space]
     private GameObject _loading;
+
+    [SerializeField] [Space]
+    private bool _dontDeselectBtns;
 
     private bool _isCoroutineRunning;
 
@@ -33,15 +36,30 @@ public class TabLoading : TabTransition, IReset
 
     public void Open() => SetActivity(true);
 
-    public void Close() => SetActivity(false);
+    public void Close()
+    {
+        SetActivity(false);
+
+        DeselectBtns();
+    }
 
     private void SetActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
 
-        Conditions<bool>.Compare(isActive, StartCloseDelay, StopCloseDelay);
-
         _loading.SetActive(isActive);
+    }
+
+    private void DeselectBtns()
+    {
+        if (_dontDeselectBtns)
+            return;
+
+        if (_baseTabBtns == null)
+            _baseTabBtns = transform.parent.GetComponentsInChildren<Btn>();
+
+        foreach (var btn in _baseTabBtns)
+            btn.Deselect();
     }
 
     private void StartCloseDelay()

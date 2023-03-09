@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class Tab_BaseSignUp : Tab_Base
+public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
 {
     [SerializeField] 
     protected CustomInputField[] _customInputFields;
@@ -38,26 +38,24 @@ public abstract class Tab_BaseSignUp : Tab_Base
 
     protected override void OnEnable()
     {
-        base.OnEnable();
+        base.OnEnable();     
 
-        MenuTabs.Tab_Initialize.onJumpTabSignUp += Authoirize;
-        MenuTabs.Tab_StartGame.onPlayOnline += Authoirize;
+        MenuTabs.Tab_Initialize.onJumpTabSignUp += Authenticate;
 
-        _optionsGameMode.onJumpTabSignUp += Authoirize;
+        _optionsGameMode.onJumpTabSignUp += Authenticate;
 
-        _optionsLogOut.onJumpTabSignUp += Authoirize;
+        _optionsLogOut.onJumpTabSignUp += Authenticate;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        MenuTabs.Tab_Initialize.onJumpTabSignUp -= Authoirize;
-        MenuTabs.Tab_StartGame.onPlayOnline -= Authoirize;
+        MenuTabs.Tab_Initialize.onJumpTabSignUp -= Authenticate;
 
-        _optionsGameMode.onJumpTabSignUp -= Authoirize;
+        _optionsGameMode.onJumpTabSignUp -= Authenticate;
 
-        _optionsLogOut.onJumpTabSignUp -= Authoirize;
+        _optionsLogOut.onJumpTabSignUp -= Authenticate;
     }
 
     protected virtual void Update() => SetInteractability();
@@ -81,12 +79,26 @@ public abstract class Tab_BaseSignUp : Tab_Base
 
     protected override void GoForward()
     {
+        OperationHandler = This;
+
         base.GoForward();
 
         Confirm();
     }
 
-    protected abstract void Authoirize();
+    protected override void OnTaskReceived(ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    {
+        if (operation == TabsOperation.Operation.Authenticate)
+        {
+            OperationHandler = handler;
+
+            Authenticate();
+        }
+    }
+
+    protected abstract void Authenticate();
+
+    protected virtual void OnAuthenticationFailed() => OperationHandler?.OnOperationFailed();
 
     protected virtual void Confirm() => OpenLoadingTab();
 
@@ -108,9 +120,9 @@ public abstract class Tab_BaseSignUp : Tab_Base
 
     protected virtual void CacheUserStatisticsData(string playfabId) => User.UpdateStats(playfabId, null, createdStatisticsOutput => { Data.Manager.Statistics = createdStatisticsOutput; });
 
-    protected virtual void ConnectToPhoton(string photonNetworkNickname, string photonNetworkUserId)
+    protected virtual void SendUserCredentialsToTabHomeOnline(string photonNetworkNickname, string photonNetworkUserId)
     {
-        MyPhoton.Connect(photonNetworkNickname, photonNetworkUserId);
+        TabsOperation.Handler.SubmitOperation(OperationHandler, TabsOperation.Operation.OpenOnlineTab, new object[] { photonNetworkNickname, photonNetworkUserId });
     }
 
     protected virtual void SetInteractability() => _btnForward.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4 ? true : false;

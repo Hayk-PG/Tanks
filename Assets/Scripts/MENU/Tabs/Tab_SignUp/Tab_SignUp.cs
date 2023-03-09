@@ -32,7 +32,7 @@ public class Tab_SignUp : Tab_BaseSignUp
         _btnSignIn.onSelect -= delegate { onOpenTabSignIn?.Invoke(); };      
     }
 
-    protected override void Authoirize()
+    protected override void Authenticate()
     {
         if (!Data.Manager.IsAutoSignInChecked)
             OpenTab();
@@ -56,12 +56,28 @@ public class Tab_SignUp : Tab_BaseSignUp
 
                 CacheUserStatisticsData(result.PlayFabId);
 
-                ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
+                SendUserCredentialsToTabHomeOnline(CustomInputFieldID.Text, result.PlayFabId);
             }
             else
             {
                 ResetTab();
+
+                OnAuthenticationFailed();
             }
         });
+    }
+
+    public override void OnOperationFailed()
+    {
+        print("Failed to sign up! " + OperationHandler);
+
+        if (OperationHandler == This)
+        {
+            base.OpenTab();
+        }
+        else
+        {
+            OperationHandler.OnOperationFailed();
+        }
     }
 }

@@ -41,7 +41,7 @@ public class Tab_SignIn : Tab_BaseSignUp
         _btnSignUp.onSelect -= delegate { onOpenTabSignUp?.Invoke(); };
     }
 
-    protected override void Authoirize()
+    protected override void Authenticate()
     {
         if (Data.Manager.IsAutoSignInChecked)
         {
@@ -75,11 +75,13 @@ public class Tab_SignIn : Tab_BaseSignUp
 
                 CacheUserStatisticsData(result.PlayFabId);
 
-                ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
+                SendUserCredentialsToTabHomeOnline(CustomInputFieldID.Text, result.PlayFabId);
             }
             else
             {
                 ResetTab();
+
+                OnAuthenticationFailed();
             }
         });
     }
@@ -109,4 +111,20 @@ public class Tab_SignIn : Tab_BaseSignUp
     }
 
     protected override void CacheUserStatisticsData(string playfabId) => User.GetStats(playfabId, result => { Data.Manager.Statistics = result; });
+
+    public override void OnOperationFailed()
+    {
+        print("Failed to sign in! " + OperationHandler);
+
+        if (OperationHandler == This)
+        {
+            IsAutoSignInChecked = false;
+
+            base.OpenTab();
+        }
+        else
+        {
+            OperationHandler.OnOperationFailed();
+        }
+    }
 }
