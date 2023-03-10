@@ -58,7 +58,7 @@ public class Tab_StartGame : Tab_Base, ITabOperation
 
     private IEnumerator Execute(Action onPlay)
     {
-        _tabLoading.Open();
+        _tabLoading.Open(10);
 
         yield return new WaitForSeconds(0.5f);
 

@@ -1,32 +1,24 @@
-using System;
 
 public class OptionsLogOut : OptionsController
 {
-    public event Action onJumpTabSignUp;
-
-
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        _options.MyPhotonCallbacks.onDisconnect += OpenTabSignUp;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-
-        _options.MyPhotonCallbacks.onDisconnect -= OpenTabSignUp;
-    }
-
     protected override void Select()
     {     
-        OpenTabLoad();
+        OpenTabLoad(15);
 
         MyPhoton.Disconnect();
 
+        ManageMyOnDisconnectEventSubscription(false);
+        ManageMyOnDisconnectEventSubscription(true);
+
         _isSelected = true;
+    }
+
+    private void ManageMyOnDisconnectEventSubscription(bool isSubscribing)
+    {
+        if(isSubscribing)
+            _options.MyPhotonCallbacks.onDisconnect += OpenTabSignUp;
+        else
+            _options.MyPhotonCallbacks.onDisconnect -= OpenTabSignUp;
     }
 
     private void OpenTabSignUp()
@@ -39,9 +31,20 @@ public class OptionsLogOut : OptionsController
 
             SetOptionsActivity(false);
 
-            onJumpTabSignUp?.Invoke();
+            TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate);;
+
+            ManageMyOnDisconnectEventSubscription(false);
 
             _isSelected = false;
         }
     }
+
+    public override void OnOperationSucceded()
+    {
+        _tabLoading.Close();
+
+        SetOptionsActivity(false);
+    }
+
+    public override void OnOperationFailed() => _tabLoading.Close();
 }

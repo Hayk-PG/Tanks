@@ -34,11 +34,11 @@ public class TabLoading : TabTransition, IReset
         _tabBase.onTabClose -= Close;
     }
 
-    public void Open()
+    public void Open(float waitTime = 0)
     {
         SetActivity(true);
 
-        StartCloseDelay();
+        StartCloseDelay(waitTime);
     }
 
     public void Close()
@@ -88,8 +88,14 @@ public class TabLoading : TabTransition, IReset
         {
             elapsedTime += Time.deltaTime;
 
+            GlobalFunctions.DebugLog($"CloseScreenAfterDelay: {elapsedTime:0}");
+
             if (elapsedTime >= waitTime)
+            {
                 Close();
+
+                yield break;
+            }
 
             yield return null;
         }

@@ -11,7 +11,7 @@ public class OptionsGameMode : OptionsController
 
     private void GoOffline()
     {
-        OpenTabLoad();
+        OpenTabLoad(5);
 
         if (MyPhotonNetwork.IsConnected)
         {
@@ -28,7 +28,7 @@ public class OptionsGameMode : OptionsController
 
     private void GoOnline()
     {
-        OpenTabLoad();
+        OpenTabLoad(10);
 
         TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate);
     }

@@ -69,7 +69,7 @@ public abstract class OptionsController : MonoBehaviour, IReset, ITabOperation
 
     protected virtual void SetOptionsActivity(bool isActive) => _options.Activity(isActive);
 
-    protected virtual void OpenTabLoad() => _tabLoading?.Open();
+    protected virtual void OpenTabLoad(float waitTime = 0) => _tabLoading?.Open(waitTime);
 
     public virtual void SetDefault() => _tabLoading?.Close();
 
