@@ -40,20 +40,12 @@ public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
     {
         base.OnEnable();     
 
-        MenuTabs.Tab_Initialize.onJumpTabSignUp += Authenticate;
-
-        _optionsGameMode.onJumpTabSignUp += Authenticate;
-
         _optionsLogOut.onJumpTabSignUp += Authenticate;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-
-        MenuTabs.Tab_Initialize.onJumpTabSignUp -= Authenticate;
-
-        _optionsGameMode.onJumpTabSignUp -= Authenticate;
 
         _optionsLogOut.onJumpTabSignUp -= Authenticate;
     }
@@ -86,7 +78,7 @@ public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
         Confirm();
     }
 
-    protected override void OnTaskReceived(ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    protected override void OnOperationSubmitted(ITabOperation handler, TabsOperation.Operation operation, object[] data)
     {
         if (operation == TabsOperation.Operation.Authenticate)
         {
@@ -122,7 +114,7 @@ public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
 
     protected virtual void SendUserCredentialsToTabHomeOnline(string photonNetworkNickname, string photonNetworkUserId)
     {
-        TabsOperation.Handler.SubmitOperation(OperationHandler, TabsOperation.Operation.OpenOnlineTab, new object[] { photonNetworkNickname, photonNetworkUserId });
+        TabsOperation.Handler.SubmitOperation(OperationHandler, TabsOperation.Operation.PlayOnline, new object[] { photonNetworkNickname, photonNetworkUserId });
     }
 
     protected virtual void SetInteractability() => _btnForward.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4 ? true : false;

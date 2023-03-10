@@ -7,12 +7,11 @@ public class Tab_StartGame : Tab_Base, ITabOperation
     [SerializeField]
     private Btn _btnOffline, _btnOnline;
 
-    public event Action onPlayOffline;
 
 
     protected override void OnEnable()
     {
-        MenuTabs.Tab_Initialize.onOpenTabStartGame += OpenTab;
+        base.OnEnable();
 
         _btnOffline.onSelect += SelectOffline;
 
@@ -21,13 +20,23 @@ public class Tab_StartGame : Tab_Base, ITabOperation
 
     protected override void OnDisable()
     {
-        MenuTabs.Tab_Initialize.onOpenTabStartGame -= OpenTab;
+        base.OnDisable();
 
         _btnOffline.onSelect -= SelectOffline;
 
         _btnOnline.onSelect -= SelectOnline;
     }
-   
+
+    protected override void OnOperationSubmitted(ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    {
+        if (operation == TabsOperation.Operation.Start)
+        {
+            OperationHandler = handler;
+
+            OpenTab();
+        }
+    }
+
     public override void OpenTab()
     {
         MyPhoton.LeaveRoom();
@@ -39,21 +48,19 @@ public class Tab_StartGame : Tab_Base, ITabOperation
 
     public void SelectOffline()
     {
-        StartCoroutine(Execute(true, onPlayOffline));
+        StartCoroutine(Execute(delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline); }));
     }
 
     public void SelectOnline()
     {
-        StartCoroutine(Execute(false, delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate); }));
+        StartCoroutine(Execute(delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate); }));
     }
 
-    private IEnumerator Execute(bool isOfflineMode, Action onPlay)
+    private IEnumerator Execute(Action onPlay)
     {
         _tabLoading.Open();
 
         yield return new WaitForSeconds(0.5f);
-
-        MyPhotonNetwork.ManageOfflineMode(isOfflineMode);
 
         onPlay?.Invoke();
     }

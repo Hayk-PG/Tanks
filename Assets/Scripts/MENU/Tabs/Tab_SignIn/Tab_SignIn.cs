@@ -63,8 +63,6 @@ public class Tab_SignIn : Tab_BaseSignUp
         {
             if (result != null)
             {
-                MyPhotonNetwork.ManageOfflineMode(false);
-
                 DeleteOrEnableAutoSignInData(); 
 
                 SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));

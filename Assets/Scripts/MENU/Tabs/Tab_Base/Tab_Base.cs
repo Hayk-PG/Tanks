@@ -54,7 +54,7 @@ public class Tab_Base: MonoBehaviour , ITabOperation
         if (_btnForward != null)
             _btnForward.onSelect += GoForward;
 
-        TabsOperation.Handler.onOperationSubmitted += OnTaskReceived;
+        TabsOperation.Handler.onOperationSubmitted += OnOperationSubmitted;
     }
 
     protected virtual void OnDisable()
@@ -65,10 +65,10 @@ public class Tab_Base: MonoBehaviour , ITabOperation
         if (_btnForward != null)
             _btnForward.onSelect -= GoForward;
 
-        TabsOperation.Handler.onOperationSubmitted -= OnTaskReceived;
+        TabsOperation.Handler.onOperationSubmitted -= OnOperationSubmitted;
     }
 
-    protected virtual void OnTaskReceived(ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    protected virtual void OnOperationSubmitted(ITabOperation handler, TabsOperation.Operation operation, object[] data)
     {
         
     }

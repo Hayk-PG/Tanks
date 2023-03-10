@@ -34,11 +34,18 @@ public class TabLoading : TabTransition, IReset
         _tabBase.onTabClose -= Close;
     }
 
-    public void Open() => SetActivity(true);
+    public void Open()
+    {
+        SetActivity(true);
+
+        StartCloseDelay();
+    }
 
     public void Close()
     {
         SetActivity(false);
+
+        StopCloseDelay();
 
         DeselectBtns();
     }
@@ -62,37 +69,29 @@ public class TabLoading : TabTransition, IReset
             btn.Deselect();
     }
 
-    private void StartCloseDelay()
+    private void StartCloseDelay(float waitTime = 0)
     {
         StopCloseDelay();
 
-        StartCoroutine(CloseScreenAfterDelay());
+        StartCoroutine(CloseScreenAfterDelay(waitTime));
     }
 
     private void StopCloseDelay() => _isCoroutineRunning = false;
 
-    private IEnumerator CloseScreenAfterDelay()
+    private IEnumerator CloseScreenAfterDelay(float waitTime = 0)
     {
-        float seconds = 0;
+        float elapsedTime = 0;
 
         _isCoroutineRunning = true;
 
-        while (_isCoroutineRunning && seconds < 5)
+        while (_isCoroutineRunning && elapsedTime < waitTime)
         {
-            seconds += Time.deltaTime;
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime >= waitTime)
+                Close();
 
             yield return null;
-        }
-
-        if (seconds >= 5)
-        {
-            Close();
-
-            if (_baseTabBtns == null)
-                _baseTabBtns = transform.parent.GetComponentsInChildren<Btn>();
-
-            foreach (var btn in _baseTabBtns)
-                btn.Deselect();
         }
     }
 

@@ -1,37 +1,28 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 public class Tab_Initialize : Tab_Base
 {
-    public event Action onOpenTabStartGame;
-    public event Action onJumpTabSignUp;
-    public event Action onJumpTabOffline;
-
-
     private void Start() => StartCoroutine(Execute());
 
     private IEnumerator Execute()
     {
-        _tabLoading.Open();
         MyPhoton.Disconnect();
+
+        _tabLoading.Open();
+
         yield return new WaitUntil(() => !MyPhotonNetwork.IsConnected);
+
         Conditions<bool>.Compare(MyPhoton.GameModeRegistered == MyPhoton.RegisteredGameMode.None, OpenTabStartGame, SkipTabStartGame);
     }
 
-    private void OpenTabStartGame() => onOpenTabStartGame?.Invoke();
+    private void OpenTabStartGame() => TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Start);
 
     private void SkipTabStartGame()
     {
         if (MyPhoton.GameModeRegistered == MyPhoton.RegisteredGameMode.Online)
-        {
-            MyPhotonNetwork.ManageOfflineMode(false);
-            onJumpTabSignUp?.Invoke();
-        }
+            TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOnline);
         else
-        {
-            MyPhotonNetwork.ManageOfflineMode(true);
-            onJumpTabOffline?.Invoke();
-        }
+            TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline);
     }
 }

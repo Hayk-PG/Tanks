@@ -17,9 +17,9 @@ public class Tab_HomeOnline : Tab_Base
         MenuTabs.Tab_SelectLobby.onGoBack -= OpenTab;
     }
 
-    protected override void OnTaskReceived(ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    protected override void OnOperationSubmitted(ITabOperation handler, TabsOperation.Operation operation, object[] data)
     {
-        if(operation == TabsOperation.Operation.OpenOnlineTab)
+        if(operation == TabsOperation.Operation.PlayOnline)
         {
             OperationHandler = handler;
 
@@ -64,8 +64,12 @@ public class Tab_HomeOnline : Tab_Base
 
     public override void OpenTab()
     {
-        base.OpenTab();
-
         MyPhoton.GameModeRegistered = MyPhoton.RegisteredGameMode.Online;
+
+        MyPhotonNetwork.ManageOfflineMode(false);
+
+        OperationHandler.OnOperationSucceded();
+
+        base.OpenTab();
     }
 }

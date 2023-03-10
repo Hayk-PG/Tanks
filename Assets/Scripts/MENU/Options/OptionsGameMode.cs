@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class OptionsGameMode : OptionsController
@@ -6,48 +5,47 @@ public class OptionsGameMode : OptionsController
     [SerializeField] 
     private Sprite _sprtOffline, _sprtOnline;
 
-    public event Action onJumpTabSignUp;
 
 
-    protected override void Select()
-    {
-        Conditions<bool>.Compare(!MyPhotonNetwork.IsOfflineMode, GoOffline, GoOnline);
-    }
+    protected override void Select() => Conditions<bool>.Compare(!MyPhotonNetwork.IsOfflineMode, GoOffline, GoOnline);
 
     private void GoOffline()
     {
-        MyPhoton.Disconnect();
-
         OpenTabLoad();
 
-        OnDisconnectCallback(delegate
+        if (MyPhotonNetwork.IsConnected)
         {
-            MyPhotonNetwork.ManageOfflineMode(true);
+            MyPhoton.Disconnect();
 
-            ChangeIcon(true);
+            _options.MyPhotonCallbacks.onDisconnect -= delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline); };
+            _options.MyPhotonCallbacks.onDisconnect += delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline); };
 
-            ChangeText(true);
+            return;
+        }
 
-            SetOptionsActivity(false);
-        });
-    }
-
-    private void OnDisconnectCallback(Action action)
-    {
-        _options.MyPhotonCallbacks.onDisconnect -= delegate { action?.Invoke(); };
-        _options.MyPhotonCallbacks.onDisconnect += delegate { action?.Invoke(); };
+        TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline);
     }
 
     private void GoOnline()
     {
-        onJumpTabSignUp?.Invoke();
+        OpenTabLoad();
 
-        OpenTabLoad();     
+        TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate);
     }
+
+    public override void OnOperationSucceded()
+    {
+        _tabLoading.Close();
+
+        SetOptionsActivity(false);
+    }
+
+    public override void OnOperationFailed() => _tabLoading.Close();
 
     public override void SetDefault()
     {
         ChangeIcon(MyPhotonNetwork.IsOfflineMode);
+
         ChangeText(MyPhotonNetwork.IsOfflineMode);
     }
 

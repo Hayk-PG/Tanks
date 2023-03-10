@@ -5,7 +5,7 @@ public class TabsOperation : MonoBehaviour
 {
     public static TabsOperation Handler { get; private set; }
 
-    public enum Operation { Authenticate, OpenOnlineTab}
+    public enum Operation { Authenticate, Start, PlayOnline, PlayOffline}
 
     public event Action<ITabOperation, Operation, object[]> onOperationSubmitted;
 
