@@ -17,13 +17,28 @@ public class OptionsGameMode : OptionsController
         {
             MyPhoton.Disconnect();
 
-            _options.MyPhotonCallbacks.onDisconnect -= delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline); };
-            _options.MyPhotonCallbacks.onDisconnect += delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline); };
+            ManageOnDisconnectEventSubscription(false);
+            ManageOnDisconnectEventSubscription(true);
 
             return;
         }
 
         TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline);
+    }
+
+    private void ManageOnDisconnectEventSubscription(bool isSubscribing)
+    {
+        if (isSubscribing)
+            _options.MyPhotonCallbacks.onDisconnect += OnDisconnect;
+        else
+            _options.MyPhotonCallbacks.onDisconnect -= OnDisconnect;
+    }
+
+    private void OnDisconnect()
+    {
+        TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline);
+
+        ManageOnDisconnectEventSubscription(false);
     }
 
     private void GoOnline()

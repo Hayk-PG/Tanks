@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
@@ -34,20 +33,6 @@ public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
         _optionsLogOut = FindObjectOfType<OptionsLogOut>();
 
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
-    }
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();     
-
-        _optionsLogOut.onJumpTabSignUp += Authenticate;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-
-        _optionsLogOut.onJumpTabSignUp -= Authenticate;
     }
 
     protected virtual void Update() => SetInteractability();
