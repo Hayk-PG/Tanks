@@ -3,14 +3,32 @@ using TMPro;
 
 public class UserNameGUI : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _txtUserName;
+    [SerializeField]
+    private TMP_Text _txtUserName;
 
-    private MyPhotonCallbacks _myPhotonCallbacks;
+    private ITabOperation _operationHandler;
 
 
-    private void Awake() => _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
 
-    private void OnEnable() => _myPhotonCallbacks._OnConnectedToMaster += delegate { _txtUserName.text = Data.Manager.Id; };
 
-    private void OnDisable() => _myPhotonCallbacks._OnConnectedToMaster -= delegate { _txtUserName.text = Data.Manager.Id; };
+    private void OnEnable() => TabsOperation.Handler.onOperationSubmitted += DisplayUserName;
+
+    private void OnDisable() => TabsOperation.Handler.onOperationSubmitted -= DisplayUserName;
+
+    private void DisplayUserName (ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    {
+        if(operation == TabsOperation.Operation.UserProfile)
+        {
+            _operationHandler = handler;
+
+            if(Data.Manager.Id == null)
+            {
+                _operationHandler.OnOperationFailed();
+
+                return;
+            }
+
+            _txtUserName.text = Data.Manager.Id;
+        }
+    }
 }

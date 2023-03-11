@@ -6,23 +6,28 @@ public class Bar_UserItems : MonoBehaviour, IReset
 {
     private CanvasGroup _canvasGroups;
 
-    [SerializeField] private Item[] _items;
-    [SerializeField] private Image[] _imgItems;
-    [SerializeField] private TMP_Text[] _txtItems;
+    [SerializeField]
+    private Item[] _items;
+
+    [SerializeField] [Space]
+    private Image[] _imgItems;
+
+    [SerializeField] [Space]
+    private TMP_Text[] _txtItems;
+
 
 
     private void Awake()
     {
         _canvasGroups = Get<CanvasGroup>.From(gameObject);
+
         SetItemsIcons();
     }
 
     private void SetItemsIcons()
     {
         for (int i = 0; i < _items.Length; i++)
-        {
             _imgItems[i].sprite = _items[i].Icon;
-        }
     }
 
     private void PrintUserItems()

@@ -3,21 +3,32 @@ using UnityEngine;
 
 public class LobbyCell : MonoBehaviour
 {
-    [SerializeField] private RoundTimeStates _roundTimeStates;
-    [SerializeField] private GameWind _gameWind;
+    [SerializeField]
+    private RoundTimeStates _roundTimeStates;
 
-    [SerializeField] private LobbyItem[] _lobbyItemsEntryFee;
-    [SerializeField] private LobbyItem[] _lobbyItemsWin;
-    [SerializeField] private LobbyItem[] _lobbyItemsLose;
+    [SerializeField] [Space]
+    private GameWind _gameWind;
 
-    [SerializeField] private LobbyGUI _lobbyGUI;
-    [SerializeField] private Btn _btnJoinLobby;
+    [SerializeField] [Space]
+    private LobbyItem[] _lobbyItemsEntryFee, _lobbyItemsWin, _lobbyItemsLose;
 
-    [SerializeField] private Maps _allMaps;
+    [SerializeField] [Space]
+    private LobbyGUI _lobbyGUI;
 
-    [SerializeField] private string _lobbyName;
-    [SerializeField] private int _mapIndex;
-    [SerializeField] private Color _color;
+    [SerializeField] [Space]
+    private Btn _btnJoinLobby;
+
+    [SerializeField] [Space]
+    private Maps _allMaps;
+
+    [SerializeField] [Space]
+    private string _lobbyName;
+
+    [SerializeField] [Space]
+    private int _mapIndex;
+
+    [SerializeField] [Space]
+    private Color _color;
 
     private MyPhotonCallbacks _myPhotonCallbacks;
     private TabLoading _tabLoading;
@@ -52,32 +63,39 @@ public class LobbyCell : MonoBehaviour
     private void Awake()
     {
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
+
         _tabLoading = Get<TabLoading>.FromChild(MenuTabs.Tab_SelectLobby.gameObject);
     }
 
     private void Start()
     {
         _lobbyGUI.PrintLobbyName(LobbyName);
+
         _lobbyGUI.PrintRoundDuration(RoundDuration);
+
         _lobbyGUI.SetColor(Color);
+
         _lobbyGUI.SetWindBlockActivity(IsWindOn);
     }
 
     private void OnEnable()
     {
         _btnJoinLobby.onSelect += JoinLobby;
+
         _myPhotonCallbacks._OnJoinedLobby += CompleteJoinRoom;
     }
 
     private void OnDisable()
     {
         _btnJoinLobby.onSelect -= JoinLobby;
+
         _myPhotonCallbacks._OnJoinedLobby -= CompleteJoinRoom;
     }
 
     private void JoinLobby()
     {
         MyPhoton.JoinLobby(LobbyName, Photon.Realtime.LobbyType.AsyncRandomLobby);
+
         _tabLoading.Open();
     }
 
@@ -122,17 +140,23 @@ public class LobbyCell : MonoBehaviour
                 _lobbyItemsLose[2].Quantity
             };
             string[][] itemsName = new string[][] { entryFee, win, lose };
+
             int[][] itemsAmount = new int[][] { entryFeeAmount, winAmount, loseAmount };
 
             MyPhoton.JoinRandomOrCreateRoomParameters joinRandomOrCreateRoomParameters = new MyPhoton.JoinRandomOrCreateRoomParameters
             {
                 TypedLobby = new Photon.Realtime.TypedLobby(LobbyName, Photon.Realtime.LobbyType.Default),
+
                 ExpectedMaxPlayers = 2,
+
                 MatchmakingMode = Photon.Realtime.MatchmakingMode.FillRoom,
+
                 RoomOptions = new Photon.Realtime.RoomOptions
                 {
                     CleanupCacheOnLeave = true,
+
                     MaxPlayers = 2,
+
                     CustomRoomProperties = new ExitGames.Client.Photon.Hashtable {
                         { Keys.RoomFakeName, LobbyName },
                         { Keys.MapWind, IsWindOn },

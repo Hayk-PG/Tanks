@@ -12,23 +12,31 @@ public class Tab_SelectLobby : Tab_Base, ITab_Base
     protected override void Awake()
     {
         base.Awake();
+
         _itabBase = Get<ITab_Base>.From(gameObject);
+
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
+
         MenuTabs.Tab_HomeOnline.onGoForward += OpenTab;
+
         MenuTabs.Tab_Tanks.onSendTab += OpenTab;
+
         _myPhotonCallbacks._OnLeftRoom += OpenTab;
     }
 
     protected override void OnDisable()
     {
         base.OnEnable();
+
         MenuTabs.Tab_HomeOnline.onGoForward -= OpenTab;
+
         MenuTabs.Tab_Tanks.onSendTab -= OpenTab;
+
         _myPhotonCallbacks._OnLeftRoom -= OpenTab;
     }
 

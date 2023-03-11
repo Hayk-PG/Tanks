@@ -5,12 +5,19 @@ public class OptionsLogOut : OptionsController
     {     
         OpenTabLoad(15);
 
-        MyPhoton.Disconnect();
-
-        ManageMyOnDisconnectEventSubscription(false);
-        ManageMyOnDisconnectEventSubscription(true);
-
         _isSelected = true;
+
+        if (MyPhotonNetwork.IsConnected)
+        {
+            MyPhoton.Disconnect();
+
+            ManageMyOnDisconnectEventSubscription(false);
+            ManageMyOnDisconnectEventSubscription(true);
+
+            return;
+        }
+
+        OpenTabSignUp();
     }
 
     private void ManageMyOnDisconnectEventSubscription(bool isSubscribing)

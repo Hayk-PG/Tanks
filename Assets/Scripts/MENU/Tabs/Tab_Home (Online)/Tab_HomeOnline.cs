@@ -70,6 +70,13 @@ public class Tab_HomeOnline : Tab_Base
 
         OperationHandler.OnOperationSucceded();
 
+        TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.UserProfile);
+
         base.OpenTab();
+    }
+
+    public override void OnOperationFailed()
+    {
+        GlobalFunctions.DebugLog("Tab_HomeOnline: Failed to display user profile");
     }
 }
