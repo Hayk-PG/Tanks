@@ -1,15 +1,18 @@
 using UnityEngine;
 using TMPro;
 
-public class UserNameGUI : MonoBehaviour
+public class UserNameGUI : MonoBehaviour, ITabOperation
 {
     [SerializeField]
     private TMP_Text _txtUserName;
 
-    private ITabOperation _operationHandler;
+    public ITabOperation This { get; set; }
+    public ITabOperation OperationHandler { get; set; }
 
 
 
+
+    private void Awake() => This = this;
 
     private void OnEnable() => TabsOperation.Handler.onOperationSubmitted += DisplayUserName;
 
@@ -19,16 +22,26 @@ public class UserNameGUI : MonoBehaviour
     {
         if(operation == TabsOperation.Operation.UserProfile)
         {
-            _operationHandler = handler;
+            OperationHandler = handler;
 
             if(Data.Manager.Id == null)
             {
-                _operationHandler.OnOperationFailed();
+                OperationHandler.OnOperationFailed();
 
                 return;
             }
 
             _txtUserName.text = Data.Manager.Id;
         }
+    }
+
+    public void OnOperationSucceded()
+    {
+        
+    }
+
+    public void OnOperationFailed()
+    {
+        
     }
 }

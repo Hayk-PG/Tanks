@@ -44,6 +44,13 @@ public class Tab_SignUp : Tab_BaseSignUp
 
         User.Register(CustomInputFieldID.Text, CustomInputFieldPassword.Text, CustomInputFieldEmail.Text, result =>
         {
+            if (_elapsedTime > _waitTime)
+            {
+                ResetTab();
+
+                return;
+            }
+
             if (result != null)
             {
                 SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
@@ -55,6 +62,8 @@ public class Tab_SignUp : Tab_BaseSignUp
                 CacheUserStatisticsData(result.PlayFabId);
 
                 SendUserCredentialsToTabHomeOnline(CustomInputFieldID.Text, result.PlayFabId);
+
+                ResetPlayfabCallbackDelayCounter();
             }
             else
             {

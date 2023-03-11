@@ -1,7 +1,8 @@
+using System.Collections;
 using UnityEngine;
 
 
-public class LobbyCell : MonoBehaviour
+public class LobbyCell : MonoBehaviour, ITabOperation
 {
     [SerializeField]
     private RoundTimeStates _roundTimeStates;
@@ -37,15 +38,16 @@ public class LobbyCell : MonoBehaviour
     {
         get => _lobbyName;
     }
+
     private Color Color
     {
         get => _color;
     }
+
     private int RoundDuration
     {
         get => Data.Manager.ConvertRoundTimeStates(_roundTimeStates);
     }
-
     public int MapIndex
     {
         get
@@ -53,10 +55,15 @@ public class LobbyCell : MonoBehaviour
             return _mapIndex < _allMaps.All.Length ? _mapIndex : _allMaps.All.Length - 1;
         }
     }
+
     private bool IsWindOn
     {
         get => _gameWind == global::GameWind.On ? true : false;
     }
+
+    public ITabOperation This { get; set; }
+    public ITabOperation OperationHandler { get; set; }
+
 
 
 
@@ -65,6 +72,8 @@ public class LobbyCell : MonoBehaviour
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
 
         _tabLoading = Get<TabLoading>.FromChild(MenuTabs.Tab_SelectLobby.gameObject);
+
+        This = this;
     }
 
     private void Start()
@@ -94,10 +103,21 @@ public class LobbyCell : MonoBehaviour
 
     private void JoinLobby()
     {
-        MyPhoton.JoinLobby(LobbyName, Photon.Realtime.LobbyType.AsyncRandomLobby);
+        _tabLoading.Open(15);
 
-        _tabLoading.Open();
+        if (MyPhotonNetwork.IsConnectedAndReady)
+        {
+            MyPhoton.JoinLobby(LobbyName, Photon.Realtime.LobbyType.AsyncRandomLobby);
+
+            return;
+        }
+
+        TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate);
+
+        GlobalFunctions.DebugLog($"IsConnectedAndReady {MyPhotonNetwork.IsConnectedAndReady}");
     }
+
+    private void CompleteJoinRoom() => JoinRandomOrCreateRoom();
 
     private void JoinRandomOrCreateRoom()
     {
@@ -165,7 +185,9 @@ public class LobbyCell : MonoBehaviour
                         { Keys.ItemName,  itemsName},
                         { Keys.ItemAmount,  itemsAmount}
                     },
+
                     IsVisible = true,
+
                     IsOpen = true,
                 },
             };
@@ -174,5 +196,13 @@ public class LobbyCell : MonoBehaviour
         }
     }
 
-    private void CompleteJoinRoom() => JoinRandomOrCreateRoom();
+    public void OnOperationSucceded()
+    {
+        GlobalFunctions.DebugLog("Successfuly reconnected");
+    }
+
+    public void OnOperationFailed()
+    {
+        GlobalFunctions.DebugLog("Failed to join lobby");
+    }
 }

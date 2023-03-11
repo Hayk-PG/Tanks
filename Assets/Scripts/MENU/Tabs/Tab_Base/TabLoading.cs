@@ -88,8 +88,6 @@ public class TabLoading : TabTransition, IReset
         {
             elapsedTime += Time.deltaTime;
 
-            GlobalFunctions.DebugLog($"CloseScreenAfterDelay: {elapsedTime:0}");
-
             if (elapsedTime >= waitTime)
             {
                 Close();

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
@@ -16,6 +17,10 @@ public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
     protected OptionsLogOut _optionsLogOut;
 
     protected MyPhotonCallbacks _myPhotonCallbacks;
+
+    protected float _waitTime = 10, _elapsedTime;
+
+    protected bool _isCallbackDelayCounterRunning;
 
     protected virtual CustomInputField CustomInputFieldEmail { get; }
     protected virtual CustomInputField CustomInputFieldID { get; }
@@ -77,7 +82,14 @@ public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
 
     protected virtual void OnAuthenticationFailed() => OperationHandler?.OnOperationFailed();
 
-    protected virtual void Confirm() => OpenLoadingTab();
+    protected virtual void Confirm()
+    {
+        OpenLoadingTab();
+
+        ResetPlayfabCallbackDelayCounter();
+
+        StartCoroutine(CountPlayfabCallbackDelay());
+    }
 
     protected virtual Data.NewData NewData(string userId, string userPassword)
     {
@@ -103,4 +115,20 @@ public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
     }
 
     protected virtual void SetInteractability() => _btnForward.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4 ? true : false;
+
+    protected virtual IEnumerator CountPlayfabCallbackDelay()
+    {
+        _elapsedTime = 0;
+
+        _isCallbackDelayCounterRunning = true;
+
+        while(_isCallbackDelayCounterRunning && _elapsedTime < _waitTime)
+        {
+            _elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+    }
+
+    protected virtual void ResetPlayfabCallbackDelayCounter() => _isCallbackDelayCounterRunning = false;
 }
