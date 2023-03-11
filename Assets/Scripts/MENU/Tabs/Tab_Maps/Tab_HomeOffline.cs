@@ -1,10 +1,14 @@
 using System;
 using UnityEngine;
+using TMPro;
 
 public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
 {
     [SerializeField] 
     private Btn _btnTank, _btnAITank;
+
+    [SerializeField] [Space]
+    private TMP_Text _txtMapName;
 
     private ITab_Base _iTabBase;
 
@@ -78,6 +82,11 @@ public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
         OpenLoadingTab();
 
         MyScene.Manager.LoadScene(MyScene.SceneName.Game);
+    }
+
+    public void DisplayMapName(Map map)
+    {
+        _txtMapName.text = map.MapName;
     }
 
     public void SetDefault()

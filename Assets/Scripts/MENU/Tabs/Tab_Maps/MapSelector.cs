@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MapSelector : MonoBehaviour, IReset
@@ -30,22 +31,39 @@ public class MapSelector : MonoBehaviour, IReset
 
 
 
+
     private void OnEnable() => _btn.onSelect += () => { _onSelect(); };
 
     private void OnDisable() => _btn.onSelect -= () => { _onSelect(); };
+
+    public void AssignMapSelector(bool isRandomMapSelector, Maps maps)
+    {
+        _onSelect = isRandomMapSelector ? () => { SelectRandomMap(maps); } : SelectMap;
+    }
 
     private void SelectRandomMap(Maps maps)
     {
         int randomMap = Random.Range(0, maps.All.Length);
 
         Data.Manager.SetMap(randomMap);
+
+        MenuTabs.Tab_HomeOffline.DisplayMapName(maps.All[randomMap]);
+
+        StartCoroutine(DelayBeforeDeselect());
     }
 
-    private void SelectMap() => Data.Manager.SetMap(_mapIndex);
-
-    public void AssignMapSelector(bool isRandomMapSelector, Maps maps)
+    private IEnumerator DelayBeforeDeselect()
     {
-        _onSelect = isRandomMapSelector ? () => { SelectRandomMap(maps); } : SelectMap;
+        yield return null;
+
+        _btn.Deselect();
+    }
+
+    private void SelectMap()
+    {
+        Data.Manager.SetMap(_mapIndex);
+
+        MenuTabs.Tab_HomeOffline.DisplayMapName(_map);
     }
 
     public void Initialize()
