@@ -38,8 +38,6 @@ public class Tab_HomeOnline : Tab_Base
         {
             elapsedTime += Time.deltaTime;
 
-            print($"Tab_HomeOnlone execute... {elapsedTime:0}");
-
             if (MyPhotonNetwork.IsConnected)
             {
                 yield return new WaitForSeconds(1f);
@@ -73,10 +71,5 @@ public class Tab_HomeOnline : Tab_Base
         TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.UserProfile);
 
         base.OpenTab();
-    }
-
-    public override void OnOperationFailed()
-    {
-        GlobalFunctions.DebugLog("Tab_HomeOnline: Failed to display user profile");
     }
 }
