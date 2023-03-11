@@ -13,6 +13,9 @@ public class Tab_StartGame : Tab_Base, ITabOperation
     {
         base.OnEnable();
 
+        MenuTabs.Tab_SignUp.onGoBack += OpenTab;
+        MenuTabs.Tab_SignIn.onGoBack += OpenTab;
+
         _btnOffline.onSelect += SelectOffline;
 
         _btnOnline.onSelect += SelectOnline;
@@ -21,6 +24,9 @@ public class Tab_StartGame : Tab_Base, ITabOperation
     protected override void OnDisable()
     {
         base.OnDisable();
+
+        MenuTabs.Tab_SignUp.onGoBack -= OpenTab;
+        MenuTabs.Tab_SignIn.onGoBack -= OpenTab;
 
         _btnOffline.onSelect -= SelectOffline;
 

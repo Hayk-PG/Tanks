@@ -68,6 +68,6 @@ public class OptionsGameMode : OptionsController
 
     private void ChangeText(bool isOffline)
     {
-        _btnTxt.SetButtonTitle(isOffline ? GlobalFunctions.TextWithColorCode("#1EFDB6", "go online") : GlobalFunctions.TextWithColorCode("#FD1E40", "go offline"));
+        _btnTxt.SetButtonTitle(isOffline ? "go: " + GlobalFunctions.TextWithColorCode("#1EFDB6", "online") : "go: " + GlobalFunctions.TextWithColorCode("#FD1E40", "offline"));
     }
 }
