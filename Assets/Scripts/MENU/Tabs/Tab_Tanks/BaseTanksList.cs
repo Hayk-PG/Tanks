@@ -8,7 +8,9 @@ public abstract class BaseTanksList : MonoBehaviour
     {
         public int _index;
         public int _horizontalGroupsLength;
+
         public TankProperties[] _tankProperties;
+
         public TankProperties[] _dataTanksList;
     }
 
@@ -43,8 +45,11 @@ public abstract class BaseTanksList : MonoBehaviour
             Parameters parameters = new Parameters
             {
                 _index = i,
+
                 _horizontalGroupsLength = horizGroupsCount,
+
                 _tankProperties = horizontalGroupTanksList,
+
                 _dataTanksList = dataTanksList
             };
 

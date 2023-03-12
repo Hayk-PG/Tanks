@@ -5,13 +5,18 @@ using UnityEngine;
 public abstract class BaseBtnTankLogic : MonoBehaviour, IReset 
 {
     protected BaseTab_Tanks _tabTanks;
-    [SerializeField] protected Btn_Tank _btnTank;
-    [SerializeField] protected Sprite _sprtButtonReleased;
-    [SerializeField] protected Sprite _sprtButtonPressed;
-    [SerializeField] protected Color _clrTankReleased;  
-    [SerializeField] protected Color _clrTankPressed;
+
+    [SerializeField]
+    protected Btn_Tank _btnTank;
+
+    [SerializeField] [Space]
+    protected Color _clrBtnReleased, _clrBtnPressed;
+
+    [SerializeField] [Space]
+    protected Color _clrTankReleased, _clrTankPressed;
 
     public event System.Action<TankProperties> onTankSelected;
+
 
 
 
@@ -32,13 +37,16 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
     protected virtual void SetScrollRectPosition(int horizontalGroupsLength)
     {
         int horizontalGroupIndex = transform.parent.GetSiblingIndex() + 1;
+
         float value = Mathf.InverseLerp(horizontalGroupsLength, 1, horizontalGroupIndex);
+
         _tabTanks.CustomScrollRect.SetNormalizedPosition(value);
     }
 
     protected virtual void AutoSelect(int relatedTankIndex, int horizontalGroupsLength)
     {
         Select(relatedTankIndex);
+
         SetScrollRectPosition(horizontalGroupsLength);
     }
 
@@ -54,7 +62,7 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
                 iReset.SetDefault();
         });
 
-        _btnTank.SpriteButton = _sprtButtonPressed;
+        _btnTank.ColorBtn = _clrBtnPressed;
         _btnTank.ImageTank.color = _clrTankPressed;
 
         onTankSelected?.Invoke(Data.Manager.AvailableTanks[relatedTankIndex]);
@@ -62,7 +70,7 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
 
     public void SetDefault()
     {
-        _btnTank.SpriteButton = _sprtButtonReleased;
+        _btnTank.ColorBtn = _clrBtnReleased;
         _btnTank.ImageTank.color = _clrTankReleased;
     }
 }

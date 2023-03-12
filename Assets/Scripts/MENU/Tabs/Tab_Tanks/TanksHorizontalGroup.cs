@@ -4,13 +4,16 @@ using System.Linq;
 
 public class TanksHorizontalGroup : MonoBehaviour
 {
-    [SerializeField] private Btn_Tank[] _btnTanks;
+    [SerializeField]
+    private Btn_Tank[] _btnTanks;
 
     public struct Parameters
     {
         public int _index;
         public int _horizontalGroupTanksLength;
+
         public TankProperties _btnTankProperty;
+
         public TankProperties[] _dataTanksList;
     }
 
@@ -21,8 +24,11 @@ public class TanksHorizontalGroup : MonoBehaviour
             Parameters parameters = new Parameters
             {
                 _index = i,
+
                 _horizontalGroupTanksLength = baseTanksListParameters._horizontalGroupsLength,
+
                 _btnTankProperty = baseTanksListParameters._tankProperties[i],
+
                 _dataTanksList = baseTanksListParameters._dataTanksList
             };
 
@@ -38,6 +44,7 @@ public class TanksHorizontalGroup : MonoBehaviour
         _btnTanks[parameters._index].SetStars(parameters._btnTankProperty._starsCount);
         _btnTanks[parameters._index].SetRelatedTankIndex((parameters._dataTanksList.ToList().IndexOf(parameters._btnTankProperty)));
         _btnTanks[parameters._index].SetLevel(parameters._btnTankProperty._availableInLevel);
+        _btnTanks[parameters._index].SetLockState(false);
         _btnTanks[parameters._index].AutoSelect(selectedTankIndex, parameters._horizontalGroupTanksLength);
     }
 }
