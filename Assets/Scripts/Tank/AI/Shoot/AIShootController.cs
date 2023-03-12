@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class AIShootController : BaseShootController
 {
-    [SerializeField] private WeaponProperties[] _bulletsPrefab;
-    [SerializeField] private int _activeBulletIndex;
+    [SerializeField] [Space]
+    private WeaponProperties[] _bulletsPrefab;
+
+    [SerializeField] [Space]
+    private int _activeBulletIndex;
 
     private struct BulletsList
     {
@@ -45,11 +48,17 @@ public class AIShootController : BaseShootController
     protected override void Awake()
     {
         base.Awake();
+
         _rigidBody = GetComponent<Rigidbody>();
+
         _aiTankMovement = GetComponent<AITankMovement>();
+
         _aiEnemyDataGetter = Get<AIEnemyDataGetter>.From(gameObject);
+
         _iScore = Get<IScore>.From(gameObject);
+
         InitializeBulletsList(_bulletsPrefab.Length);
+
         _activeBulletIndex = 0;
     }
 
@@ -61,13 +70,16 @@ public class AIShootController : BaseShootController
     protected override void OnEnable()
     {
         base.OnEnable();
+
         _aiTankMovement.Shoot += ShootBullet;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+
         _aiTankMovement.Shoot -= ShootBullet;
+
         _aiCanonRaycast.onRayCast -= OnAICanonRaycast;
     }
 
@@ -129,7 +141,9 @@ public class AIShootController : BaseShootController
         if(!HaveEnoughBulletsCount(randomIndex) && !IsCurrentWeaponUnclockingTimerRunning(randomIndex) && HaveRequiredScoreAmmount(randomIndex))
         {         
             UpdateBulletsCount(randomIndex, _bulletsPrefab[randomIndex]._value);
+
             _scoreController.Score -= _bulletsPrefab[randomIndex]._requiredScoreAmmount;
+
             _activeBulletIndex = randomIndex;
         }
 
@@ -148,6 +162,7 @@ public class AIShootController : BaseShootController
         while (unlockTime > 0)
         {
             unlockTime--;
+
             yield return new WaitForSeconds(1);
         }
 
@@ -170,12 +185,15 @@ public class AIShootController : BaseShootController
         switch (singleGameDifficultyLevel)
         {
             case SingleGameDifficultyLevel.Easy: return;
+
             case SingleGameDifficultyLevel.Normal:
+
                 SubscribeToAICanonRaycast();
                 StartCoroutine(OnHigherThanEasyDifficultyLevel());         
                 break;
 
             case SingleGameDifficultyLevel.Hard:
+
                 SubscribeToAICanonRaycast();
                 _desiredTrajectoryTime = 2;
                 break;
@@ -187,6 +205,7 @@ public class AIShootController : BaseShootController
         while (true)
         {
             _desiredTrajectoryTime = Random.Range(1.5f, 2);
+
             yield return new WaitForSeconds(2);
         }
     }
@@ -200,12 +219,14 @@ public class AIShootController : BaseShootController
                 if (hitPointDistance > _aiEnemyDataGetter.Distance || hitPointDistance <= _aiEnemyDataGetter.Distance && _aiEnemyDataGetter.Distance > 8)
                 {
                     _currentTrajectoryTime = _desiredTrajectoryTime;
+
                     _currentOffsetX = Mathf.Lerp(0, _aiEnemyDataGetter.Distance, _currentTrajectoryTime) / 10;
                 }
 
                 if (hitPointDistance <= _aiEnemyDataGetter.Distance && _aiEnemyDataGetter.Distance < 8)
                 {
                     _currentTrajectoryTime = _defaultTrajectoryTime;
+
                     _currentOffsetX = 0;
                 }
             }
@@ -214,11 +235,13 @@ public class AIShootController : BaseShootController
                 if (_aiEnemyDataGetter.Distance > 8)
                 {
                     _currentTrajectoryTime = _desiredTrajectoryTime;
+
                     _currentOffsetX = Mathf.Lerp(0, _aiEnemyDataGetter.Distance, _currentTrajectoryTime) / 10;
                 }
                 else
                 {
                     _currentTrajectoryTime = _defaultTrajectoryTime;
+
                     _currentOffsetX = 0;
                 }
             }
@@ -228,11 +251,17 @@ public class AIShootController : BaseShootController
     public void RotateCanon()
     {
         _target = _trajectory.PredictedTrajectory(new Vector3(_aiEnemyDataGetter.Enemy.position.x - _currentOffsetX + _targetFixingValue, _aiEnemyDataGetter.Enemy.position.y, _aiEnemyDataGetter.Enemy.position.z), transform.position, _currentTrajectoryTime);
+
         _lookRot = Quaternion.LookRotation(Vector3.forward, _target);
+
         _rot = _lookRot * Quaternion.Euler(_canon._rotationStabilizer.x, _canon._rotationStabilizer.y, _canon._rotationStabilizer.z);
+
         _desiredRotation = Quaternion.Slerp(_desiredRotation, _rot, _canon._rotationSpeed);
+
         _canon._rotationSpeed = 2 * Time.deltaTime;
+
         _canon._currentEulerAngleX = _desiredRotation.eulerAngles.x;
+
         _canonPivotPoint.rotation = _desiredRotation;
     }
 
@@ -249,18 +278,25 @@ public class AIShootController : BaseShootController
         if (HaveEnoughBulletsCount(_activeBulletIndex))
         {
             BaseBulletController baseBulletController = Instantiate(_cachedBulletsList[_activeBulletIndex]._weaponProperties._prefab, _shootPoint.position, _canonPivotPoint.rotation);
+
             baseBulletController.OwnerScore = _iScore;
             baseBulletController.IsOwnerAI = true;
             baseBulletController.RigidBody.velocity = _target;
 
             _rigidBody.AddForce(transform.forward * _target.magnitude * _shoot._rigidbodyForceMultiplier, ForceMode.Impulse);
+
             GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, baseBulletController.RigidBody, null, null);
-            _currentTrajectoryTime = _defaultTrajectoryTime;           
+
+            _currentTrajectoryTime = _defaultTrajectoryTime;
+            
             OnDash(_aiTankMovement.Direction);
+
             UsedActiveWeapon();
+
             ActivateRandomWeapon();
 
             OnShoot?.Invoke();
+
             onAiShoot?.Invoke(baseBulletController.gameObject);
         }
     }

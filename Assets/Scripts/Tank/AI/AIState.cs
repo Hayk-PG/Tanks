@@ -6,13 +6,13 @@ public class AIState : MonoBehaviour
     [SerializeField]
     private PlayerTurn _playerTurn;
 
-    [SerializeField]
+    [SerializeField] [Space]
     private HealthController _healthController;
 
-    [SerializeField]
+    [SerializeField] [Space]
     private AIShootController _aiShootController;
 
-    [SerializeField]
+    [SerializeField] [Space]
     private AICanonRaycast _aiCanonRayCast;
 
     public enum MovementStates { MoveForward, MoveBackward, DoNotMove }
@@ -23,19 +23,27 @@ public class AIState : MonoBehaviour
     public int ReceivedHitCounts { get; private set; }
 
     public float Distance { get; private set; }
+    public float ShotDistance { get; private set; }
     public float RaycastHitDistance { get; private set; }
     public float WoodBoxDistance { get; private set; }
 
     public bool IsHit { get; private set; }
     public bool IsRaycastHit { get; private set; }
+    public bool IsLastShotMissed { get; private set; }
 
     public Vector3 PreviousPosition { get; private set; }
     public Vector3 CurrentPosition { get; private set; }
     public Vector3 NextPosition { get; private set; }
     public Vector3 EnemyCurrentPosition { get; private set; }
     public Vector3 EnemyPreviousPosition { get; private set; }
-   
+    public Vector3 HitPosition { get; private set; }
+    public Vector3 EnemyHitPosition { get; private set; }
+    public Vector3 MissileLandingPosition { get; private set; }
+    public Vector3 MissilePosition { get; private set; }
+
+    public GameObject MissileObj { get; private set; }
     public GameObject EnemyTankObj { get; private set; }
+
     public HealthController HealthController { get; private set; }
 
     public event System.Action<int, int> onMove;
@@ -46,32 +54,53 @@ public class AIState : MonoBehaviour
     private void OnEnable()
     {
         GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStart;
+
         GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnController;
 
+        _aiShootController.onAiShoot += OnShoot;
+
         _healthController.OnTakeDamage += OnTakeDamage;
+
         _healthController.onUpdateArmorBar += (int damage) => { OnTakeDamage(null, damage); };
+
         _aiCanonRayCast.onRayCast += OnRayCast;
     }
 
     private void OnDisable()
     {
         GameSceneObjectsReferences.GameManager.OnGameStarted -= OnGameStart;
+
         GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnController;
 
+        _aiShootController.onAiShoot -= OnShoot;
+
         _healthController.OnTakeDamage -= OnTakeDamage;
+
         _healthController.onUpdateArmorBar -= (int damage) => { OnTakeDamage(null, damage); };
+
         _aiCanonRayCast.onRayCast -= OnRayCast;
+    }
+
+    private void FixedUpdate()
+    {
+        GetMissilePosition();
     }
 
     private void OnGameStart()
     {
         EnemyTankObj = GlobalFunctions.ObjectsOfType<TankController>.Find(tankController => tankController.gameObject.name != Names.Tank_SecondPlayer).gameObject;
+
         HealthController = Get<HealthController>.From(EnemyTankObj);
     }
 
     private void OnTurnController(TurnState turnState)
     {
         GetTurnState(turnState);
+    }
+
+    private void OnShoot(GameObject gameObject)
+    {
+        MissileObj = gameObject;
     }
 
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
@@ -83,7 +112,16 @@ public class AIState : MonoBehaviour
     private void OnRayCast(bool isRayCastHit, float distance)
     {
         IsRaycastHit = isRayCastHit;
+
         RaycastHitDistance = distance;
+    }
+
+    private void GetMissilePosition()
+    {
+        if (MissileObj != null)
+        {
+            MissilePosition = MissileObj.transform.position;
+        }
     }
 
     private void GetTurnState(TurnState turnState)
@@ -98,6 +136,7 @@ public class AIState : MonoBehaviour
     private IEnumerator ExecuteOnAITurn()
     {
         yield return StartCoroutine(CalculateEnemyCurrentPosition());
+        yield return StartCoroutine(CalculateEnemyHitPositions());
         yield return StartCoroutine(CalculateCurrentPosition());
         yield return StartCoroutine(CalculateWoodBoxDistance());
         yield return StartCoroutine(CalculateTanksDistance());
@@ -151,6 +190,30 @@ public class AIState : MonoBehaviour
         //GlobalFunctions.DebugLog("Distance: " + Distance);
     }
 
+    private IEnumerator CalculateEnemyHitPositions()
+    {
+        yield return null;
+
+        if (MissilePosition != Vector3.zero)
+        {
+            MissileLandingPosition = MissilePosition;
+
+            ShotDistance = (float)Converter.Double(Vector3.Distance(EnemyPreviousPosition, MissileLandingPosition));
+
+            print(Vector3.Cross(EnemyCurrentPosition, MissileLandingPosition));
+
+            IsLastShotMissed = ShotDistance <= 1 ? false : true;
+
+            //GlobalFunctions.DebugLog($"Hit distance: {ShotDistance}");
+        }
+        else
+        {
+            IsLastShotMissed = true;
+        }
+
+        //print(EnemyPreviousPosition);
+    }
+
     private IEnumerator CalculateShootControllerTargetFixingValue()
     {
         yield return null;
@@ -177,6 +240,7 @@ public class AIState : MonoBehaviour
         if (WoodBoxDistance != 0)
         {
             stepsLenth = Mathf.Abs(Mathf.RoundToInt(WoodBoxDistance));
+
             direction = WoodBoxDistance < 0 ? 1 : -1;
 
             RaiseOnMoveEvent(stepsLenth, direction);
@@ -200,6 +264,7 @@ public class AIState : MonoBehaviour
         if (IsRaycastHit)
         {
             stepsLenth = Mathf.RoundToInt(RaycastHitDistance);
+
             direction = -1;
 
             RaiseOnMoveEvent(stepsLenth, direction);

@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class AiMovementPlanner : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] [Space]
     private Raycasts _rayCasts;
 
-    [SerializeField]
+    [SerializeField] [Space]
     private AIState _aiState;
 
     private Vector3 _nextTilePosition;
