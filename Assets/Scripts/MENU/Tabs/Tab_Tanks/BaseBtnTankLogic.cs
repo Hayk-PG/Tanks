@@ -63,7 +63,12 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
         });
 
         _btnTank.ColorBtn = _clrBtnPressed;
+
         _btnTank.ImageTank.color = _clrTankPressed;
+
+        _tabTanks.SubTabUnlock?.Display(_btnTank.TankProperties, _btnTank.IsLocked);
+
+        _tabTanks.SubTabRepair?.Display(_btnTank.TankProperties);
 
         onTankSelected?.Invoke(Data.Manager.AvailableTanks[relatedTankIndex]);
     }

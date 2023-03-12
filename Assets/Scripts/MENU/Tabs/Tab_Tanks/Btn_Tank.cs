@@ -25,6 +25,8 @@ public class Btn_Tank : MonoBehaviour
 
     private int _relatedTankIndex;
 
+    public TankProperties TankProperties { get; private set; }
+
     public Button Button { get => _button; }
 
     public Image ImageTank { get => _imgTank; }
@@ -53,6 +55,11 @@ public class Btn_Tank : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
     }
 
+    public void SetTankProprties(TankProperties tankProperties)
+    {
+        TankProperties = tankProperties;
+    }
+
     public void SetPicture(Sprite sprite)
     {
         _imgTank.sprite = sprite;
@@ -75,11 +82,14 @@ public class Btn_Tank : MonoBehaviour
 
     public void SetLevel(int level)
     {
-        if (!MyPhotonNetwork.IsOfflineMode)
+        if (MyPhotonNetwork.IsOfflineMode)
+        {
             _txtLevel.gameObject.SetActive(false);
-        else
-            _txtLevel.gameObject.SetActive(true);
 
+            return;
+        }
+
+        _txtLevel.gameObject.SetActive(true);
         _txtLevel.text = Level(level);
     }
 
