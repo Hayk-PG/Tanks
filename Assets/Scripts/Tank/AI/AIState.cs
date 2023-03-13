@@ -18,18 +18,20 @@ public class AIState : MonoBehaviour
     public enum MovementStates { MoveForward, MoveBackward, DoNotMove }
     public MovementStates AiMovementStates { get; private set; }
 
-    public int MissedShotsCount { get; private set; }
-    public int SuccessfulShotsCount { get; private set; }
-    public int ReceivedHitCounts { get; private set; }
+    public int AccurateShot { get; private set; }
+    public int MissedShot { get; private set; }
+    public int PlayerPreviousHealth { get; private set; }
+    public int PlayerCurrentHealth { get; private set; }
 
     public float Distance { get; private set; }
     public float ShotDistance { get; private set; }
+    public float PreviousShotDistance { get; private set; }
     public float RaycastHitDistance { get; private set; }
     public float WoodBoxDistance { get; private set; }
 
-    public bool IsHit { get; private set; }
-    public bool IsRaycastHit { get; private set; }
-    public bool IsLastShotMissed { get; private set; }
+    public bool IsTakingDamage { get; private set; }
+    public bool IsRayCollided { get; private set; }
+    public bool IsEnemyTakingDamage { get; private set; }
 
     public Vector3 PreviousPosition { get; private set; }
     public Vector3 CurrentPosition { get; private set; }
@@ -44,7 +46,7 @@ public class AIState : MonoBehaviour
     public GameObject MissileObj { get; private set; }
     public GameObject EnemyTankObj { get; private set; }
 
-    public HealthController HealthController { get; private set; }
+    public HealthController EnemyHealthController { get; private set; }
 
     public event System.Action<int, int> onMove;
 
@@ -79,6 +81,12 @@ public class AIState : MonoBehaviour
         _healthController.onUpdateArmorBar -= (int damage) => { OnTakeDamage(null, damage); };
 
         _aiCanonRayCast.onRayCast -= OnRayCast;
+
+        if(EnemyHealthController != null)
+        {
+            EnemyHealthController.OnUpdateHealthBar += OnEnemyHit;
+            EnemyHealthController.onUpdateArmorBar += OnEnemyHit;
+        }
     }
 
     private void FixedUpdate()
@@ -90,7 +98,10 @@ public class AIState : MonoBehaviour
     {
         EnemyTankObj = GlobalFunctions.ObjectsOfType<TankController>.Find(tankController => tankController.gameObject.name != Names.Tank_SecondPlayer).gameObject;
 
-        HealthController = Get<HealthController>.From(EnemyTankObj);
+        EnemyHealthController = Get<HealthController>.From(EnemyTankObj);
+
+        EnemyHealthController.OnUpdateHealthBar += OnEnemyHit;
+        EnemyHealthController.onUpdateArmorBar += OnEnemyHit;
     }
 
     private void OnTurnController(TurnState turnState)
@@ -101,17 +112,36 @@ public class AIState : MonoBehaviour
     private void OnShoot(GameObject gameObject)
     {
         MissileObj = gameObject;
+
+        IsEnemyTakingDamage = false;
     }
 
     private void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
         if (damage > 0)
-            IsHit = true;
+            IsTakingDamage = true;
+    }
+
+    private void OnEnemyHit(int health)
+    {
+        PlayerPreviousHealth = PlayerCurrentHealth;
+        PlayerCurrentHealth = health;
+
+        CalculateShotsResult(PlayerCurrentHealth != PlayerPreviousHealth);
+    }
+
+    private void CalculateShotsResult(bool isEnemyTakingDamage)
+    {
+        IsEnemyTakingDamage = isEnemyTakingDamage;
+
+        AccurateShot = IsEnemyTakingDamage ? AccurateShot + 1 : 0;
+
+        MissedShot = IsEnemyTakingDamage ? 0 : MissedShot + 1;
     }
 
     private void OnRayCast(bool isRayCastHit, float distance)
     {
-        IsRaycastHit = isRayCastHit;
+        IsRayCollided = isRayCastHit;
 
         RaycastHitDistance = distance;
     }
@@ -146,7 +176,7 @@ public class AIState : MonoBehaviour
 
     private IEnumerator ExecuteOnEnemyTurn()
     {
-        IsHit = false;
+        IsTakingDamage = false;
 
         WoodBoxDistance = 0;
 
@@ -194,31 +224,50 @@ public class AIState : MonoBehaviour
     {
         yield return null;
 
-        if (MissilePosition != Vector3.zero)
+        if (IsEnemyTakingDamage)
         {
-            MissileLandingPosition = MissilePosition;
-
-            ShotDistance = (float)Converter.Double(Vector3.Distance(EnemyPreviousPosition, MissileLandingPosition));
-
-            print(Vector3.Cross(EnemyCurrentPosition, MissileLandingPosition));
-
-            IsLastShotMissed = ShotDistance <= 1 ? false : true;
-
-            //GlobalFunctions.DebugLog($"Hit distance: {ShotDistance}");
-        }
-        else
-        {
-            IsLastShotMissed = true;
+            yield break;
         }
 
-        //print(EnemyPreviousPosition);
+        if (MissilePosition == Vector3.zero)
+        {
+            CalculateShotsResult(false);
+
+            yield break;
+        }
+
+        MissileLandingPosition = MissilePosition;
+
+        PreviousShotDistance = ShotDistance;
+
+        ShotDistance = (float)Converter.Double(EnemyPreviousPosition.x - MissileLandingPosition.x);
+
+        yield return null;
+
+        if (PreviousShotDistance == ShotDistance)
+        {
+            float random = Mathf.Abs(PreviousShotDistance) > 0.2f ? Random.Range(-Mathf.Abs(PreviousShotDistance), Mathf.Abs(PreviousShotDistance)) : Random.Range(-0.2f, 0.2f);
+
+            ShotDistance = random;
+
+            GlobalFunctions.DebugLog($"Same spot: {ShotDistance}");
+        }
+
+        yield return null;
+
+        if (Mathf.Abs(ShotDistance) >= 2)
+            ShotDistance = 0;
+
+        CalculateShotsResult(false);
+
+        GlobalFunctions.DebugLog($"Hit distance: {ShotDistance}");
     }
 
     private IEnumerator CalculateShootControllerTargetFixingValue()
     {
         yield return null;
 
-        _aiShootController.ControlTargetFixingValue(Distance > 6 ? 0.5f : 0);
+        _aiShootController.ControlTargetFixingValue(ShotDistance);
     }
 
     private IEnumerator CalculateCurrentPosition()
@@ -250,7 +299,7 @@ public class AIState : MonoBehaviour
             yield break;
         }
 
-        if (IsHit)
+        if (IsTakingDamage)
         {
             stepsLenth = Random.Range(7, 15);
 
@@ -261,7 +310,7 @@ public class AIState : MonoBehaviour
             yield break;
         }
 
-        if (IsRaycastHit)
+        if (IsRayCollided)
         {
             stepsLenth = Mathf.RoundToInt(RaycastHitDistance);
 

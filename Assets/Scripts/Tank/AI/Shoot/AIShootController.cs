@@ -250,7 +250,7 @@ public class AIShootController : BaseShootController
 
     public void RotateCanon()
     {
-        _target = _trajectory.PredictedTrajectory(new Vector3(_aiEnemyDataGetter.Enemy.position.x - _currentOffsetX + _targetFixingValue, _aiEnemyDataGetter.Enemy.position.y, _aiEnemyDataGetter.Enemy.position.z), transform.position, _currentTrajectoryTime);
+        _target = _trajectory.PredictedTrajectory(new Vector3((_aiEnemyDataGetter.Enemy.position.x - _currentOffsetX) + _targetFixingValue, _aiEnemyDataGetter.Enemy.position.y, _aiEnemyDataGetter.Enemy.position.z), transform.position, _currentTrajectoryTime);
 
         _lookRot = Quaternion.LookRotation(Vector3.forward, _target);
 
