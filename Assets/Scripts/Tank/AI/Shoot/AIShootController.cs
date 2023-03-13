@@ -18,16 +18,20 @@ public class AIShootController : BaseShootController
     private BulletsList[] _cachedBulletsList;
 
     private Rigidbody _rigidBody;
+
     private AITankMovement _aiTankMovement;
+
     private AIEnemyDataGetter _aiEnemyDataGetter;
-    private Vector3 _target;    
+
     private IScore _iScore;
+
+    private Vector3 _target;
+    
     private Quaternion _lookRot;
     private Quaternion _rot;
     private Quaternion _desiredRotation;
      
     private float _defaultTrajectoryTime = 1;
-    private float _desiredTrajectoryTime = 1;
     private float _currentTrajectoryTime = 1;
     private float _currentOffsetX = 0;
     private float _targetFixingValue = 0;
@@ -42,6 +46,8 @@ public class AIShootController : BaseShootController
     }
 
     public event System.Action<GameObject> onAiShoot;
+
+
 
 
 
@@ -189,13 +195,14 @@ public class AIShootController : BaseShootController
             case SingleGameDifficultyLevel.Normal:
 
                 SubscribeToAICanonRaycast();
-                StartCoroutine(OnHigherThanEasyDifficultyLevel());         
+                StartCoroutine(OnHigherThanEasyDifficultyLevel());
+                
                 break;
 
             case SingleGameDifficultyLevel.Hard:
 
                 SubscribeToAICanonRaycast();
-                _desiredTrajectoryTime = 2;
+
                 break;
         }
     }
@@ -204,8 +211,6 @@ public class AIShootController : BaseShootController
     {
         while (true)
         {
-            _desiredTrajectoryTime = Random.Range(1.5f, 2);
-
             yield return new WaitForSeconds(2);
         }
     }
@@ -214,37 +219,25 @@ public class AIShootController : BaseShootController
     {
         if (CanRotateCanon)
         {
-            if (isRaycastHit)
-            {
-                if (hitPointDistance > _aiEnemyDataGetter.Distance || hitPointDistance <= _aiEnemyDataGetter.Distance && _aiEnemyDataGetter.Distance > 8)
-                {
-                    _currentTrajectoryTime = _desiredTrajectoryTime;
+            //return;
+        }
 
-                    _currentOffsetX = Mathf.Lerp(0, _aiEnemyDataGetter.Distance, _currentTrajectoryTime) / 10;
-                }
+        if (isRaycastHit)
+        {
+            if (hitPointDistance > _aiEnemyDataGetter.Distance || hitPointDistance <= _aiEnemyDataGetter.Distance && _aiEnemyDataGetter.Distance > 8)
+                _currentOffsetX = Mathf.Lerp(0, _aiEnemyDataGetter.Distance, _currentTrajectoryTime) / 10;
 
-                if (hitPointDistance <= _aiEnemyDataGetter.Distance && _aiEnemyDataGetter.Distance < 8)
-                {
-                    _currentTrajectoryTime = _defaultTrajectoryTime;
+            if (hitPointDistance <= _aiEnemyDataGetter.Distance && _aiEnemyDataGetter.Distance < 8)
+                _currentOffsetX = 0;
 
-                    _currentOffsetX = 0;
-                }
-            }
+            _currentTrajectoryTime = _currentTrajectoryTime < 2 ? _currentTrajectoryTime += 2 * Time.fixedDeltaTime : 2;
+        }
+        else
+        {
+            if (_aiEnemyDataGetter.Distance > 8)
+                _currentOffsetX = Mathf.Lerp(0, _aiEnemyDataGetter.Distance, _currentTrajectoryTime) / 10;
             else
-            {
-                if (_aiEnemyDataGetter.Distance > 8)
-                {
-                    _currentTrajectoryTime = _desiredTrajectoryTime;
-
-                    _currentOffsetX = Mathf.Lerp(0, _aiEnemyDataGetter.Distance, _currentTrajectoryTime) / 10;
-                }
-                else
-                {
-                    _currentTrajectoryTime = _defaultTrajectoryTime;
-
-                    _currentOffsetX = 0;
-                }
-            }
+                _currentOffsetX = 0;
         }
     }
 

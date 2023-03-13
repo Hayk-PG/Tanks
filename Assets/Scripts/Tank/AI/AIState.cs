@@ -198,8 +198,6 @@ public class AIState : MonoBehaviour
         yield return null;
 
         EnemyPreviousPosition = EnemyTankObj.transform.position;
-
-        //GlobalFunctions.DebugLog("EnemyPreviousPosition: " + EnemyPreviousPosition);
     }
 
     private IEnumerator CalculateEnemyCurrentPosition()
@@ -207,8 +205,6 @@ public class AIState : MonoBehaviour
         yield return null;
 
         EnemyCurrentPosition = EnemyTankObj.transform.position;
-
-        //GlobalFunctions.DebugLog("EnemyCurrentPosition: " + EnemyCurrentPosition);
     }
 
     private IEnumerator CalculateTanksDistance()
@@ -216,8 +212,6 @@ public class AIState : MonoBehaviour
         yield return null;
 
         Distance = Vector3.Distance(CurrentPosition, EnemyCurrentPosition);
-
-        //GlobalFunctions.DebugLog("Distance: " + Distance);
     }
 
     private IEnumerator CalculateEnemyHitPositions()
@@ -244,23 +238,21 @@ public class AIState : MonoBehaviour
 
         yield return null;
 
+        if (Mathf.Abs(ShotDistance) >= 1.5f)
+            ShotDistance = 0;
+
+        yield return null;
+
         if (PreviousShotDistance == ShotDistance)
         {
             float random = Mathf.Abs(PreviousShotDistance) > 0.2f ? Random.Range(-Mathf.Abs(PreviousShotDistance), Mathf.Abs(PreviousShotDistance)) : Random.Range(-0.2f, 0.2f);
 
             ShotDistance = random;
-
-            GlobalFunctions.DebugLog($"Same spot: {ShotDistance}");
         }
 
         yield return null;
 
-        if (Mathf.Abs(ShotDistance) >= 1)
-            ShotDistance = 0;
-
         CalculateShotsResult(false);
-
-        GlobalFunctions.DebugLog($"Hit distance: {ShotDistance}");
     }
 
     private IEnumerator CalculateShootControllerTargetFixingValue()
@@ -275,8 +267,6 @@ public class AIState : MonoBehaviour
         yield return null;
 
         CurrentPosition = transform.position;
-
-        //GlobalFunctions.DebugLog("CurrentPosition: " + CurrentPosition);
     }
 
     private IEnumerator CalculateNextPosition()
@@ -294,8 +284,6 @@ public class AIState : MonoBehaviour
 
             RaiseOnMoveEvent(stepsLenth, direction);
 
-            //GlobalFunctions.DebugLog("Going for the wood box: " + stepsLenth + "/" + direction);
-
             yield break;
         }
 
@@ -304,8 +292,6 @@ public class AIState : MonoBehaviour
             stepsLenth = Random.Range(7, 15);
 
             RaiseOnMoveEvent(stepsLenth, direction);
-
-            //GlobalFunctions.DebugLog("Taking damage, move by: " + stepsLenth + "/" + direction);
 
             yield break;
         }
@@ -318,14 +304,10 @@ public class AIState : MonoBehaviour
 
             RaiseOnMoveEvent(stepsLenth, direction);
 
-            //GlobalFunctions.DebugLog("Can't shoot, move by: " + stepsLenth + "/" + direction);
-
             yield break;
         }
 
         RaiseOnMoveEvent(stepsLenth, direction);
-
-        //GlobalFunctions.DebugLog("Don't move");
     }
 
     private void RaiseOnMoveEvent(int stepsLength, int direction)
