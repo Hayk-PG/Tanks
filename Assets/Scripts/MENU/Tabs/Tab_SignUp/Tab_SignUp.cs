@@ -76,8 +76,6 @@ public class Tab_SignUp : Tab_BaseSignUp
 
     public override void OnOperationFailed()
     {
-        print("Failed to sign up! " + OperationHandler);
-
         if (OperationHandler == This)
         {
             base.OpenTab();

@@ -10,6 +10,7 @@ public class Tab_SignIn : Tab_BaseSignUp
 
     protected override CustomInputField CustomInputFieldID => _customInputFields[0];
     protected override CustomInputField CustomInputFieldPassword => _customInputFields[1];
+
     public bool IsAutoSignInChecked { get => _customToggleAutoSignIn.IsOn; set => _customToggleAutoSignIn.IsOn = value; }
 
     public event Action onOpenTabSignUp;
@@ -121,8 +122,6 @@ public class Tab_SignIn : Tab_BaseSignUp
 
     public override void OnOperationFailed()
     {
-        print("Failed to sign in! " + OperationHandler);
-
         if (OperationHandler == This)
         {
             IsAutoSignInChecked = false;
