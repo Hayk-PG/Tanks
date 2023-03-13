@@ -255,7 +255,7 @@ public class AIState : MonoBehaviour
 
         yield return null;
 
-        if (Mathf.Abs(ShotDistance) >= 2)
+        if (Mathf.Abs(ShotDistance) >= 1)
             ShotDistance = 0;
 
         CalculateShotsResult(false);
