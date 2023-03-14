@@ -107,6 +107,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private DropBoxSelectionPanelScores _dropBoxSelectionPanelScores;
 
     [SerializeField]
+    private DropBoxSelectionPanelC4 _dropBoxSelectionPanelC4;
+
+    [SerializeField]
     private DropBoxItemSelectionPanelOwner _dropBoxItemSelectionPanelOwner;
 
 
@@ -161,6 +164,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static DropBoxSelectionPanelDoubleXp DropBoxSelectionPanelDoubleXp => Instance._dropBoxSelectionPanelDoubleXp;
     public static DropBoxSelectionPanelShield DropBoxSelectionPanelShield => Instance._dropBoxSelectionPanelShield;
     public static DropBoxSelectionPanelScores DropBoxSelectionPanelScores => Instance._dropBoxSelectionPanelScores;
+    public static DropBoxSelectionPanelC4 DropBoxSelectionPanelC4 => Instance._dropBoxSelectionPanelC4;
     public static DropBoxItemSelectionPanelOwner DropBoxItemSelectionPanelOwner => Instance._dropBoxItemSelectionPanelOwner;
 
     //HUD

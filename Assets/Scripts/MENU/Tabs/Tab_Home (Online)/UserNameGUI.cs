@@ -31,6 +31,8 @@ public class UserNameGUI : MonoBehaviour, ITabOperation
                 return;
             }
 
+            OperationHandler.OnOperationSucceded();
+
             _txtUserName.text = Data.Manager.Id;
         }
     }

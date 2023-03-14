@@ -70,6 +70,18 @@ public class Tab_HomeOnline : Tab_Base
 
         TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.UserProfile);
 
+        TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.UserStats);
+
         base.OpenTab();
+    }
+
+    public override void OnOperationFailed()
+    {
+        TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate);
+    }
+
+    public override void OnOperationSucceded()
+    {
+        GlobalFunctions.DebugLog("User stats and profile name are successfuly loaded");
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: beb1457d375110e468b8d8e1f29fccea, type: 3}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.36240247, g: 0.5655266, b: 0.84377646, a: 1}
+  m_IndirectSpecularColor: {r: 0.36311492, g: 0.5663884, b: 0.84380317, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1221,6 +1221,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40959b21b378fd944bba4d4a889cce54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1398081074 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2874729236386962862, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172970de8e9ff4477945729b6763d3df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1417429131 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4654267480470436947, guid: 8bb47859066a5bf46b4be5e41db5feb7,
@@ -2382,6 +2394,7 @@ MonoBehaviour:
   _dropBoxSelectionPanelDoubleXp: {fileID: 743729802}
   _dropBoxSelectionPanelShield: {fileID: 1245829704}
   _dropBoxSelectionPanelScores: {fileID: 1287106649}
+  _dropBoxSelectionPanelC4: {fileID: 1398081074}
   _dropBoxItemSelectionPanelOwner: {fileID: 583500467}
   _baseRemoteControlTarget: {fileID: 1220509570}
   _tabRocketController: {fileID: 733756324}
@@ -3076,6 +3089,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2874729236386962862, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _price
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3030534918239187482, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3459,7 +3477,7 @@ PrefabInstance:
     - target: {fileID: 5061348894829396163, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000030517578
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5160998875630907240, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}

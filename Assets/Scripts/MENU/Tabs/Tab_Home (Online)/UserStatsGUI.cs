@@ -1,12 +1,13 @@
 using UnityEngine;
 using TMPro;
 
-public class UserStatsGUI : MonoBehaviour, IReset, ITabOperation
+public class UserStatsGUI : MonoBehaviour, ITabOperation
 {
     [SerializeField] [Space]
     private TMP_Text _txtLevel, _txtPoints, _txtWins, _txtLoses, _txtKills, _txtKdRatio, _txtTimePlayed, _txtQuits;
 
     public ITabOperation This { get; set; }
+
     public ITabOperation OperationHandler { get; set; }
 
 
@@ -14,26 +15,42 @@ public class UserStatsGUI : MonoBehaviour, IReset, ITabOperation
 
     private void Awake() => This = this;
 
-    private void PrintUserStats()
+    private void OnEnable() => TabsOperation.Handler.onOperationSubmitted += DisplayUserStats;
+
+    private void OnDisable() => TabsOperation.Handler.onOperationSubmitted -= DisplayUserStats;
+
+    private void DisplayUserStats(ITabOperation handler, TabsOperation.Operation operation, object[] data)
     {
-        if(Data.Manager.Statistics == null)
+        if(operation == TabsOperation.Operation.UserStats)
         {
-            TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate);
+            OperationHandler = handler;
 
-            return;
+            if(Data.Manager.Statistics == null)
+            {
+                OperationHandler.OnOperationFailed();
+
+                return;
+            }
+
+            OperationHandler.OnOperationSucceded();
+
+            _txtLevel.text = Data.Manager.Statistics[Keys.Level].ToString();
+
+            _txtPoints.text = Data.Manager.Statistics[Keys.Points].ToString();
+
+            _txtWins.text = Data.Manager.Statistics[Keys.Wins].ToString();
+
+            _txtLoses.text = Data.Manager.Statistics[Keys.Losses].ToString();
+
+            _txtKills.text = Data.Manager.Statistics[Keys.Kills].ToString();
+
+            _txtKdRatio.text = Data.Manager.Statistics[Keys.KD].ToString();
+
+            _txtTimePlayed.text = Data.Manager.Statistics[Keys.TimePlayed].ToString();
+
+            _txtQuits.text = Data.Manager.Statistics[Keys.Quits].ToString();
         }
-
-        _txtLevel.text = Data.Manager.Statistics[Keys.Level].ToString();
-        _txtPoints.text = Data.Manager.Statistics[Keys.Points].ToString();
-        _txtWins.text = Data.Manager.Statistics[Keys.Wins].ToString();
-        _txtLoses.text = Data.Manager.Statistics[Keys.Losses].ToString();
-        _txtKills.text = Data.Manager.Statistics[Keys.Kills].ToString();
-        _txtKdRatio.text = Data.Manager.Statistics[Keys.KD].ToString();
-        _txtTimePlayed.text = Data.Manager.Statistics[Keys.TimePlayed].ToString();
-        _txtQuits.text = Data.Manager.Statistics[Keys.Quits].ToString();
     }
-
-    public void SetDefault() => PrintUserStats();
 
     public void OnOperationSucceded()
     {

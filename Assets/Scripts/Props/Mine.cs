@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using System;
 
 
 //ADDRESSABLE
@@ -11,8 +10,6 @@ public class Mine : MetalTile
 
     private bool _isTriggered;
 
-    private Action onTriggerEnter;
-
     public Vector3 ID { get; private set; }
 
 
@@ -22,8 +19,6 @@ public class Mine : MetalTile
         base.Start();
 
         ID = transform.position;
-
-        onTriggerEnter = MyPhotonNetwork.IsOfflineMode ? TriggerMine : TriggerMineInOnlineMode;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,7 +28,10 @@ public class Mine : MetalTile
 
         if (!_isTriggered)
         {
-            onTriggerEnter();
+            if (MyPhotonNetwork.IsOfflineMode)
+                TriggerMine();
+            else
+                TriggerMineInOnlineMode();
 
             _isTriggered = true;
         }
@@ -46,16 +44,16 @@ public class Mine : MetalTile
 
     protected override void OnDestruction() => Addressables.Release(_meshObj);
 
-    private void TriggerMineInOnlineMode()
-    {
-        GameSceneObjectsReferences.PhotonNetworkMineController.TriggerMine(ID);
-    }
-
     public void TriggerMine()
     {
         _explosion.gameObject.SetActive(true);
         _explosion.transform.SetParent(null);
 
         _tile.Destruct(100, 0);
+    }
+
+    private void TriggerMineInOnlineMode()
+    {
+        GameSceneObjectsReferences.PhotonNetworkMineController.TriggerMine(ID);
     }
 }
