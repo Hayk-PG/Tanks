@@ -87,7 +87,13 @@ public class BaseBulletVelocity : MonoBehaviour
     protected virtual void ControlGravitation()
     {
         if (_baseBulletController.RigidBody.velocity.y <= 0)
-            _baseBulletController.RigidBody.velocity = new Vector3(_baseBulletController.RigidBody.velocity.x, GravityForce * WeatherFactor, _baseBulletController.RigidBody.velocity.z);
+        {
+            Vector3 velocity = new Vector3(_baseBulletController.RigidBody.velocity.x, GravityForce * WeatherFactor, _baseBulletController.RigidBody.velocity.z);
+
+            velocity.y = Mathf.Clamp(velocity.y, -10, 0);
+
+            _baseBulletController.RigidBody.velocity = velocity;
+        }
     }
 
     protected virtual void OnVerticalLimit()
