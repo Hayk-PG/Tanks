@@ -9,9 +9,9 @@ public class OfflineGameResultProcessor : MonoBehaviour
 
 
 
-    private void OnEnable() => _winnerLoserIndentifier.onIdentified += OnWinnerLoserIdentified;
+    //private void OnEnable() => _winnerLoserIndentifier.onIdentified += OnWinnerLoserIdentified;
 
-    private void OnDisable() => _winnerLoserIndentifier.onIdentified += OnWinnerLoserIdentified;
+    //private void OnDisable() => _winnerLoserIndentifier.onIdentified += OnWinnerLoserIdentified;
 
     private void OnWinnerLoserIdentified(ScoreController scoreController, bool isWin)
     {

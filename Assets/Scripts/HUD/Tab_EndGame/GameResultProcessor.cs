@@ -122,11 +122,13 @@ public class GameResultProcessor : MonoBehaviour
             if (_endGameUIManager.SliderValue < _endGameUIManager.SliderMax)
             {
                 _endGameUIManager.SetSliderValueAndCurrentXP(stage);
+
                 yield return null;
             }
             else
             {
                 LevelUpAndResetSlider();
+
                 yield return new WaitForSeconds(2);
             }
         }

@@ -9,20 +9,11 @@ public class WinnerLoserIdentifier : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        _baseEndGame = MyPhotonNetwork.IsOfflineMode ? FindObjectOfType<EndOfflineGame>() : FindObjectOfType<EndOnlineGame>();
-    }
+    private void Awake() => _baseEndGame = MyPhotonNetwork.IsOfflineMode ? FindObjectOfType<EndOfflineGame>() : FindObjectOfType<EndOnlineGame>();
 
-    private void OnEnable()
-    {
-        _baseEndGame.OnEndGameTab += GetGameResult;
-    }
+    private void OnEnable() => _baseEndGame.OnEndGameTab += GetGameResult;
 
-    private void OnDisable()
-    {
-        _baseEndGame.OnEndGameTab -= GetGameResult;
-    }
+    private void OnDisable() => _baseEndGame.OnEndGameTab -= GetGameResult;
 
     private void GetGameResult(string successedPlayerName, string defeatedPlayerName)
     {

@@ -3,12 +3,17 @@ using UnityEngine.UI;
 
 public class EndGameUIManager : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup[] _gameResultPanelsCanvasGroups;
-    [SerializeField] private Text _txtCurrentXP;
-    [SerializeField] private Text _txtReceivedXP;
-    [SerializeField] private Text _txtLevel;
-    [SerializeField] private Slider _sldrXP;
-    [SerializeField] private Animator _animReceivedXP;
+    [SerializeField] 
+    private CanvasGroup[] _gameResultPanelsCanvasGroups;
+
+    [SerializeField] 
+    private Text _txtCurrentXP, _txtReceivedXP, _txtLevel;
+
+    [SerializeField] 
+    private Slider _sldrXP;
+
+    [SerializeField] 
+    private Animator _animReceivedXP;
 
     public int SliderMin { get => (int)_sldrXP.minValue; private set => _sldrXP.minValue = value; }
     public int SliderMax { get => (int)_sldrXP.maxValue; private set => _sldrXP.maxValue = value; }
@@ -21,8 +26,11 @@ public class EndGameUIManager : MonoBehaviour
     private void Start()
     {
         _txtCurrentXP.text = "0";
+
         _txtReceivedXP.text = "0";
+
         _txtLevel.text = "0";
+
         _sldrXP.value = 0;
     }
 
