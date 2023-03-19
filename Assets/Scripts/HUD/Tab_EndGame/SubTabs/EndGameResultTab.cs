@@ -36,11 +36,6 @@ public class EndGameResultTab : BaseEndGameSubTab
         DisplayGameResult();
     }
 
-    protected override void GetData(object[] data = null)
-    {
-        _data = data;
-    }
-
     protected override void SetActive()
     {
         _animator?.Play(_gameResultTabAnim, 0, 0);

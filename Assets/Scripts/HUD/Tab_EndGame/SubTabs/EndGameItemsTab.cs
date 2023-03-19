@@ -16,25 +16,17 @@ public class EndGameItemsTab : BaseEndGameSubTab
 
         OperationHandler = handler;
 
+        GetData(data);
+
         InitializeAnimator(animator);
 
         SetActive();
-    }
-
-    protected override void GetData(object[] data = null)
-    {
-        _data = data;
     }
 
     protected override void SetActive()
     {
         _animator?.Play(_itemsTabAnim, 5, 0);
 
-        SubmitOperation();
-    }
-
-    public override void SubmitOperation()
-    {
         StartCoroutine(RunIteration());
     }
 
@@ -42,6 +34,8 @@ public class EndGameItemsTab : BaseEndGameSubTab
     {
         for (int i = 0; i < _itemsGroupds.Length; i++)
             yield return StartCoroutine(InitializeItemGroup(_itemsGroupds[i]));
+
+        yield return new WaitForSeconds(1);
 
         SubmitOperation();
     }
@@ -57,6 +51,11 @@ public class EndGameItemsTab : BaseEndGameSubTab
 
             yield return null;
         }
+    }
+
+    public override void SubmitOperation()
+    {
+        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.UIShiny);
     }
 
     public override void OnSucceed()

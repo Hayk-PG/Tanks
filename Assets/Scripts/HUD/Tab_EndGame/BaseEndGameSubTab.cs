@@ -31,7 +31,7 @@ public abstract class BaseEndGameSubTab : MonoBehaviour, IGameOutcomeHandler
         _animator = animator;
     }
 
-    protected abstract void GetData(object[] data = null);
+    protected virtual void GetData(object[] data = null) => _data = data;
 
     protected abstract void SetActive();
 

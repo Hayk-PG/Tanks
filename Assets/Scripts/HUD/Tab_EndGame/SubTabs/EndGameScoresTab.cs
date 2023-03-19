@@ -26,11 +26,6 @@ public class EndGameScoresTab : BaseEndGameSubTab
         SetActive();
     }
 
-    protected override void GetData(object[] data = null)
-    {
-        _data = data;
-    }
-
     protected override void SetActive()
     {
         _animator?.Play(_scoresTabAnim, 2, 0);
