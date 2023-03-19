@@ -41,6 +41,8 @@ public class EndGameShiny : MonoBehaviour,IGameOutcomeHandler
         OperationHandler = handler;
 
         StartCoroutine(PlayUIShinyEffect());
+
+        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.MenuScene);
     }
 
     private IEnumerator PlayUIShinyEffect()

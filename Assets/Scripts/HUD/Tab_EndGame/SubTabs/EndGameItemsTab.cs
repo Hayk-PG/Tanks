@@ -55,7 +55,7 @@ public class EndGameItemsTab : BaseEndGameSubTab
 
     public override void SubmitOperation()
     {
-        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.UIShiny);
+        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.ButtonsTab);
     }
 
     public override void OnSucceed()
