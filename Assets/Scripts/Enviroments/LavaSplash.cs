@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class LavaSplash : MonoBehaviour
 {
-    [SerializeField] private ParticleBubbles[] _lavaSplashes;
+    [SerializeField]
+    private ParticleBubbles[] _lavaSplashes;
 
 
     public void ActivateSmallSplash(Vector3 position)
@@ -10,6 +11,7 @@ public class LavaSplash : MonoBehaviour
         if (!IsActive(_lavaSplashes[0].gameObject))
         {
             Activate(position, _lavaSplashes[0]);
+
             SecondarySoundController.PlaySound(5, 0);
         }
     }
@@ -19,6 +21,7 @@ public class LavaSplash : MonoBehaviour
         if (!IsActive(_lavaSplashes[1].gameObject))
         {
             Activate(position, _lavaSplashes[1]);
+
             SecondarySoundController.PlaySound(5, 1);
         }
     }

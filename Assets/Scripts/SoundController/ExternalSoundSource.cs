@@ -9,21 +9,28 @@ public class ExternalSoundSource : MonoBehaviour
     [SerializeField] 
     private PlayMode _playMode;
 
-    [SerializeField]
-    private bool _isDestroyable;
+    [SerializeField] [Space]
+    private bool _isDestroyable, _dontPlayAnimation;
 
     private AudioSource _audioSource;
+
     private Animator _animator;
+
     private SoundController _soundController;
+
 
 
     private void Awake()
     {
         _audioSource = Get<AudioSource>.From(gameObject);
+
         _animator = Get<Animator>.From(gameObject);
+
         _soundController = FindObjectOfType<SoundController>();
 
         Play(PlayMode.OnAwake);
+
+        _audioSource.mute = SoundController.IsMuted;
     }
 
     private void Start()
@@ -34,20 +41,33 @@ public class ExternalSoundSource : MonoBehaviour
     private void OnEnable()
     {
         Play(PlayMode.OnEnable);
+
+        SoundController.onAudioSourceMute += OnMute;
+    }
+
+    private void OnDisable()
+    {
+        SoundController.onAudioSourceMute -= OnMute;
+    }
+
+    private void OnMute(bool isMuted)
+    {
+        _audioSource.mute = isMuted;
     }
 
     public void Play(PlayMode playMode)
     {
         if(playMode == _playMode)
         {
-            _animator.SetTrigger("play");
             _audioSource.Play();
+
+            PlayAnimation(true);
         }
     }
 
     public void Stop(bool unparent)
     {
-        _animator.SetTrigger("stop");
+        PlayAnimation(false);
 
         if (unparent)
             transform.SetParent(null);
@@ -57,5 +77,16 @@ public class ExternalSoundSource : MonoBehaviour
     {
         if (_isDestroyable)
             Destroy(gameObject);
+    }
+
+    private void PlayAnimation(bool play)
+    {
+        if (_dontPlayAnimation)
+            return;
+
+        if (play)
+            _animator.SetTrigger("play");
+        else
+            _animator.SetTrigger("stop");
     }
 }
