@@ -7,6 +7,8 @@ public abstract class BaseEndGameSubTab : MonoBehaviour, IGameOutcomeHandler
 
     protected Animator _animator;
 
+    protected object[] _data;
+
     public IGameOutcomeHandler This { get; set; }
     public IGameOutcomeHandler OperationHandler { get; set; }
 
@@ -28,6 +30,8 @@ public abstract class BaseEndGameSubTab : MonoBehaviour, IGameOutcomeHandler
 
         _animator = animator;
     }
+
+    protected abstract void GetData(object[] data = null);
 
     protected abstract void SetActive();
 

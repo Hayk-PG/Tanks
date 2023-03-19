@@ -21,7 +21,7 @@ public class EndGameAnimationsEventsCallbacks : MonoBehaviour
     public void InvokeResultTabAnimSecondEvent() => _resultTab.SubmitOperation();
 
     // Used as an animation event callback.
-    public void InvokeScoresTabAnimFirstEvent() => _scoresTab.Move();
+    public void InvokeScoresTabAnimFirstEvent() => _scoresTab.DisplayFinalScore();
 
     // Used as an animation event callback.
     public void InvokeScoresTabAnimSecondEvent() => _scoresTab.SubmitOperation();
