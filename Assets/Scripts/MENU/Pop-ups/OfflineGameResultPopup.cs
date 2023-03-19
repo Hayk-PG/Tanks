@@ -1,4 +1,6 @@
 using UnityEngine.SceneManagement;
+using UnityEngine;
+
 
 public class OfflineGameResultPopup 
 {
@@ -19,6 +21,9 @@ public class OfflineGameResultPopup
 
     private void Execute()
     {
-        UnityEngine.MonoBehaviour.FindObjectOfType<Tab_PopUp>().Display(Tab_PopUp.PopUpType.OfflineModeReminder);
+        if (PlayerPrefs.GetInt(Keys.GoOnlineReminder) > 0)
+            return;
+
+        MonoBehaviour.FindObjectOfType<Tab_PopUp>().Display(Tab_PopUp.PopUpType.OfflineModeReminder);
     }
 }

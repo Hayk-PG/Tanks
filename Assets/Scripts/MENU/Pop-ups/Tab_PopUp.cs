@@ -32,14 +32,10 @@ public class Tab_PopUp : MonoBehaviour
     private void CloseAllCanvasGroups()
     {
         GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups,
+
             canvasGroup =>
             {
                 GlobalFunctions.CanvasGroupActivity(canvasGroup, false);
             });
-    }
-
-    public void OnClick()
-    {
-        ControlCanvasGroup(_tabCanvasGroup, false);
     }
 }

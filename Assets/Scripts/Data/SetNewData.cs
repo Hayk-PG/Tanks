@@ -15,6 +15,7 @@ public partial class Data
         public int? IsWindToggleOn { get; internal set; }
         public int? DifficultyLevel { get; internal set; }
         public int? RoundTime { get; internal set; }
+        public int? GoOnlineReminder { get; internal set; }
     }
 
     public void OnDestroy()
@@ -33,6 +34,7 @@ public partial class Data
         if (newData.IsWindToggleOn != null) PlayerPrefs.SetInt(Keys.MapWind, (int)newData.IsWindToggleOn);
         if (newData.DifficultyLevel != null) PlayerPrefs.SetInt(Keys.DifficultyLevel, (int)newData.DifficultyLevel);
         if (newData.RoundTime != null) PlayerPrefs.SetInt(Keys.RoundTime, (int)newData.RoundTime);
+        if (newData.GoOnlineReminder != null) PlayerPrefs.SetInt(Keys.GoOnlineReminder, (int)newData.GoOnlineReminder);
     }
 
     public void DeleteData(string key)

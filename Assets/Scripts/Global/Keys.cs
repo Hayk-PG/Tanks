@@ -34,4 +34,5 @@
     public static string BasicBox { get; private set; } = "Basic box";
     public static string RewardChest { get; private set; } = "Reward chest";
     public static string WoodBox { get; private set; } = "Wood box";
+    public static string GoOnlineReminder { get; private set; } = "GoOnlineReminder";
 }
