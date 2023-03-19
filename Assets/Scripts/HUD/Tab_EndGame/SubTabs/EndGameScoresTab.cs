@@ -41,10 +41,15 @@ public class EndGameScoresTab : BaseEndGameSubTab
     {
         _txtScore.text = "0";
 
-        float score = 0;
-        float newScore = 20000;
+        ScoreController scoreController = (ScoreController)_data[0];
 
-        while(score < newScore)
+        float score = 0;
+        float playPoints = 100;
+        float _experiencePoints = 200;
+        float winPoints = (bool)_data[1] ? 400 : 0;
+        float newScore = scoreController.MainScore + playPoints + _experiencePoints + winPoints;
+
+        while (score < newScore)
         {
             score += (Mathf.RoundToInt(newScore) / 5) * Time.deltaTime;
 

@@ -13,7 +13,7 @@ public class EndGameItemsGroup : MonoBehaviour
 
 
 
-    private void Initialize(string value)
+    public void Initialize(string value)
     {
         _txtValue.text = value;
     }

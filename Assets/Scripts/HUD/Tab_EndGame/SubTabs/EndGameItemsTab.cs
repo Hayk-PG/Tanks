@@ -9,6 +9,7 @@ public class EndGameItemsTab : BaseEndGameSubTab
     private const string _itemsTabAnim = "ItemsTabAnim";
 
 
+
     protected override void OnSubmit(IGameOutcomeHandler handler, GameOutcomeHandler.Operation operation, Animator animator, object[] data)
     {
         if (operation != GameOutcomeHandler.Operation.ItemsTab)
@@ -33,9 +34,11 @@ public class EndGameItemsTab : BaseEndGameSubTab
     private IEnumerator RunIteration()
     {
         for (int i = 0; i < _itemsGroupds.Length; i++)
-            yield return StartCoroutine(InitializeItemGroup(_itemsGroupds[i]));
+        {
+            SetItemValue(_itemsGroupds[i], i);
 
-        yield return new WaitForSeconds(1);
+            yield return StartCoroutine(InitializeItemGroup(_itemsGroupds[i]));
+        }
 
         SubmitOperation();
     }
@@ -53,10 +56,21 @@ public class EndGameItemsTab : BaseEndGameSubTab
         }
     }
 
-    public override void SubmitOperation()
+    private void SetItemValue(EndGameItemsGroup itemGroup, int index) => itemGroup.Initialize(MyPhotonNetwork.IsOfflineMode ? ItemValue() : ItemValue(index));
+
+    //For offline mode
+    private string ItemValue()
     {
-        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.ButtonsTab);
+        return "??";
     }
+
+    //For online mode
+    private string ItemValue(int index)
+    {
+        return "";
+    }
+
+    public override void SubmitOperation() => GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.ButtonsTab);
 
     public override void OnSucceed()
     {
