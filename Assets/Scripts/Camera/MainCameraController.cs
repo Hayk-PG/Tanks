@@ -11,15 +11,6 @@ public class MainCameraController : MonoBehaviour, IEndGame
 
     [SerializeField][Space] 
     private Rigidbody _rb;
-
-    [SerializeField][Space] 
-    private GameManager _gameManager;
-
-    [SerializeField][Space] 
-    private TurnController _turnController;
-
-    [SerializeField][Space] 
-    private MapPoints _mapPoints;
     
     private Rigidbody _player1, _player2;
 
@@ -38,10 +29,12 @@ public class MainCameraController : MonoBehaviour, IEndGame
 
     private Rigidbody Target1 { get; set; }
     private Rigidbody Target2 { get; set; }
+
     private bool PlayersInitialized
     {
         get => Target1 != null && Target2 != null;
     }
+
     private float SceneWidth
     {
         get => Vector3.Distance(Target1.position - _halfLength, Target2.position + _halfLength);
@@ -71,16 +64,16 @@ public class MainCameraController : MonoBehaviour, IEndGame
 
     private void OnEnable()
     {
-        _gameManager.OnGameStarted += OnGameStarted;
+        GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStarted;
 
-        _turnController.OnTurnChanged += OnTurnChanged;
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
     private void OnDisable()
     {
-        _gameManager.OnGameStarted -= OnGameStarted;
+        GameSceneObjectsReferences.GameManager.OnGameStarted -= OnGameStarted;
 
-        _turnController.OnTurnChanged -= OnTurnChanged;
+        GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnChanged;
     }
 
     private void FixedUpdate() => ControlMovement();
@@ -122,8 +115,8 @@ public class MainCameraController : MonoBehaviour, IEndGame
 
     private Vector3 ClampPosition(Vector3 position)
     {
-        _minPosX = _mapPoints.HorizontalMin + CameraWidth - 3;
-        _maxPosX = _mapPoints.HorizontalMax - CameraWidth + 3;
+        _minPosX = GameSceneObjectsReferences.MapPoints.HorizontalMin + CameraWidth - 3;
+        _maxPosX = GameSceneObjectsReferences.MapPoints.HorizontalMax - CameraWidth + 3;
         _newPosX = Mathf.Clamp(position.x, _minPosX, _maxPosX);
 
         return new Vector3(_newPosX, position.y, position.z);
