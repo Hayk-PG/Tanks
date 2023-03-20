@@ -5,7 +5,7 @@ public class GameOutcomeHandler : MonoBehaviour
 {
     private static GameOutcomeHandler Instance { get; set; }
 
-    public enum Operation { GameResultTab, ScoresTab, StatsTab, ItemsTab, ButtonsTab, UIShiny, MenuScene }
+    public enum Operation { Start, GameResultTab, ScoresTab, StatsTab, ItemsTab, ButtonsTab, UIShiny, CleanUp, MenuScene }
 
     [SerializeField]
     private Animator _animator;

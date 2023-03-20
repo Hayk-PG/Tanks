@@ -10,6 +10,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField] [Space]
     private GameManager _gameManager;
 
+    [SerializeField]
+    private BaseEndGame[] _baseEndGames;
+
     [SerializeField] 
     private TurnController _turnController;
 
@@ -128,6 +131,10 @@ public class GameSceneObjectsReferences : MonoBehaviour
 
     //GameManager
     public static GameManager GameManager => Instance._gameManager;
+    public static BaseEndGame BaseEndGame
+    {
+        get => Instance._baseEndGames[0].enabled ? Instance._baseEndGames[0] : Instance._baseEndGames[1];
+    }
     public static TurnController TurnController => Instance._turnController;
     public static WindSystemController WindSystemController => Instance._windSystemController;
     public static AirSupport AirSupport => Instance._airSupport;

@@ -54,15 +54,20 @@ public class MainCameraController : MonoBehaviour
     {
         get => 0.5f * UnitsPerPixel * Screen.height;
     }
+
+    private System.Func<Vector3> Point1 { get; set; }
+    private System.Func<Vector3> Point2 { get; set; }
+
     private Vector3 Center
     {
-        get => Vector3.Lerp(Target1.position, Target2.position, 0.5f);
+        get => Vector3.Lerp(Point1(), Point2(), 0.5f);
     }
     
     private float CameraWidth => _camera.orthographicSize * _camera.aspect;
 
 
 
+    private void Start() => ControlCameraPoints();
 
     private void OnEnable()
     {
@@ -81,6 +86,13 @@ public class MainCameraController : MonoBehaviour
     private void FixedUpdate() => ControlMovement();
 
     private void LateUpdate() => ControlOrtographicSize();
+
+    private void ControlCameraPoints()
+    {
+        Point1 = delegate { return Target1?.position ?? Vector3.zero; };
+
+        Point2 = delegate { return Target2?.position ?? Vector3.zero; };
+    }
 
     private void ControlMovement()
     {

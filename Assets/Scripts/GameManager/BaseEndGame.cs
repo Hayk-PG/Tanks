@@ -13,17 +13,14 @@ public class BaseEndGame : MonoBehaviourPun
     protected HealthController _healthTank1;
     protected HealthController _healthTank2;
 
-    public Action<string, string> OnEndGameTab { get; set; }
+    public event Action<string, string> onEndGame;
 
 
 
 
     protected virtual void Awake() => _myPlugins = FindObjectOfType<MyPlugins>();
 
-    protected virtual void OnEnable()
-    {
-        _gameManager.OnGameStarted += OnGameStarted;
-    }
+    protected virtual void OnEnable() => _gameManager.OnGameStarted += OnGameStarted;
 
     protected virtual void OnDisable()
     {
@@ -44,6 +41,7 @@ public class BaseEndGame : MonoBehaviourPun
         else
         {
             UnsubscribeFromPluginService();
+
             SubscribeToPluginService();
         }
     }
@@ -58,20 +56,11 @@ public class BaseEndGame : MonoBehaviourPun
         }
     }
 
-    protected void UnsubscribeFromPluginService()
-    {
-        _myPlugins.OnPluginService -= OnPluginService;
-    }
+    protected void UnsubscribeFromPluginService() => _myPlugins.OnPluginService -= OnPluginService;
 
-    protected void SubscribeToPluginService()
-    {
-        _myPlugins.OnPluginService += OnPluginService;
-    } 
+    protected void SubscribeToPluginService() => _myPlugins.OnPluginService += OnPluginService;
 
-    protected virtual void OnPluginService()
-    {
-        GameEndChecker();
-    }
+    protected virtual void OnPluginService() => GameEndChecker();
 
     protected virtual void GameEndChecker()
     {
@@ -110,8 +99,6 @@ public class BaseEndGame : MonoBehaviourPun
        
         _gameManager.IsGameEnded = true;
 
-        _gameManager.OnGameEnded?.Invoke();
-
-        OnEndGameTab?.Invoke(successedPlayerName, defeatedPlayerName);
+        onEndGame?.Invoke(successedPlayerName, defeatedPlayerName);
     }
 }

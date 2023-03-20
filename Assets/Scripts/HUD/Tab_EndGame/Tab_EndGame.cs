@@ -34,13 +34,18 @@ public class Tab_EndGame : MonoBehaviour, IGameOutcomeHandler
 
     private void Awake() => This = this;
 
-    private void OnEnable() => _winnerLoserIdentifier.onIdentified += OnReultSet;
+    private void OnEnable() => GameOutcomeHandler.onSubmit += OnSubmit;
 
-    private void OnDisable() => _winnerLoserIdentifier.onIdentified -= OnReultSet;
+    private void OnDisable() => GameOutcomeHandler.onSubmit -= OnSubmit;
 
-    private void OnReultSet(ScoreController scoreController, bool isWin)
+    private void OnSubmit(IGameOutcomeHandler handler, GameOutcomeHandler.Operation operation, Animator animator, object[] data)
     {
-        InitializeBackgroundImage(scoreController, isWin);
+        if (operation != GameOutcomeHandler.Operation.Start)
+            return;
+
+        OperationHandler = handler;
+
+        InitializeBackgroundImage((ScoreController)data[0], (bool)data[1]);
     }
 
     private void InitializeBackgroundImage(ScoreController scoreController, bool isWin)
@@ -51,17 +56,31 @@ public class Tab_EndGame : MonoBehaviour, IGameOutcomeHandler
         { 
             _imgBackground.sprite = background.Result;
 
-            StartCoroutine(LoadBlurredBackgroundImage(scoreController, isWin));
+            StartCoroutine(Execute(scoreController, isWin));
         };
     }
 
-    private IEnumerator LoadBlurredBackgroundImage(ScoreController scoreController, bool isWin)
+    private IEnumerator Execute(ScoreController scoreController, bool isWin)
     {
+        yield return StartCoroutine(SetActive(isWin));
+
+        yield return StartCoroutine(Submit(scoreController, isWin));
+    }
+
+    private IEnumerator SetActive(bool isWin)
+    {
+        yield return new WaitForSeconds(5);
+
         _currentAssetReferenceBlurredBgImg = isWin ? _assetReferenceVictoryBlurredBgImg : _assetReferenceDefeatBlurredBgImg;
 
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
 
-        yield return new WaitForSeconds(1);
+        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.CleanUp);
+    }
+
+    private IEnumerator Submit(ScoreController scoreController, bool isWin)
+    {
+        yield return new WaitForSeconds(2);
 
         _currentAssetReferenceBlurredBgImg.LoadAssetAsync().Completed += blurredBackground =>
         {
@@ -69,7 +88,7 @@ public class Tab_EndGame : MonoBehaviour, IGameOutcomeHandler
 
             _imgBackgroundBlue.gameObject.SetActive(true);
 
-            GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.GameResultTab, new object[] { scoreController , isWin });
+            GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.GameResultTab, new object[] { scoreController, isWin });
         };
     }
 

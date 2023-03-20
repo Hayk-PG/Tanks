@@ -8,34 +8,36 @@ public class EndGameCleanupHandler : MonoBehaviour
 
 
 
-    private void OnEnable()
-    {
-        _winnerLoserIdentifier.onIdentified += DeactivateGameobjects;
+    private void OnEnable() => GameOutcomeHandler.onSubmit += OnSubmit;
 
-        GameOutcomeHandler.onSubmit += OnSubmit;
-    }
-
-    private void OnDisable()
-    {
-        _winnerLoserIdentifier.onIdentified -= DeactivateGameobjects;
-
-        GameOutcomeHandler.onSubmit -= OnSubmit;
-    }
-
-    private void DeactivateGameobjects(ScoreController sc, bool isWin)
-    {
-        DeactivateTanks();
-    }
-
-    private void DeactivateTanks() => GlobalFunctions.Loop<TankController>.Foreach(FindObjectsOfType<TankController>(), tk => { tk.gameObject.SetActive(false); });
+    private void OnDisable() => GameOutcomeHandler.onSubmit -= OnSubmit;
 
     private void OnSubmit(IGameOutcomeHandler handler, GameOutcomeHandler.Operation operation, Animator animator, object[] data)
     {
-        if (operation != GameOutcomeHandler.Operation.MenuScene)
-            return;
+        if (operation == GameOutcomeHandler.Operation.Start)
+            DeactivateDefeatedTank((ScoreController)data[0], (bool)data[1]);
 
-        StartCoroutine(FinishGame());
+        if (operation == GameOutcomeHandler.Operation.CleanUp)
+            DeactivateGameobjects();
+
+        if (operation == GameOutcomeHandler.Operation.MenuScene)
+            StartCoroutine(FinishGame());
     }
+
+    private void DeactivateDefeatedTank(ScoreController sc, bool isWin)
+    {
+        if (isWin)
+            GlobalFunctions.ObjectsOfType<ScoreController>.Find(s => s != sc).gameObject.SetActive(false);
+        else
+            sc.gameObject.SetActive(false);
+    }
+
+    private void DeactivateGameobjects()
+    {
+        DeactivateAllTanks();
+    }
+
+    private void DeactivateAllTanks() => GlobalFunctions.Loop<TankController>.Foreach(FindObjectsOfType<TankController>(), tk => { tk.gameObject.SetActive(false); });
 
     private IEnumerator FinishGame()
     {

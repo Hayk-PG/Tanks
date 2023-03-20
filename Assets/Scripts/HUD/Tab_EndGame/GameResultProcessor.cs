@@ -20,13 +20,13 @@ public class GameResultProcessor : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!MyPhotonNetwork.IsOfflineMode)
-            _winnerLoserIdentifier.onIdentified += ProcessLocalPlayerGameResult;
+        //if (!MyPhotonNetwork.IsOfflineMode)
+        //    _winnerLoserIdentifier.onIdentified += ProcessLocalPlayerGameResult;
     }
 
     private void OnDisable()
     {
-        _winnerLoserIdentifier.onIdentified -= ProcessLocalPlayerGameResult;
+        //_winnerLoserIdentifier.onIdentified -= ProcessLocalPlayerGameResult;
     }
 
     private void ProcessLocalPlayerGameResult(ScoreController scoreController, bool isWin)

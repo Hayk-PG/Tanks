@@ -1,19 +1,17 @@
 using System;
 using UnityEngine;
 
-public class WinnerLoserIdentifier : MonoBehaviour
+public class WinnerLoserIdentifier : MonoBehaviour,IGameOutcomeHandler
 {
-    private BaseEndGame _baseEndGame;
-
-    public event Action<ScoreController, bool> onIdentified;
-
+    public IGameOutcomeHandler This { get; set; }
+    public IGameOutcomeHandler OperationHandler { get; set; }
 
 
-    private void Awake() => _baseEndGame = MyPhotonNetwork.IsOfflineMode ? FindObjectOfType<EndOfflineGame>() : FindObjectOfType<EndOnlineGame>();
 
-    private void OnEnable() => _baseEndGame.OnEndGameTab += GetGameResult;
 
-    private void OnDisable() => _baseEndGame.OnEndGameTab -= GetGameResult;
+    private void Awake() => This = this;
+
+    private void OnEnable() => GameSceneObjectsReferences.BaseEndGame.onEndGame += GetGameResult;
 
     private void GetGameResult(string successedPlayerName, string defeatedPlayerName)
     {
@@ -23,6 +21,7 @@ public class WinnerLoserIdentifier : MonoBehaviour
         if (successedTank != null && defeatedTank != null)
         {
             DetermineWinner(successedTank);
+
             DetermineLoser(defeatedTank);
         }
     }
@@ -48,6 +47,16 @@ public class WinnerLoserIdentifier : MonoBehaviour
     {
         ScoreController scoreController = Get<ScoreController>.From(tank);
 
-        onIdentified?.Invoke(scoreController, isWin);
+        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.Start, new object[] { scoreController, isWin });
+    }
+
+    public void OnSucceed()
+    {
+        
+    }
+
+    public void OnFailed()
+    {
+        
     }
 }

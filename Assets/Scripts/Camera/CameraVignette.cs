@@ -19,6 +19,8 @@ public class CameraVignette : BaseCameraFX
         _gameplayAnnouncer.OnGameStartAnnouncement += delegate { StartCoroutine(ChangeAmount(0.12f, -5)); };
 
         _playerDamageCameraFX.onDamageFX += OnDamage;
+
+        GameSceneObjectsReferences.BaseEndGame.onEndGame += delegate { _pp.Vignette = false; };
     }
 
     private void OnDisable()
@@ -31,6 +33,7 @@ public class CameraVignette : BaseCameraFX
     private void OnDamage(int damage)
     {
         _dmg += damage;
+
         StartCoroutine(ChangeAmount((_dmg / 100) / 1.2f <= 0.12f ? 0.12f : (_dmg / 100) / 1.2f, -5));
     }
 
@@ -41,10 +44,12 @@ public class CameraVignette : BaseCameraFX
         while (_pp.VignetteAmount > defaultValue)
         {
             _pp.VignetteAmount += lerp * Time.deltaTime;
+
             yield return null;
         }
 
         yield return null;
+
         _pp.VignetteAmount = defaultValue;
     }
 }

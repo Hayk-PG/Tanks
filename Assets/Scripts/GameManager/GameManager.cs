@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviourPun
 
     public Action OnInstantiateOfflinePlayers { get; set; }
     public Action OnGameStarted { get; set; }
-    public Action OnGameEnded { get; set; }
 
     public TankController Tank1 { get; set; }
     public TankController Tank2 { get; set; }

@@ -17,32 +17,23 @@ public class EndGameShiny : MonoBehaviour,IGameOutcomeHandler
 
     private void Awake() => This = this;
 
-    private void OnEnable()
-    {
-        _winnerLoserIdentifier.onIdentified += delegate { InitializeUIShinies(); };
+    private void OnEnable() => GameOutcomeHandler.onSubmit += OnSubmit;
 
-        GameOutcomeHandler.onSubmit += OnSubmit;
-    }
-
-    private void OnDisable()
-    {
-        _winnerLoserIdentifier.onIdentified -= delegate { InitializeUIShinies(); };
-
-        GameOutcomeHandler.onSubmit -= OnSubmit;
-    }
-
-    private void InitializeUIShinies() => _uIShinies = GetComponentsInChildren<UIShiny>(true);
+    private void OnDisable() => GameOutcomeHandler.onSubmit -= OnSubmit;
 
     private void OnSubmit(IGameOutcomeHandler handler, GameOutcomeHandler.Operation operation, Animator animator, object[] data)
     {
-        if (operation != GameOutcomeHandler.Operation.UIShiny)
-            return;
+        if (operation == GameOutcomeHandler.Operation.Start)
+            _uIShinies = GetComponentsInChildren<UIShiny>(true);
 
-        OperationHandler = handler;
+        if (operation == GameOutcomeHandler.Operation.UIShiny)
+        {
+            OperationHandler = handler;
 
-        StartCoroutine(PlayUIShinyEffect());
+            StartCoroutine(PlayUIShinyEffect());
 
-        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.MenuScene);
+            GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.MenuScene);
+        }
     }
 
     private IEnumerator PlayUIShinyEffect()
