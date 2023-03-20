@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class HUDMainTabsActivity : MonoBehaviour
+public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 {
     [SerializeField] 
     private CanvasGroup[] _canvasGroups;
@@ -74,5 +74,10 @@ public class HUDMainTabsActivity : MonoBehaviour
         }
 
         GlobalFunctions.CanvasGroupActivity(_canvasGroups[1], !isOpen);
+    }
+
+    public void OnGameEnd(object[] data = null)
+    {
+        Lock(true);
     }
 }

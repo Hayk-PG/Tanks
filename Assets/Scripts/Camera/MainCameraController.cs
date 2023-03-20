@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MainCameraController : MonoBehaviour
+public class MainCameraController : MonoBehaviour, IEndGame
 {
     public enum CameraUser { None, RemoteControl}
 
@@ -204,6 +204,11 @@ public class MainCameraController : MonoBehaviour
             SetTargets(_player1, _player2);
 
         DesiredHeightOffset(desiredHeightOffset.HasValue ? desiredHeightOffset.Value : 0);
+    }
+
+    public void OnGameEnd(object[] data = null)
+    {
+        print($"{Point1()} / {Point2()}");
     }
 }
 

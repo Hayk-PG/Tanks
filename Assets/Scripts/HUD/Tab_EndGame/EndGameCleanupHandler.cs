@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using System.Linq;
 
 public class EndGameCleanupHandler : MonoBehaviour
 {
@@ -15,7 +16,12 @@ public class EndGameCleanupHandler : MonoBehaviour
     private void OnSubmit(IGameOutcomeHandler handler, GameOutcomeHandler.Operation operation, Animator animator, object[] data)
     {
         if (operation == GameOutcomeHandler.Operation.Start)
+        {
             DeactivateDefeatedTank((ScoreController)data[0], (bool)data[1]);
+
+            foreach (var iEndGame in FindObjectsOfType<MonoBehaviour>().OfType<IEndGame>())
+                iEndGame.OnGameEnd();
+        }
 
         if (operation == GameOutcomeHandler.Operation.CleanUp)
             DeactivateGameobjects();

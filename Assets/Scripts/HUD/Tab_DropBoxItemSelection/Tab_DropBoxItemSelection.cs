@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class Tab_DropBoxItemSelection : MonoBehaviour
+public class Tab_DropBoxItemSelection : MonoBehaviour,IEndGame
 {
     [SerializeField] [Space]
     private CanvasGroup _canvasGroup;
@@ -11,8 +11,7 @@ public class Tab_DropBoxItemSelection : MonoBehaviour
 
     public event Action<bool> onDropBoxItemSelectionTabActivity;
 
-
-
+    
 
     public void SetActivity(bool isActive)
     {
@@ -22,5 +21,10 @@ public class Tab_DropBoxItemSelection : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
 
         onDropBoxItemSelectionTabActivity?.Invoke(isActive);
+    }
+
+    public void OnGameEnd(object[] data = null)
+    {
+        SetActivity(false);
     }
 }

@@ -1,26 +1,21 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class CameraBlur : BaseCameraFX
+public class CameraBlur : BaseCameraFX, IEndGame
 {
     private bool _isScreenBlurred;
 
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    protected override void Awake() => base.Awake();
 
-    public void CameraShakeBlur()
-    {
-        StartCoroutine(BlurCoroutine());
-    }
+    public void CameraShakeBlur() => StartCoroutine(BlurCoroutine());
 
     private IEnumerator BlurCoroutine()
     {
         float blurAmount = 0;
 
         bool isBlurry = false;
+
         bool isBlurDisabled = false;
 
         while (!isBlurDisabled)
@@ -56,7 +51,13 @@ public class CameraBlur : BaseCameraFX
     public void ScreenBlur(bool blur)
     {
         _isScreenBlurred = blur;
+
         _pp.BlurAmount = blur ? 1 : 0;
+    }
+
+    public void OnGameEnd(object[] data = null)
+    {
+        ScreenBlur(false);
     }
 }
 

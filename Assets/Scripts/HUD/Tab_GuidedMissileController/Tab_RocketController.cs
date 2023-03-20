@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class Tab_RocketController : MonoBehaviour
+public class Tab_RocketController : MonoBehaviour, IEndGame
 {
     [SerializeField]
     private CanvasGroup _canvasGroup;
@@ -19,12 +19,15 @@ public class Tab_RocketController : MonoBehaviour
 
     public event Action<bool> onActivity;
 
-
-
     public void SetActivity(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
 
         onActivity?.Invoke(isActive);
+    }
+
+    public void OnGameEnd(object[] data = null)
+    {
+        SetActivity(false);
     }
 }

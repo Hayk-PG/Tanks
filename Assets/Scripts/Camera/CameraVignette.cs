@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class CameraVignette : BaseCameraFX
+public class CameraVignette : BaseCameraFX, IEndGame
 {
     [SerializeField] 
     private GameplayAnnouncer _gameplayAnnouncer;
@@ -19,8 +19,6 @@ public class CameraVignette : BaseCameraFX
         _gameplayAnnouncer.OnGameStartAnnouncement += delegate { StartCoroutine(ChangeAmount(0.12f, -5)); };
 
         _playerDamageCameraFX.onDamageFX += OnDamage;
-
-        GameSceneObjectsReferences.BaseEndGame.onEndGame += delegate { _pp.Vignette = false; };
     }
 
     private void OnDisable()
@@ -51,5 +49,10 @@ public class CameraVignette : BaseCameraFX
         yield return null;
 
         _pp.VignetteAmount = defaultValue;
+    }
+
+    public void OnGameEnd(object[] data = null)
+    {
+        _pp.Vignette = false;
     }
 }
