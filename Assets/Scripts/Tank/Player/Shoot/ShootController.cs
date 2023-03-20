@@ -247,7 +247,7 @@ public class ShootController : BaseShootController
 
         GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = Bullet;
 
-        GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
+        GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, 5, null);
     }
 
     public virtual void LaunchRocket(int id)
@@ -263,7 +263,7 @@ public class ShootController : BaseShootController
 
         GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = rocket;
 
-        GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, rocket.RigidBody, null, null);
+        GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, rocket.RigidBody, 6, null);
     }
 
     protected virtual bool HaveEnoughBullets()

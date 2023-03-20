@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MainCameraController : MonoBehaviour, IEndGame
+public class MainCameraController : MonoBehaviour
 {
     public enum CameraUser { None, RemoteControl}
 
@@ -87,6 +87,23 @@ public class MainCameraController : MonoBehaviour, IEndGame
         Point2 = delegate { return Target2?.position ?? Vector3.zero; };
     }
 
+    private void OnGameStarted()
+    {
+        PlayerTurn p1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn.MyTurn == TurnState.Player1);
+        PlayerTurn p2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn.MyTurn == TurnState.Player2);
+
+        _player1 = Get<Rigidbody>.From(p1.gameObject);
+        _player2 = Get<Rigidbody>.From(p2.gameObject);
+
+        ResetTargets();
+    }
+
+    private void OnTurnChanged(TurnState turnState)
+    {
+        if (turnState == TurnState.Transition)
+            ResetTargets();
+    }
+
     private void ControlMovement()
     {
         if (PlayersInitialized)
@@ -122,17 +139,6 @@ public class MainCameraController : MonoBehaviour, IEndGame
         return new Vector3(_newPosX, position.y, position.z);
     }
 
-    private void OnGameStarted()
-    {
-        PlayerTurn p1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn.MyTurn == TurnState.Player1);
-        PlayerTurn p2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerturn => playerturn.MyTurn == TurnState.Player2);
-
-        _player1 = Get<Rigidbody>.From(p1.gameObject);
-        _player2 = Get<Rigidbody>.From(p2.gameObject);
-
-        ResetTargets();
-    }
-
     private void OffsetY(float value)
     {
         _yOffset = value;
@@ -156,12 +162,6 @@ public class MainCameraController : MonoBehaviour, IEndGame
         OffsetY(2);
 
         DesiredHeightOffset(0);
-    }
-
-    private void OnTurnChanged(TurnState turnState)
-    {
-        if (turnState == TurnState.Transition)
-            ResetTargets();
     }
 
     public void CameraOffset(PlayerTurn playerTurn, Rigidbody target, float? yOffset, float? desiredHeightOffset, CameraUser cameraUser = CameraUser.None, bool isLocked = false)
@@ -197,11 +197,6 @@ public class MainCameraController : MonoBehaviour, IEndGame
             SetTargets(_player1, _player2);
 
         DesiredHeightOffset(desiredHeightOffset.HasValue ? desiredHeightOffset.Value : 0);
-    }
-
-    public void OnGameEnd(object[] data = null)
-    {
-        print($"{Point1()} / {Point2()}");
     }
 }
 

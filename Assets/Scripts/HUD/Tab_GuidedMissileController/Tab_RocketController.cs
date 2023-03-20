@@ -7,13 +7,13 @@ public class Tab_RocketController : MonoBehaviour, IEndGame
     private CanvasGroup _canvasGroup;
 
     [SerializeField] [Space]
-    private VariableJoystick _variableJoystick;
+    private FixedJoystick _fixedJoystick;
 
     public Vector3 Direction
     {
         get
         {
-            return new Vector2(_variableJoystick.Horizontal, _variableJoystick.Vertical);
+            return new Vector2(_fixedJoystick.Horizontal, _fixedJoystick.Vertical);
         }
     }
 
