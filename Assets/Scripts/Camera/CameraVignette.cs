@@ -43,4 +43,9 @@ public class CameraVignette : BaseCameraFX, IEndGame
     {
         _pp.Vignette = false;
     }
+
+    public void WrapUpGame(object[] data = null)
+    {
+        
+    }
 }

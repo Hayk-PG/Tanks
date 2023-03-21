@@ -7,7 +7,12 @@ public class EndGameCleanupHandler : MonoBehaviour
     [SerializeField]
     private WinnerLoserIdentifier _winnerLoserIdentifier;
 
+    private IEndGame[] _iEndGames;
 
+
+
+
+    private void Awake() => _iEndGames = FindObjectsOfType<MonoBehaviour>().OfType<IEndGame>().ToArray();
 
     private void OnEnable() => GameOutcomeHandler.onSubmit += OnSubmit;
 
@@ -16,34 +21,14 @@ public class EndGameCleanupHandler : MonoBehaviour
     private void OnSubmit(IGameOutcomeHandler handler, GameOutcomeHandler.Operation operation, Animator animator, object[] data)
     {
         if (operation == GameOutcomeHandler.Operation.Start)
-        {
-            DeactivateDefeatedTank((ScoreController)data[0], (bool)data[1]);
+            GlobalFunctions.Loop<IEndGame>.Foreach(FindObjectsOfType<MonoBehaviour>().OfType<IEndGame>().ToArray(), iEndGame => { iEndGame.OnGameEnd(); });
 
-            foreach (var iEndGame in FindObjectsOfType<MonoBehaviour>().OfType<IEndGame>())
-                iEndGame.OnGameEnd();
-        }
-
-        if (operation == GameOutcomeHandler.Operation.CleanUp)
-            DeactivateGameobjects();
+        if (operation == GameOutcomeHandler.Operation.WrapUp)
+            GlobalFunctions.Loop<IEndGame>.Foreach(FindObjectsOfType<MonoBehaviour>().OfType<IEndGame>().ToArray(), iEndGame => { iEndGame.WrapUpGame(); });
 
         if (operation == GameOutcomeHandler.Operation.MenuScene)
             StartCoroutine(FinishGame());
     }
-
-    private void DeactivateDefeatedTank(ScoreController sc, bool isWin)
-    {
-        if (isWin)
-            GlobalFunctions.ObjectsOfType<ScoreController>.Find(s => s != sc).gameObject.SetActive(false);
-        else
-            sc.gameObject.SetActive(false);
-    }
-
-    private void DeactivateGameobjects()
-    {
-        DeactivateAllTanks();
-    }
-
-    private void DeactivateAllTanks() => GlobalFunctions.Loop<TankController>.Foreach(FindObjectsOfType<TankController>(), tk => { tk.gameObject.SetActive(false); });
 
     private IEnumerator FinishGame()
     {

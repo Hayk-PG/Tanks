@@ -30,4 +30,9 @@ public class Tab_RocketController : MonoBehaviour, IEndGame
     {
         SetActivity(false);
     }
+
+    public void WrapUpGame(object[] data = null)
+    {
+        
+    }
 }

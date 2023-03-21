@@ -59,5 +59,10 @@ public class CameraBlur : BaseCameraFX, IEndGame
     {
         ScreenBlur(false);
     }
+
+    public void WrapUpGame(object[] data = null)
+    {
+        
+    }
 }
 

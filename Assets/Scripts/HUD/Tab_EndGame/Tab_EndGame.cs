@@ -75,7 +75,7 @@ public class Tab_EndGame : MonoBehaviour, IGameOutcomeHandler
 
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
 
-        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.CleanUp);
+        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.WrapUp);
     }
 
     private IEnumerator Submit(ScoreController scoreController, bool isWin)

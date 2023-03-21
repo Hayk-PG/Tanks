@@ -3,7 +3,7 @@ using Photon.Pun;
 using System;
 using UnityEngine;
 
-public class HealthController : MonoBehaviour, IDamage
+public class HealthController : MonoBehaviour, IDamage, IEndGame
 {
     private TankController _tankController;
 
@@ -260,5 +260,17 @@ public class HealthController : MonoBehaviour, IDamage
 
             onUpdateArmorBar?.Invoke(ShieldHealth);
         }
+    }
+
+    public void OnGameEnd(object[] data = null)
+    {
+        if (Health <= 0)
+            gameObject.SetActive(false);
+    }
+
+    public void WrapUpGame(object[] data = null)
+    {
+        if (gameObject.activeInHierarchy)
+            gameObject.SetActive(false);
     }
 }

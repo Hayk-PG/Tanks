@@ -80,4 +80,9 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
     {
         Lock(true);
     }
+
+    public void WrapUpGame(object[] data = null)
+    {
+        
+    }
 }

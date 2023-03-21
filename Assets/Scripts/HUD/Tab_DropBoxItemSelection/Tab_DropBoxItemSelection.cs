@@ -27,4 +27,9 @@ public class Tab_DropBoxItemSelection : MonoBehaviour,IEndGame
     {
         SetActivity(false);
     }
+
+    public void WrapUpGame(object[] data = null)
+    {
+        
+    }
 }
