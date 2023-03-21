@@ -3,30 +3,15 @@ using UnityEngine;
 
 public class CameraVignette : BaseCameraFX, IEndGame
 {
-    [SerializeField] 
-    private GameplayAnnouncer _gameplayAnnouncer;
-
     [SerializeField]
     protected PlayerDamageCameraFX _playerDamageCameraFX;
 
     private float _dmg;
 
 
-    private void Start() => _pp.VignetteAmount = 1;
+    private void OnEnable() => _playerDamageCameraFX.onDamageFX += OnDamage;
 
-    private void OnEnable()
-    {
-        _gameplayAnnouncer.OnGameStartAnnouncement += delegate { StartCoroutine(ChangeAmount(0.12f, -5)); };
-
-        _playerDamageCameraFX.onDamageFX += OnDamage;
-    }
-
-    private void OnDisable()
-    {
-        _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { StartCoroutine(ChangeAmount(0.12f, -5)); };
-
-        _playerDamageCameraFX.onDamageFX -= OnDamage;
-    }
+    private void OnDisable() => _playerDamageCameraFX.onDamageFX -= OnDamage;
 
     private void OnDamage(int damage)
     {
@@ -39,16 +24,19 @@ public class CameraVignette : BaseCameraFX, IEndGame
     {
         float defaultValue = targetValue;
 
+        yield return StartCoroutine(RunCalculation(defaultValue, lerp));
+
+        _pp.VignetteAmount = defaultValue;
+    }
+
+    private IEnumerator RunCalculation(float defaultValue, float lerp)
+    {
         while (_pp.VignetteAmount > defaultValue)
         {
             _pp.VignetteAmount += lerp * Time.deltaTime;
 
             yield return null;
         }
-
-        yield return null;
-
-        _pp.VignetteAmount = defaultValue;
     }
 
     public void OnGameEnd(object[] data = null)

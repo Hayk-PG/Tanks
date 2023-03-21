@@ -24,6 +24,9 @@ public class Tab_GameStartBackground : MonoBehaviour
         _assetReferenceSprite.LoadAssetAsync().Completed += (asset) =>
         {
             _sprt = asset.Result;
+
+            _img.color = Color.white;
+
             _img.sprite = _sprt;
         };
     }

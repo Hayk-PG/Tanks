@@ -1,15 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Tab_GameStart : MonoBehaviour
 {
-    [SerializeField] [Space]
-    private GameManager _gameManager;
+    private void OnEnable() => GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStarted;
 
+    private void OnDisable() => GameSceneObjectsReferences.GameManager.OnGameStarted -= OnGameStarted;
 
+    private void OnGameStarted() => StartCoroutine(Hide());
 
-    private void OnEnable() => _gameManager.OnGameStarted += OnGameStarted;
+    private IEnumerator Hide()
+    {
+        yield return new WaitForSeconds(1);
 
-    private void OnDisable() => _gameManager.OnGameStarted -= OnGameStarted;
-
-    private void OnGameStarted() => gameObject.SetActive(false);
+        gameObject.SetActive(false);
+    }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: beb1457d375110e468b8d8e1f29fccea, type: 3}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.36240247, g: 0.5655266, b: 0.84377646, a: 1}
+  m_IndirectSpecularColor: {r: 0.36311492, g: 0.5663884, b: 0.84380317, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -242,7 +242,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 322e1859e73a3404fa31d38361a37166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameplayAnnouncer: {fileID: 279360527758376170}
   _playerDamageCameraFX: {fileID: 43998261}
 --- !u!114 &43998260
 MonoBehaviour:
@@ -3756,6 +3755,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6034319644868626970, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _assetReferenceSprite.m_AssetGUID
+      value: 29f67fe8e660d43de83ff35e42eafe2b
+      objectReference: {fileID: 0}
+    - target: {fileID: 6034319644868626970, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _assetReferenceSprite.m_SubObjectName
+      value: CoverImage6
+      objectReference: {fileID: 0}
     - target: {fileID: 6097273242201001631, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3944,17 +3953,17 @@ PrefabInstance:
     - target: {fileID: 7366788332508849805, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7366788332508849805, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7366788332508849805, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7888873686505817667, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
@@ -4173,18 +4182,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bb47859066a5bf46b4be5e41db5feb7, type: 3}
---- !u!114 &279360527758376170 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 859985680, guid: 8bb47859066a5bf46b4be5e41db5feb7,
-    type: 3}
-  m_PrefabInstance: {fileID: 279360527758376169}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2946d8647260d4949a274725ffdca651, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &279360527758376171 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7483021113024429908, guid: 8bb47859066a5bf46b4be5e41db5feb7,
