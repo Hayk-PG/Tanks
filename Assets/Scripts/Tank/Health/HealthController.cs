@@ -264,6 +264,9 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
     public void OnGameEnd(object[] data = null)
     {
+        if (_tankController.BasePlayer != null)
+            GameSceneObjectsReferences.GameplayAnnouncer.AnnounceGameResult(Health > 0);
+
         if (Health <= 0)
             gameObject.SetActive(false);
     }

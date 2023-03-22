@@ -127,6 +127,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private Controllers _controllers;
 
+    [SerializeField]
+    private GameplayAnnouncer _gamePlayAnnouncer;
+
 
 
     //GameManager
@@ -178,6 +181,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static BaseRemoteControlTarget BaseRemoteControlTarget => Instance._baseRemoteControlTarget;
     public static Tab_RocketController TabRocketController => Instance._tabRocketController;
     public static Controllers Controllers => Instance._controllers;
+    public static GameplayAnnouncer GameplayAnnouncer => Instance._gamePlayAnnouncer;
 
 
 

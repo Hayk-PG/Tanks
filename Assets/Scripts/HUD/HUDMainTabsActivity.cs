@@ -6,9 +6,6 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
     private CanvasGroup[] _canvasGroups;
 
     [SerializeField] [Space]
-    private GameplayAnnouncer _gameplayAnnouncer;
-
-    [SerializeField] [Space]
     private AmmoTypeController _ammoTypeController;
 
     private bool _isLocked;
@@ -19,9 +16,9 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 
     private void OnEnable()
     {
-        _gameplayAnnouncer.OnGameStartAnnouncement += delegate { CanvasGroupsActivity(true); };
-
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
+
+        GameSceneObjectsReferences.GameplayAnnouncer.onGameStartAnnouncement += delegate { CanvasGroupsActivity(true); };
 
         GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity += Lock;
 
@@ -30,9 +27,9 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 
     private void OnDisable()
     {
-        _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { CanvasGroupsActivity(false); };
-
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
+
+        GameSceneObjectsReferences.GameplayAnnouncer.onGameStartAnnouncement -= delegate { CanvasGroupsActivity(false); };
 
         GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity -= Lock;
 

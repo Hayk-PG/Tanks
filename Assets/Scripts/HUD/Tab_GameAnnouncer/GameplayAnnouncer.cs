@@ -1,44 +1,71 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using TMPro;
 
-public class GameplayAnnouncer : BaseAnnouncer
+public class GameplayAnnouncer : MonoBehaviour
 {
-    private int coroutineCallCounts;
+    [SerializeField]
+    private TMP_Text _txt;
+
+    public event Action onGameStartAnnouncement;
 
 
 
-    protected override void OnEnable() => _gameManager.OnGameStarted += OnGameStarted;
+    private void OnEnable() => GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStarted;
 
-    protected override void OnDisable() => _gameManager.OnGameStarted += OnGameStarted;
+    private void OnDisable() => GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStarted;
 
-    private void OnGameStarted() => StartCoroutine(GameStartAnnouncementCoroutine());
+    private void OnGameStarted() => StartCoroutine(AnnounceGameStart());
 
-    private IEnumerator GameStartAnnouncementCoroutine()
+    private IEnumerator AnnounceGameStart()
     {
-        coroutineCallCounts++;
+        TextAnnouncement(GlobalFunctions.TextWithColorCode("#F6B30A", "Ready?"), true);
 
-        if (coroutineCallCounts <= 1)
-        {
-            TextAnnouncement(0, GlobalFunctions.TextWithColorCode("#FF7700", "Ready?"), true);
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
+        SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Ready, out float clipLength);
 
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-            SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Ready, out float clipLength);
+        yield return new WaitForSeconds(clipLength);
 
-            yield return new WaitForSeconds(clipLength);
+        TextAnnouncement("", false);
+        TextAnnouncement(GlobalFunctions.TextWithColorCode("#6EF60C", "Go"), true);
 
-            TextAnnouncement(0, "", false);
-            TextAnnouncement(0, GlobalFunctions.TextWithColorCode("#9DD70D", "Go"), true);
+        onGameStartAnnouncement?.Invoke();
 
-            OnGameStartAnnouncement?.Invoke();
+        SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Go, out float nextClipLength);
 
-            SoundController.PlaySound(0, Indexes.Combat_Announcer_Male_Effect_Go, out float nextClipLength);
+        yield return new WaitForSeconds(nextClipLength);
 
-            yield return new WaitForSeconds(nextClipLength);
+        TextAnnouncement("", false);
 
-            TextAnnouncement(0, "", false);
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
+    }
 
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
-        }
+    public void AnnounceGameResult(bool isWin)
+    {
+        StartCoroutine(AnnounceGameResultCoroutine(isWin));
+    }
+
+    private IEnumerator AnnounceGameResultCoroutine(bool isWin)
+    {
+        yield return new WaitForSeconds(1);
+
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
+
+        int clipIndex = isWin ? 2 : 3;
+
+        SoundController.PlaySound(0, clipIndex, out float clipLength);
+
+        TextAnnouncement(GlobalFunctions.TextWithColorCode(isWin ? "#17EAE0": "#EB4F7C", isWin ? "You win!" : "You Lose!"), true);
+
+        yield return new WaitForSeconds(clipLength);
+
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
+    }
+
+    private void TextAnnouncement(string text, bool isActive)
+    {
+        _txt.text = text;
+        _txt.gameObject.SetActive(isActive);
     }
 }

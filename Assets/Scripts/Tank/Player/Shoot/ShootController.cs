@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class ShootController : BaseShootController
+public class ShootController : BaseShootController, IEndGame
 {
     public class PlayerHUDValues
     {
@@ -41,9 +41,9 @@ public class ShootController : BaseShootController
     protected BaseBulletController _instantiatedBullet;
 
     [HideInInspector] [SerializeField] 
-    protected int _activeAmmoIndex;  
+    protected int _activeAmmoIndex;
 
-    protected bool _hasShot;
+    protected bool _hasShot, _isGameEnd;
 
     public BaseBulletController Bullet
     {
@@ -116,9 +116,9 @@ public class ShootController : BaseShootController
 
         _tankMovement.OnDirectionValue += OnMovementDirectionValue;
 
-        _gameplayAnnouncer.OnGameStartAnnouncement += delegate { _isGameplayAnnounced = true; };
-
         _playerAmmoType.onRocketSelected += OnRocketSelected;
+
+        GameSceneObjectsReferences.GameplayAnnouncer.onGameStartAnnouncement += delegate { _isGameplayAnnounced = true; };
 
         GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
@@ -133,7 +133,7 @@ public class ShootController : BaseShootController
 
         _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
 
-        _gameplayAnnouncer.OnGameStartAnnouncement -= delegate { _isGameplayAnnounced = true; };
+        GameSceneObjectsReferences.GameplayAnnouncer.onGameStartAnnouncement -= delegate { _isGameplayAnnounced = true; };
 
         GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
@@ -171,7 +171,7 @@ public class ShootController : BaseShootController
 
     protected virtual void ShootPointGameobjectActivity(bool isActive = false)
     {
-        if(_currentWeaponType == ButtonType.Rocket)
+        if(_currentWeaponType == ButtonType.Rocket || _isGameEnd)
         {
             _shootPoint.gameObject.SetActive(false);
 
@@ -290,5 +290,15 @@ public class ShootController : BaseShootController
     public virtual void OnEnteredSandbagsTrigger(bool isEntered)
     {
         _isSandbagsTriggered = isEntered;
+    }
+
+    public virtual void OnGameEnd(object[] data = null)
+    {
+        ShootPointGameobjectActivity(_isGameEnd = true);
+    }
+
+    public virtual void WrapUpGame(object[] data = null)
+    {
+        
     }
 }

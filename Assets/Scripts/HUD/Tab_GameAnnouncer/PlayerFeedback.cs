@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 
 
-public class PlayerFeedback : BaseAnnouncer
+public class PlayerFeedback : MonoBehaviour
 {
     [SerializeField] [Space]
     private Tab_HitText _tabHitText;
 
+    private SoundController _soundController;
 
+
+
+
+    private void Awake() => _soundController = FindObjectOfType<SoundController>();
 
     public HitTextManager CurrentHitTextManager(string tankName)
     {
