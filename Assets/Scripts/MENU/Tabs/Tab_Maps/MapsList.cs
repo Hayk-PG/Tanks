@@ -1,12 +1,16 @@
+using System.Collections;
 using UnityEngine;
 
-public class MapsList : MonoBehaviour
+public class MapsList : MonoBehaviour, IReset
 {  
     [SerializeField]
     private Transform _content;
     
     [SerializeField] [Space]
     private Maps _maps;
+
+    [SerializeField] [Space]
+    private CustomScrollRect _customScrollRect;
 
     private MapSelector[] _mapSelectors;
 
@@ -61,6 +65,17 @@ public class MapsList : MonoBehaviour
         }
     }
 
+    private IEnumerator SetCustomScrollRectNormalizedPosition()
+    {
+        float horizontalBarsCount = _content.childCount;
+        float currentHorizontalBarIndex = (Data.Manager.MapIndex / 3) < 0 ? 0 : Data.Manager.MapIndex / 3;
+        float normalizedPosition = Mathf.InverseLerp(horizontalBarsCount, 1, currentHorizontalBarIndex + 1);
+
+        yield return null;
+
+        _customScrollRect.SetNormalizedPosition(normalizedPosition);
+    }
+
     private void DeselectOtherBtns(Btn btn)
     {
         GlobalFunctions.Loop<Btn>.Foreach(_btns, b =>
@@ -68,5 +83,10 @@ public class MapsList : MonoBehaviour
             if (b != btn)
                 b.Deselect();
         });
+    }
+
+    public void SetDefault()
+    {
+        StartCoroutine(SetCustomScrollRectNormalizedPosition());
     }
 }

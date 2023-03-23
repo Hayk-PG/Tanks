@@ -86,7 +86,7 @@ public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
 
     public void DisplayMapName(Map map)
     {
-        _txtMapName.text = map.MapName;
+        _txtMapName.text = $"{Data.Manager.MapIndex + 1}: {map.MapName}";
     }
 
     public void SetDefault()

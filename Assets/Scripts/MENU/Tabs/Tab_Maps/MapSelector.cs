@@ -96,6 +96,13 @@ public class MapSelector : MonoBehaviour, IReset
     public void SetDefault()
     {
         if (_mapIndex == Data.Manager.MapIndex && _map != null)
-            _btn.Select();
+            StartCoroutine(AutoSelect());
+    }
+
+    private IEnumerator AutoSelect()
+    {
+        yield return null;
+
+        _btn.Select();
     }
 }
