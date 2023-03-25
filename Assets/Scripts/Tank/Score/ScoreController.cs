@@ -10,7 +10,7 @@ public class ScoreController : MonoBehaviour, IScore
     private ScoreFromTerOccIndController _scoreFromTerOccIndController;
 
     private int _score;
-    
+
     public IDamage IDamage { get; set; }
     public PlayerTurn PlayerTurn { get; set; }
     public int Score
@@ -21,7 +21,7 @@ public class ScoreController : MonoBehaviour, IScore
     public int MainScore { get; set; }
     public bool IsXpBoost { get; set; }
 
-    public Action<int, float> OnDisplayTempPoints { get; set; }
+    public event Action<int, float> onDisplayPlayerScore;
     public Action<int> OnPlayerGetsPoints { get; set; }
     public Action<int[]> OnHitEnemy { get; set; }
 
@@ -131,7 +131,7 @@ public class ScoreController : MonoBehaviour, IScore
         if (sc > 0)
             MainScore += sc;
 
-        OnDisplayTempPoints?.Invoke(sc, waitForSeconds);
+        onDisplayPlayerScore?.Invoke(sc, waitForSeconds);
 
         OnPlayerGetsPoints?.Invoke(Score);
     }

@@ -3,27 +3,53 @@ using TMPro;
 
 public class ScoreText : MonoBehaviour
 {
-    private Animator _anim;
+    [SerializeField]
     private TMP_Text _txt;
 
-    private int Score
+    [SerializeField] [Space]
+    private Animator _anim;
+
+    private ScoreController _playerScoreController;
+
+    private int _score = 0;
+
+
+
+    private void Awake() => UpdateScoreText();
+
+    private void OnEnable() => GameSceneObjectsReferences.GameManager.OnGameStarted += GetPlayerScoreController;
+
+    private void OnDisable() => GameSceneObjectsReferences.GameManager.OnGameStarted -= GetPlayerScoreController;
+
+    private void GetPlayerScoreController()
     {
-        get => int.Parse(_txt.text);
-        set => _txt.text = value.ToString();
+        _playerScoreController = GlobalFunctions.ObjectsOfType<TankController>.Find(tc => tc.BasePlayer != null)?.GetComponent<ScoreController>();
+
+        _playerScoreController.onDisplayPlayerScore += OnDisplayPlayerScore;
     }
 
-
-    private void Awake()
+    private void OnDisplayPlayerScore(int score, float waitForSeconds = 0)
     {
-        _anim = Get<Animator>.From(gameObject);
-        _txt = Get<TMP_Text>.From(gameObject);
+        _score += score;
+
+        UpdateScoreText();
+
+        PlayAnimation();
     }
 
-    public void UpdateScoreText(int score)
+    private void UpdateScoreText()
     {
-        Score += score;
+        if (_txt == null)
+            return;
 
-        if (_anim != null)
-            _anim.SetTrigger(Names.Play);
+        _txt.text = Converter.DecimalString(_score, 5);
+    }
+
+    private void PlayAnimation()
+    {
+        if (_anim == null)
+            return;
+
+        _anim.SetTrigger(Names.Play);
     }
 }

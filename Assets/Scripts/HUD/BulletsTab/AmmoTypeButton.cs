@@ -65,12 +65,12 @@ public class AmmoTypeButton : MonoBehaviour
         {
             get
             {
-                return int.Parse(_txtQuantity.text.Substring(1));
+                return int.Parse(_txtQuantity.text);
             }
 
             set
             {
-                _txtQuantity.text = "x" + value;
+                _txtQuantity.text = Converter.DecimalString(value, 3);
             }
         }
         public int Price
