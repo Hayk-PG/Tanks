@@ -50,6 +50,8 @@ public class GameplayAnnouncer : MonoBehaviour
 
         onGameStartAnnouncement?.Invoke();
 
+        GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(null, HudTabsHandler.HudTab.GameplayAnnouncer, false);
+
         yield return new WaitForSeconds(nextClipLength);
 
         TextAnnouncement("", false);

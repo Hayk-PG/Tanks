@@ -6803,6 +6803,7 @@ GameObject:
   m_Component:
   - component: {fileID: 279360525962437350}
   - component: {fileID: 4484186613105932991}
+  - component: {fileID: 397491386001905516}
   m_Layer: 5
   m_Name: AmmoTab
   m_TagString: Untagged
@@ -6844,6 +6845,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &397491386001905516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279360525962437351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95058fc4cdebd644c824f2a1bb9129c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 4484186613105932991}
 --- !u!1 &279360526558610837
 GameObject:
   m_ObjectHideFlags: 0
@@ -6934,6 +6948,7 @@ GameObject:
   - component: {fileID: 279360526606462011}
   - component: {fileID: 1793197559}
   - component: {fileID: 2411927879972778766}
+  - component: {fileID: 1895883375948156513}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -7066,7 +7081,22 @@ MonoBehaviour:
   - {fileID: 3183504503785577034}
   - {fileID: 1032326326854525087}
   - {fileID: 4484186613105932991}
+  _upperTab: {fileID: 7418587664483671}
+  _ammoTab: {fileID: 397491386001905516}
+  _hudMainTab: {fileID: 5638536988152076368}
   _ammoTypeController: {fileID: 279360527388715765}
+--- !u!114 &1895883375948156513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279360526606462008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce9f3feb37f73f4aa986420e35bc85b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &279360526915810227
 GameObject:
   m_ObjectHideFlags: 0
@@ -8553,6 +8583,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7985088340203688989}
   - component: {fileID: 1032326326854525087}
+  - component: {fileID: 5638536988152076368}
   m_Layer: 5
   m_Name: MainTab
   m_TagString: Untagged
@@ -8604,6 +8635,19 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &5638536988152076368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3210760969675864109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d9260aa8a30b094a9d80c03ce8ac04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 1032326326854525087}
 --- !u!1 &3222568591647516400
 GameObject:
   m_ObjectHideFlags: 0
@@ -11330,6 +11374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0507bd2aab00ec94f99a495586490ba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 3183504503785577034}
 --- !u!1 &6986183437401402987
 GameObject:
   m_ObjectHideFlags: 0

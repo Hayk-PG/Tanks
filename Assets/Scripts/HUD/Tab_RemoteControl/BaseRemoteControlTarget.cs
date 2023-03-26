@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 
-public class BaseRemoteControlTarget : MonoBehaviour
+public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 {
     private enum Mode { None, Bomber, Artillery}
     private Mode _mode;
@@ -40,12 +40,14 @@ public class BaseRemoteControlTarget : MonoBehaviour
     private void OnEnable()
     {
         GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber += OnSelectBomber; });
+
         GlobalFunctions.Loop<DropBoxSelectionPanelArtillery>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelArtillery, selectArtillery => { selectArtillery.onArtillery += OnSelectArtillery; });
     }
 
     private void OnDisable()
     {
         GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber -= OnSelectBomber; });
+
         GlobalFunctions.Loop<DropBoxSelectionPanelArtillery>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelArtillery, selectArtillery => { selectArtillery.onArtillery += OnSelectArtillery; });
     }
 
@@ -103,6 +105,11 @@ public class BaseRemoteControlTarget : MonoBehaviour
         if (_canvasGroup.interactable == isActive)
             return;
 
+        GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.TabRemoteControl, isActive);
+    }
+
+    public void Execute(bool isActive)
+    {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
 
         LockCamera(isActive);

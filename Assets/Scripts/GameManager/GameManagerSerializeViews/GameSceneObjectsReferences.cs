@@ -119,6 +119,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [Header("HUD")]
 
     [SerializeField] [Space]
+    private HudTabsHandler _hudTabsHandler;
+
+    [SerializeField]
     private BaseRemoteControlTarget _baseRemoteControlTarget;
 
     [SerializeField]
@@ -178,6 +181,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static DropBoxItemSelectionPanelOwner DropBoxItemSelectionPanelOwner => Instance._dropBoxItemSelectionPanelOwner;
 
     //HUD
+    public static HudTabsHandler HudTabsHandler => Instance._hudTabsHandler;
     public static BaseRemoteControlTarget BaseRemoteControlTarget => Instance._baseRemoteControlTarget;
     public static Tab_RocketController TabRocketController => Instance._tabRocketController;
     public static Controllers Controllers => Instance._controllers;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class Tab_DropBoxItemSelection : MonoBehaviour,IEndGame
+public class Tab_DropBoxItemSelection : MonoBehaviour, IHudTabsObserver, IEndGame
 {
     [SerializeField] [Space]
     private CanvasGroup _canvasGroup;
@@ -18,6 +18,11 @@ public class Tab_DropBoxItemSelection : MonoBehaviour,IEndGame
         if (!_canvasGroup.interactable && GameSceneObjectsReferences.BaseRemoteControlTarget.IsActive)
             return;
 
+        GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.TabDropBoxItemSelection, isActive);
+    }
+
+    public void Execute(bool isActive)
+    {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
 
         onDropBoxItemSelectionTabActivity?.Invoke(isActive);

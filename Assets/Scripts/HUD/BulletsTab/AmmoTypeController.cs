@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class AmmoTypeController : MonoBehaviour
+public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
 {
     [SerializeField]
     private Animator _animator;
@@ -63,6 +63,16 @@ public class AmmoTypeController : MonoBehaviour
 
     public void OnAmmoTabActivity()
     {
+        GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.AmmoTypeController, WasHidden);
+    }
+
+    public void PlaySoundFx(int clipIndex)
+    {
+        UISoundController.PlaySound(1, clipIndex);
+    }
+
+    public void Execute(bool isActive)
+    {
         _animatorSpeed = WasHidden ? 1 : -1;
         _animator.SetFloat(_direction, _animatorSpeed);
         _animator.SetTrigger(_play);
@@ -72,10 +82,5 @@ public class AmmoTypeController : MonoBehaviour
         PlaySoundFx(WasHidden ? 0 : 1);
 
         OnInformAboutTabActivityToTabsCustomization?.Invoke(WasHidden);
-    }
-
-    public void PlaySoundFx(int clipIndex)
-    {
-        UISoundController.PlaySound(1, clipIndex);
     }
 }

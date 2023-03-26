@@ -2,80 +2,232 @@
 
 public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 {
-    [SerializeField] 
-    private CanvasGroup[] _canvasGroups;
+    [SerializeField] [Space]
+    private UpperTab _upperTab;
 
     [SerializeField] [Space]
-    private AmmoTypeController _ammoTypeController;
+    private AmmoTab _ammoTab;
 
-    private bool _isLocked;
+    [SerializeField] [Space]
+    private HudMainTab _hudMainTab;
+
+    private HudTabsHandler.HudTab _currentActiveTab;
+
+    private IHudTabsObserver _currentObserver;
+
+    private PlayerTurn LocalPlayerTurn { get; set; }
+    private bool IsGameStartAnnounced { get; set; }
+    private bool IsMyTurn { get; set; }
+
+    
 
 
 
-    private void Start() => CanvasGroupsActivity(false);
+    private void Awake() => SetAllMainTabsActivities(false, false, false);
 
     private void OnEnable()
     {
-        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChange;
 
-        GameSceneObjectsReferences.GameplayAnnouncer.onGameStartAnnouncement += delegate { CanvasGroupsActivity(true); };
-
-        GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity += Lock;
-
-        GameSceneObjectsReferences.TabRocketController.onActivity += isOpen => { CanvasGroupsActivity(!isOpen); };
+        GameSceneObjectsReferences.HudTabsHandler.onRequestTabActivityPermission += OnRequestTabActivityPermission;
     }
 
-    private void OnDisable()
+    private void OnTurnChange(TurnState turnState)
     {
-        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
+        if (LocalPlayerTurn == null)
+            LocalPlayerTurn = GlobalFunctions.ObjectsOfType<TankController>.Find(tk => tk.BasePlayer != null)?.GetComponent<PlayerTurn>();
 
-        GameSceneObjectsReferences.GameplayAnnouncer.onGameStartAnnouncement -= delegate { CanvasGroupsActivity(false); };
+        IsMyTurn = LocalPlayerTurn?.MyTurn == turnState;
 
-        GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity -= Lock;
+        if (!IsGameStartAnnounced)
+            return;
 
-        GameSceneObjectsReferences.TabRocketController.onActivity -= isOpen => { CanvasGroupsActivity(!isOpen); };
+        SetAllMainTabsActivities(true, true, true);
     }
 
-    private void Lock(bool isActive)
+    private void OnRequestTabActivityPermission(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
     {
-        _isLocked = isActive;
-
-        CanvasGroupsActivity(!isActive);
-    }
-
-    public void CanvasGroupsActivity(bool isActive)
-    {
-        if (_isLocked)
+        switch (requestedTab)
         {
-            GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasgroup =>
+            case HudTabsHandler.HudTab.GameplayAnnouncer: OnGameplayAnnouncer(observer, currentActiveTab, requestedTab, isActive); break;
+
+            case HudTabsHandler.HudTab.AmmoTypeController: OnAmmoTypeController(observer, currentActiveTab, requestedTab, isActive); break;
+
+            case HudTabsHandler.HudTab.TabRemoteControl: OnTabRemoteControl(observer, currentActiveTab, requestedTab, isActive); break;
+
+            case HudTabsHandler.HudTab.TabRocketController: OnTabRocketController(observer, currentActiveTab, requestedTab, isActive); break;
+
+            case HudTabsHandler.HudTab.TabModify: OnTabModify(observer, currentActiveTab, requestedTab, isActive); break;
+
+            case HudTabsHandler.HudTab.TabDropBoxItemSelection: OnTabDropBoxItemSelection(observer, currentActiveTab, requestedTab, isActive); break;
+        }
+    }
+
+    #region OnGameplayAnnouncer
+    private void OnGameplayAnnouncer(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
+    {
+        IsGameStartAnnounced = true;
+
+        SetAllMainTabsActivities(true, true, true);
+    }
+    #endregion
+
+    #region OnAmmoTypeController
+    private void OnAmmoTypeController(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
+    {
+        observer?.Execute(isActive);
+
+        SetCurrentObserver(isActive, observer);
+
+        SetCurrentTab(isActive, requestedTab);
+
+        SetAllMainTabsActivities(!isActive, !isActive);
+    }
+    #endregion
+
+    #region OnTabRemoteControl
+    private void OnTabRemoteControl(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
+    {
+        observer.Execute(isActive);
+
+        SetCurrentObserver(isActive, observer);
+
+        SetCurrentTab(isActive, requestedTab);
+
+        SetAllMainTabsActivities(!isActive, !isActive, !isActive);
+    }
+    #endregion
+
+    #region OnTabRocketController
+    private void OnTabRocketController(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
+    {
+        observer.Execute(isActive);
+
+        SetCurrentObserver(isActive, observer);
+
+        SetCurrentTab(isActive, requestedTab);
+
+        SetAllMainTabsActivities(!isActive, !isActive, !isActive);
+    }
+    #endregion
+
+    #region OnTabModify
+    private void OnTabModify(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
+    {
+        observer.Execute(isActive);
+
+        SetCurrentObserver(isActive, observer);
+
+        SetCurrentTab(isActive, requestedTab);
+
+        SetAllMainTabsActivities(!isActive, !isActive, !isActive);
+    }
+    #endregion
+
+    #region OnTabDropBoxItemSelection
+    private void OnTabDropBoxItemSelection(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
+    {
+        if (isActive)
+        {
+            if (currentActiveTab == HudTabsHandler.HudTab.TabRemoteControl || currentActiveTab == HudTabsHandler.HudTab.TabRocketController)
             {
-                GlobalFunctions.CanvasGroupActivity(canvasgroup, false);
-            });
+                //Queue this request ?
+
+                return;
+            }
+
+            if(currentActiveTab != HudTabsHandler.HudTab.None || currentActiveTab != HudTabsHandler.HudTab.AmmoTypeController || 
+               currentActiveTab != HudTabsHandler.HudTab.GameplayAnnouncer || currentActiveTab != HudTabsHandler.HudTab.TabDropBoxItemSelection)
+            {
+                _currentObserver?.Execute(false);
+            }
+        }
+
+        observer.Execute(isActive);
+
+        SetCurrentObserver(isActive, observer);
+
+        SetCurrentTab(isActive, requestedTab);
+
+        SetAllMainTabsActivities(!isActive, !isActive, !isActive);
+    }
+    #endregion
+
+    private void SetCurrentObserver(bool isActive, IHudTabsObserver observer)
+    {
+        if (!isActive)
+        {
+            _currentObserver = null;
 
             return;
         }
 
-        GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasgroup =>
-        {
-            GlobalFunctions.CanvasGroupActivity(canvasgroup, isActive);
-        });
+        _currentObserver = observer;
     }
 
-    private void OnWeaponsTabActivity(bool isOpen)
+    private void SetCurrentTab(bool isActive, HudTabsHandler.HudTab hudTab)
     {
-        if (_isLocked)
+        if (!isActive)
         {
-            GlobalFunctions.CanvasGroupActivity(_canvasGroups[1], false);
+            _currentActiveTab = HudTabsHandler.HudTab.None;
+
+            GameSceneObjectsReferences.HudTabsHandler.SetCurrentActiveTab(_currentActiveTab);
 
             return;
         }
 
-        GlobalFunctions.CanvasGroupActivity(_canvasGroups[1], !isOpen);
+        _currentActiveTab = hudTab;
+
+        GameSceneObjectsReferences.HudTabsHandler.SetCurrentActiveTab(_currentActiveTab);
+    }
+
+    private void SetAllMainTabsActivities(bool? isUpperTabActive = null, bool? isMainTabActive = null, bool? isAmmoTabActive = null)
+    {
+        if (_currentActiveTab == HudTabsHandler.HudTab.TabDropBoxItemSelection ||
+            _currentActiveTab == HudTabsHandler.HudTab.TabModify ||
+            _currentActiveTab == HudTabsHandler.HudTab.TabRemoteControl ||
+            _currentActiveTab == HudTabsHandler.HudTab.TabRocketController)
+        {
+            _upperTab.Execute(false);
+
+            _hudMainTab.Execute(false);
+
+            _ammoTab.Execute(false);
+
+            return;
+        }
+
+        if(_currentActiveTab == HudTabsHandler.HudTab.AmmoTypeController)
+        {
+            _upperTab.Execute(false);
+
+            _hudMainTab.Execute(false);
+
+            return;
+        }
+
+        if (IsMyTurn)
+        {
+            if (isUpperTabActive.HasValue)
+                _upperTab.Execute(isUpperTabActive.Value);
+
+            if (isMainTabActive.HasValue)
+                _hudMainTab.Execute(isMainTabActive.Value);
+        }
+        else
+        {
+            _upperTab.Execute(false);
+
+            _hudMainTab.Execute(false);
+        }
+
+        if (isAmmoTabActive.HasValue)
+            _ammoTab.Execute(isAmmoTabActive.Value);
     }
 
     public void OnGameEnd(object[] data = null)
     {
-        Lock(true);
+        
     }
 
     public void WrapUpGame(object[] data = null)

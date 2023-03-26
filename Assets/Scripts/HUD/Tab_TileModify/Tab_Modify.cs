@@ -1,24 +1,16 @@
 using System.Collections;
 using UnityEngine;
 
-public class Tab_Modify : MonoBehaviour
+public class Tab_Modify : MonoBehaviour, IHudTabsObserver
 {
-    [SerializeField] private Btn _btnClose;
-
-    [SerializeField] [Space]
-    private BuildModeSwitcher _buildModeSwitcher;
-
-    [SerializeField] [Space]
+    [SerializeField] 
     private CanvasGroup _canvasGroup;
 
     [SerializeField] [Space]
-    private HUDMainTabsActivity _hudMainTabsActivity;
+    private Btn _btnClose;
 
     [SerializeField] [Space]
-    private GameManager _gameManager;
-
-    [SerializeField] [Space]
-    private TurnController _turnController;
+    private BuildModeSwitcher _buildModeSwitcher;
 
     private IReset[] _iResets;
     
@@ -37,22 +29,22 @@ public class Tab_Modify : MonoBehaviour
 
     private void OnEnable()
     {
+        GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStarted;
+
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += delegate { CloseTab(); };
+
         _buildModeSwitcher.onSelect += OpenTab;
-
-        _gameManager.OnGameStarted += OnGameStarted;
-
-        _turnController.OnTurnChanged += delegate { CloseTab(); };
 
         _btnClose.onSelect += CloseTab;
     }
 
     private void OnDisable()
     {
+        GameSceneObjectsReferences.GameManager.OnGameStarted -= OnGameStarted;
+
+        GameSceneObjectsReferences.TurnController.OnTurnChanged -= delegate { CloseTab(); };
+
         _buildModeSwitcher.onSelect -= OpenTab;
-
-        _gameManager.OnGameStarted -= OnGameStarted;
-
-        _turnController.OnTurnChanged -= delegate { CloseTab(); };
 
         _btnClose.onSelect -= CloseTab;
     }
@@ -76,22 +68,26 @@ public class Tab_Modify : MonoBehaviour
         yield return new WaitForSeconds(0.01f);
 
         if ((bool)LocalPlayerTurn?.IsMyTurn)
-        {
-            _hudMainTabsActivity.CanvasGroupsActivity(false);
-
-            GlobalFunctions.Loop<IReset>.Foreach(_iResets, iReset => { iReset.SetDefault(); });
-            GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
-
-            _isTabOpen = true;
-        }
+            GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.TabModify, true);
     }
 
     private void CloseTab()
     {
         if (_isTabOpen)
-        {
-            _hudMainTabsActivity.CanvasGroupsActivity(true);
+            GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.TabModify, false);
+    }
 
+    public void Execute(bool isActive)
+    {
+        if (isActive)
+        {
+            GlobalFunctions.Loop<IReset>.Foreach(_iResets, iReset => { iReset.SetDefault(); });
+            GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
+
+            _isTabOpen = true;
+        }
+        else
+        {
             GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
             GlobalFunctions.Loop<TileModifyGUI>.Foreach(FindObjectsOfType<TileModifyGUI>(), tileModifyGUI => { tileModifyGUI.DisableGUI(); });
 

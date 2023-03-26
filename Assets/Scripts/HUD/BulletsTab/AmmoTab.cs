@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class UpperTab : MonoBehaviour, IHudTabsObserver
+public class AmmoTab : MonoBehaviour, IHudTabsObserver
 {
     [SerializeField]
     private CanvasGroup _canvasGroup;

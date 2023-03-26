@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: beb1457d375110e468b8d8e1f29fccea, type: 3}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.36311492, g: 0.5663884, b: 0.84380317, a: 1}
+  m_IndirectSpecularColor: {r: 0.36240247, g: 0.5655266, b: 0.84377646, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -478,6 +478,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &449422149 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1895883375948156513, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce9f3feb37f73f4aa986420e35bc85b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &547845001
 GameObject:
   m_ObjectHideFlags: 0
@@ -2323,6 +2335,7 @@ MonoBehaviour:
   _dropBoxSelectionPanelScores: {fileID: 1287106649}
   _dropBoxSelectionPanelC4: {fileID: 1398081074}
   _dropBoxItemSelectionPanelOwner: {fileID: 583500467}
+  _hudTabsHandler: {fileID: 449422149}
   _baseRemoteControlTarget: {fileID: 1220509570}
   _tabRocketController: {fileID: 733756324}
   _controllers: {fileID: 1357933347}
@@ -3431,6 +3444,21 @@ PrefabInstance:
     - target: {fileID: 4179136292063317311, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484186613105932991, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484186613105932991, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484186613105932991, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: m_BlocksRaycasts
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4640303899109572535, guid: 8bb47859066a5bf46b4be5e41db5feb7,

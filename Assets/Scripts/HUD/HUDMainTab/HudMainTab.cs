@@ -1,10 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class UpperTab : MonoBehaviour, IHudTabsObserver
+public class HudMainTab : MonoBehaviour, IHudTabsObserver
 {
     [SerializeField]
     private CanvasGroup _canvasGroup;
-
 
 
 
