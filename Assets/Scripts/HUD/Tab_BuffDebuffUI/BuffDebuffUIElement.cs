@@ -4,43 +4,27 @@ using Coffee.UIEffects;
 
 public class BuffDebuffUIElement : MonoBehaviour, IReset
 {
-    [SerializeField] [Space]
-    private Image _img, _imgIcon;
+    [SerializeField]
+    private Image _imgBg, _imgIcon, _imgFill;
 
     [SerializeField] [Space]
     private UIShiny _uiShiny;
 
+    private int _rounds;
 
 
 
-    public void Set()
+    public void Set(Color color, Sprite icon, int rounds)
     {
-        
-    }
+        _imgBg.color = color;
 
-    private void SetColor(Color color)
-    {
-        if (color == default)
-            return;
+        _imgIcon.sprite = icon;
 
-        _img.color = color;
-    }
-
-    private void SetIcon(Sprite sprite)
-    {
-        if (sprite == null)
-            return;
-
-        _imgIcon.sprite = sprite;
-    }
-
-    public void Deactivate()
-    {
-        gameObject.SetActive(false);
+        _rounds = rounds;
     }
 
     public void SetDefault()
     {
-        _uiShiny.Play();
+        
     }
 }

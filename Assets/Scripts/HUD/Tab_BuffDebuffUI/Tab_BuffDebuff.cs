@@ -30,7 +30,7 @@ public class Tab_BuffDebuff : MonoBehaviour
             if (!element.gameObject.activeInHierarchy)
             {
                 element.gameObject.SetActive(true);
-                element.Set();
+                //element.Set();
 
                 return;
             }
