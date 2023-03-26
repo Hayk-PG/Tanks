@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 {
@@ -14,6 +16,8 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
     private HudTabsHandler.HudTab _currentActiveTab;
 
     private IHudTabsObserver _currentObserver;
+
+    private Action _queuedExecution;
 
     private PlayerTurn LocalPlayerTurn { get; set; }
 
@@ -44,6 +48,8 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
             return;
 
         SetAllMainTabsActivities(true, true, true);
+
+        _queuedExecution?.Invoke();
     }
 
     private void OnRequestTabActivityPermission(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
@@ -137,29 +143,51 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
     {
         if (isActive)
         {
-            bool queue = currentActiveTab == HudTabsHandler.HudTab.TabRemoteControl || currentActiveTab == HudTabsHandler.HudTab.TabRocketController;
+            bool queue = !IsMyTurn || currentActiveTab == HudTabsHandler.HudTab.TabRemoteControl || currentActiveTab == HudTabsHandler.HudTab.TabRocketController;
 
             if (queue)
             {
-                //Queue this request ?
+                _queuedExecution = ()=> Execute(observer, requestedTab, true, isActive);
 
                 return;
             }
 
-            bool closeCurrentTab = currentActiveTab != HudTabsHandler.HudTab.None || currentActiveTab != HudTabsHandler.HudTab.AmmoTypeController ||
-                              currentActiveTab != HudTabsHandler.HudTab.GameplayAnnouncer || currentActiveTab != HudTabsHandler.HudTab.TabDropBoxItemSelection;
-
-            if (closeCurrentTab)
-                _currentObserver?.Execute(false);
+            CloseDropBoxItemSelecionTab(currentActiveTab);
         }
 
+        bool setCurrentActiveTab = !isActive && currentActiveTab != HudTabsHandler.HudTab.TabRemoteControl ||
+                                   !isActive && currentActiveTab != HudTabsHandler.HudTab.TabRocketController;
+
+        Execute(observer, requestedTab, setCurrentActiveTab, isActive);
+    }
+
+    // Close if certain tabs are open
+    private void CloseDropBoxItemSelecionTab(HudTabsHandler.HudTab currentActiveTab)
+    {
+        bool closeCurrentTab = currentActiveTab != HudTabsHandler.HudTab.None || currentActiveTab != HudTabsHandler.HudTab.AmmoTypeController ||
+                               currentActiveTab != HudTabsHandler.HudTab.GameplayAnnouncer || currentActiveTab != HudTabsHandler.HudTab.TabDropBoxItemSelection;
+
+        if (closeCurrentTab)
+            _currentObserver?.Execute(false);
+    }
+
+    private void Execute(IHudTabsObserver observer, HudTabsHandler.HudTab requestedTab, bool setCurrentActiveTab, bool isActive)
+    {
         observer.Execute(isActive);
 
         SetCurrentObserver(isActive, observer);
 
-        SetCurrentTab(isActive, requestedTab);
+        TrySetCurrentActiveTab(setCurrentActiveTab, isActive, observer, requestedTab);
 
         SetAllMainTabsActivities(!isActive, !isActive, !isActive);
+
+        _queuedExecution = null;
+    }
+
+    private void TrySetCurrentActiveTab(bool setCurrentActiveTab, bool isActive, IHudTabsObserver observer, HudTabsHandler.HudTab requestedTab)
+    {
+        if (!setCurrentActiveTab)
+            SetCurrentTab(isActive, requestedTab);
     }
     #endregion
 

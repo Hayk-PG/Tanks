@@ -38,7 +38,7 @@ public class ScoreController : MonoBehaviour, IScore
 
         _scoreFromTerOccIndController = Get<ScoreFromTerOccIndController>.From(gameObject);
 
-        Score = 0;
+        Score = 20000;
 
         MainScore = Score;
     }
