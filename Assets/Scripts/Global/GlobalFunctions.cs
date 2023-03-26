@@ -78,9 +78,9 @@ public static class GlobalFunctions
 
     public class ObjectsOfType<T> where T: UnityEngine.Object
     {
-        public static T Find(Predicate<T> p)
+        public static T Find(Predicate<T> p, bool includeIncactive = false)
         {
-            return MonoBehaviour.FindObjectsOfType<T>().ToList().Find(p);
+            return MonoBehaviour.FindObjectsOfType<T>(includeIncactive).ToList().Find(p);
         }
     }   
 }

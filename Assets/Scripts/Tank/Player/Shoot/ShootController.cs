@@ -250,7 +250,7 @@ public class ShootController : BaseShootController, IEndGame
 
     public virtual void LaunchRocket(int id)
     {
-        BaseBulletController rocketType = GlobalFunctions.ObjectsOfType<DropBoxSelectionPanelRocket>.Find(r => r.Id == id).Weapon._prefab;
+        BaseBulletController rocketType = GlobalFunctions.ObjectsOfType<DropBoxSelectionPanelRocket>.Find(r => r.Id == id, true).Weapon._prefab;
 
         if (rocketType == null)
             return;
