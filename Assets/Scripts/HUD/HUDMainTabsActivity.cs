@@ -16,9 +16,10 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
     private IHudTabsObserver _currentObserver;
 
     private PlayerTurn LocalPlayerTurn { get; set; }
+
     private bool IsGameStartAnnounced { get; set; }
     private bool IsMyTurn { get; set; }
-
+    private bool IsGameEnd { get; set; }
     
 
 
@@ -47,6 +48,13 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 
     private void OnRequestTabActivityPermission(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
     {
+        if(isActive && IsGameEnd)
+        {
+            SetAllMainTabsActivities();
+
+            return;
+        }
+
         switch (requestedTab)
         {
             case HudTabsHandler.HudTab.GameplayAnnouncer: OnGameplayAnnouncer(observer, currentActiveTab, requestedTab, isActive); break;
@@ -129,18 +137,20 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
     {
         if (isActive)
         {
-            if (currentActiveTab == HudTabsHandler.HudTab.TabRemoteControl || currentActiveTab == HudTabsHandler.HudTab.TabRocketController)
+            bool queue = currentActiveTab == HudTabsHandler.HudTab.TabRemoteControl || currentActiveTab == HudTabsHandler.HudTab.TabRocketController;
+
+            if (queue)
             {
                 //Queue this request ?
 
                 return;
             }
 
-            if(currentActiveTab != HudTabsHandler.HudTab.None || currentActiveTab != HudTabsHandler.HudTab.AmmoTypeController || 
-               currentActiveTab != HudTabsHandler.HudTab.GameplayAnnouncer || currentActiveTab != HudTabsHandler.HudTab.TabDropBoxItemSelection)
-            {
+            bool closeCurrentTab = currentActiveTab != HudTabsHandler.HudTab.None || currentActiveTab != HudTabsHandler.HudTab.AmmoTypeController ||
+                              currentActiveTab != HudTabsHandler.HudTab.GameplayAnnouncer || currentActiveTab != HudTabsHandler.HudTab.TabDropBoxItemSelection;
+
+            if (closeCurrentTab)
                 _currentObserver?.Execute(false);
-            }
         }
 
         observer.Execute(isActive);
@@ -183,10 +193,12 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 
     private void SetAllMainTabsActivities(bool? isUpperTabActive = null, bool? isMainTabActive = null, bool? isAmmoTabActive = null)
     {
-        if (_currentActiveTab == HudTabsHandler.HudTab.TabDropBoxItemSelection ||
-            _currentActiveTab == HudTabsHandler.HudTab.TabModify ||
-            _currentActiveTab == HudTabsHandler.HudTab.TabRemoteControl ||
-            _currentActiveTab == HudTabsHandler.HudTab.TabRocketController)
+        bool closeAllTabs = IsGameEnd || _currentActiveTab == HudTabsHandler.HudTab.TabDropBoxItemSelection ||
+                            _currentActiveTab == HudTabsHandler.HudTab.TabModify ||
+                            _currentActiveTab == HudTabsHandler.HudTab.TabRemoteControl ||
+                            _currentActiveTab == HudTabsHandler.HudTab.TabRocketController;
+
+        if (closeAllTabs)
         {
             _upperTab.Execute(false);
 
@@ -197,7 +209,9 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
             return;
         }
 
-        if(_currentActiveTab == HudTabsHandler.HudTab.AmmoTypeController)
+        bool isAmmoTypeControllerActive = _currentActiveTab == HudTabsHandler.HudTab.AmmoTypeController;
+
+        if (isAmmoTypeControllerActive)
         {
             _upperTab.Execute(false);
 
@@ -208,27 +222,22 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 
         if (IsMyTurn)
         {
-            if (isUpperTabActive.HasValue)
-                _upperTab.Execute(isUpperTabActive.Value);
-
             if (isMainTabActive.HasValue)
                 _hudMainTab.Execute(isMainTabActive.Value);
         }
         else
         {
-            _upperTab.Execute(false);
-
             _hudMainTab.Execute(false);
         }
+
+        if (isUpperTabActive.HasValue)
+            _upperTab.Execute(isUpperTabActive.Value);
 
         if (isAmmoTabActive.HasValue)
             _ammoTab.Execute(isAmmoTabActive.Value);
     }
 
-    public void OnGameEnd(object[] data = null)
-    {
-        
-    }
+    public void OnGameEnd(object[] data = null) => IsGameEnd = true;
 
     public void WrapUpGame(object[] data = null)
     {
