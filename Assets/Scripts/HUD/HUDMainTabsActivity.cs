@@ -177,18 +177,13 @@ public class HUDMainTabsActivity : MonoBehaviour, IEndGame
 
         SetCurrentObserver(isActive, observer);
 
-        TrySetCurrentActiveTab(setCurrentActiveTab, isActive, observer, requestedTab);
+        SetCurrentTab(isActive, requestedTab);
 
         SetAllMainTabsActivities(!isActive, !isActive, !isActive);
 
         _queuedExecution = null;
     }
 
-    private void TrySetCurrentActiveTab(bool setCurrentActiveTab, bool isActive, IHudTabsObserver observer, HudTabsHandler.HudTab requestedTab)
-    {
-        if (!setCurrentActiveTab)
-            SetCurrentTab(isActive, requestedTab);
-    }
     #endregion
 
     private void SetCurrentObserver(bool isActive, IHudTabsObserver observer)

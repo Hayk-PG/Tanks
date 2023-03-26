@@ -51,11 +51,11 @@ public class Controllers : MonoBehaviour
 
     public void OnPointerUp() => _buttons = Buttons.None;
 
-    public void ControlButtonsVisibility(bool isVisible)
+    public void SetControllersActive(bool isActive)
     {
         GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasGroup =>
         {
-            GlobalFunctions.CanvasGroupActivity(canvasGroup, isVisible);
+            GlobalFunctions.CanvasGroupActivity(canvasGroup, isActive);
         });
     }
 }

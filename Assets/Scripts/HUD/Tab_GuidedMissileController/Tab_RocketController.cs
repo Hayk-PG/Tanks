@@ -30,6 +30,8 @@ public class Tab_RocketController : MonoBehaviour, IHudTabsObserver, IEndGame
     public void Execute(bool isActive)
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+
+        GameSceneObjectsReferences.Controllers.SetControllersActive(true);
     }
 
     public void OnGameEnd(object[] data = null)

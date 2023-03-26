@@ -166,7 +166,7 @@ public class ShootController : BaseShootController, IEndGame
 
         ShootPointGameobjectActivity();
 
-        SetControllerButtonsVisiblity(isSelected);
+        GameSceneObjectsReferences.Controllers.SetControllersActive(!isSelected);
     }
 
     protected virtual void ShootPointGameobjectActivity(bool isActive = false)
@@ -181,8 +181,6 @@ public class ShootController : BaseShootController, IEndGame
         if (_shootPoint.gameObject.activeInHierarchy != isActive && _isGameplayAnnounced)
             _shootPoint.gameObject.SetActive(isActive);
     }
-
-    protected virtual void SetControllerButtonsVisiblity(bool isActive) => GameSceneObjectsReferences.Controllers.ControlButtonsVisibility(!isActive);
 
     protected virtual void OnMovementDirectionValue(float direction)
     {
