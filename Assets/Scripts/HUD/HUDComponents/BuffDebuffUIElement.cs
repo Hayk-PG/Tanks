@@ -71,7 +71,7 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
 
     private void OnTurnController(TurnState turnState)
     {
-        if(GameSceneObjectsReferences.TurnController.TurnCyclesCount > _activeDurationTime)
+        if(GameSceneObjectsReferences.TurnController.TurnCyclesCount >= _activeDurationTime)
         {
             ManageTurnControllerSubscribtion(false);
 

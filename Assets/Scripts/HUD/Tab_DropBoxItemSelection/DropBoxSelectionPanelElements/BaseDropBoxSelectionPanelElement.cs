@@ -13,15 +13,9 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
 
 
 
-    protected virtual void OnEnable()
-    {
-        _btnDropBoxSelectionPanelElement.Btn.onSelect += OnSelect;
-    }
+    protected virtual void OnEnable() => _btnDropBoxSelectionPanelElement.Btn.onSelect += OnSelect;
 
-    protected virtual void OnDisable()
-    {
-        _btnDropBoxSelectionPanelElement.Btn.onSelect -= OnSelect;
-    }
+    protected virtual void OnDisable() => _btnDropBoxSelectionPanelElement.Btn.onSelect -= OnSelect;
 
     public virtual void Activate()
     {

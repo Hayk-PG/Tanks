@@ -92,10 +92,7 @@ public class ScoreController : MonoBehaviour, IScore
             GetScore(150, null);
     }
 
-    private void OnTornado(object[] data)
-    {
-        ReceiveTornadoScore(data);
-    }
+    private void OnTornado(object[] data) => ReceiveTornadoScore(data);
 
     private void OnTornado(EventData data)
     {
@@ -109,10 +106,7 @@ public class ScoreController : MonoBehaviour, IScore
             UpdateScore(-ammoTypeButton._properties.Price, 0);    
     }
 
-    private void OnSupportOrPropsChanged(AmmoTypeButton supportOrPropsTypeButton)
-    {
-        UpdateScore(-supportOrPropsTypeButton._properties.Price, 0);
-    }
+    private void OnSupportOrPropsChanged(AmmoTypeButton supportOrPropsTypeButton) => UpdateScore(-supportOrPropsTypeButton._properties.Price, 0);
 
     public void GetScore(int score, IDamage iDamage)
     {
@@ -125,13 +119,16 @@ public class ScoreController : MonoBehaviour, IScore
             return;
 
         int sc = IsXpBoost && score > 0 ? score * 2 : score;
+        int multipliedScore = sc > 0 ? sc * _scoreMultiplier : sc;
 
-        Score += sc * _scoreMultiplier; 
+        print($"sc: {sc} / multipliedScore: {multipliedScore}");
 
-        if (sc > 0)
-            MainScore += sc;
+        Score += multipliedScore;
 
-        onDisplayPlayerScore?.Invoke(sc, waitForSeconds);
+        if (multipliedScore > 0)
+            MainScore += multipliedScore;
+
+        onDisplayPlayerScore?.Invoke(multipliedScore, waitForSeconds);
 
         OnPlayerGetsPoints?.Invoke(Score);
     }
@@ -139,9 +136,7 @@ public class ScoreController : MonoBehaviour, IScore
     public void HitEnemyAndGetScore(int[] scores, IDamage enemyDamage)
     {
         if (enemyDamage != IDamage)
-        {
             OnHitEnemy?.Invoke(scores);
-        }
     }
 
     private void OnGetScoreFromTerOccInd() => UpdateScore(100, 0.5f);

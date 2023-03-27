@@ -43,7 +43,7 @@ public class OfflinePlayerXpMultiplier: PlayerDropBoxObserver
 
     protected override void OnTurnController(TurnState turnState)
     {
-        if(Quantity >= GameSceneObjectsReferences.TurnController.TurnCyclesCount)
+        if(GameSceneObjectsReferences.TurnController.TurnCyclesCount >= Quantity)
         {
             ManageTurnControllerSubscription(false);
 
