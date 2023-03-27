@@ -10,15 +10,19 @@ public class ScoreController : MonoBehaviour, IScore
     private ScoreFromTerOccIndController _scoreFromTerOccIndController;
 
     private int _score;
+    private int _scoreMultiplier = 1;
 
     public IDamage IDamage { get; set; }
+
     public PlayerTurn PlayerTurn { get; set; }
+
     public int Score
     {
         get => _score;
         set => _score = value;
     }
     public int MainScore { get; set; }
+
     public bool IsXpBoost { get; set; }
 
     public event Action<int, float> onDisplayPlayerScore;
@@ -52,8 +56,6 @@ public class ScoreController : MonoBehaviour, IScore
         else
             PhotonNetwork.NetworkingClient.EventReceived += OnTornado;
 
-        GameSceneObjectsReferences.DropBoxSelectionPanelDoubleXp.onDoubleXp += GetScoreFromDropBoxPanel;
-
         GameSceneObjectsReferences.DropBoxSelectionPanelScores.onScores += (scores) => { GetScore(scores, null); };
     }
 
@@ -70,8 +72,6 @@ public class ScoreController : MonoBehaviour, IScore
             GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado -= OnTornado;
         else
             PhotonNetwork.NetworkingClient.EventReceived -= OnTornado;
-
-        GameSceneObjectsReferences.DropBoxSelectionPanelDoubleXp.onDoubleXp -= GetScoreFromDropBoxPanel;
 
         GameSceneObjectsReferences.DropBoxSelectionPanelScores.onScores -= (scores) => { GetScore(scores, null); };
     }
@@ -126,7 +126,7 @@ public class ScoreController : MonoBehaviour, IScore
 
         int sc = IsXpBoost && score > 0 ? score * 2 : score;
 
-        Score += sc;
+        Score += sc * _scoreMultiplier; 
 
         if (sc > 0)
             MainScore += sc;
@@ -145,6 +145,8 @@ public class ScoreController : MonoBehaviour, IScore
     }
 
     private void OnGetScoreFromTerOccInd() => UpdateScore(100, 0.5f);
+
+    public void SetScoreMultiplier(int value) => _scoreMultiplier = value;
 
     public void GetScoreFromDropBoxPanel(int multiplier)
     {
