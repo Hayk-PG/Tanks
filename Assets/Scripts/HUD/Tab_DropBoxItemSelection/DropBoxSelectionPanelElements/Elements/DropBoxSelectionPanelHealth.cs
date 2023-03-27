@@ -11,6 +11,6 @@ public class DropBoxSelectionPanelHealth : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        onUpdateHealth?.Invoke(-_price, _health);
+        onUpdateHealth?.Invoke(NegativePrice, _health);
     }
 }

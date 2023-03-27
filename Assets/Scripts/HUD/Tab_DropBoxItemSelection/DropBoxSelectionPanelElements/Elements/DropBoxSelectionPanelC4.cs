@@ -9,7 +9,7 @@ public class DropBoxSelectionPanelC4 : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        onC4?.Invoke(MinePosition, -_price);
+        onC4?.Invoke(MinePosition, NegativePrice);
 
         CanUse = false;
     }

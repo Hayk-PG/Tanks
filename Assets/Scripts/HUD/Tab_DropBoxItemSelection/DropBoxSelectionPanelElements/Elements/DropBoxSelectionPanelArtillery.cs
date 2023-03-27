@@ -11,7 +11,7 @@ public class DropBoxSelectionPanelArtillery : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        onArtillery?.Invoke(_shellsSpreadValue, -_price, _quantity);
+        onArtillery?.Invoke(_shellsSpreadValue, NegativePrice, _quantity);
 
         CanUse = false;
     }

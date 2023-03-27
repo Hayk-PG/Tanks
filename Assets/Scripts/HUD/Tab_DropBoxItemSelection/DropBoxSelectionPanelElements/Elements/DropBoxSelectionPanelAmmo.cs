@@ -6,6 +6,6 @@ public class DropBoxSelectionPanelAmmo : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        onAmmo?.Invoke(-_price);
+        onAmmo?.Invoke(NegativePrice);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 
-public enum DropBoxItemType { Xp2, Xp3 }
+public enum DropBoxItemType { Xp2, Xp3, Ammo }
 
 public class DropBoxSelectionHandler : MonoBehaviour
 {

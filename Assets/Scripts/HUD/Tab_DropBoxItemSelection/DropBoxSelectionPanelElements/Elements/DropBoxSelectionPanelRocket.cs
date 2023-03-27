@@ -22,7 +22,7 @@ public class DropBoxSelectionPanelRocket : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        onRocket?.Invoke(Weapon, Id, -_price);
+        onRocket?.Invoke(Weapon, Id, NegativePrice);
 
         CanUse = false;
     }

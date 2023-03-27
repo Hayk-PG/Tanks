@@ -9,6 +9,14 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
     [SerializeField] [Space]
     protected int _price, _quantity;
 
+    protected virtual int NegativePrice
+    {
+        get
+        {
+            return _price > 0 ? -_price : _price;
+        }
+    }
+
     protected virtual bool CanUse { get; set; } = true;
 
 

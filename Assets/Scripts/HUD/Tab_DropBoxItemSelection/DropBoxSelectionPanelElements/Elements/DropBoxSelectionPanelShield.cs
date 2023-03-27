@@ -6,7 +6,7 @@ public class DropBoxSelectionPanelShield : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        onShield?.Invoke(-_price);
+        onShield?.Invoke(NegativePrice);
 
         CanUse = false;
     }
