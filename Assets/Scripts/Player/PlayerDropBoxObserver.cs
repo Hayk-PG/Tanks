@@ -9,9 +9,10 @@ public abstract class PlayerDropBoxObserver : MonoBehaviour
 
     protected abstract int Price { get; set; }
     protected abstract int Quantity { get; set; }
-    protected abstract int PlayerIndex { get; set; }
 
     protected abstract bool IsAllowed { get; set; }
+
+    protected abstract TurnState PlayerTurnState { get; set; }
 
 
 

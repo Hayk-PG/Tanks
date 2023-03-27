@@ -6,18 +6,21 @@ public class OfflinePlayerXpMultiplier: PlayerDropBoxObserver
 {
     protected override int Price { get; set; }
     protected override int Quantity { get; set; }
-    protected override int PlayerIndex { get; set; }
 
     protected int XpMultiplier { get; set; }
 
     protected override bool IsAllowed { get; set; }
+
+    protected override TurnState PlayerTurnState { get; set; }
+
+
 
 
     protected override void OnItemSelect(DropBoxItemType dropBoxItemType, object[] data)
     {
         IsAllowed = dropBoxItemType == DropBoxItemType.Xp2 || dropBoxItemType == DropBoxItemType.Xp3;
 
-        if (!IsAllowed)
+        if (IsAllowed)
             Execute(data);
     }
 
@@ -26,13 +29,14 @@ public class OfflinePlayerXpMultiplier: PlayerDropBoxObserver
         Price = (int)data[0];
         Quantity = (int)data[1] + GameSceneObjectsReferences.TurnController.TurnCyclesCount;
         XpMultiplier = (int)data[2];
-        PlayerIndex = _playerTankController.OwnTank.gameObject.name == Names.Tank_FirstPlayer ? 0 : 1;
+
+        PlayerTurnState = _playerTankController.OwnTank.gameObject.name == Names.Tank_FirstPlayer ? TurnState.Player1 : TurnState.Player2;
 
         SetPlayerScoreMultiplier(XpMultiplier);
 
         ManageTurnControllerSubscription(true);
 
-        BuffDebuffHandler.RaiseEvent(XpMultiplier <= 2 ? BuffDebuffType.Xp2 : BuffDebuffType.Xp3, PlayerIndex, new object[] { Quantity });
+        BuffDebuffHandler.RaiseEvent(XpMultiplier <= 2 ? BuffDebuffType.Xp2 : BuffDebuffType.Xp3, PlayerTurnState, new object[] { Quantity });
     }
 
     protected void SetPlayerScoreMultiplier(int xpMultiplier) => _playerTankController._scoreController.SetScoreMultiplier(xpMultiplier);

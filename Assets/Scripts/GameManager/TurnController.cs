@@ -68,11 +68,7 @@ public class TurnController : MonoBehaviourPun
     private void CalculateTurnCycles(TurnState turnState)
     {
         if (turnState == TurnState.Player1 || turnState == TurnState.Player2)
-        {
             TurnCyclesCount++;
-
-            GlobalFunctions.DebugLog($"TurnCyclesCount: {TurnCyclesCount}");
-        }
     }
 
     [PunRPC]
