@@ -1,10 +1,11 @@
 using UnityEngine;
 using System;
 
+
+public enum DropBoxItemType { Xp2, Xp3 }
+
 public class DropBoxSelectionHandler : MonoBehaviour
 {
-    public enum DropBoxItemType { XpMultiplier }
-
     public static event Action<DropBoxItemType, object[]> onItemSelect;
 
     public static  void RaiseEvent(DropBoxItemType dropBoxItemType, object[] data)

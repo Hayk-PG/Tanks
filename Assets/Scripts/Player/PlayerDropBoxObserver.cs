@@ -5,27 +5,36 @@ public abstract class PlayerDropBoxObserver : MonoBehaviour
     [SerializeField]
     protected BasePlayerTankController<BasePlayer> _playerTankController;
 
-    protected bool _isAllowed;
+    protected bool _isSubscribed;
 
-    protected int _activeTurnsCount;
+    protected abstract int Price { get; set; }
+    protected abstract int Quantity { get; set; }
+    protected abstract int PlayerIndex { get; set; }
+
+    protected abstract bool IsAllowed { get; set; }
 
 
 
-    protected virtual void OnEnable()
+    protected virtual void OnEnable() => DropBoxSelectionHandler.onItemSelect += OnItemSelect;
+
+    protected virtual void OnDisable() => DropBoxSelectionHandler.onItemSelect -= OnItemSelect;
+
+    protected abstract void OnItemSelect(DropBoxItemType dropBoxItemType, object[] data);
+
+    protected virtual void ManageTurnControllerSubscription(bool isSubscribing)
     {
-        DropBoxSelectionHandler.onItemSelect += OnItemSelect;
+        if (isSubscribing && _isSubscribed)
+            return;
 
-        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnController;
+        if (isSubscribing)
+            GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnController;
+        else
+            GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnController;
+
+        _isSubscribed = isSubscribing;
     }
 
-    protected virtual void OnDisable()
-    {
-        DropBoxSelectionHandler.onItemSelect -= OnItemSelect;
-
-        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnController;
-    }
-
-    protected abstract void OnItemSelect(DropBoxSelectionHandler.DropBoxItemType dropBoxItemType, object[] data);
+    protected abstract void Execute(object[] data);
 
     protected abstract void OnTurnController(TurnState turnState);
 }
