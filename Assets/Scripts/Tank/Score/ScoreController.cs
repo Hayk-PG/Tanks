@@ -121,8 +121,6 @@ public class ScoreController : MonoBehaviour, IScore
         int sc = IsXpBoost && score > 0 ? score * 2 : score;
         int multipliedScore = sc > 0 ? sc * _scoreMultiplier : sc;
 
-        print($"sc: {sc} / multipliedScore: {multipliedScore}");
-
         Score += multipliedScore;
 
         if (multipliedScore > 0)
