@@ -30,7 +30,7 @@ public abstract class PlayerDropBoxObserver : MonoBehaviour
         if (isSubscribing)
             GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnController;
         else
-            GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnController;
+            GameSceneObjectsReferences.TurnController.OnTurnChanged -= OnTurnController;
 
         _isSubscribed = isSubscribing;
     }

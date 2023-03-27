@@ -75,6 +75,8 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
         {
             ManageTurnControllerSubscribtion(false);
 
+            gameObject.SetActive(false);
+
             return;
         }
 
