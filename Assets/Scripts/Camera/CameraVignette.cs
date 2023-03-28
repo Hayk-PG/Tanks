@@ -1,37 +1,55 @@
 using System.Collections;
 using UnityEngine;
 
-public class CameraVignette : BaseCameraFX, IEndGame
+public class CameraVignette : BasePlayerDependentCameraEffects<HealthController>, IEndGame
 {
-    [SerializeField]
-    protected PlayerDamageCameraFX _playerDamageCameraFX;
+    private float _defaultIntensity, _previousIntensity, _currentIntensity, _vignetteTargetIntensity;
 
-    private float _dmg;
+    private bool? _isIncrementing;
 
 
-    private void OnEnable() => _playerDamageCameraFX.onDamageFX += OnDamage;
 
-    private void OnDisable() => _playerDamageCameraFX.onDamageFX -= OnDamage;
 
-    private void OnDamage(int damage)
+    private void Awake()
     {
-        _dmg += damage;
-
-        StartCoroutine(ChangeAmount((_dmg / 100) / 1.2f <= 0.12f ? 0.12f : (_dmg / 100) / 1.2f, -5));
+        _defaultIntensity = 0.12f;
+        _previousIntensity = 100;
     }
 
-    private IEnumerator ChangeAmount(float targetValue, float lerp)
+    protected override void Execute()
     {
-        float defaultValue = targetValue;
+        ModifyVignetteIntensity(_t.Health);
 
-        yield return StartCoroutine(RunCalculation(defaultValue, lerp));
-
-        _pp.VignetteAmount = defaultValue;
+        _t.OnUpdateHealthBar += ModifyVignetteIntensity;
     }
 
-    private IEnumerator RunCalculation(float defaultValue, float lerp)
+    private void ModifyVignetteIntensity(int value)
     {
-        while (_pp.VignetteAmount > defaultValue)
+        _previousIntensity = _currentIntensity;
+        _currentIntensity = value;
+        _vignetteTargetIntensity = _defaultIntensity + (1 - (_currentIntensity / 100));
+
+        _isIncrementing = _currentIntensity < _previousIntensity ? true : _currentIntensity > _previousIntensity ? false : null;
+
+        StartCoroutine(UpdateVignetteIntensity(_isIncrementing, _vignetteTargetIntensity, 3));
+    }
+
+    private IEnumerator UpdateVignetteIntensity(bool? isIncrementing, float targetValue, float lerp)
+    {
+        if (isIncrementing == null)
+            yield break;
+
+        if (isIncrementing.Value)
+            yield return StartCoroutine(RunIncrement(targetValue, lerp));
+        else
+            yield return StartCoroutine(RunDecrement(targetValue, lerp));
+
+        _pp.VignetteAmount = targetValue;
+    }
+
+    private IEnumerator RunIncrement(float targetValue, float lerp)
+    {
+        while (_pp.VignetteAmount < targetValue)
         {
             _pp.VignetteAmount += lerp * Time.deltaTime;
 
@@ -39,13 +57,20 @@ public class CameraVignette : BaseCameraFX, IEndGame
         }
     }
 
-    public void OnGameEnd(object[] data = null)
+    private IEnumerator RunDecrement(float targetValue, float lerp)
     {
-        _pp.Vignette = false;
+        while (_pp.VignetteAmount > targetValue)
+        {
+            _pp.VignetteAmount -= lerp * Time.deltaTime;
+
+            yield return null;
+        }
     }
+
+    public void OnGameEnd(object[] data = null) => _pp.Vignette = false;
 
     public void WrapUpGame(object[] data = null)
     {
-        
+
     }
 }

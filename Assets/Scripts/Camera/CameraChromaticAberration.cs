@@ -9,12 +9,14 @@ public class CameraChromaticAberration : BaseCameraFX
     public void CameraGlitchFX(float duration)
     {
         CoroutineStop();
+
         CoroutineStart(duration);
     }
 
     private void CoroutineStart(float duration)
     {
         _coroutine = Coroutine(duration);
+
         StartCoroutine(_coroutine);
     }
 
@@ -23,6 +25,7 @@ public class CameraChromaticAberration : BaseCameraFX
         if (_coroutine != null)
         {
             StopCoroutine(_coroutine);
+
             _coroutine = null;
         }
     }
@@ -30,7 +33,9 @@ public class CameraChromaticAberration : BaseCameraFX
     private IEnumerator Coroutine(float duration)
     {
         ChromaticAberration(true);
+
         yield return new WaitForSeconds(duration);
+
         ChromaticAberration(false);
     }
 
