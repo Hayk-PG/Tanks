@@ -10,7 +10,11 @@ public class DropBoxSelectionPanelXpMultiplier : BaseDropBoxSelectionPanelElemen
 
     protected override void Use()
     {
-        DropBoxSelectionHandler.RaiseEvent(_multiplier <= 2 ? DropBoxItemType.Xp2: DropBoxItemType.Xp3, new object[] { NegativePrice, _quantity, _multiplier });
+        _data[0] = NegativePrice;
+        _data[1] = _quantity;
+        _data[2] = _multiplier;
+
+        DropBoxSelectionHandler.RaiseEvent(_multiplier <= 2 ? DropBoxItemType.Xp2: DropBoxItemType.Xp3, _data);
 
         CanUse = false;
     }

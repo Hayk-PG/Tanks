@@ -1,5 +1,10 @@
 
 public class DropBoxSelectionPanelAmmo : BaseDropBoxSelectionPanelElement
 {
-    protected override void Use() => DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Ammo, new object[] { NegativePrice });
+    protected override void Use()
+    {
+        _data[0] = NegativePrice;
+
+        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Ammo, _data);
+    }
 }

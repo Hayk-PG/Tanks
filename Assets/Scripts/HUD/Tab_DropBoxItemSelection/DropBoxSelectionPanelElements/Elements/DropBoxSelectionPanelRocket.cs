@@ -20,7 +20,11 @@ public class DropBoxSelectionPanelRocket : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Rocket, new object[] { Weapon, Id, NegativePrice });
+        _data[0] = Weapon;
+        _data[1] = Id;
+        _data[2] = NegativePrice;
+
+        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Rocket, _data);
 
         CanUse = false;
     }

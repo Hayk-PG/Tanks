@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 
 public class DropBoxSelectionPanelHealth : BaseDropBoxSelectionPanelElement
 {
@@ -7,5 +6,11 @@ public class DropBoxSelectionPanelHealth : BaseDropBoxSelectionPanelElement
     private int _health;
 
 
-    protected override void Use() => DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Health, new object[] { NegativePrice, _health });
+    protected override void Use()
+    {
+        _data[0] = NegativePrice;
+        _data[1] = _health;
+
+        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Health, _data);
+    }
 }
