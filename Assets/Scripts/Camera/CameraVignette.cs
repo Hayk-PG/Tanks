@@ -27,7 +27,7 @@ public class CameraVignette : BasePlayerDependentCameraEffects<HealthController>
     {
         _previousIntensity = _currentIntensity;
         _currentIntensity = value;
-        _vignetteTargetIntensity = _defaultIntensity + (1 - (_currentIntensity / 100));
+        _vignetteTargetIntensity = _defaultIntensity + (1 - (_currentIntensity / 100)) / 100 * 50;
 
         _isIncrementing = _currentIntensity < _previousIntensity ? true : _currentIntensity > _previousIntensity ? false : null;
 
