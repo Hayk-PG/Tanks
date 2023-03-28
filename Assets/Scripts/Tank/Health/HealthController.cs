@@ -62,7 +62,7 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
         ManageShieldActivityEventSubscription(true);
 
-        ManageDropBoxSelectionPanelHealthEventSubscription(true);
+        DropBoxSelectionHandler.onItemSelect += GetHealthFromDropBoxPanel;
     }
 
     private void OnDisable()
@@ -71,7 +71,7 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
         ManageShieldActivityEventSubscription(false);
 
-        ManageDropBoxSelectionPanelHealthEventSubscription(false);
+        DropBoxSelectionHandler.onItemSelect -= GetHealthFromDropBoxPanel;
     }
 
     private void ManageTornadoEventSubscription(bool isSubscribing)
@@ -88,24 +88,6 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
             _playerShields.onShieldActivity += OnShieldActivity;
         else
             _playerShields.onShieldActivity -= OnShieldActivity;
-    }
-
-    private void ManageDropBoxSelectionPanelHealthEventSubscription(bool isSubscribing)
-    {
-        if (isSubscribing)
-        {
-            GlobalFunctions.Loop<DropBoxSelectionPanelHealth>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelHealth, dropBoxSelectionPanelHealth =>
-            {
-                dropBoxSelectionPanelHealth.onUpdateHealth += GetHealthFromDropBoxSelectionPanel;
-            });
-        }
-        else
-        {
-            GlobalFunctions.Loop<DropBoxSelectionPanelHealth>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelHealth, dropBoxSelectionPanelHealth =>
-            {
-                dropBoxSelectionPanelHealth.onUpdateHealth -= GetHealthFromDropBoxSelectionPanel;
-            });
-        }
     }
 
     public void BoostSafeZone(bool isSafeZone) => IsSafeZone = isSafeZone;
@@ -209,28 +191,24 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
     private void ReceiveTornadoDamage(object[] data)
     {
         if ((string)data[0] == name)
-        {
             Damage((int)data[1]);
-        }
     }
 
-    private void OnTornadoDamage(object[] data)
-    {
-        ReceiveTornadoDamage(data);
-    }
+    private void OnTornadoDamage(object[] data) => ReceiveTornadoDamage(data);
 
     private void OnTornadoDamage(EventData data)
     {
         if (data.Code == EventInfo.Code_TornadoDamage)
-        {
             ReceiveTornadoDamage((object[])data.CustomData);
-        }
     }
 
-    private void GetHealthFromDropBoxSelectionPanel(int price, int health)
+    private void GetHealthFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
     {
-        if (_tankController.BasePlayer != null)
+        if(dropBoxItemType == DropBoxItemType.Health && _tankController.BasePlayer != null)
         {
+            int price = (int)data[0];
+            int health = (int)data[1];
+
             if (Health + health <= 100)
                 Health += health;
             else
@@ -246,10 +224,8 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
     public void CameraChromaticAberrationFX()
     {
-        if(_tankController.BasePlayer != null)
-        {
+        if (_tankController.BasePlayer != null)
             FindObjectOfType<CameraChromaticAberration>().CameraGlitchFX(60);
-        }
     }
 
     private void OnShieldActivity(bool isActive)

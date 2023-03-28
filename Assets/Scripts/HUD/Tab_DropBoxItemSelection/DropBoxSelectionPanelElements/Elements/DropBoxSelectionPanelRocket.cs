@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 
 public class DropBoxSelectionPanelRocket : BaseDropBoxSelectionPanelElement
 {
@@ -10,7 +9,6 @@ public class DropBoxSelectionPanelRocket : BaseDropBoxSelectionPanelElement
 
     public int Id { get; private set; }
 
-    public event Action<WeaponProperties, int, int> onRocket;
 
 
     private void Awake()
@@ -22,7 +20,7 @@ public class DropBoxSelectionPanelRocket : BaseDropBoxSelectionPanelElement
 
     protected override void Use()
     {
-        onRocket?.Invoke(Weapon, Id, NegativePrice);
+        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Rocket, new object[] { Weapon, Id, NegativePrice });
 
         CanUse = false;
     }

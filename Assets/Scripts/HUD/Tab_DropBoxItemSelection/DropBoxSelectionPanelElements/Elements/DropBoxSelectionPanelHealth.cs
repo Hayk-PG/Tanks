@@ -6,11 +6,6 @@ public class DropBoxSelectionPanelHealth : BaseDropBoxSelectionPanelElement
     [SerializeField] [Space]
     private int _health;
 
-    public event Action<int, int> onUpdateHealth;
 
-
-    protected override void Use()
-    {
-        onUpdateHealth?.Invoke(NegativePrice, _health);
-    }
+    protected override void Use() => DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Health, new object[] { NegativePrice, _health });
 }

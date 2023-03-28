@@ -49,26 +49,20 @@ public class PlayerAmmoType : MonoBehaviour
     {
         _tankController.OnInitialize += OnInitialize;
 
-        GameSceneObjectsReferences.DropBoxSelectionPanelAmmo.onAmmo += UpdateAmmoFromDropBoxPanel;
+        DropBoxSelectionHandler.onItemSelect += AddWeaponFromDropBoxPanel;
 
-        GlobalFunctions.Loop<DropBoxSelectionPanelRocket>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelRockets, rocket =>
-        {
-            rocket.onRocket += delegate (WeaponProperties weaponProperties, int id, int price) { AddWeapon(weaponProperties, price); };
-        });
+        DropBoxSelectionHandler.onItemSelect += UpdateAmmoFromDropBoxPanel;
     }
-   
+
     private void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
 
         GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
 
-        GameSceneObjectsReferences.DropBoxSelectionPanelAmmo.onAmmo -= UpdateAmmoFromDropBoxPanel;
+        DropBoxSelectionHandler.onItemSelect -= AddWeaponFromDropBoxPanel;
 
-        GlobalFunctions.Loop<DropBoxSelectionPanelRocket>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelRockets, rocket =>
-        {
-            rocket.onRocket -= delegate (WeaponProperties weaponProperties, int id, int price) { AddWeapon(weaponProperties, price); };
-        });
+        DropBoxSelectionHandler.onItemSelect -= UpdateAmmoFromDropBoxPanel;
     }
 
     private void OnInitialize()
@@ -174,33 +168,40 @@ public class PlayerAmmoType : MonoBehaviour
             GameSceneObjectsReferences.AmmoTabCustomization.SetDefaultAmmo(null);
     }
 
-    public void AddWeapon(WeaponProperties weaponProperties, int price = 0)
+    public void AddWeaponFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
     {
-        if (_tankController.BasePlayer == null)
-            return;
+        if(dropBoxItemType == DropBoxItemType.Rocket && _tankController.BasePlayer != null)
+        {
+            WeaponProperties newWeapon = (WeaponProperties)data[0];
 
-        WeaponProperties[] weaponsTempCollection = new WeaponProperties[_weapons.Length + 1];
+            int id = (int)data[1];
+            int price = (int)data[2];
 
-        for (int i = 0; i < _weapons.Length; i++)
-            weaponsTempCollection[i] = _weapons[i];
+            WeaponProperties[] weaponsTempCollection = new WeaponProperties[_weapons.Length + 1];
 
-        weaponsTempCollection[weaponsTempCollection.Length - 1] = weaponProperties;
+            for (int i = 0; i < _weapons.Length; i++)
+                weaponsTempCollection[i] = _weapons[i];
 
-        _weapons = weaponsTempCollection;
+            weaponsTempCollection[weaponsTempCollection.Length - 1] = newWeapon;
 
-        _weaponsBulletsCount.Add(weaponProperties._value);
+            _weapons = weaponsTempCollection;
 
-        _scoreController.GetScore(price, null);
+            _weaponsBulletsCount.Add(newWeapon._value);
 
-        GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(weaponProperties, 1);
+            _scoreController.GetScore(price, null);
 
-        GameSceneObjectsReferences.AmmoTabButtonNotification.NewAvailableWeaponNotificationHolder();
+            GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(newWeapon, 1);
+
+            GameSceneObjectsReferences.AmmoTabButtonNotification.NewAvailableWeaponNotificationHolder();
+        }
     }
 
-    private void UpdateAmmoFromDropBoxPanel(int price)
+    private void UpdateAmmoFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
     {
-        if (_tankController.BasePlayer != null)
+        if (dropBoxItemType == DropBoxItemType.Ammo && _tankController.BasePlayer != null)
         {
+            int price = (int)data[0];
+
             for (int i = 0; i < _defaultWeaponsLength; i++)
                 _weaponsBulletsCount[i] += UnityEngine.Random.Range(0, 10);
 
