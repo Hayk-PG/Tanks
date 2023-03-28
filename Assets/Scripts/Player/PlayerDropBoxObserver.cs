@@ -7,6 +7,8 @@ public abstract class PlayerDropBoxObserver : MonoBehaviour
 
     protected bool _isSubscribed;
 
+    protected object[] _data = new object[10];
+
     protected abstract int Price { get; set; }
     protected abstract int Quantity { get; set; }
 
