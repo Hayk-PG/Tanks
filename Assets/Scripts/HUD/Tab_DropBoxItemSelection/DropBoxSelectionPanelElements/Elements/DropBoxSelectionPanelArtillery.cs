@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 
@@ -7,11 +6,14 @@ public class DropBoxSelectionPanelArtillery : BaseDropBoxSelectionPanelElement
     [SerializeField] [Space]
     private float _shellsSpreadValue;
 
-    public event Action<float, int, int> onArtillery;
 
     protected override void Use()
     {
-        onArtillery?.Invoke(_shellsSpreadValue, NegativePrice, _quantity);
+        _data[0] = _shellsSpreadValue;
+        _data[1] = NegativePrice;
+        _data[2] = _quantity;
+
+        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Artillery, _data);
 
         CanUse = false;
     }

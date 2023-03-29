@@ -3,38 +3,35 @@ using UnityEngine;
 
 public class OfflinePlayerArtilleryCaller : OfflinePlayerBomberCaller
 {
-    protected override void OnEnable()
+    protected override bool IsAllowed(BaseRemoteControlTarget.Mode mode)
     {
-        GameSceneObjectsReferences.BaseRemoteControlTarget.onArtilleryTargetSet += OnRemoteControlTargetSet;
+        return mode == BaseRemoteControlTarget.Mode.Artillery;
     }
 
-    protected override void OnDisable()
-    {
-        GameSceneObjectsReferences.BaseRemoteControlTarget.onArtilleryTargetSet -= OnRemoteControlTargetSet;
-    }
-
-    protected override IEnumerator Execute(IEnumerator waitUntil, object[] targetData)
+    protected override IEnumerator Execute(IEnumerator waitUntil, object[] data)
     {
         yield return StartCoroutine(waitUntil);
 
-        DeductScores((int)targetData[1]);
+        DeductScores((int)data[1]);
 
-        CallArtillery(targetData);
+        CallArtillery(data);
     }
 
-    protected virtual void CallArtillery(object[] targetData)
+    protected virtual void CallArtillery(object[] data)
     {
-        GameSceneObjectsReferences.ArtillerySupport.Call(Data(targetData));
+        GameSceneObjectsReferences.ArtillerySupport.Call(Data(data));
     }
 
-    protected virtual object[] Data(object[] targetData)
+    protected virtual object[] Data(object[] data)
     {
         return new object[]
         {
             _playerTankController._playerTurn,
             _playerTankController._iScore,
-            RandomShellSpreadValues((int)targetData[2], (float)targetData[0]),
-            (Vector3)targetData[3]
+
+            RandomShellSpreadValues((int)data[2], (float)data[0]),
+
+            (Vector3)data[3]
         };
     }
 

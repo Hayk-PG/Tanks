@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 {
-    private enum Mode { None, Bomber, Artillery}
+    public enum Mode { None, Bomber, Artillery}
     private Mode _mode;
 
     [SerializeField] [Space]
@@ -30,26 +30,14 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
     public event Action<bool> onRemoteControlActivity;
 
-    public event Action<object[]> onBomberTargetSet;
-    public event Action<object[]> onArtilleryTargetSet;
+    public event Action<Mode, object[]> onRemoteControlTarget;
 
 
 
 
+    private void OnEnable() => DropBoxSelectionHandler.onItemSelect += OnItemSelect;
 
-    private void OnEnable()
-    {
-        GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber += OnSelectBomber; });
-
-        GlobalFunctions.Loop<DropBoxSelectionPanelArtillery>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelArtillery, selectArtillery => { selectArtillery.onArtillery += OnSelectArtillery; });
-    }
-
-    private void OnDisable()
-    {
-        GlobalFunctions.Loop<DropBoxSelectionPanelBomber>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelBombers, selectedBobmer => { selectedBobmer.onCallBomber -= OnSelectBomber; });
-
-        GlobalFunctions.Loop<DropBoxSelectionPanelArtillery>.Foreach(GameSceneObjectsReferences.DropBoxSelectionPanelArtillery, selectArtillery => { selectArtillery.onArtillery += OnSelectArtillery; });
-    }
+    private void OnDisable() => DropBoxSelectionHandler.onItemSelect -= OnItemSelect;
 
     protected virtual void Update()
     {
@@ -58,24 +46,20 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
         PlayAnimation();
     }
 
-    private void OnSelectBomber(BomberType bomberType, int price, int quantity)
+    private void OnItemSelect(DropBoxItemType dropBoxItemType, object[] data)
     {
-        _data[0] = bomberType;
-        _data[1] = price;
-        _data[2] = quantity;
+        if (dropBoxItemType == DropBoxItemType.Bomber)
+            OnSelectMode(Mode.Bomber, data);
 
-        SetMode(Mode.Bomber);
-
-        SetActivity(true);
+        if (dropBoxItemType == DropBoxItemType.Artillery)
+            OnSelectMode(Mode.Artillery, data);
     }
 
-    private void OnSelectArtillery(float _shellsSpreadValue, int price, int quantity)
+    private void OnSelectMode(Mode mode, object[] data)
     {
-        _data[0] = _shellsSpreadValue;
-        _data[1] = price;
-        _data[2] = quantity;
+        _data = data;
 
-        SetMode(Mode.Artillery);
+        SetMode(mode);
 
         SetActivity(true);
     }
@@ -155,9 +139,7 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
         if (_mode == Mode.None)
             return;
-        else if (_mode == Mode.Bomber)
-            onBomberTargetSet?.Invoke(_data);
-        else
-            onArtilleryTargetSet?.Invoke(_data);
+
+        onRemoteControlTarget?.Invoke(_mode, _data);
     }
 }

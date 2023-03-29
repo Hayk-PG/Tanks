@@ -6,8 +6,12 @@ public class PhotonPlayerArtilleryCaller : OfflinePlayerArtilleryCaller
     [SerializeField] [Space]
     private PhotonPlayerController _photonPlayerController;
 
-    protected override bool IsAllowed => _playerTankController?.OwnTank.BasePlayer != null;
 
+
+    protected override bool IsAllowed(BaseRemoteControlTarget.Mode mode)
+    {
+        return mode == BaseRemoteControlTarget.Mode.Artillery && _playerTankController?.OwnTank.BasePlayer != null;
+    }
 
     protected override void CallArtillery(object[] targetData)
     {

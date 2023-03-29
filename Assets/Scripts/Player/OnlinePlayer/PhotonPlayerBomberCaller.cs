@@ -6,9 +6,12 @@ public class PhotonPlayerBomberCaller : OfflinePlayerBomberCaller
     [SerializeField] [Space]
     private PhotonPlayerController _photonPlayerController;
 
-    protected override bool IsAllowed => _playerTankController?.OwnTank.BasePlayer != null;
 
 
+    protected override bool IsAllowed(BaseRemoteControlTarget.Mode mode)
+    {
+        return mode == BaseRemoteControlTarget.Mode.Bomber && _playerTankController?.OwnTank.BasePlayer != null;
+    }
 
     protected override void CallBomber(BomberType bomberType, Vector3 dropPosition)
     {

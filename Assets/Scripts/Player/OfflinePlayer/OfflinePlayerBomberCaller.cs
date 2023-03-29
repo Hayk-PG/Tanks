@@ -6,35 +6,32 @@ public class OfflinePlayerBomberCaller : MonoBehaviour
     [SerializeField]
     protected BasePlayerTankController<BasePlayer> _playerTankController;
 
-    protected virtual bool IsAllowed { get; } = true;
 
 
+    protected virtual void OnEnable() => GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlTarget += OnRemoteControlTarget;
 
-    protected virtual void OnEnable()
+    protected virtual void OnDisable() => GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlTarget -= OnRemoteControlTarget;
+
+    protected virtual void OnRemoteControlTarget(BaseRemoteControlTarget.Mode mode, object[] data)
     {
-        GameSceneObjectsReferences.BaseRemoteControlTarget.onBomberTargetSet += OnRemoteControlTargetSet;
-    }
-
-    protected virtual void OnDisable()
-    {
-        GameSceneObjectsReferences.BaseRemoteControlTarget.onBomberTargetSet -= OnRemoteControlTargetSet;
-    }
-
-    protected virtual void OnRemoteControlTargetSet(object[] targetData)
-    {
-        if (!IsAllowed)
+        if (!IsAllowed(mode))
             return;
 
-        StartCoroutine(Execute(WaitUntil(), targetData));
+        StartCoroutine(Execute(WaitUntil(), data));
     }
 
-    protected virtual IEnumerator Execute(IEnumerator waitUntil, object[] targetData)
+    protected virtual bool IsAllowed(BaseRemoteControlTarget.Mode mode)
+    {
+        return mode == BaseRemoteControlTarget.Mode.Bomber;
+    }
+
+    protected virtual IEnumerator Execute(IEnumerator waitUntil, object[] data)
     {
         yield return StartCoroutine(waitUntil);
 
-        DeductScores((int)targetData[1]);
+        DeductScores((int)data[1]);
 
-        CallBomber((BomberType)targetData[0], (Vector3)targetData[3]);
+        CallBomber((BomberType)data[0], (Vector3)data[3]);
     }
 
     protected virtual IEnumerator WaitUntil()
