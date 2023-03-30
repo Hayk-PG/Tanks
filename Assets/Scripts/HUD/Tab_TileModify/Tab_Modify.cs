@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Tab_Modify : MonoBehaviour, IHudTabsObserver
+public class Tab_Modify : MonoBehaviour, IHudTabsObserver, IEndGame
 {
     [SerializeField] 
     private CanvasGroup _canvasGroup;
@@ -93,5 +93,12 @@ public class Tab_Modify : MonoBehaviour, IHudTabsObserver
 
             _isTabOpen = false;
         }
+    }
+
+    public void OnGameEnd(object[] data = null) => Execute(false);
+
+    public void WrapUpGame(object[] data = null)
+    {
+        
     }
 }

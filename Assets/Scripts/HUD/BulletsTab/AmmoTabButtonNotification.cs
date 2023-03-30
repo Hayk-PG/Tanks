@@ -25,8 +25,6 @@ public class AmmoTabButtonNotification : MonoBehaviour
     // NewAvailableWeaponNotificationHolder is used for public access to OnNewAvailableWeaponNotification
     public Action NewAvailableWeaponNotificationHolder => OnNewAvailableWeaponNotification;
 
-    public Action OnNewAwailableWeaponNotification { get; set; }
-
     public Action<List<AmmoTypeButton>, bool> OnDisplayAvailableWeapons { get; set; }
 
 
@@ -95,7 +93,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
     {
         OnNotificationIcon(true && !_isAmmoTabOpen);
 
-        OnNewAwailableWeaponNotification?.Invoke();
+        UISoundController.PlaySound(7, 0);
     }
 
     private void OnNotificationIcon(bool isActive)
