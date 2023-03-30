@@ -7,8 +7,6 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 {
     private TankController _tankController;
 
-    private ScoreController _scoreController;
-
     private PlayerShields _playerShields;
 
     [SerializeField]
@@ -24,6 +22,7 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
         get => _armor;
         set => _armor = value;
     }
+
     public bool IsShieldActive
     {
         get
@@ -49,8 +48,6 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
     {
         _tankController = Get<TankController>.From(gameObject);
 
-        _scoreController = Get<ScoreController>.From(gameObject);
-
         _playerShields = Get<PlayerShields>.From(gameObject);
 
         Health = 100;
@@ -61,8 +58,6 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
         ManageTornadoEventSubscription(true);
 
         ManageShieldActivityEventSubscription(true);
-
-        DropBoxSelectionHandler.onItemSelect += GetHealthFromDropBoxPanel;
     }
 
     private void OnDisable()
@@ -70,8 +65,6 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
         ManageTornadoEventSubscription(false);
 
         ManageShieldActivityEventSubscription(false);
-
-        DropBoxSelectionHandler.onItemSelect -= GetHealthFromDropBoxPanel;
     }
 
     private void ManageTornadoEventSubscription(bool isSubscribing)
@@ -202,24 +195,16 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
             ReceiveTornadoDamage((object[])data.CustomData);
     }
 
-    private void GetHealthFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
+    public void BoostHealth(int hp)
     {
-        if(dropBoxItemType == DropBoxItemType.Health && _tankController.BasePlayer != null)
-        {
-            int price = (int)data[0];
-            int health = (int)data[1];
+        if (Health + hp <= 100)
+            Health += hp;
+        else
+            Health = 100;
 
-            if (Health + health <= 100)
-                Health += health;
-            else
-                Health = 100;
+        OnUpdateHealthBar?.Invoke(Health);
 
-            _scoreController.GetScore(price, null);
-
-            OnUpdateHealthBar?.Invoke(Health);
-
-            OnTankDamageFire?.Invoke(Health);
-        }
+        OnTankDamageFire?.Invoke(Health);
     }
 
     public void CameraChromaticAberrationFX()
