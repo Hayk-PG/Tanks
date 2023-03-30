@@ -114,17 +114,11 @@ public class PlayerAmmoType : MonoBehaviour
     {
         if(ammoTypeButton._properties._buttonType == ButtonType.Rocket && ammoTypeButton._properties.Quantity > 0)
         {
-            print("Rocket is selected: ");
-
             for (int i = 0; i < GameSceneObjectsReferences.DropBoxSelectionPanelRockets.Length; i++)
             {
-                print(ammoTypeButton._properties.Index + ") " + "Searching the ID...: ");
-
                 if (GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Weapon == _weapons[ammoTypeButton._properties.Index])
                 {
                     int id = GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Id;
-
-                    print("Found ID: " + id);
 
                     RaiseOnRocketSelectedEvent(true, id);
 

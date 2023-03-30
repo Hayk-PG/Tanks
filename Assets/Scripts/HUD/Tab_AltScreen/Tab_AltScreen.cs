@@ -22,11 +22,23 @@ public class Tab_AltScreen : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
 
         PlayAnimation(isActive);
+
+        PlaySoundFx(isActive);
     }
 
-    private void PlayAnimation(bool play)
+    private void PlayAnimation(bool isActive)
     {
-        if (play)
-            _animator.Play("FadeAnim", 0, 0);
+        if (!isActive)
+            return;
+
+        _animator.Play("FadeAnim", 0, 0);
+    }
+
+    private void PlaySoundFx(bool isActive)
+    {
+        if (!isActive)
+            return;
+
+        UISoundController.PlaySound(1, 4);
     }
 }
