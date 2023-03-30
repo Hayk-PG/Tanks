@@ -17,9 +17,9 @@ public class ControlPanelCameraManager : MonoBehaviour
 
     private void Start() => CacheDefaultStates();
 
-    private void OnEnable() => GameSceneObjectsReferences.HudTabsHandler.onRequestTabActivityPermission += OnRocketController;
+    //private void OnEnable() => GameSceneObjectsReferences.HudTabsHandler.onRequestTabActivityPermission += OnRocketController;
 
-    private void OnDisable() => GameSceneObjectsReferences.HudTabsHandler.onRequestTabActivityPermission -= OnRocketController;
+    //private void OnDisable() => GameSceneObjectsReferences.HudTabsHandler.onRequestTabActivityPermission -= OnRocketController;
 
     private void CacheDefaultStates()
     {
@@ -33,7 +33,7 @@ public class ControlPanelCameraManager : MonoBehaviour
 
     private void OnRocketController(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
     {
-        if (requestedTab != HudTabsHandler.HudTab.TabRocketController)
+        if (requestedTab != HudTabsHandler.HudTab.TabRocketController && requestedTab != HudTabsHandler.HudTab.TabModify)
             return;
 
         SetActive(isActive);

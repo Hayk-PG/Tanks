@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Tab_CameraView : MonoBehaviour
+public class Tab_AltScreen : MonoBehaviour
 {
     [SerializeField]
     private CanvasGroup _canvasGroup;
@@ -16,7 +16,7 @@ public class Tab_CameraView : MonoBehaviour
 
     private void HudTabsHandler_onRequestTabActivityPermission(IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive)
     {
-        if (requestedTab != HudTabsHandler.HudTab.TabRocketController)
+        if (requestedTab != HudTabsHandler.HudTab.TabRocketController && requestedTab != HudTabsHandler.HudTab.TabRemoteControl)
             return;
 
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);

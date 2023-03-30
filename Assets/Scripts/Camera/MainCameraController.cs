@@ -25,7 +25,7 @@ public class MainCameraController : MonoBehaviour
     private bool _isLocked;
 
     private Vector3 _currentVelocity;
-    private Vector3 _halfLength = new Vector3(0.5f, 0, 0);
+    private Vector3 _halfLength = new Vector3(0.5f, 0, 0), _defaultHalfLength;
 
     private Rigidbody Target1 { get; set; }
     private Rigidbody Target2 { get; set; }
@@ -60,7 +60,12 @@ public class MainCameraController : MonoBehaviour
 
 
 
-    private void Start() => ControlCameraPoints();
+    private void Start()
+    {
+        ControlCameraPoints();
+
+        CacheHalfLength();
+    }
 
     private void OnEnable()
     {
@@ -86,6 +91,8 @@ public class MainCameraController : MonoBehaviour
 
         Point2 = delegate { return Target2?.position ?? Vector3.zero; };
     }
+
+    private void CacheHalfLength() => _defaultHalfLength = _halfLength;
 
     private void OnGameStarted()
     {
@@ -199,6 +206,18 @@ public class MainCameraController : MonoBehaviour
             SetTargets(_player1, _player2);
 
         DesiredHeightOffset(desiredHeightOffset.HasValue ? desiredHeightOffset.Value : 0);
+    }
+
+    public void ChangeHalfLength(Vector3 newHalfLength = default, bool reset = false)
+    {
+        if (reset)
+        {
+            _halfLength = _defaultHalfLength;
+
+            return;
+        }
+
+        _halfLength = newHalfLength;
     }
 }
 

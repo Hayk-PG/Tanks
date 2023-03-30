@@ -37,12 +37,10 @@ public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
 
         _ammoTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
 
-        GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity += isActive =>
+        GameSceneObjectsReferences.HudTabsHandler.onRequestTabActivityPermission += (IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive) => 
         {
-            if (WasHidden)
-                return;
-
-            OnAmmoTabActivity();
+            if (requestedTab == HudTabsHandler.HudTab.TabRemoteControl && !WasHidden)
+                OnAmmoTabActivity();
         };
     }
 
@@ -51,25 +49,11 @@ public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
         _ammoTabButton.OnAmmoTabActivity -= OnAmmoTabActivity;
 
         _ammoTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
-
-        GameSceneObjectsReferences.BaseRemoteControlTarget.onRemoteControlActivity -= isActive =>
-        {
-            if (WasHidden)
-                return;
-
-            OnAmmoTabActivity();
-        };
     }
 
-    public void OnAmmoTabActivity()
-    {
-        GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.AmmoTypeController, WasHidden);
-    }
+    public void OnAmmoTabActivity() => GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.AmmoTypeController, WasHidden);
 
-    public void PlaySoundFx(int clipIndex)
-    {
-        UISoundController.PlaySound(1, clipIndex);
-    }
+    public void PlaySoundFx(int clipIndex) => UISoundController.PlaySound(1, clipIndex);
 
     public void Execute(bool isActive)
     {

@@ -28,8 +28,6 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
     public bool IsActive => _canvasGroup.interactable;
 
-    public event Action<bool> onRemoteControlActivity;
-
     public event Action<Mode, object[]> onRemoteControlTarget;
 
 
@@ -100,13 +98,15 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
         StartCoroutine(StartCloseTabTimer(isActive));
 
-        onRemoteControlActivity?.Invoke(isActive);
+        ChangeCameraHalfLength(isActive);
     }
 
     private void LockCamera(bool isActive)
     {
         GameSceneObjectsReferences.MainCameraController.CameraOffset(null, null, null, 1, MainCameraController.CameraUser.RemoteControl, isActive);
     }
+
+    private void ChangeCameraHalfLength(bool isActive) => GameSceneObjectsReferences.MainCameraController.ChangeHalfLength(new Vector3(1.5f, 0, 0), !isActive);
 
     private IEnumerator StartCloseTabTimer(bool isActive)
     {
