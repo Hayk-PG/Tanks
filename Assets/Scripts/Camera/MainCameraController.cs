@@ -7,7 +7,7 @@ public class MainCameraController : MonoBehaviour
     private CameraUser _cameraUser;
 
     [SerializeField]
-    private Camera _camera, _hudCamera, _noPPCamera;
+    private Camera _camera, _hudCamera, _noPPCamera, _controlPanelCamera;
 
     [SerializeField][Space] 
     private Rigidbody _rb;
@@ -127,6 +127,8 @@ public class MainCameraController : MonoBehaviour
             _hudCamera.orthographicSize = _camera.orthographicSize;
 
             _noPPCamera.orthographicSize = _camera.orthographicSize;
+
+            _controlPanelCamera.orthographicSize = _camera.orthographicSize;
         }
     }
 

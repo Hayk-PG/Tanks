@@ -22,10 +22,7 @@ public class Tab_RocketController : MonoBehaviour, IHudTabsObserver, IEndGame
 
 
 
-    public void SetActivity(bool isActive)
-    {
-        GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.TabRocketController, isActive); 
-    }
+    public void SetActivity(bool isActive) => GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.TabRocketController, isActive);
 
     public void Execute(bool isActive)
     {
@@ -34,10 +31,7 @@ public class Tab_RocketController : MonoBehaviour, IHudTabsObserver, IEndGame
         GameSceneObjectsReferences.Controllers.SetControllersActive(true);
     }
 
-    public void OnGameEnd(object[] data = null)
-    {
-        SetActivity(false);
-    }
+    public void OnGameEnd(object[] data = null) => SetActivity(false);
 
     public void WrapUpGame(object[] data = null)
     {
