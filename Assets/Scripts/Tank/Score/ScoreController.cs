@@ -55,8 +55,6 @@ public class ScoreController : MonoBehaviour, IScore
             GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado += OnTornado;
         else
             PhotonNetwork.NetworkingClient.EventReceived += OnTornado;
-
-        GameSceneObjectsReferences.DropBoxSelectionPanelScores.onScores += (scores) => { GetScore(scores, null); };
     }
 
     private void OnDisable()
@@ -72,8 +70,6 @@ public class ScoreController : MonoBehaviour, IScore
             GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado -= OnTornado;
         else
             PhotonNetwork.NetworkingClient.EventReceived -= OnTornado;
-
-        GameSceneObjectsReferences.DropBoxSelectionPanelScores.onScores -= (scores) => { GetScore(scores, null); };
     }
 
     private void OnInitialize()

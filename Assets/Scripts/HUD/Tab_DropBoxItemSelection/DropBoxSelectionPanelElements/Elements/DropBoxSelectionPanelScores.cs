@@ -2,13 +2,14 @@ using UnityEngine;
 
 public class DropBoxSelectionPanelScores : BaseDropBoxSelectionPanelElement
 {
-    public event System.Action<int> onScores;
+    private int _randomXp = Random.Range(0, 101);
 
 
     protected override void Use()
     {
-        int scores = Random.Range(1, 51);
+        _data[0] = _randomXp;
+        _data[1] = NegativePrice;
 
-        onScores?.Invoke(scores * 100);
+        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.XpUpgrade, _data);
     }
 }

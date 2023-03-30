@@ -14,7 +14,7 @@ public class DropBoxSelectionPanelXpMultiplier : BaseDropBoxSelectionPanelElemen
         _data[1] = _quantity;
         _data[2] = _multiplier;
 
-        DropBoxSelectionHandler.RaiseEvent(_multiplier <= 2 ? DropBoxItemType.Xp2: DropBoxItemType.Xp3, _data);
+        DropBoxSelectionHandler.RaiseEvent(_multiplier <= 2 ? DropBoxItemType.XpDoubleBoost: DropBoxItemType.XpTripleBoost, _data);
 
         CanUse = false;
     }

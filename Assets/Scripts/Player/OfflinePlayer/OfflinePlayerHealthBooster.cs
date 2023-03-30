@@ -5,7 +5,7 @@ public class OfflinePlayerHealthBooster : PlayerDropBoxObserver
 
     protected override bool IsAllowed(DropBoxItemType dropBoxItemType)
     {
-        return dropBoxItemType == DropBoxItemType.Health;
+        return dropBoxItemType == DropBoxItemType.HpBoost;
     }
 
     protected override void Execute(object[] data)

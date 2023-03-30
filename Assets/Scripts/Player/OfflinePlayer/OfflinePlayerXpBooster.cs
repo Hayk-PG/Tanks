@@ -1,14 +1,13 @@
 
-public class OfflinePlayerXpMultiplier: PlayerDropBoxObserver
+public class OfflinePlayerXpBooster : PlayerDropBoxObserver
 {
     protected int _xpMultiplier;
 
 
 
-
     protected override bool IsAllowed(DropBoxItemType dropBoxItemType)
     {
-        return dropBoxItemType == DropBoxItemType.Xp2 || dropBoxItemType == DropBoxItemType.Xp3;
+        return dropBoxItemType == DropBoxItemType.XpDoubleBoost || dropBoxItemType == DropBoxItemType.XpTripleBoost;
     }
 
     protected override void Execute(object[] data)
@@ -32,7 +31,7 @@ public class OfflinePlayerXpMultiplier: PlayerDropBoxObserver
 
     protected override void OnTurnController(TurnState turnState)
     {
-        if(GameSceneObjectsReferences.TurnController.TurnCyclesCount >= _quantity)
+        if (GameSceneObjectsReferences.TurnController.TurnCyclesCount >= _quantity)
         {
             ManageTurnControllerSubscription(false);
 

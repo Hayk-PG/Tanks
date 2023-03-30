@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 
-public enum DropBoxItemType { Xp2, Xp3, Ammo, Health, Rocket, Bomber, Artillery, C4 }
+public enum DropBoxItemType { XpDoubleBoost, XpTripleBoost, XpUpgrade, HpBoost, Ammo, Rocket, Bomber, Artillery, C4 }
 
 public class DropBoxSelectionHandler : MonoBehaviour
 {
