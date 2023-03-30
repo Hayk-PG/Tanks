@@ -24,7 +24,7 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
     protected bool _isPlayingAnimation;
 
-    private object[] _data = new object[4];
+    private object[] _data;
 
     public bool IsActive => _canvasGroup.interactable;
 

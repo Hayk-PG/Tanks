@@ -7,14 +7,11 @@ public abstract class PlayerDropBoxObserver : MonoBehaviour
 
     protected bool _isSubscribed;
 
-    protected object[] _data = new object[10];
+    protected int _price, _quantity;
 
-    protected abstract int Price { get; set; }
-    protected abstract int Quantity { get; set; }
+    protected object[] _altData = new object[10];
 
-    protected abstract bool IsAllowed { get; set; }
-
-    protected abstract TurnState PlayerTurnState { get; set; }
+    protected TurnState _playerTurnState;
 
 
 
@@ -22,7 +19,20 @@ public abstract class PlayerDropBoxObserver : MonoBehaviour
 
     protected virtual void OnDisable() => DropBoxSelectionHandler.onItemSelect -= OnItemSelect;
 
-    protected abstract void OnItemSelect(DropBoxItemType dropBoxItemType, object[] data);
+    protected abstract void Execute(object[] data);
+
+    protected virtual void OnItemSelect(DropBoxItemType dropBoxItemType, object[] data)
+    {
+        if (IsAllowed(dropBoxItemType))
+            Execute(data);
+    }
+
+    protected virtual bool IsAllowed(DropBoxItemType dropBoxItemType)
+    {
+        return false;
+    }
+
+    protected virtual void DeductScores(int price) => _playerTankController._scoreController.GetScore(price, null);
 
     protected virtual void ManageTurnControllerSubscription(bool isSubscribing)
     {
@@ -37,7 +47,8 @@ public abstract class PlayerDropBoxObserver : MonoBehaviour
         _isSubscribed = isSubscribing;
     }
 
-    protected abstract void Execute(object[] data);
+    protected virtual void OnTurnController(TurnState turnState)
+    {
 
-    protected abstract void OnTurnController(TurnState turnState);
+    }
 }

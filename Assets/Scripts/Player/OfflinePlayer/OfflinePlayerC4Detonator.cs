@@ -2,60 +2,46 @@ using UnityEngine;
 using System;
 
 
-public class OfflinePlayerC4Detonator: MonoBehaviour
+public class OfflinePlayerC4Detonator: PlayerDropBoxObserver
 {
-    [SerializeField]
-    protected BasePlayerTankController<BasePlayer> _playerTankController;
-
-    protected virtual bool IsAllowed { get; } = true;
+    protected Func<TankController, Vector3?> _minePosition;
 
 
 
-    protected virtual void OnEnable()
+    protected override bool IsAllowed(DropBoxItemType dropBoxItemType)
     {
-        GameSceneObjectsReferences.DropBoxSelectionPanelC4.onC4 += OnC4;
+        return dropBoxItemType == DropBoxItemType.C4;
     }
 
-    protected virtual void OnDisable()
+    protected override void Execute(object[] data)
     {
-        GameSceneObjectsReferences.DropBoxSelectionPanelC4.onC4 -= OnC4;
+        _minePosition = (Func<TankController, Vector3?>)data[0];
+
+        _price = (int)data[1];
+        _quantity = (int)data[2];
+
+        OnC4(_minePosition, _price);
     }
 
-    protected virtual void OnC4(Func<TankController, Vector3> MinePosition, int price)
-    {
-        if (!IsAllowed)
-            return;
-
-        TriggerMine(MinePosition, price);
-    }
-
-    protected virtual void TriggerMine(Func<TankController, Vector3> MinePosition, int price)
+    protected virtual void OnC4(Func<TankController, Vector3?> MinePosition, int price)
     {
         TankController tankController = GlobalFunctions.ObjectsOfType<TankController>.Find(tk => tk != _playerTankController.OwnTank);
 
-        Vector3 minePosition = MinePosition(tankController);
+        Vector3? minePosition = MinePosition(tankController);
 
-        if(minePosition == Vector3.zero)
+        if (minePosition.HasValue)
         {
-            OnFailedToFindMine();
+            DeductScores(price);
+
+            TriggerMine(minePosition.Value);
 
             return;
         }
 
-        DeductScores(price);
-
-        TriggerMine(minePosition);
+        OnFailedToFindMine();
     }
 
-    protected virtual void TriggerMine(Vector3 minePosition)
-    {
-        GlobalFunctions.ObjectsOfType<Mine>.Find(m => m.transform.position == minePosition).TriggerMine();
-    }
-
-    protected virtual void DeductScores(int price)
-    {
-        _playerTankController._scoreController.GetScore(price, null);
-    }
+    protected virtual void TriggerMine(Vector3 minePosition) => GlobalFunctions.ObjectsOfType<Mine>.Find(m => m.transform.position == minePosition).TriggerMine();
 
     protected virtual void OnFailedToFindMine()
     {

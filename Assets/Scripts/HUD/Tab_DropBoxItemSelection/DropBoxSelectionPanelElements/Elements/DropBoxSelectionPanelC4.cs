@@ -4,28 +4,34 @@ using System;
 
 public class DropBoxSelectionPanelC4 : BaseDropBoxSelectionPanelElement
 {
-    public event Action<Func<TankController, Vector3>, int> onC4;
+    private Func<TankController, Vector3?> minePosition;
 
 
     protected override void Use()
     {
-        onC4?.Invoke(MinePosition, NegativePrice);
+        minePosition = MinePosition;
+
+        _data[0] = minePosition;
+        _data[1] = NegativePrice;
+        _data[2] = _quantity;
+
+        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.C4, _data);
 
         CanUse = false;
     }
 
-    private Vector3 MinePosition(TankController tankController)
+    private Vector3? MinePosition(TankController tankController)
     {
-        Vector3 minePosition = Vector3.zero;
+        Vector3? minePosition = null;
 
         float previousDistance = 0;
-        float distance = 0;
+        float distance = previousDistance;
 
         foreach (var mine in FindObjectsOfType<Mine>())
         {
             previousDistance = distance;
 
-            if (distance < previousDistance)
+            if (distance <= previousDistance)
             {
                 distance = Vector3.Distance(mine.transform.position, tankController.transform.position);
 
