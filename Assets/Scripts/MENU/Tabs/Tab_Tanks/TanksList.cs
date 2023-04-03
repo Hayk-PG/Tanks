@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class TanksList : MonoBehaviour
 {
-    [SerializeField]
     protected Btn_Tank[] _btnTanks;
 
 
 
+
+    protected virtual void Awake() => GetAllBtnTanks();
 
     protected virtual int SelectedTankIndex => Data.Manager.SelectedTankIndex;
 
@@ -14,8 +15,12 @@ public class TanksList : MonoBehaviour
 
     protected virtual void OnDisable() => MenuTabs.Tab_Tanks.onTabOpen -= SetTankList;
 
+    protected virtual void GetAllBtnTanks() => _btnTanks = GetComponentsInChildren<Btn_Tank>(true);
+
     protected virtual void SetTankList()
     {
+        print($"Selected tank's index: {Data.Manager.SelectedTankIndex}");
+
         for (int i = 0; i < Data.Manager.AvailableTanks.Length; i++)
         {
             _btnTanks[i].SetActivity(true);
@@ -26,7 +31,7 @@ public class TanksList : MonoBehaviour
             _btnTanks[i].SetStars(Data.Manager.AvailableTanks[i]._starsCount);
             _btnTanks[i].SetLevel(Data.Manager.AvailableTanks[i]._availableInLevel);
             _btnTanks[i].SetLockState(false);
-            _btnTanks[i].AutoSelect(Data.Manager.AvailableTanks[i]._tankIndex, Data.Manager.SelectedTankIndex);
+            _btnTanks[i].AutoSelect(Data.Manager.SelectedTankIndex);
         }
     }
 }

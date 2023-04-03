@@ -86,14 +86,14 @@ public class Btn_Tank : MonoBehaviour
 
     public void SetLockState(bool isLocked) => IsLocked = isLocked;
 
-    public void AutoSelect(int relatedTankIndex, int horizontalGroupsLength)
+    public void AutoSelect(int selectedTankIndex, int horizontalGroupsLength = 0)
     {
-        if (_relatedTankIndex == relatedTankIndex)
-        {
-            _btn.Select();
+        if (_relatedTankIndex != selectedTankIndex)
+            return;
 
-            _onAutoSelect?.Invoke(relatedTankIndex, horizontalGroupsLength);
-        }
+        _btn.Select();
+
+        _onAutoSelect?.Invoke(_relatedTankIndex, horizontalGroupsLength);
     }
 
     private string Level(int level)
