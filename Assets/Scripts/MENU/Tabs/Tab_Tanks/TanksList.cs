@@ -1,14 +1,32 @@
-public class TanksList : BaseTanksList
+using UnityEngine;
+
+public class TanksList : MonoBehaviour
 {
-    protected override int SelectedTankIndex => Data.Manager.SelectedTankIndex;
+    [SerializeField]
+    protected Btn_Tank[] _btnTanks;
 
-    protected override void OnEnable()
+
+
+
+    protected virtual int SelectedTankIndex => Data.Manager.SelectedTankIndex;
+
+    protected virtual void OnEnable() => MenuTabs.Tab_Tanks.onTabOpen += SetTankList;
+
+    protected virtual void OnDisable() => MenuTabs.Tab_Tanks.onTabOpen -= SetTankList;
+
+    protected virtual void SetTankList()
     {
-        MenuTabs.Tab_Tanks.onTabOpen += delegate { SetTanksList(Data.Manager.AvailableTanks); };
+        for (int i = 0; i < Data.Manager.AvailableTanks.Length; i++)
+        {
+            _btnTanks[i].SetActivity(true);
+            _btnTanks[i].SetTankProprties(Data.Manager.AvailableTanks[i]);
+            _btnTanks[i].SetPicture(Data.Manager.AvailableTanks[i].assetReferenceIcon);
+            _btnTanks[i].SetName(Data.Manager.AvailableTanks[i]._tankName);
+            _btnTanks[i].SetRelatedTankIndex(Data.Manager.AvailableTanks[i]._tankIndex);
+            _btnTanks[i].SetStars(Data.Manager.AvailableTanks[i]._starsCount);
+            _btnTanks[i].SetLevel(Data.Manager.AvailableTanks[i]._availableInLevel);
+            _btnTanks[i].SetLockState(false);
+            _btnTanks[i].AutoSelect(Data.Manager.AvailableTanks[i]._tankIndex, Data.Manager.SelectedTankIndex);
+        }
     }
-
-    protected override void OnDisable()
-    {
-        MenuTabs.Tab_Tanks.onTabOpen -= delegate { SetTanksList(Data.Manager.AvailableTanks); };
-    }   
 }

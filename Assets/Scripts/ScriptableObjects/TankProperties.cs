@@ -1,13 +1,16 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 [CreateAssetMenu(menuName = "Scriptable objects/Tanks/New tank")]
+
+//ADDRESSABLE
 public class TankProperties : ScriptableObject
 {
     public int _tankIndex;
 
-    [Header("UI")]
-    public Sprite _iconTank;
+    [Header("Addressable")]
+    public AssetReferenceSprite assetReferenceIcon;
 
     [Header("Prefab")]
     public TankController _tank;

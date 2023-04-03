@@ -24,6 +24,7 @@ public class TabBaseBackgroundImg : MonoBehaviour
         _assetReferenceSprite.LoadAssetAsync().Completed += (asset) =>
         {
             _sprt = asset.Result;
+
             _img.sprite = _sprt;
         };
     }

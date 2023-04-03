@@ -41,7 +41,7 @@ public class SubTabUnlock : MonoBehaviour
         if (MyPhotonNetwork.IsOfflineMode)
             return;
 
-        _img.sprite = tankProperties._iconTank;
+        //_img.sprite = tankProperties._iconTank;
 
         _stars.Display(tankProperties._starsCount);
 

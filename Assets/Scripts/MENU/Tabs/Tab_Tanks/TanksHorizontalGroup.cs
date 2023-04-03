@@ -40,7 +40,7 @@ public class TanksHorizontalGroup : MonoBehaviour
     {
         _btnTanks[parameters._index].SetActivity(true);
         _btnTanks[parameters._index].SetTankProprties(parameters._btnTankProperty);
-        _btnTanks[parameters._index].SetPicture(parameters._btnTankProperty._iconTank);
+        //_btnTanks[parameters._index].SetPicture(parameters._btnTankProperty._iconTank);
         _btnTanks[parameters._index].SetName(parameters._btnTankProperty._tankName);
         _btnTanks[parameters._index].SetStars(parameters._btnTankProperty._starsCount);
         _btnTanks[parameters._index].SetRelatedTankIndex((parameters._dataTanksList.ToList().IndexOf(parameters._btnTankProperty)));

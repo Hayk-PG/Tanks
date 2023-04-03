@@ -9,12 +9,6 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
     [SerializeField]
     protected Btn_Tank _btnTank;
 
-    [SerializeField] [Space]
-    protected Color _clrBtnReleased, _clrBtnPressed;
-
-    [SerializeField] [Space]
-    protected Color _clrTankReleased, _clrTankPressed;
-
     public event System.Action<TankProperties> onTankSelected;
 
 
@@ -25,12 +19,14 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
     protected virtual void OnEnable()
     {
         _btnTank._onAutoSelect += AutoSelect;
+
         _btnTank._onClick += Select;
     }
 
     protected virtual void OnDisable()
     {
         _btnTank._onAutoSelect -= AutoSelect;
+
         _btnTank._onClick -= Select;
     }
 
@@ -40,7 +36,7 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
 
         float value = Mathf.InverseLerp(horizontalGroupsLength, 1, horizontalGroupIndex);
 
-        _tabTanks.CustomScrollRect.SetNormalizedPosition(value);
+        //_tabTanks.CustomScrollRect.SetNormalizedPosition(value);
     }
 
     protected virtual void AutoSelect(int relatedTankIndex, int horizontalGroupsLength)
@@ -56,15 +52,11 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
     {
         SaveTankIndex(relatedTankIndex);
 
-        GlobalFunctions.Loop<IReset>.Foreach(_tabTanks.GetComponentsInChildren<IReset>(true), iReset =>
-        {
-            if (iReset.GetType() != typeof(CustomScrollRect))
-                iReset.SetDefault();
-        });
-
-        _btnTank.ColorBtn = _clrBtnPressed;
-
-        _btnTank.ImageTank.color = _clrTankPressed;
+        //GlobalFunctions.Loop<IReset>.Foreach(_tabTanks.GetComponentsInChildren<IReset>(true), iReset =>
+        //{
+        //    if (iReset.GetType() != typeof(CustomScrollRect))
+        //        iReset.SetDefault();
+        //});
 
         _tabTanks.SubTabUnlock?.Display(_btnTank.TankProperties, _btnTank.IsLocked);
 
@@ -75,7 +67,6 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
 
     public void SetDefault()
     {
-        _btnTank.ColorBtn = _clrBtnReleased;
-        _btnTank.ImageTank.color = _clrTankReleased;
+        
     }
 }

@@ -1,24 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System;
+using UnityEngine.AddressableAssets;
 
+
+//ADDRESSABLE
 public class Btn_Tank : MonoBehaviour
 {
     [SerializeField]
     private CanvasGroup _canvasGroup;
 
     [SerializeField] [Space]
-    private Button _button;
+    private Btn _btn;
 
     [SerializeField] [Space]
     private Image _imgTank, _imgLock;
 
     [SerializeField] [Space]
-    private TMP_Text _txtName;
-
-    [SerializeField] [Space]
-    private TMP_Text _txtLevel;
+    private BtnTxt _btnTxtTop, _btnTxtBottom;
 
     [SerializeField] [Space]
     private Stars _stars;
@@ -27,16 +26,21 @@ public class Btn_Tank : MonoBehaviour
 
     public TankProperties TankProperties { get; private set; }
 
-    public Button Button { get => _button; }
-
     public Image ImageTank { get => _imgTank; }
-
-    public Color ColorBtn { get => _button.image.color; internal set => _button.image.color = value; }
 
     public bool IsLocked
     {
-        get => _imgLock.gameObject.activeInHierarchy;
-        set => _imgLock.gameObject.SetActive(value);
+        get
+        {
+            return _imgLock == null ? false : _imgLock.gameObject.activeInHierarchy;
+        }
+        set
+        {
+            if (_imgLock == null)
+                return;
+
+            _imgLock.gameObject.SetActive(value);
+        }
     }
 
     public event Action<int, int> _onAutoSelect;
@@ -45,63 +49,51 @@ public class Btn_Tank : MonoBehaviour
 
 
 
-    private void Start()
+
+    private void OnEnable() => _btn.onSelect += () => _onClick?.Invoke(_relatedTankIndex);
+
+    private void OnDisable() => _btn.onSelect -= () => _onClick?.Invoke(_relatedTankIndex);
+
+    public void SetActivity(bool isActive) => GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+
+    public void SetTankProprties(TankProperties tankProperties) => TankProperties = tankProperties;
+
+    public void SetPicture(AssetReferenceSprite assetReferenceSprite)
     {
-        _button.onClick.AddListener(() => _onClick?.Invoke(_relatedTankIndex));
+        if (_imgTank.sprite == null)
+            assetReferenceSprite.LoadAssetAsync().Completed += asset => { _imgTank.sprite = asset.Result; };
     }
 
-    public void SetActivity(bool isActive)
-    {
-        GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
-    }
+    public void SetName(string name) => _btnTxtTop.SetButtonTitle(name);
 
-    public void SetTankProprties(TankProperties tankProperties)
-    {
-        TankProperties = tankProperties;
-    }
+    public void SetStars(int stars) => _stars.Display(stars);
 
-    public void SetPicture(Sprite sprite)
-    {
-        _imgTank.sprite = sprite;
-    }
-
-    public void SetName(string name)
-    {
-        _txtName.text = name;
-    }
-
-    public void SetStars(int stars)
-    {
-        _stars.Display(stars);
-    }
-
-    public void SetRelatedTankIndex(int relatedtankIndex)
-    {
-        _relatedTankIndex = relatedtankIndex;
-    }
+    public void SetRelatedTankIndex(int relatedtankIndex) => _relatedTankIndex = relatedtankIndex;
 
     public void SetLevel(int level)
     {
         if (MyPhotonNetwork.IsOfflineMode)
         {
-            _txtLevel.gameObject.SetActive(false);
+            _btnTxtBottom.gameObject.SetActive(false);
 
             return;
         }
 
-        _txtLevel.gameObject.SetActive(true);
-        _txtLevel.text = Level(level);
+        _btnTxtBottom.gameObject.SetActive(true);
+
+        _btnTxtBottom.SetButtonTitle($"Lv. {level}");
     }
 
-    public void SetLockState(bool isLocked)
-    {
-        IsLocked = isLocked;
-    }
+    public void SetLockState(bool isLocked) => IsLocked = isLocked;
 
     public void AutoSelect(int relatedTankIndex, int horizontalGroupsLength)
     {
         if (_relatedTankIndex == relatedTankIndex)
+        {
+            _btn.Select();
+
             _onAutoSelect?.Invoke(relatedTankIndex, horizontalGroupsLength);
+        }
     }
 
     private string Level(int level)
