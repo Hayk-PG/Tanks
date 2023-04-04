@@ -3,17 +3,20 @@ using UnityEngine;
 
 public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
 {
-    [SerializeField]
+    [SerializeField] [Space]
+    private CanvasGroup _canvasGroupBtnClose;
+
+    [SerializeField] [Space]
     private Animator _animator;
 
     [SerializeField] [Space]
     private RectTransform _rectTransform;
 
     [SerializeField] [Space]
-    private AmmoTabCustomization _ammoTabCustomization;
+    private AmmoTabButton _ammoTabButton;
 
     [SerializeField] [Space]
-    private AmmoTabButton _ammoTabButton;
+    private Btn _btnClose;
 
     [SerializeField] [Space]
     private CameraBlur _cameraBlur;
@@ -33,9 +36,11 @@ public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
 
     private void OnEnable()
     {
-        _ammoTabButton.OnAmmoTabActivity += OnAmmoTabActivity;
+        _ammoTabButton.onAmmoTabActivity += OnAmmoTabActivity;
 
-        _ammoTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
+        _btnClose.onSelect += OnAmmoTabActivity;
+
+        GameSceneObjectsReferences.AmmoTabCustomization.OnAmmoTypeController += OnAmmoTabActivity;
 
         GameSceneObjectsReferences.HudTabsHandler.onRequestTabActivityPermission += (IHudTabsObserver observer, HudTabsHandler.HudTab currentActiveTab, HudTabsHandler.HudTab requestedTab, bool isActive) => 
         {
@@ -46,10 +51,14 @@ public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
 
     private void OnDisable()
     {
-        _ammoTabButton.OnAmmoTabActivity -= OnAmmoTabActivity;
+        _ammoTabButton.onAmmoTabActivity -= OnAmmoTabActivity;
 
-        _ammoTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
+        _btnClose.onSelect -= OnAmmoTabActivity;
+
+        GameSceneObjectsReferences.AmmoTabCustomization.OnAmmoTypeController -= OnAmmoTabActivity;
     }
+
+    private void SetAmmoTabCloseButtonActive(bool isActive) => GlobalFunctions.CanvasGroupActivity(_canvasGroupBtnClose, isActive);
 
     public void OnAmmoTabActivity() => GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.AmmoTypeController, WasHidden);
 
@@ -64,6 +73,8 @@ public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
         _cameraBlur.ScreenBlur(WasHidden);
 
         PlaySoundFx(WasHidden ? 0 : 1);
+
+        SetAmmoTabCloseButtonActive(isActive);
 
         OnInformAboutTabActivityToTabsCustomization?.Invoke(WasHidden);
     }

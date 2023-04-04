@@ -8,12 +8,6 @@ public class AmmoTabButtonNotification : MonoBehaviour
     public List<AmmoTypeButton> _weapons = new List<AmmoTypeButton>();
     public List<AmmoTypeButton> _availableWeapons;
 
-    [SerializeField]
-    private AmmoTabCustomization _ammoTabCustomization;
-
-    [SerializeField] [Space]
-    private AmmoTypeController _ammoTypeController;
-
     [SerializeField] [Space]
     private GameObject _notificationsIcon;
 
@@ -32,16 +26,16 @@ public class AmmoTabButtonNotification : MonoBehaviour
 
     private void OnEnable()
     {
-        _ammoTabCustomization.OnSendWeaponPointsToUnlock += CacheWeaponsPointsToUnlock;
+        GameSceneObjectsReferences.AmmoTabCustomization.OnSendWeaponPointsToUnlock += CacheWeaponsPointsToUnlock;
 
-        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
+        GameSceneObjectsReferences.AmmoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
     }
 
     private void OnDisable()
     {
-        _ammoTabCustomization.OnSendWeaponPointsToUnlock -= CacheWeaponsPointsToUnlock;
+        GameSceneObjectsReferences.AmmoTabCustomization.OnSendWeaponPointsToUnlock -= CacheWeaponsPointsToUnlock;
 
-        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
+        GameSceneObjectsReferences.AmmoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
 
         if (_playerScoreController != null)
             _playerScoreController.OnPlayerGetsPoints -= PlayerGetsPoints;
