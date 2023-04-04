@@ -6,25 +6,13 @@ public class CanonPushBack : MonoBehaviour
     private BaseShootController _baseShootController;
 
 
-    private void Awake()
-    {
-        _baseShootController = Get<BaseShootController>.From(gameObject);
-    }
+    private void Awake() => _baseShootController = Get<BaseShootController>.From(gameObject);
 
-    private void OnEnable()
-    {
-        _baseShootController.OnShoot += OnShoot;
-    }
+    private void OnEnable() => _baseShootController.OnShoot += OnShoot;
 
-    private void OnDisable()
-    {
-        _baseShootController.OnShoot -= OnShoot;
-    }
+    private void OnDisable() => _baseShootController.OnShoot -= OnShoot;
 
-    private void OnShoot()
-    {
-        StartCoroutine(CanonPushBackCoroutine());
-    }
+    private void OnShoot() => StartCoroutine(CanonPushBackCoroutine());
 
     private IEnumerator CanonPushBackCoroutine()
     {       
@@ -33,6 +21,7 @@ public class CanonPushBack : MonoBehaviour
         while (transform.localPosition.z > fixedZ)
         {
             float updatedZ = transform.localPosition.z;
+
             transform.localPosition = new Vector3(0, 0, updatedZ -= 10 * Time.deltaTime);
 
             if (transform.localPosition.z <= fixedZ)
@@ -46,6 +35,7 @@ public class CanonPushBack : MonoBehaviour
         while (transform.localPosition.z < 0)
         {
             float updatedZ = transform.localPosition.z;
+
             transform.localPosition = new Vector3(0, 0, updatedZ += 4 * Time.deltaTime);
 
             if (transform.localPosition.z >= 0)

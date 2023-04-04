@@ -20,6 +20,9 @@ public class BaseTankMovement : MonoBehaviour
     public float _brakeOnRain;
     public float _brakeOnSnow;
 
+    [Space] [Range(0, 500)]
+    public float fuelConsumptionPercent;
+
     [Space]
     public Vector3 _normalCenterOfMass;
     protected float _currentBrake;

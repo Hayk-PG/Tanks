@@ -3,15 +3,22 @@
 public class VehicleSmoke : MonoBehaviour
 {
     private ParticleSystem _particleSystem;
+
     private BaseTankMovement _tankMovement;
+
     private TankDamageFire _tankDamageFire;
+
     private bool _canPlaySmokeParticles = true;
+
+
 
 
     private void Awake()
     {
         _particleSystem = GetComponent<ParticleSystem>();
+
         _tankMovement = Get<BaseTankMovement>.From(gameObject);
+
         _tankDamageFire = Get<TankDamageFire>.FromChild(_tankMovement.gameObject);
     }
 
@@ -37,8 +44,11 @@ public class VehicleSmoke : MonoBehaviour
 
     private void ParticleSystemActivtiy(bool isEnabled)
     {
-        if (!_particleSystem.isPlaying && isEnabled) _particleSystem.Play();
-        if (_particleSystem.isPlaying && !isEnabled) _particleSystem.Stop();
+        if (!_particleSystem.isPlaying && isEnabled) 
+            _particleSystem.Play();
+
+        if (_particleSystem.isPlaying && !isEnabled) 
+            _particleSystem.Stop();
     }
 
     private void OnTankDamageFire(bool canPlaySmokeParticles) => _canPlaySmokeParticles = canPlaySmokeParticles;

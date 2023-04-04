@@ -19,8 +19,6 @@ public class TanksList : MonoBehaviour
 
     protected virtual void SetTankList()
     {
-        print($"Selected tank's index: {Data.Manager.SelectedTankIndex}");
-
         for (int i = 0; i < Data.Manager.AvailableTanks.Length; i++)
         {
             _btnTanks[i].SetActivity(true);

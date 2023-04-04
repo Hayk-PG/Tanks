@@ -54,7 +54,12 @@ public class TankMovement : BaseTankMovement
         SynchVariables(false);
     }
 
-    private void Start() => DefineFunctions();
+    private void Start()
+    {
+        InitializeFuelConsumptionValue();
+
+        DefineFunctions();
+    }
 
     protected override void OnEnable()
     {
@@ -85,6 +90,12 @@ public class TankMovement : BaseTankMovement
             return;
 
         _iPhotonPlayerJumpExecuter = Get<IPhotonPlayerJumpExecuter>.From(_tankController.BasePlayer.gameObject);
+    }
+
+    private void InitializeFuelConsumptionValue()
+    {
+        if (fuelConsumptionPercent <= 0)
+            fuelConsumptionPercent = 100;
     }
 
     private void DefineFunctions()
@@ -182,7 +193,7 @@ public class TankMovement : BaseTankMovement
 
         OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
         OnDirectionValue?.Invoke(Direction);
-        OnFuel?.Invoke(_wheelColliderController.WheelRPM(), _playerTurn.IsMyTurn);
+        OnFuel?.Invoke(_wheelColliderController.WheelRPM() / 100 * fuelConsumptionPercent, _playerTurn.IsMyTurn);
         OnRigidbodyPosition?.Invoke(_rigidBody);       
     }
 

@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class Recoil : MonoBehaviour
 {
-    public enum RecoilType { Vehicle, Canon}
-
     private Rigidbody _rigidbody;
 
     private ShootController _shootController;
 
+    [SerializeField]
+    private float _elapsedTime;
     private float _force = 1;
 
 
@@ -28,8 +28,8 @@ public class Recoil : MonoBehaviour
 
     private IEnumerator GenerateRecoil()
     {
-        yield return StartCoroutine(PushBackwards(0.3f, 0));
-        yield return StartCoroutine(PushForward(0.3f, 0));
+        yield return StartCoroutine(PushBackwards(_elapsedTime, 0));
+        yield return StartCoroutine(PushForward(_elapsedTime, 0));
     }
 
     private IEnumerator PushBackwards(float elapsedTime, float delay)
@@ -38,7 +38,7 @@ public class Recoil : MonoBehaviour
         {
             delay += Time.deltaTime;
 
-            _rigidbody.position += -transform.forward * (_force + delay) * Time.fixedDeltaTime;
+            _rigidbody.position += -transform.forward * (_force - delay) * Time.fixedDeltaTime;
 
             yield return null;
         }
@@ -50,7 +50,7 @@ public class Recoil : MonoBehaviour
         {
             delay += Time.deltaTime;
 
-            _rigidbody.position += transform.forward * (_force + delay) / 2 * Time.fixedDeltaTime;
+            _rigidbody.position += transform.forward * (_force - delay) / 2 * Time.fixedDeltaTime;
 
             yield return null;
         }
