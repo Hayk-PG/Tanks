@@ -60,6 +60,13 @@ public class Btn_Tank : MonoBehaviour
 
     public void SetPicture(AssetReferenceSprite assetReferenceSprite)
     {
+        if (assetReferenceSprite.IsValid())
+        {
+            _imgTank.sprite = (Sprite)assetReferenceSprite.OperationHandle.Result;
+
+            return;
+        }
+
         if (_imgTank.sprite == null)
             assetReferenceSprite.LoadAssetAsync().Completed += asset => { _imgTank.sprite = asset.Result; };
     }

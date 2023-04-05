@@ -9,12 +9,12 @@ public class Tile : MonoBehaviour, IDestruct
     private TileProps _tileProps;
 
     [SerializeField] [Space]
-    private AssetReference _assetReferenceMesh, _assetReferenceParticles;
+    private AssetReference _assetReferenceParticles;
+
+    private GameObject _mesh;
 
     [SerializeField] [Space]
     private bool _isSuspended, _isProtected;
-
-    private GameObject _cachedMesh;
 
     public bool IsSuspended
     {
@@ -45,33 +45,24 @@ public class Tile : MonoBehaviour, IDestruct
 
     private void InstantiateMesh()
     {
-        if (!System.String.IsNullOrEmpty(_assetReferenceMesh.AssetGUID))
+        if (AddressableTile.Loader.TilesMesh.Find(asset => ((GameObject)(asset.OperationHandle.Result)).name == gameObject.name) != null)
         {
-            _assetReferenceMesh.InstantiateAsync(transform).Completed += asset =>
+            _mesh = Instantiate((GameObject)AddressableTile.Loader.TilesMesh.Find(asset => ((GameObject)(asset.OperationHandle.Result)).name == gameObject.name).OperationHandle.Result, transform);
+
+            _mesh.name = gameObject.name;
+
+            if (IsOverlapped)
             {
-                _cachedMesh = asset.Result;
+                DestroyMesh();
 
-                if (IsOverlapped)
-                {
-                    DestroyMesh();
+                return;
+            }
 
-                    return;
-                }
-
-                onMeshInstantiated?.Invoke(asset.Result);
-            };
+            onMeshInstantiated?.Invoke(_mesh);
         }
     }
 
-    private void DestroyMesh()
-    {
-        if (_cachedMesh != null)
-        {
-            Addressables.Release(_cachedMesh);
-
-            Destroy(_cachedMesh);
-        }
-    }
+    private void DestroyMesh() => Destroy(_mesh);
 
     private void Destruction()
     {
@@ -108,7 +99,7 @@ public class Tile : MonoBehaviour, IDestruct
     {
         IsOverlapped = true;
 
-        if (_cachedMesh == null)
+        if (_mesh == null)
             return;
 
         onDestroyingMesh?.Invoke();
