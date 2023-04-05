@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 public enum ButtonType { Shell, Rocket}
@@ -121,15 +122,31 @@ public class AmmoTypeButton : MonoBehaviour
 
     public Properties _properties;
 
+    [SerializeField] [Space]
+    private CanvasGroup _canvasGroupDisplay, _canvasGroupDescription;
+
+    [SerializeField] [Space]
+    private TMP_Text _txtTop, _txtBottom;
+
     private bool _isAutoSelected;
 
-    public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }   
+    public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }
 
+
+
+
+    private void OnEnable() => GameSceneObjectsReferences.AmmoTabDescriptionButton.onDescriptionActivity += SetGroupsActive;
 
     public virtual void OnClickButton()
     {
         if (!_properties.IsSelected && _properties.IsUnlocked)
             OnClickAmmoTypeButton?.Invoke(this);
+    }
+
+    private void SetGroupsActive(bool isDescription)
+    {
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupDisplay, !isDescription);
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupDescription, isDescription);
     }
 
     public void DisplayScoresToUnlock(int playerScore, int bulletsCount)
@@ -143,6 +160,15 @@ public class AmmoTypeButton : MonoBehaviour
         Conditions<bool>.Compare(_properties.PlayerScore >= _properties.Price, Unlock, Lock);
 
         AutoSelect();
+    }
+
+    public void PrintDescription(string title, string text)
+    {
+        if (_txtTop == null || _txtBottom == null)
+            return;
+
+        _txtTop.text = title;
+        _txtBottom.text = text;
     }
 
     private void ControlPriceTagActivity() => GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupPrice, _properties.Price <= 0 ? false : true);

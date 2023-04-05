@@ -57,7 +57,9 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
             _supportType = weaponProperty._supportType,
 
-            _icon = weaponProperty._icon
+            _icon = weaponProperty._icon,
+
+            _description = weaponProperty.description
 
         }, weaponProperty._ammoTypeStars);
     }

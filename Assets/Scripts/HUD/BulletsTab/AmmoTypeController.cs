@@ -4,7 +4,7 @@ using UnityEngine;
 public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
 {
     [SerializeField] [Space]
-    private CanvasGroup _canvasGroupBtnClose;
+    private CanvasGroup _canvasGroupBtnClose, _canvasGroupAmmoTabDescriptionButton;
 
     [SerializeField] [Space]
     private Animator _animator;
@@ -59,6 +59,7 @@ public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
     }
 
     private void SetAmmoTabCloseButtonActive(bool isActive) => GlobalFunctions.CanvasGroupActivity(_canvasGroupBtnClose, isActive);
+    private void SetAmmoTabDescriptionButtonActive(bool isActive) => GlobalFunctions.CanvasGroupActivity(_canvasGroupAmmoTabDescriptionButton, isActive);
 
     public void OnAmmoTabActivity() => GameSceneObjectsReferences.HudTabsHandler.RequestTabActivityPermission(this, HudTabsHandler.HudTab.AmmoTypeController, WasHidden);
 
@@ -75,6 +76,8 @@ public class AmmoTypeController : MonoBehaviour, IHudTabsObserver
         PlaySoundFx(WasHidden ? 0 : 1);
 
         SetAmmoTabCloseButtonActive(isActive);
+
+        SetAmmoTabDescriptionButtonActive(isActive);
 
         OnInformAboutTabActivityToTabsCustomization?.Invoke(WasHidden);
     }

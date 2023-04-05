@@ -34,6 +34,9 @@ public class BaseWeaponProperties<T> : ScriptableObject
     [Space]
     public int _tileParticleIndex;   
     public string _weaponType;  
+    
+    [Header("Description")]
+    public string description;
 
     [Header("Support or props type")]
     public string _supportType;

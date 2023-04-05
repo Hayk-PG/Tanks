@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,9 @@ public class Btn_Icon : MonoBehaviour
     [SerializeField] [Space]
     private Color _clrPressed;
     private Color _clrReleased;
+
+    // ChangeIconHolder is used for public access to ChangeIconSprite
+    public Action<Sprite> ChangeIconHolder => ChangeIconSprite;
 
 
 
@@ -72,6 +76,7 @@ public class Btn_Icon : MonoBehaviour
         }
     }
 
+    // This method is held by ChangeIconHolder delegate for public use only
     private void ChangeIconSprite(Sprite sprite)
     {
         if (sprite == null)
