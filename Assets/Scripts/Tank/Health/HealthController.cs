@@ -128,10 +128,15 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
     private void ApplyHealthDamage(int damage)
     {
+        if (DamageValue(damage) <= 0)
+            return;
+
         Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
         
         OnUpdateHealthBar?.Invoke(Health);
-        OnTakeDamage?.Invoke(_tankController.BasePlayer, DamageValue(DamageValue(damage)));
+
+        OnTakeDamage?.Invoke(_tankController.BasePlayer, DamageValue(damage));
+
         OnTankDamageFire?.Invoke(Health);
 
         PlayDamageSoundFX();
@@ -139,7 +144,10 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
     private void ApplyArmorDamage(int damage)
     {
-        int shieldHealth = damage - ShieldHealth;
+        if (DamageValue(damage) <= 0)
+            return;
+
+        int shieldHealth = DamageValue(damage) - ShieldHealth;
 
         Conditions<int>.Compare(shieldHealth, 0,
             delegate 

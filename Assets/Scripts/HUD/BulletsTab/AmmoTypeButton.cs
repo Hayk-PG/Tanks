@@ -135,6 +135,8 @@ public class AmmoTypeButton : MonoBehaviour
 
 
 
+    private void Awake() => SetGroupsActive(GameSceneObjectsReferences.AmmoTabDescriptionButton.IsActive);
+
     private void OnEnable() => GameSceneObjectsReferences.AmmoTabDescriptionButton.onDescriptionActivity += SetGroupsActive;
 
     public virtual void OnClickButton()

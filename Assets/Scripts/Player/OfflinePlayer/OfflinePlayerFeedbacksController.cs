@@ -14,9 +14,5 @@ public class OfflinePlayerFeedbacksController : PlayerFeedbackController
         _playerFeedback.DisplayWeaponChangeText(_playerController.OwnTank.name, ammoTypeButton._properties.Name);
     }
 
-    protected override void OnTakeDamage(BasePlayer basePlayer, int damage)
-    {
-        if (damage > 0)
-            _playerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
-    }
+    protected override void OnTakeDamage(BasePlayer basePlayer, int damage) => _playerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
 }

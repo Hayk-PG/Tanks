@@ -54,14 +54,12 @@ public class PhotonPlayerFeedbacksController : PlayerFeedbackController
     {
         // This method is called on the local side
 
-        if (damage > 0)
-            _playerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
+        _playerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
 
         // This method is called on the server side
         // And should not be called on the local side
 
-        if (damage > 0)
-            _photonPlayerController.PhotonView.RPC("OnTakeDamageRPC", RpcTarget.Others, _playerController.OwnTank.name, damage);
+        _photonPlayerController.PhotonView.RPC("OnTakeDamageRPC", RpcTarget.Others, _playerController.OwnTank.name, damage);
     }
 
     [PunRPC]

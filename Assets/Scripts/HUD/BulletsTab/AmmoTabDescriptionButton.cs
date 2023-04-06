@@ -15,7 +15,7 @@ public class AmmoTabDescriptionButton : MonoBehaviour
     [SerializeField] [Space]
     private Sprite[] _sprts;
 
-    private bool _isActive = false;
+    public bool IsActive { get; private set; }
 
     public event Action<bool> onDescriptionActivity;
 
@@ -27,10 +27,10 @@ public class AmmoTabDescriptionButton : MonoBehaviour
 
     private void OnSelect()
     {
-        _isActive = !_isActive;
+        IsActive = !IsActive;
 
-        _btnIcon.ChangeIconHolder(_isActive ? _sprts[0] : _sprts[1]);
+        _btnIcon.ChangeIconHolder(IsActive ? _sprts[0] : _sprts[1]);
 
-        onDescriptionActivity?.Invoke(_isActive);
+        onDescriptionActivity?.Invoke(IsActive);
     }
 }
