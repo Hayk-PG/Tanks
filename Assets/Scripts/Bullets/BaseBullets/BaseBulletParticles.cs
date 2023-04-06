@@ -65,6 +65,7 @@ public class BaseBulletParticles : MonoBehaviour
     protected virtual void OnExplode()
     {
         _explosion.OwnerScore = _baseBulletController.OwnerScore;
+        _explosion.IDamageAi = _baseBulletController.IDamageAi;
         _explosion.Distance = _baseBulletController.Distance;
         _explosion.gameObject.SetActive(true);
         _explosion.transform.parent = null;

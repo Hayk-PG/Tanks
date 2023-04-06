@@ -3,6 +3,7 @@ using UnityEngine;
 public class BaseExplosion : MonoBehaviour
 {
     public IScore OwnerScore { get; set; }
+    public IDamage IDamageAi { get; set; }
     public Collider Collider { get; set; }
 
     public float Distance { get; set; }

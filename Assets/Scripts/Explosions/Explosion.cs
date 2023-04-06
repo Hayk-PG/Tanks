@@ -80,6 +80,11 @@ public class Explosion : BaseExplosion
 
     protected virtual void DamageAndScoreInOfflineMode(IDamage iDamage, int damageValue, int[] scores)
     {
+        //Preventing self-damage for Ai
+
+        if (IDamageAi == iDamage)
+            return;
+
         iDamage.Damage(damageValue);
 
         Score(iDamage, scores);

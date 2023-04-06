@@ -24,6 +24,7 @@ public class AIShootController : BaseShootController
     private AIEnemyDataGetter _aiEnemyDataGetter;
 
     private IScore _iScore;
+    private IDamage _iDamage;
 
     private Vector3 _target;
     
@@ -62,6 +63,8 @@ public class AIShootController : BaseShootController
         _aiEnemyDataGetter = Get<AIEnemyDataGetter>.From(gameObject);
 
         _iScore = Get<IScore>.From(gameObject);
+
+        _iDamage = Get<IDamage>.From(gameObject);
 
         InitializeBulletsList(_bulletsPrefab.Length);
 
@@ -273,6 +276,7 @@ public class AIShootController : BaseShootController
             BaseBulletController baseBulletController = Instantiate(_cachedBulletsList[_activeBulletIndex]._weaponProperties._prefab, _shootPoint.position, _canonPivotPoint.rotation);
 
             baseBulletController.OwnerScore = _iScore;
+            baseBulletController.IDamageAi = _iDamage;
             baseBulletController.IsOwnerAI = true;
             baseBulletController.RigidBody.velocity = _target;
 

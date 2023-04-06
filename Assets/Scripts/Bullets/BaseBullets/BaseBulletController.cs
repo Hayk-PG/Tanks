@@ -7,6 +7,7 @@ public class BaseBulletController : MonoBehaviour
 
     public Rigidbody RigidBody => _rigidbody;
     public IScore OwnerScore { get; set; }
+    public IDamage IDamageAi { get; set; }
 
     public Vector3 StartPosition { get; protected set; }
     public Vector3 ID { get; protected set; }
