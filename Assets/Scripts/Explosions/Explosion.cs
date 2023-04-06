@@ -36,6 +36,8 @@ public class Explosion : BaseExplosion
 
     protected virtual void Start()
     {
+        base.Start();
+
         for (int i = 0; i < _colliders.Length; i++)
         {
             _magnitude = (transform.position - _colliders[i].transform.position).magnitude;

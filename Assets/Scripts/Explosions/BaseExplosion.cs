@@ -12,6 +12,9 @@ public class BaseExplosion : MonoBehaviour
 
 
 
+
+    protected virtual void Start() => GameSceneObjectsReferences.RipplePostProcessor.ApplyRippleFX(transform.position);
+
     protected virtual void Score(IDamage iDamage, int[] scores)
     {
         OwnerScore?.GetScore(scores[0] + scores[1], iDamage);

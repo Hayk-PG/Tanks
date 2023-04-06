@@ -1,38 +1,60 @@
-﻿using UnityEngine;
+using System.Collections;
+using UnityEngine;
 
 public class RipplePostProcessor : MonoBehaviour
 {
-    public Material RippleMaterial;
-    public float MaxAmount = 50f;
- 
-    [Range(0,1)]
-    public float Friction = .9f;
- 
-    private float Amount = 0f;
- 
-    private void Update()
-    {
-        this.RippleMaterial.SetFloat("_Amount", this.Amount);
+    [SerializeField]
+    private Material _rippleMaterial;
 
-        this.Amount *= this.Friction;
+    [SerializeField]
+    [Space]
+    public float _maxAmount;
 
-        print(this.Amount);
-    }
+    [SerializeField]
+    [Range(0, 1)]
+    public float _friction;
 
-    private void OnRenderImage(RenderTexture src, RenderTexture dst)
-    {
-        Graphics.Blit(src, dst, this.RippleMaterial);
-    }
+    private float _amount = 0f;
+
+
+
+    private void OnRenderImage(RenderTexture src, RenderTexture dst) => Graphics.Blit(src, dst, this._rippleMaterial);
 
     public void ApplyRippleFX(Vector3 pos)
     {
+        if (_amount > 0)
+            return;
+
+        StartCoroutine(ManageRippleEffectActivity(pos));
+    }
+
+    private IEnumerator ManageRippleEffectActivity(Vector3 pos)
+    {
         Vector3 ScreenPoint = Camera.main.WorldToScreenPoint(pos);
 
-        this.Amount = this.MaxAmount;
-        this.RippleMaterial.SetFloat("_CenterX", ScreenPoint.x);
-        this.RippleMaterial.SetFloat("_CenterY", ScreenPoint.y);
+        _amount = _maxAmount;
 
-        this.RippleMaterial.SetFloat("_Amount", this.Amount);
-        this.Amount *= this.Friction;
+        _rippleMaterial.SetFloat("_CenterX", ScreenPoint.x);
+        _rippleMaterial.SetFloat("_CenterY", ScreenPoint.y);
+
+        SetRippleMaterialAmount();
+
+        yield return StartCoroutine(ResetRippleEffect());
     }
+
+    private IEnumerator ResetRippleEffect()
+    {
+        while (_amount >= 0.05f)
+        {
+            _amount *= _friction;
+
+            SetRippleMaterialAmount();
+
+            yield return null;
+        }
+
+        _amount = 0;
+    }
+
+    private void SetRippleMaterialAmount() => _rippleMaterial.SetFloat("_Amount", _amount);
 }

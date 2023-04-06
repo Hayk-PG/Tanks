@@ -915,6 +915,7 @@ GameObject:
   - component: {fileID: 963194238}
   - component: {fileID: 963194231}
   - component: {fileID: 963194239}
+  - component: {fileID: 963194240}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1117,6 +1118,21 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!114 &963194240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d96b2eab4c41a654d920d6e8da81fa9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rippleMaterial: {fileID: 2100000, guid: aa7f237f918d0da4d957159a01f0c02f, type: 2}
+  _maxAmount: 50
+  _friction: 0.95
 --- !u!114 &1220509570 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2421112072003297648, guid: 8bb47859066a5bf46b4be5e41db5feb7,
@@ -2355,6 +2371,7 @@ MonoBehaviour:
   _mapPoints: {fileID: 1950072990}
   _mainCameraController: {fileID: 963194236}
   _weatherManager: {fileID: 9149140056536914899}
+  _ripplePostProcessor: {fileID: 963194240}
   _tabDropBoxItemSelection: {fileID: 150762624}
   _dropBoxSelectionPanelRockets:
   - {fileID: 248514977}

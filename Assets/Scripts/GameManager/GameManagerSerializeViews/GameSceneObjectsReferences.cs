@@ -85,6 +85,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField] 
     private WeatherManager _weatherManager;
 
+    [SerializeField]
+    private RipplePostProcessor _ripplePostProcessor;
+
 
     [Header("DropBoxSelectionPanel")]
 
@@ -159,6 +162,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     //Camera
     public static MainCameraController MainCameraController => Instance._mainCameraController;
     public static WeatherManager WeatherManager => Instance._weatherManager;
+    public static RipplePostProcessor RipplePostProcessor => Instance._ripplePostProcessor;
 
     //DropBoxSelectionPanel
     public static Tab_DropBoxItemSelection Tab_DropBoxItemSelection => Instance._tabDropBoxItemSelection;

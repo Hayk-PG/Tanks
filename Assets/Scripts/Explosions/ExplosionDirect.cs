@@ -14,6 +14,8 @@ public class ExplosionDirect : BaseExplosion
 
     private void Start()
     {
+        base.Start();
+
         HitTank(Get<IDamage>.From(Collider.gameObject));
         HitTile(Get<IDestruct>.From(Collider.gameObject));
     }
