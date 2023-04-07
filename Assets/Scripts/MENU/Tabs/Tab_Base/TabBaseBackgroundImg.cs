@@ -7,25 +7,26 @@ using UnityEngine.UI;
 public class TabBaseBackgroundImg : MonoBehaviour
 {
     [SerializeField]
-    private Image _img;
+    protected Image _img;
 
     [SerializeField] [Space]
-    private AssetReferenceSprite _assetReferenceSprite;
+    protected AssetReferenceSprite _assetReferenceSprite;
 
-    private Sprite _sprt;
+    protected Sprite _sprt;
 
 
-    private void Awake() => LoadSpriteAsync();
+    protected virtual void Awake() => LoadSpriteAsync();
 
-    private void OnDestroy() => Addressables.Release(_sprt);
+    protected virtual void OnDestroy() => Addressables.Release(_sprt);
 
-    private void LoadSpriteAsync()
+    protected virtual void LoadSpriteAsync() => _assetReferenceSprite.LoadAssetAsync().Completed += asset => AssignImageSprite(asset.Result);
+
+    protected virtual void AssignImageSprite(Sprite sprite)
     {
-        _assetReferenceSprite.LoadAssetAsync().Completed += (asset) =>
-        {
-            _sprt = asset.Result;
+        _sprt = sprite;
 
-            _img.sprite = _sprt;
-        };
+        _img.sprite = sprite;
+
+        _img.color = Color.white;
     }
 }
