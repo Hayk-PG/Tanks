@@ -139,6 +139,8 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void GetMoreBullets(AmmoTypeButton ammoTypeButton)
     {
+        return;
+
         if (_weaponsBulletsCount[_shootController.ActiveAmmoIndex] <= 0)
             _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += ammoTypeButton._properties.Quantity;
     }
