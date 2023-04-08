@@ -3,9 +3,12 @@ using UnityEngine;
 public class ParticlesSound : MonoBehaviour
 {
     private enum SoundType { SecondarySoundController, ExplosionsSoundController }
-    [SerializeField] private SoundType _soundType;
 
-    [SerializeField] private int _listIndex, _clipIndex;
+    [SerializeField]
+    private SoundType _soundType;
+
+    [SerializeField]
+    private int _listIndex, _clipIndex;
 
 
     private void Awake()
