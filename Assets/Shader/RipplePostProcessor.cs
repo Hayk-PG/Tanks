@@ -18,6 +18,9 @@ public class RipplePostProcessor : MonoBehaviour
 
 
 
+
+    private void Awake() => SetRippleMaterialAmount();
+
     private void OnRenderImage(RenderTexture src, RenderTexture dst) => Graphics.Blit(src, dst, this._rippleMaterial);
 
     public void ApplyRippleFX(Vector3 pos)
