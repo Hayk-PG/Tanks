@@ -46,7 +46,7 @@ public class BulletMotionSoundFX : MonoBehaviour
         _audioSrc.loop = true;
         _audioSrc.Play();
 
-        while (!SoundController.IsMuted)
+        while (!SoundController.IsSoundMuted)
         {
             _audioSrc.volume = 1;
 
@@ -61,7 +61,7 @@ public class BulletMotionSoundFX : MonoBehaviour
         _audioSrc.enabled = true;
         _audioSrc.Play();
 
-        while (_volume > 0.05f && !SoundController.IsMuted)
+        while (_volume > 0.05f && !SoundController.IsSoundMuted)
         {
             _volume -= 0.5f * Time.deltaTime;
 

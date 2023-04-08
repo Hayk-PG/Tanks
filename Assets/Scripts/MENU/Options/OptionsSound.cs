@@ -1,59 +1,42 @@
 using UnityEngine;
+using System;
 
-public class OptionsSound : OptionsController
+public class OptionsSound : OptionsController, ISoundController
 {
-    [SerializeField] protected Sprite _sprtOn, _sprtOff;
+    [SerializeField] 
+    protected Sprite _sprtOn, _sprtOff;
 
-    protected bool _isOn;
+    protected virtual bool IsMuted => SoundController.IsSoundMuted;
 
-    protected virtual string Key { get; } = Keys.IsSoundOn;
+    protected virtual string Title =>  "Sound: ";
+
+    protected virtual Action<bool?, ISoundController> ToggleAudioActivity => SoundController.ToggleSoundActivity;
+
+
 
 
     protected virtual void Start()
     {
-        SetDefault();
-    }
-
-    protected override void Select() => Set();
-
-    public override void SetDefault() => Get();
-
-    protected virtual void Get()
-    {
-        _isOn = PlayerPrefsGetInt() < 1 ? false : true;
-        SetSoundController();
         ChangeIcon();
-        ChangeText("Sound: ");
+
+        ChangeText();
     }
 
-    protected virtual void Set()
+    protected override void Select() => ToggleAudioActivity?.Invoke(null, this);
+
+    protected virtual void ChangeIcon() => _icon.sprite = IsMuted ? _sprtOff : _sprtOn;
+
+    protected virtual void ChangeText()
     {
-        _isOn = !_isOn;
-        SetSoundController();
-        PlayerPrefsSetInt();
+        string txt = IsMuted ? GlobalFunctions.TextWithColorCode("#FD1E40", "Off") : GlobalFunctions.TextWithColorCode("#1EFDB6", "On");
+
+        _btnTxt.SetButtonTitle(Title + txt);
+    }
+
+    public virtual void Set(bool isOn = false)
+    {
         ChangeIcon();
-        ChangeText("Sound: ");
-    }
 
-    protected virtual int PlayerPrefsGetInt()
-    {
-        return PlayerPrefs.GetInt(Key, 0);
-    }
-
-    protected virtual void PlayerPrefsSetInt()
-    {
-        int index = _isOn ? 1 : 0;
-        PlayerPrefs.SetInt(Key, index);
-    }
-
-    protected virtual void SetSoundController() => SoundController.SoundSRCCondition(_isOn);
-
-    protected virtual void ChangeIcon() => _icon.sprite = _isOn ? _sprtOn : _sprtOff;
-
-    protected virtual void ChangeText(string title)
-    {
-        string txt = _isOn ? GlobalFunctions.TextWithColorCode("#1EFDB6", "On") : GlobalFunctions.TextWithColorCode("#FD1E40", "Off");
-
-        _btnTxt.SetButtonTitle(title + txt);
+        ChangeText();
     }
 }

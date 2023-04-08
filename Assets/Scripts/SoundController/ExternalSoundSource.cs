@@ -30,7 +30,7 @@ public class ExternalSoundSource : MonoBehaviour
 
         Play(PlayMode.OnAwake);
 
-        _audioSource.mute = SoundController.IsMuted;
+        _audioSource.mute = SoundController.IsSoundMuted;
     }
 
     private void Start()

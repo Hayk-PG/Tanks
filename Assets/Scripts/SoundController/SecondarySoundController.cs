@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SecondarySoundController : MonoBehaviour
 {
-    private static SecondarySoundController _inst;
+    public static SecondarySoundController Instance { get; private set; }
 
     private AudioSource _audioSRC;
 
@@ -20,18 +20,23 @@ public class SecondarySoundController : MonoBehaviour
     private ClipsList[] _clipsList;
 
 
+
+
     private void Awake()
     {
-        _inst = this;
+        Instance = this;
 
         _audioSRC = Get<AudioSource>.From(transform.Find("SoundSRC_2").gameObject);
     }
 
     public static void PlaySound(int listIndex, int clipIndex)
     {
-        if (listIndex >= _inst._clipsList.Length || clipIndex >= _inst._clipsList[listIndex]._clips.Length)
+        if (Instance == null)
+            Instance = FindObjectOfType<SecondarySoundController>();
+
+        if (listIndex >= Instance._clipsList.Length || clipIndex >= Instance._clipsList[listIndex]._clips.Length)
             return;
 
-        _inst._audioSRC.PlayOneShot(_inst._clipsList[listIndex]._clips[clipIndex]);
+        Instance._audioSRC.PlayOneShot(Instance._clipsList[listIndex]._clips[clipIndex]);
     }
 }

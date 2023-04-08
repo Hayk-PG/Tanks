@@ -13,7 +13,7 @@ public class VehicleEngineSoundCtrl : MonoBehaviour
 
     private void Awake() => _baseTankMovement = Get<BaseTankMovement>.From(gameObject);
 
-    private void Start() => audioSRC.mute = SoundController.IsMuted;
+    private void Start() => audioSRC.mute = SoundController.IsSoundMuted;
 
     private void OnEnable()
     {

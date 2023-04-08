@@ -1,11 +1,10 @@
+using System;
+
 public class OptionsMusic : OptionsSound
 {
-    protected override string Key => Keys.IsMusicOn;
+    protected override bool IsMuted => SoundController.IsMusicMuted;
 
-    protected override void SetSoundController() => SoundController.MusicSRCCondition(_isOn);
+    protected override string Title => "Music: ";
 
-    protected override void ChangeText(string title)
-    {
-        base.ChangeText("Music: ");
-    }
+    protected override Action<bool?, ISoundController> ToggleAudioActivity => SoundController.ToggleMusicActivity;
 }

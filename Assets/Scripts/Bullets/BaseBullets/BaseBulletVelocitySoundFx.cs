@@ -14,7 +14,7 @@ public class BaseBulletVelocitySoundFx : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!_isPlayed && !SoundController.IsMuted && _rigidbody.velocity.y <= 0)
+        if(!_isPlayed && !SoundController.IsSoundMuted && _rigidbody.velocity.y <= 0)
         {
             SecondarySoundController.PlaySound(2, _clipIndex);
 
