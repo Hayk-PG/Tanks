@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Coffee.UIEffects;
 
 public class MapSelector : MonoBehaviour, IReset
 {
@@ -11,6 +12,12 @@ public class MapSelector : MonoBehaviour, IReset
 
     [SerializeField] [Space]
     private Btn_Icon _bntIconLock;
+
+    [SerializeField] [Space]
+    private UIGradient _uiGradient;
+
+    [SerializeField] [Space]
+    private UIShiny _uiShiny;
 
     private Map _map;
 
@@ -28,17 +35,40 @@ public class MapSelector : MonoBehaviour, IReset
         }
     }
 
+    public event System.Action onRandomMapSelected;
 
 
 
 
-    private void OnEnable() => _btn.onSelect += () => { _onSelect(); };
 
-    private void OnDisable() => _btn.onSelect -= () => { _onSelect(); };
-
-    public void AssignMapSelector(bool isRandomMapSelector, Maps maps)
+    private void OnEnable()
     {
-        _onSelect = isRandomMapSelector ? () => { SelectRandomMap(maps); } : SelectMap;
+        _btn.onSelect += () => { _onSelect(); };
+
+        _btn.onDeselect += () => 
+        { 
+            SetUiGradientActive(true);
+
+            SetUiShinyActive(false);
+        };
+    }
+
+    public void AssignMapSelector(bool isRandomMapSelector, Maps maps) => _onSelect = isRandomMapSelector ? () => { SelectRandomMap(maps); } : SelectMap;
+
+    private void SetUiGradientActive(bool isActive)
+    {
+        if (_uiGradient.enabled == isActive)
+            return;
+
+        _uiGradient.enabled = isActive;
+    }
+
+    private void SetUiShinyActive(bool isActive)
+    {
+        if (_uiShiny.enabled == isActive)
+            return;
+
+        _uiShiny.enabled = isActive;
     }
 
     private void SelectRandomMap(Maps maps)
@@ -50,6 +80,8 @@ public class MapSelector : MonoBehaviour, IReset
         MenuTabs.Tab_HomeOffline.DisplayMapName(maps.All[randomMap]);
 
         StartCoroutine(DelayBeforeDeselect());
+
+        onRandomMapSelected?.Invoke();
     }
 
     private IEnumerator DelayBeforeDeselect()
@@ -64,6 +96,10 @@ public class MapSelector : MonoBehaviour, IReset
         Data.Manager.SetMap(_mapIndex);
 
         MenuTabs.Tab_HomeOffline.DisplayMapName(_map);
+
+        SetUiGradientActive(false);
+
+        SetUiShinyActive(true);
     }
 
     public void Initialize()

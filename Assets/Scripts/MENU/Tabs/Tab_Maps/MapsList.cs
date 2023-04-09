@@ -12,14 +12,24 @@ public class MapsList : MonoBehaviour, IReset
     [SerializeField] [Space]
     private CustomScrollRect _customScrollRect;
 
+    [SerializeField] [Space]
+    private MapSelector _randomMapSelector;
+
     private MapSelector[] _mapSelectors;
 
     private Btn[] _btns;
 
+    private IReset[] _btnResets;
 
 
 
-    private void Awake() => _btns = _content.GetComponentsInChildren<Btn>();
+
+    private void Awake()
+    {
+        _btns = _content.GetComponentsInChildren<Btn>();
+
+        _btnResets = _content.GetComponentsInChildren<IReset>();
+    }
 
     private void Start() => AddMapSelectors();
 
@@ -29,6 +39,8 @@ public class MapsList : MonoBehaviour, IReset
         { 
             btn.onSelect += delegate { DeselectOtherBtns(btn); }; 
         });
+
+        _randomMapSelector.onRandomMapSelected += () => GlobalFunctions.Loop<IReset>.Foreach(_btnResets, btnReset => { btnReset.SetDefault(); });
     }
 
     private void OnDisable()
@@ -37,6 +49,8 @@ public class MapsList : MonoBehaviour, IReset
         { 
             btn.onSelect += delegate { DeselectOtherBtns(btn); };
         });
+
+        _randomMapSelector.onRandomMapSelected -= () => GlobalFunctions.Loop<IReset>.Foreach(_btnResets, btnReset => { btnReset.SetDefault(); });
     }
 
     private void AddMapSelectors()
