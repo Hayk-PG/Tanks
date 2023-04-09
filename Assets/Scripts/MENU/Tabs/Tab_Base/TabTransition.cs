@@ -9,8 +9,8 @@ public class TabTransition : MonoBehaviour
     protected virtual void Awake()
     {
         _canvasGroup = Get<CanvasGroup>.From(gameObject);
+
         _tabBase = Get<Tab_Base>.From(gameObject);
-        transform.SetAsLastSibling();
     }
 
     protected virtual void OnEnable()
@@ -36,11 +36,9 @@ public class TabTransition : MonoBehaviour
     private void Open()
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
+
         Invoke("Close", 0.5f);
     }
 
-    private void Close()
-    {
-        GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
-    }
+    private void Close() => GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
 }
