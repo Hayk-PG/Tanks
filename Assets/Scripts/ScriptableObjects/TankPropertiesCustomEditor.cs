@@ -124,4 +124,20 @@ public class DetailsLevelCustomEditor : Editor
     }
 }
 
+[CustomEditor(typeof(PrefabsFontResetter))]
+public class PrefabsFontResetterCustomEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        PrefabsFontResetter prefabsFontResetter = (PrefabsFontResetter)target;
+
+        if (GUILayout.Button("Place", GUILayout.Height(40)))
+        {
+            prefabsFontResetter.ResetFonts();
+        }
+    }
+}
+
 #endif

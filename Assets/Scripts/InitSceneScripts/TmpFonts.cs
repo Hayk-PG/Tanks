@@ -22,14 +22,7 @@ public class TmpFonts : MonoBehaviour
     /// 8: NexaRustSlab-BlackShadow01 SDF <br/>
     /// 9: SparTakus SDF <br/>
     /// 10: Tokeely_Brookings SDF <br/>
-    /// 11: Tokeely_Brookings_Schatten SDF <br/>
-    /// 12: Electrolize-Regular_Extended ASCII SDF <br/>
-    /// 13: NEXON Football Gothic B SDF <br/>
-    /// 14: NEXON Football Gothic L SDF <br/>
-    /// 15: Oxanium-ExtraBold_Extended ASCII SDF <br/>
-    /// 16: Ubuntu-Bold_Extended ASCII SDF <br/>
-    /// 17: Ubuntu-Medium_Extended ASCII SDF <br/>
-    /// 18: Ubuntu-Regular_Extended ASCII SDF
+    /// 11: Tokeely_Brookings_Schatten SDF 
     /// </summary>
     public List<AssetReferenceTmpFont> Asset => _assetReferenceTmpFonts;
 
