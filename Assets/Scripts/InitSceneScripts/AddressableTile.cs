@@ -1,18 +1,9 @@
-using System;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 
-
-[Serializable]
-public class AssetReferenceTiles: AssetReferenceT<Tile>
-{
-    public AssetReferenceTiles(string guid) : base(guid)
-    {
-
-    }
-}
 
 //ADDRESSABLE
 public class AddressableTile : MonoBehaviour
@@ -23,6 +14,10 @@ public class AddressableTile : MonoBehaviour
     private List<AssetReference> _assetReferenceTilesMesh;
 
     public List<AssetReference> TilesMesh => _assetReferenceTilesMesh;
+
+    [SerializeField] [Space]
+    private InitAddressablesValidationChecklist _validationChecklist;
+
 
 
 
@@ -41,16 +36,20 @@ public class AddressableTile : MonoBehaviour
         }
     }
 
-    private void Start() => LoadAssets();
+    private void Start() => StartCoroutine(RunIteration());
 
-    private void LoadAssets()
+    private IEnumerator RunIteration()
     {
         foreach (var asset in _assetReferenceTilesMesh)
         {
             if (asset.OperationHandle.IsValid())
                 continue;
 
-            asset.LoadAssetAsync<GameObject>();
+            yield return asset.LoadAssetAsync<GameObject>().IsDone;
         }
+
+        yield return null;
+
+        _validationChecklist.CheckValidation(null, true, null);
     }
 }
