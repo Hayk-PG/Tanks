@@ -34,11 +34,7 @@ public class TmpFontToTmpTextAssigner : MonoBehaviour
     private void Awake()
     {
         foreach (var tmpText in _tmpTexts)
-        {
             foreach (var txts in tmpText._txts)
-            {
                 txts.font = TmpFonts.Loader.Asset[tmpText._fontIndex].OperationHandle.Result as TMP_FontAsset;
-            }
-        }
     }
 }

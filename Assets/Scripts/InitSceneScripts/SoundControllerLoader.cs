@@ -7,16 +7,34 @@ using UnityEngine.AddressableAssets;
 //ADDRESSABLE
 public class SoundControllerLoader : MonoBehaviour
 {
+    public static SoundControllerLoader Instance { get; private set; }
+
     [SerializeField] 
     private AssetReference _assetReferenceSoundController;
 
     [SerializeField] [Space]
     private InitAddressablesValidationChecklist _validationChecklist;
 
+    public bool IsValid { get; private set; }
 
 
 
-    private void Awake() => StartCoroutine(RunIteration());
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void Start() => StartCoroutine(RunIteration());
 
     private IEnumerator RunIteration()
     {
@@ -32,5 +50,8 @@ public class SoundControllerLoader : MonoBehaviour
         ConfirmValidation();
     }
 
-    private void ConfirmValidation() => _validationChecklist.CheckValidation(true, null, null);
+    private void ConfirmValidation()
+    {
+        _validationChecklist.CheckValidation(IsValid = true, null, null);
+    }
 }

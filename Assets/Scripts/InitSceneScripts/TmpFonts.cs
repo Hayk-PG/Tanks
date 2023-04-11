@@ -29,6 +29,8 @@ public class TmpFonts : MonoBehaviour
     [SerializeField] [Space]
     private InitAddressablesValidationChecklist _validationChecklist;
 
+    public bool IsValid { get; private set; }
+
 
 
 
@@ -60,6 +62,6 @@ public class TmpFonts : MonoBehaviour
 
         yield return null;
 
-        _validationChecklist.CheckValidation(null, null, true);
+        _validationChecklist.CheckValidation(null, null, IsValid = true);
     }
 }
