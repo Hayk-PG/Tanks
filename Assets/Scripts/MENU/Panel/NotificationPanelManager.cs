@@ -24,6 +24,8 @@ public class NotificationPanelManager : MonoBehaviour
     [SerializeField] [Space]
     private UnityEvent _unityEventMain, _unityEventSecond;
 
+    public bool IsActive => _canvasGroup.interactable;
+
 
 
 

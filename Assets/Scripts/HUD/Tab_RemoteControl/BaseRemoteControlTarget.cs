@@ -27,6 +27,8 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
     protected bool _isPlayingAnimation;
 
+    protected Vector3 _targetInitialPosition;
+
     protected object[] _data;
 
     protected string _artilleryNotificationPanelText = "To target your artillery, touch and hold on the screen where you want to aim!";
@@ -39,6 +41,9 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
 
 
+
+    private void Awake() => DefineTargetInitialPosition();
+
     private void OnEnable() => DropBoxSelectionHandler.onItemSelect += OnItemSelect;
 
     private void OnDisable() => DropBoxSelectionHandler.onItemSelect -= OnItemSelect;
@@ -49,6 +54,8 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
         PlayAnimation();
     }
+
+    private void DefineTargetInitialPosition() => _targetInitialPosition = _targetIcon.position;
 
     private void OnItemSelect(DropBoxItemType dropBoxItemType, object[] data)
     {
@@ -72,7 +79,7 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 
     private void ControlTargetIcon()
     {
-        if (!Input.GetMouseButton(0) || !_canvasGroup.interactable)
+        if (!Input.GetMouseButton(0) || !_canvasGroup.interactable || _notificationPanelManager.IsActive)
         {
             _isPlayingAnimation = false;
 
@@ -107,6 +114,16 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
         ChangeCameraHalfLength(isActive);
 
         SetNotificationPanelActive(isActive);
+
+        ResetTargetPosition(isActive);
+    }
+
+    private void ResetTargetPosition(bool isActive)
+    {
+        if (!isActive)
+            return;
+
+        _targetIcon.position = _targetInitialPosition;
     }
 
     private void LockCamera(bool isActive)
