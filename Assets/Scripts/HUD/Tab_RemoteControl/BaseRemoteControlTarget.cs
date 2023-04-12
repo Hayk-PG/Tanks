@@ -6,7 +6,7 @@ using UnityEngine;
 public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
 {
     public enum Mode { None, Bomber, Artillery}
-    private Mode _mode;
+    protected Mode _mode;
 
     [SerializeField] [Space]
     protected RectTransform _canvas, _targetIcon;
@@ -20,11 +20,17 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
     [SerializeField] [Space]
     protected Camera _mainCamera;
 
+    [SerializeField] [Space]
+    protected NotificationPanelManager _notificationPanelManager;
+
     protected Ray _ray;
 
     protected bool _isPlayingAnimation;
 
-    private object[] _data;
+    protected object[] _data;
+
+    protected string _artilleryNotificationPanelText = "To target your artillery, touch and hold on the screen where you want to aim!";
+    protected string _airBomberNotificationPanelText = "To target your air bomber, touch and hold on the screen where you want to aim";
 
     public bool IsActive => _canvasGroup.interactable;
 
@@ -99,6 +105,8 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
         StartCoroutine(StartCloseTabTimer(isActive));
 
         ChangeCameraHalfLength(isActive);
+
+        SetNotificationPanelActive(isActive);
     }
 
     private void LockCamera(bool isActive)
@@ -124,6 +132,19 @@ public class BaseRemoteControlTarget : MonoBehaviour, IHudTabsObserver
                 yield return new WaitForSeconds(1);
             }
         }
+    }
+
+    private void SetNotificationPanelActive(bool isActive)
+    {
+        if (!isActive)
+        {
+            _notificationPanelManager.Set();
+
+            return;
+        }
+
+        _notificationPanelManager.Set(NotificationPanelManager.InteractionType.Close, null, _mode == Mode.Artillery ? _artilleryNotificationPanelText : _mode == Mode.Bomber ?
+                                      _airBomberNotificationPanelText : "", "Ok!");
     }
 
     public void OnAnimationEnd()
