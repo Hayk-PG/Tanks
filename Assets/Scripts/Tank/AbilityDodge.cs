@@ -12,6 +12,8 @@ public class AbilityDodge : MonoBehaviour
 
     private BaseBulletController _projectile;
 
+    private MeshRenderer[] _meshes;
+
     [SerializeField] [Space]
     private bool _isActive;
     private bool _isDodged;
@@ -24,7 +26,6 @@ public class AbilityDodge : MonoBehaviour
 
 
 
-
     private void OnEnable() => GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
 
     private void FixedUpdate()
@@ -33,13 +34,29 @@ public class AbilityDodge : MonoBehaviour
         {
             if (!_isDodged && _isOpponentsTurn && ProjectileDistane() < 5)
             {
-                transform.position = _positionNextTile;
-
-                _isDodged = true;
-
-                //print($"Dodged: ");
+                Dodge();
             }
         }
+    }
+
+    private void Dodge()
+    {
+        SetMeshesActive(false);
+
+        transform.position = _positionNextTile;
+
+        _isDodged = true;
+    }
+
+    private void SetMeshesActive(bool isActive)
+    {
+        if (_meshes == null)
+            _meshes = GetComponentsInChildren<MeshRenderer>();
+
+        if (_meshes == null)
+            return;
+
+        GlobalFunctions.Loop<MeshRenderer>.Foreach(_meshes, meshes => { meshes.gameObject.SetActive(isActive); });
     }
 
     private void OnTurnChanged(TurnState turnState)
@@ -59,9 +76,9 @@ public class AbilityDodge : MonoBehaviour
     {
         if (_playerTurn.IsMyTurn)
         {
-            StartCoroutine(ResetTransformPosition());
+            _isOpponentsTurn = false;
 
-            SetConditionsFalse();
+            StartCoroutine(ResetDodge());
         }
     }
 
@@ -83,19 +100,19 @@ public class AbilityDodge : MonoBehaviour
             GetProjectile();
     }
 
-    private IEnumerator ResetTransformPosition()
+    private IEnumerator ResetDodge()
     {
         yield return new WaitForSeconds(0.25f);
 
-        if (_isDodged && GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(_positionCurrentTile) && transform.position != _positionLast)
-            transform.position = _positionLast;
-    }
+        if (_isDodged)
+        {
+            if (GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(_positionCurrentTile - new Vector3(0, 0.5f, 0)))
+                transform.position = _positionLast;
 
-    private void SetConditionsFalse()
-    {
-        _isDodged = false;
+            SetMeshesActive(true);
 
-        _isOpponentsTurn = false;
+            _isDodged = false;
+        }
     }
 
     private void GetLastPosition() => _positionLast = transform.position;
@@ -130,8 +147,6 @@ public class AbilityDodge : MonoBehaviour
                 if (isFound)
                 {
                     result?.Invoke(tileDict.Key);
-
-                    print($"{excludeTiles}: {tileDict.Value.name}");
 
                     yield break;
                 }
