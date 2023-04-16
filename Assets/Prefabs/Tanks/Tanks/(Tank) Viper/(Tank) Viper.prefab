@@ -766,17 +766,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af4eb96fba8d32643a5e098be2c921b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _normalSpeed: 275
-  _maxBrake: 275
-  _accelerated: 2750
-  _damageFactor: 85
-  _speedOnNormal: 325
-  _speedOnRain: 275
-  _speedOnSnow: 180
-  _brakeOnNormal: 325
-  _brakeOnRain: 5
-  _brakeOnSnow: 0
-  fuelConsumptionPercent: 400
+  _normalSpeed: 310
+  _maxBrake: 310
+  _accelerated: 2600
+  _damageFactor: 30
+  _speedOnNormal: 310
+  _speedOnRain: 290
+  _speedOnSnow: 210
+  _brakeOnNormal: 310
+  _brakeOnRain: 29
+  _brakeOnSnow: 21
+  fuelConsumptionPercent: 150
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
   _isJumpButtonPressed: 0
   _isJumped: 0
@@ -811,12 +811,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canon:
-    _minEulerAngleX: -58
+    _minEulerAngleX: -50
     _maxEulerAngleX: 0
-    _rotationSpeed: 10
+    _rotationSpeed: 17
     _rotationStabilizer: {x: 0, y: 0, z: 0}
   _shoot:
-    _rigidbodyForceMultiplier: 350
+    _rigidbodyForceMultiplier: 500
   _instantiatedBullet: {fileID: 0}
   _activeAmmoIndex: 0
 --- !u!114 &6957401674214711107
@@ -1574,6 +1574,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7893780686837114732}
     m_Modifications:
+    - target: {fileID: 49952221758070092, guid: 38c56cefbf207d941905675fb1d7ed10,
+        type: 3}
+      propertyPath: _elapsedTime
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 3561686518108696395, guid: 38c56cefbf207d941905675fb1d7ed10,
         type: 3}
       propertyPath: m_RootOrder
