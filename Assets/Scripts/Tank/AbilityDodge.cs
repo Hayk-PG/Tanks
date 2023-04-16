@@ -23,6 +23,8 @@ public class AbilityDodge : MonoBehaviour
     private Vector3 _positionNextTile;
     private Vector3 _positionLast;
 
+    public event Action onDodge;
+
 
 
 
@@ -33,9 +35,7 @@ public class AbilityDodge : MonoBehaviour
         if (_isActive)
         {
             if (!_isDodged && _isOpponentsTurn && ProjectileDistane() < 5)
-            {
                 Dodge();
-            }
         }
     }
 
@@ -43,9 +43,9 @@ public class AbilityDodge : MonoBehaviour
     {
         SetMeshesActive(false);
 
-        transform.position = _positionNextTile;
-
-        _isDodged = true;
+        transform.position = _positionNextTile; 
+        
+        _isDodged = true; 
     }
 
     private void SetMeshesActive(bool isActive)
@@ -55,6 +55,8 @@ public class AbilityDodge : MonoBehaviour
 
         if (_meshes == null)
             return;
+
+        onDodge?.Invoke();
 
         GlobalFunctions.Loop<MeshRenderer>.Foreach(_meshes, meshes => { meshes.gameObject.SetActive(isActive); });
     }
@@ -69,7 +71,6 @@ public class AbilityDodge : MonoBehaviour
 
             OnOtherTurn(turnState);
         }
-
     }
 
     private void OnMyTurn()
@@ -106,11 +107,15 @@ public class AbilityDodge : MonoBehaviour
 
         if (_isDodged)
         {
-            if (GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(_positionCurrentTile - new Vector3(0, 0.5f, 0)))
-                transform.position = _positionLast;
-
             SetMeshesActive(true);
 
+            if (GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(_positionCurrentTile - new Vector3(0, 0.5f, 0)))
+            {
+                transform.position = _positionCurrentTile + new Vector3(0, 0.5f, 0);
+
+                //transform.position = _positionLast;
+            }
+            
             _isDodged = false;
         }
     }

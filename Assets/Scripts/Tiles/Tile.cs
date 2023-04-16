@@ -45,18 +45,26 @@ public class Tile : MonoBehaviour, IDestruct
 
     private void InstantiateMesh()
     {
-        _mesh = Instantiate((GameObject)AddressableTile.Loader.TilesMesh.Find(asset => ((GameObject)(asset.OperationHandle.Result)).name == gameObject.name).OperationHandle.Result, transform);
-
-        _mesh.name = gameObject.name;
-
-        if (IsOverlapped)
+        foreach (var item in AddressableTile.Loader.TilesMesh)
         {
-            DestroyMesh();
+            if (((GameObject)item.OperationHandle.Result).name == gameObject.name)
+            {
+                _mesh = Instantiate(((GameObject)item.OperationHandle.Result), transform);
 
-            return;
+                _mesh.name = gameObject.name;
+
+                if (IsOverlapped)
+                {
+                    DestroyMesh();
+
+                    return;
+                }
+
+                onMeshInstantiated?.Invoke(_mesh);
+
+                return;
+            }
         }
-
-        onMeshInstantiated?.Invoke(_mesh);
     }
 
     private void DestroyMesh() => Destroy(_mesh);
