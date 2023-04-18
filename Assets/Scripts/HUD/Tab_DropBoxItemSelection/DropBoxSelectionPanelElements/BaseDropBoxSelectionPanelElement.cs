@@ -14,6 +14,9 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
 
     [SerializeField] [Space]
     protected int _price, _quantity, _usageFrequency, _turns;
+    protected int _usedTimes;
+
+    protected bool _hasStartedUse;
 
     protected object[] _data = new object[10];
 
@@ -60,12 +63,29 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
 
         Use();
 
+        CalculateUsedTimesAndCheckCanUseAgain();
+
         CloseTab();
     }
 
     protected abstract void Use();
 
     protected virtual void CloseTab() => GameSceneObjectsReferences.Tab_DropBoxItemSelection.SetActivity(false);
+
+    protected virtual void CalculateUsedTimesAndCheckCanUseAgain()
+    {
+        if (!_hasStartedUse)
+        {
+            _usedTimes = _usageFrequency;
+
+            _hasStartedUse = true;
+        }
+
+        _usedTimes--;
+
+        if (_usedTimes <= 0)
+            CanUse = false;
+    }
 
     //For player's abilities
     public void Initialize(string title, string ability, int price, int quantity, int usageFrequency, int turns)
@@ -115,7 +135,7 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
 
     protected virtual string UsageFrequencyText(int timeUsage)
     {
-        return timeUsage <= 0 ? "Can be used repeatedly throughout the game.": $"Can be used {TimeUsageText(timeUsage)} per game.";
+        return timeUsage >= 100 ? "Can be used repeatedly throughout the game.": $"Can be used {TimeUsageText(timeUsage)} per game.";
     }
 
     protected virtual string TimeUsageText(int timeUsage)
