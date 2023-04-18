@@ -7,7 +7,13 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
     protected Btn_DropBoxSelectionPanelElement _btnDropBoxSelectionPanelElement;
 
     [SerializeField] [Space]
-    protected int _price, _quantity;
+    protected Texts_DropBoxSelectionPanelElement _textsDropBoxSelectionPanelElement;
+
+    [SerializeField] [Space]
+    protected string _title, _ability;
+
+    [SerializeField] [Space]
+    protected int _price, _quantity, _usageFrequency, _turns;
 
     protected object[] _data = new object[10];
 
@@ -20,6 +26,8 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
     }
 
     protected virtual bool CanUse { get; set; } = true;
+
+
 
 
 
@@ -36,9 +44,13 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
             return;
         }
 
-        DisplayPrice();
+        DisplayTitle();
 
-        DisplayQuantity();
+        DisplayUsageFrequency();
+
+        DisplayAbility();
+
+        DisplayPrice();
     }
 
     protected virtual void OnSelect()
@@ -55,34 +67,59 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
 
     protected virtual void CloseTab() => GameSceneObjectsReferences.Tab_DropBoxItemSelection.SetActivity(false);
 
-    protected virtual void DisplayPrice()
+    //For player's abilities
+    public void Initialize(string title, string ability, int price, int quantity, int usageFrequency, int turns)
     {
-        if(_price == 0)
+        _title = title;
+        _ability = ability;
+
+        _price = price;
+        _quantity = quantity;
+        _usageFrequency = usageFrequency;
+        _turns = turns;
+    }
+
+    public virtual void DisplayTitle() => _textsDropBoxSelectionPanelElement.Title.text = _title;
+
+    public virtual void DisplayUsageFrequency() => _textsDropBoxSelectionPanelElement.UsageFrequency.text = UsageFrequencyText(_usageFrequency);
+
+    public virtual void DisplayAbility() => _textsDropBoxSelectionPanelElement.Ability.text = _ability;
+
+    public virtual void DisplayPrice() => SetPriceTagActive(_price > 0);
+
+    public virtual void MakeAvailableAgain() => CanUse = true;
+
+    protected virtual void SetPriceTagActive(bool isActive)
+    {
+        if (isActive)
+        {
+            _btnDropBoxSelectionPanelElement.BtnTxts[0].gameObject.SetActive(true);
+
+            _btnDropBoxSelectionPanelElement.BtnTxts[1].gameObject.SetActive(false);
+
+            _btnDropBoxSelectionPanelElement.Btn_IconStar.gameObject.SetActive(true);
+
+            _btnDropBoxSelectionPanelElement.BtnTxts[0].SetButtonTitle(_price.ToString());
+        }
+        else
         {
             _btnDropBoxSelectionPanelElement.BtnTxts[0].gameObject.SetActive(false);
 
-            return;
-        }
+            _btnDropBoxSelectionPanelElement.BtnTxts[1].gameObject.SetActive(true);
 
-        _btnDropBoxSelectionPanelElement.BtnTxts[0].gameObject.SetActive(true);
-        _btnDropBoxSelectionPanelElement.BtnTxts[0].SetButtonTitle(_price.ToString());
+            _btnDropBoxSelectionPanelElement.Btn_IconStar.gameObject.SetActive(false);
+
+            _btnDropBoxSelectionPanelElement.BtnTxts[1].SetButtonTitle("Free");
+        }
     }
 
-    protected virtual void DisplayQuantity(string txt = "")
+    protected virtual string UsageFrequencyText(int timeUsage)
     {
-        if(_quantity == 0)
-        {
-            _btnDropBoxSelectionPanelElement.BtnTxts[1].gameObject.SetActive(false);
-
-            return;
-        }
-
-        _btnDropBoxSelectionPanelElement.BtnTxts[1].gameObject.SetActive(true);
-        _btnDropBoxSelectionPanelElement.BtnTxts[1].SetButtonTitle(_quantity + txt);
+        return timeUsage <= 0 ? "Can be used repeatedly throughout the game.": $"Can be used {TimeUsageText(timeUsage)} per game.";
     }
 
-    public virtual void MakeAvailableAgain()
+    protected virtual string TimeUsageText(int timeUsage)
     {
-        CanUse = true;
+        return timeUsage == 1 ? "once" : timeUsage == 2 ? "twice" : $"{timeUsage} time";
     }
 }
