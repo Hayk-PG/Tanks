@@ -15,6 +15,9 @@ public class AbilityDodge : MonoBehaviour
     private MeshRenderer[] _meshes;
 
     [SerializeField] [Space]
+    private int _dropBoxSelectionPanelIndex;
+
+    [SerializeField] [Space]
     private bool _isActive;
     private bool _isDodged;
     private bool _isOpponentsTurn;
@@ -23,10 +26,25 @@ public class AbilityDodge : MonoBehaviour
     private Vector3 _positionNextTile;
     private Vector3 _positionLast;
 
+    private int Price { get; set; } = 1300;
+    private int Quantity { get; set; } = 0;
+    private int UsageFrequency { get; set; } = 3;
+    private int Turns { get; set; } = 3;
+
+    private string Title { get; set; } = "Dodge";
+    private string Ability { get; set; } = "Avoid next incoming attacks for 3 turn.";
+
     public event Action onDodge;
 
 
 
+
+
+    private void Awake()
+    {
+        GameSceneObjectsReferences.DropBoxSelectionPanelPlayerAbilities[_dropBoxSelectionPanelIndex < 1 ? 0: 1].Initialize
+            (Title, Ability, Price, Quantity, UsageFrequency, Turns);
+    }
 
     private void OnEnable() => GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
 

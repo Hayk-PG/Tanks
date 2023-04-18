@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 
 public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
@@ -40,7 +41,7 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
 
     public virtual void Activate()
     {
-        if (!CanUse || !GameSceneObjectsReferences.DropBoxItemSelectionPanelOwner.HasEnoughPoints(_price))
+        if (!CanUse || !GameSceneObjectsReferences.DropBoxItemSelectionPanelOwner.HasEnoughPoints(_price) || String.IsNullOrEmpty(_title))
         {
             gameObject.SetActive(false);
 
@@ -99,7 +100,13 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
         _turns = turns;
     }
 
-    public virtual void DisplayTitle() => _textsDropBoxSelectionPanelElement.Title.text = _title;
+    public virtual void DisplayTitle()
+    {
+        if (transform.GetSiblingIndex() == 0 || transform.GetSiblingIndex() == 1)
+            print(_title);
+
+        _textsDropBoxSelectionPanelElement.Title.text = _title;
+    }
 
     public virtual void DisplayUsageFrequency() => _textsDropBoxSelectionPanelElement.UsageFrequency.text = UsageFrequencyText(_usageFrequency);
 
