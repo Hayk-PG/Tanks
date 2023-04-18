@@ -88,25 +88,7 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
             CanUse = false;
     }
 
-    //For player's abilities
-    public void Initialize(string title, string ability, int price, int quantity, int usageFrequency, int turns)
-    {
-        _title = title;
-        _ability = ability;
-
-        _price = price;
-        _quantity = quantity;
-        _usageFrequency = usageFrequency;
-        _turns = turns;
-    }
-
-    public virtual void DisplayTitle()
-    {
-        if (transform.GetSiblingIndex() == 0 || transform.GetSiblingIndex() == 1)
-            print(_title);
-
-        _textsDropBoxSelectionPanelElement.Title.text = _title;
-    }
+    public virtual void DisplayTitle() => _textsDropBoxSelectionPanelElement.Title.text = _title;
 
     public virtual void DisplayUsageFrequency() => _textsDropBoxSelectionPanelElement.UsageFrequency.text = UsageFrequencyText(_usageFrequency);
 

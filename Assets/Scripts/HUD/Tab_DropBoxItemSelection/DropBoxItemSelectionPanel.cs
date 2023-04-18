@@ -30,9 +30,6 @@ public class DropBoxItemSelectionPanel : MonoBehaviour
 
         for (int i = 0; i < _elements.Length; i++)
         {
-            if (i == 0)
-                continue;
-
             if(Random.Range(0, 2) < 1 )
             {
                 SetElementActivity(false, i);

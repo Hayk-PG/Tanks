@@ -2,9 +2,14 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class AbilityDodge : MonoBehaviour
+public class AbilityDodge : MonoBehaviour, IPlayerAbility
 {
+    private enum AbilitiesOrders { First, Second}
+
     [SerializeField]
+    private AbilitiesOrders _abilitiesOrders;
+
+    [SerializeField] [Space]
     private Rigidbody _rigidbody;
 
     [SerializeField] [Space]
@@ -12,12 +17,10 @@ public class AbilityDodge : MonoBehaviour
 
     private BaseBulletController _projectile;
 
+    private IPlayerAbility _iPlayerAbility;
+
     private MeshRenderer[] _meshes;
 
-    [SerializeField] [Space]
-    private int _dropBoxSelectionPanelIndex;
-
-    [SerializeField] [Space]
     private bool _isActive;
     private bool _isDodged;
     private bool _isOpponentsTurn;
@@ -40,13 +43,19 @@ public class AbilityDodge : MonoBehaviour
 
 
 
-    private void Awake()
+    private void Awake() => _iPlayerAbility = this;
+
+    private void Start()
     {
-        GameSceneObjectsReferences.DropBoxSelectionPanelPlayerAbilities[_dropBoxSelectionPanelIndex < 1 ? 0: 1].Initialize
-            (Title, Ability, Price, Quantity, UsageFrequency, Turns);
+        GameSceneObjectsReferences.DropBoxSelectionPanelPlayerAbilities[(int)_abilitiesOrders].Initialize(_iPlayerAbility, Title, Ability, Price, Quantity, UsageFrequency, Turns);
     }
 
-    private void OnEnable() => GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
+    private void OnEnable()
+    {
+        DropBoxSelectionHandler.onItemSelect += OnDropBoxItemSelect;
+
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
+    }
 
     private void FixedUpdate()
     {
@@ -54,6 +63,19 @@ public class AbilityDodge : MonoBehaviour
         {
             if (!_isDodged && _isOpponentsTurn && ProjectileDistane() < 5)
                 Dodge();
+        }
+    }
+
+    private void OnDropBoxItemSelect(DropBoxItemType dropBoxItemType, object[] data)
+    {
+        if(dropBoxItemType == DropBoxItemType.Ability && (IPlayerAbility)data[0] == _iPlayerAbility)
+        {
+            _isActive = true;
+
+            print($"Dodge is activated!");
+
+            //Extend this
+            //Attach script to offline player 
         }
     }
 
