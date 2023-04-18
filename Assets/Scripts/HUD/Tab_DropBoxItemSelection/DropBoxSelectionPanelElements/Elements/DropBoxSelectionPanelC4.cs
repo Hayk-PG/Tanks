@@ -16,8 +16,6 @@ public class DropBoxSelectionPanelC4 : BaseDropBoxSelectionPanelElement
         _data[2] = _quantity;
 
         DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.C4, _data);
-
-        CanUse = false;
     }
 
     private Vector3? MinePosition(TankController tankController)

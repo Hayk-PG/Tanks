@@ -14,7 +14,5 @@ public class DropBoxSelectionPanelBomber : BaseDropBoxSelectionPanelElement
         _data[2] = _quantity;
 
         DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Bomber, _data);
-
-        CanUse = false;
     }
 }

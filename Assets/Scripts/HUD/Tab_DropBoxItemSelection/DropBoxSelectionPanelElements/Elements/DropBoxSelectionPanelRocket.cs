@@ -25,7 +25,5 @@ public class DropBoxSelectionPanelRocket : BaseDropBoxSelectionPanelElement
         _data[2] = NegativePrice;
 
         DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Rocket, _data);
-
-        CanUse = false;
     }
 }

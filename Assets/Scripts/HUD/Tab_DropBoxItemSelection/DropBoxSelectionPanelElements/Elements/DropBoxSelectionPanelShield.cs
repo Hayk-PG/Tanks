@@ -1,13 +1,10 @@
-using System;
 
 public class DropBoxSelectionPanelShield : BaseDropBoxSelectionPanelElement
 {
-    public event Action<int> onShield;
-
     protected override void Use()
     {
-        onShield?.Invoke(NegativePrice);
+        _data[0] = NegativePrice;
 
-        CanUse = false;
+        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Shield, _data);
     }
 }

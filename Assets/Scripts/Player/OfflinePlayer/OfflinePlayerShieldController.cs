@@ -7,9 +7,16 @@ public class OfflinePlayerShieldController : MonoBehaviour
 
 
 
-    protected virtual void OnEnable() => GameSceneObjectsReferences.DropBoxSelectionPanelShield.onShield += OnActivateShield;
+    protected virtual void OnEnable()
+    {
+        DropBoxSelectionHandler.onItemSelect += delegate (DropBoxItemType dropBoxItemType, object[] data)
+        {
+            if (dropBoxItemType != DropBoxItemType.Shield)
+                return;
 
-    protected virtual void OnDisable() => GameSceneObjectsReferences.DropBoxSelectionPanelShield.onShield -= OnActivateShield;
+            OnActivateShield((int)data[0]);
+        };
+    }
 
     protected virtual void OnActivateShield(int price)
     {
