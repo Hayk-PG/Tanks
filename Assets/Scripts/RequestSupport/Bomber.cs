@@ -6,13 +6,19 @@ public enum BomberType { Light, Medium, Heavy, Nuke }
 public class Bomber : MonoBehaviour
 {
     [SerializeField] [Space]
-    private Transform _propeller, _bombSpwnPoint;
+    private Transform _bombSpwnPoint;
 
     [SerializeField] [Space]
     private Rigidbody _rigidbody;
 
     [SerializeField] [Space]
     private BombController _bombPrefab;
+
+    [SerializeField] [Space]
+    private BomberAddressable _bomberAddressable;
+
+    [SerializeField] [Space]
+    private ExternalSoundSource _externalSoundSource;
 
     public IScore OwnerScore { get; set; }
 
@@ -31,18 +37,20 @@ public class Bomber : MonoBehaviour
 
 
 
+
+
+    private void OnEnable()
+    {
+        _bomberAddressable.LoadMeshes();
+
+        _externalSoundSource.Play(ExternalSoundSource.PlayMode.OnReference);
+    }
+
     private void FixedUpdate()
     {
-        Movement();
-
         DropBomb();
 
         Conditions<bool>.Compare(IsOutOfBoundaries, Deactivate, null);
-    }
-
-    private void Movement()
-    {
-        _propeller.Rotate(Vector3.right, -1000 * Time.deltaTime);
     }
 
     public void DropBomb()
