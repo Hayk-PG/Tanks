@@ -19,7 +19,9 @@ public class MainCameraController : MonoBehaviour
     private float _currentVelocityfloat;
     private float _ortographicSize;  
     private float _minPosX, _maxPosX, _newPosX;
-    private float _yOffset = 2;
+    [SerializeField] [Space]
+    private float _yDefaultPosition;
+    private float _yPosition;
     private float _desiredHeightOffset = 0;
 
     private bool _isLocked;
@@ -59,6 +61,10 @@ public class MainCameraController : MonoBehaviour
     private float CameraWidth => _camera.orthographicSize * _camera.aspect;
 
 
+
+
+
+    private void Awake() => SetVerticalPos(_yDefaultPosition);
 
     private void Start()
     {
@@ -115,7 +121,7 @@ public class MainCameraController : MonoBehaviour
     {
         if (PlayersInitialized)
         {
-            Vector3 targetPosition = new Vector3(Center.x, Center.y + _yOffset, _rb.position.z);
+            Vector3 targetPosition = new Vector3(Center.x, Center.y + _yPosition, _rb.position.z);
 
             Vector3 smoothPosition = Vector3.SmoothDamp(_rb.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
 
@@ -148,15 +154,9 @@ public class MainCameraController : MonoBehaviour
         return new Vector3(_newPosX, position.y, position.z);
     }
 
-    private void OffsetY(float value)
-    {
-        _yOffset = value;
-    }
+    private void SetVerticalPos(float value) => _yPosition = value;
 
-    private void DesiredHeightOffset(float value)
-    {
-        _desiredHeightOffset = value;
-    }
+    private void DesiredHeightOffset(float value) => _desiredHeightOffset = value;
 
     private void SetTargets(Rigidbody target1, Rigidbody target2)
     {
@@ -168,7 +168,7 @@ public class MainCameraController : MonoBehaviour
     {
         SetTargets(_player1, _player2);
 
-        OffsetY(2);
+        SetVerticalPos(_yDefaultPosition);
 
         DesiredHeightOffset(0);
     }
@@ -191,14 +191,14 @@ public class MainCameraController : MonoBehaviour
             {
                 SetTargets(target, _player2);
 
-                OffsetY(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target2.position.y, 0.5f));
+                SetVerticalPos(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target2.position.y, 0.5f));
             }
 
             if (!isPlayerOnesTurn)
             {
                 SetTargets(_player1, target);
 
-                OffsetY(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target1.position.y, 0.5f));
+                SetVerticalPos(Mathf.Lerp(yOffset.HasValue ? yOffset.Value : 2, Target1.position.y, 0.5f));
             }
         }
 
