@@ -6,9 +6,7 @@ public class LevelGenerator : MonoBehaviour
 {
     [SerializeField] private Maps _maps;
     [SerializeField] private int _currentMapIndex;
-
-    private ChangeTiles _changeTiles;
-    
+   
     public int CurrentMapIndex
     {
         get => _currentMapIndex;
@@ -20,13 +18,18 @@ public class LevelGenerator : MonoBehaviour
     private float QuarterOfMapTextureHeight => MapTextureHeight / 4;
     private Texture2D MapTexture => _maps.All[CurrentMapIndex].Texture;
 
+    public static ChangeTiles ChangeTiles { get; private set; }
+    public static TilesData TilesData { get; private set; }
+
+
     public event Action<LevelGeneratorData> onMapTexturePixels;
 
 
 
     private void Awake()
     {
-        _changeTiles = Get<ChangeTiles>.From(gameObject);
+        ChangeTiles = Get<ChangeTiles>.From(gameObject);
+        TilesData = Get<TilesData>.From(gameObject);
     }
 
     private void Start()
@@ -55,7 +58,7 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        _changeTiles.UpdateTiles(null);
+        ChangeTiles.UpdateTiles(null);
     }
 
     private void ShareLevelGeneratorData(LevelGeneratorData levelGeneratorData, int x, int y)

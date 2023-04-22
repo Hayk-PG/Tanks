@@ -32,7 +32,7 @@ public class AITankMovement : BaseTankMovement
     {
         base.OnEnable();
 
-        _aiMovementPlanner.OnAIMovementPlanner += OnGetDestination;
+        _aiMovementPlanner.onAiMovementPlanner += OnGetDestination;
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
    
@@ -40,7 +40,7 @@ public class AITankMovement : BaseTankMovement
     {
         base.OnDisable();
 
-        _aiMovementPlanner.OnAIMovementPlanner -= OnGetDestination;
+        _aiMovementPlanner.onAiMovementPlanner -= OnGetDestination;
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
     }
 
@@ -128,11 +128,16 @@ public class AITankMovement : BaseTankMovement
         _isOnRightSlope = Direction > 0.5f && _rayCasts.FrontHit.collider?.name == _slopesNames[0];
         _isOnLeftSlope = Direction < -0.5f && _rayCasts.BackHit.collider?.name == _slopesNames[1];
 
-        if (_isOnRightSlope) RigidbodyPush(_vectorRight, 2500);
-        if (_isOnLeftSlope) RigidbodyPush(_vectorLeft, 2500);
+        if (_isOnRightSlope) 
+            RigidbodyPush(_vectorRight, 2500);
 
-        if (_isOnRightSlope || _isOnLeftSlope) Speed = _accelerated;
-        else Speed = _normalSpeed;
+        if (_isOnLeftSlope) 
+            RigidbodyPush(_vectorLeft, 2500);
+
+        if (_isOnRightSlope || _isOnLeftSlope) 
+            Speed = _accelerated;
+        else 
+            Speed = _normalSpeed;
     }
 
     public void Brake()

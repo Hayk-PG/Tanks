@@ -2,24 +2,24 @@
 
 public class PlayerHUD : MonoBehaviour
 { 
+    [SerializeField] 
     protected Canvas _canvas;
+
+    [SerializeField]
     protected CanvasGroup _mainCanvasGroup;
+
+    [SerializeField] 
     protected CanvasGroup _canvasGroupShootValues;
+
+    [SerializeField]
     protected TankController _tankController;
+
+    [SerializeField]
     protected TankMovement _tankMovement;
+
     protected PhotonPlayerEnableHUDRPC _photonPlayerEnableHUDRPC;
-    protected IsGroundedChecker _isGroundedChecker;
 
 
-    protected virtual void Awake()
-    {
-        _canvas = GetComponent<Canvas>();
-        _mainCanvasGroup = GetComponent<CanvasGroup>();
-        _canvasGroupShootValues = transform.Find("Tab_ShootValues").GetComponent<CanvasGroup>();
-        _tankController = Get<TankController>.From(gameObject);
-        _tankMovement = Get<TankMovement>.From(gameObject);
-        _isGroundedChecker = Get<IsGroundedChecker>.FromChild(transform.parent.gameObject);
-    }
 
     protected virtual void Start()
     {
@@ -28,18 +28,12 @@ public class PlayerHUD : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        if (_isGroundedChecker != null)
-            _isGroundedChecker.OnGrounded += EnablePlayerHUD;
-
         if (_tankMovement != null)
             _tankMovement.OnDirectionValue += OnMovementDirectionValue;
     }
 
     protected virtual void OnDisable()
     {
-        if (_isGroundedChecker != null)
-            _isGroundedChecker.OnGrounded -= EnablePlayerHUD;
-
         if (_tankMovement != null)
             _tankMovement.OnDirectionValue -= OnMovementDirectionValue;
     }

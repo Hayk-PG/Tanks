@@ -4,14 +4,26 @@ using UnityEngine;
 [Serializable]
 public class BaseTankMovement : MonoBehaviour
 {
-    [Header("Movement parameters")] [Range(0, 1000)] 
-    public float _normalSpeed;
-    [Range(0, 1000)]
-    public float _maxBrake;
-    [Range(0, 3000)]
-    public float _accelerated;
-    [Range(0, 100)]
-    public int _damageFactor;
+    [Header("Movement parameters")] 
+    [Range(0, 1000)] public float _normalSpeed;
+    [Range(0, 1000)] public float _maxBrake;
+    [Range(0, 3000)] public float _accelerated;
+    [Range(0, 100)] [Tooltip("Light => 0 - 40: Medium => 45 - 75: Heavy => 80 - 100")] public int _damageFactor;
+
+    [Header("Movement factors")]
+    public float _speedOnNormal;
+    public float _speedOnRain;
+    public float _speedOnSnow;
+
+    [Space]
+    public float _brakeOnNormal;
+    public float _brakeOnRain;
+    public float _brakeOnSnow;
+
+    [Space] [Range(50, 500)]
+    public float fuelConsumptionPercent;
+
+    [Space]
     public Vector3 _normalCenterOfMass;
     protected float _currentBrake;
     protected float _currentSpeed;
@@ -69,6 +81,8 @@ public class BaseTankMovement : MonoBehaviour
     {
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight += OnAllowingPlayerToMoveOnlyFromLeftToRight;
 
+        GameSceneObjectsReferences.WeatherManager.onWeatherActivity += OnWeatherActivity;
+
         if (_stun != null)
             _stun.OnStunEffect += OnStunEffect;
     }
@@ -76,6 +90,8 @@ public class BaseTankMovement : MonoBehaviour
     protected virtual void OnDisable()
     {
         _vehicleRigidbodyPosition.OnAllowingPlayerToMoveOnlyFromLeftToRight -= OnAllowingPlayerToMoveOnlyFromLeftToRight;
+
+        GameSceneObjectsReferences.WeatherManager.onWeatherActivity -= OnWeatherActivity;
 
         if (_stun != null)
             _stun.OnStunEffect -= OnStunEffect;
@@ -87,6 +103,7 @@ public class BaseTankMovement : MonoBehaviour
 
         string right = InitialRotationYAxis > 0 ? "RS" : "LS";
         string left = InitialRotationYAxis > 0 ? "LS" : "RS";
+
         _slopesNames = new string[2] { right, left };
 
         _vectorRight = InitialRotationYAxis > 0 ? Vector3.right : Vector3.left;
@@ -96,6 +113,27 @@ public class BaseTankMovement : MonoBehaviour
     protected virtual void OnAllowingPlayerToMoveOnlyFromLeftToRight(bool? mustMoveFromLeftToRightOnly)
     {
 
+    }
+
+    protected virtual void OnWeatherActivity(bool isRaining, bool isSnowing)
+    {
+        if (isRaining)
+        {
+            _normalSpeed = _speedOnRain;
+            _maxBrake = _brakeOnRain;
+        }
+
+        else if (isSnowing)
+        {
+            _normalSpeed = _speedOnSnow;
+            _maxBrake = _brakeOnSnow;
+        }
+
+        else
+        {
+            _normalSpeed = _speedOnNormal;
+            _maxBrake = _brakeOnNormal;
+        }
     }
 
     protected virtual void OnStunEffect(bool isStunned)

@@ -2,16 +2,41 @@ using UnityEngine;
 
 public class LevelCreator : BaseLevelGenerator
 {
-    [SerializeField] private ColorToPrefab _colorOfArmoredTile;
-    [SerializeField] private ColorToPrefab _colorOfArmoredWall;
-    [SerializeField] private ColorToPrefab _colorOfExplosiveBarrel;
+    [SerializeField]
+    [Space]
+    private ColorToPrefab _colorOfArmoredTile;
+
+    [SerializeField]
+    [Space]
+    private ColorToPrefab _colorOfArmoredWall;
+
+    [SerializeField]
+    [Space]
+    private ColorToPrefab _colorOfExplosiveBarrel;
+
+    [SerializeField]
+    [Space]
+    private ColorToPrefab _colorOfMine;
+
+    [SerializeField]
+    [Space]
+    private ColorToPrefab _colorOfBoostZoneDoubleXp;
+
+    [SerializeField]
+    [Space]
+    private ColorToPrefab _colorOfBoostZoneSafe;
+
+
+
 
     protected override void GetLevelGeneratorData(LevelGeneratorData levelGeneratorData)
     {
         CreateArmoredTiles(levelGeneratorData);
         CreateTilesWithArmoredWall(levelGeneratorData);
-        CreateExplosiveBarrels(levelGeneratorData);
+        CreateMines(levelGeneratorData);
         CreateTiles(levelGeneratorData);
+        CreateDoubleXpBoostZone(levelGeneratorData);
+        CreateSafeBoostZone(levelGeneratorData);
     }
 
     private void CreateTiles(LevelGeneratorData levelGeneratorData)
@@ -35,10 +60,30 @@ public class LevelCreator : BaseLevelGenerator
             ActivateProps(Tile(_colorOfArmoredWall._prefab, levelGeneratorData), TileProps.PropsType.MetalGround);
     }
 
-    private void CreateExplosiveBarrels(LevelGeneratorData levelGeneratorData)
+    private void CreateMines(LevelGeneratorData levelGeneratorData)
     {
-        if (_colorOfExplosiveBarrel._color == levelGeneratorData.MapTexturePixelColor)
-            ActivateProps(Tile(_colorOfArmoredWall._prefab, levelGeneratorData), TileProps.PropsType.ExplosiveBarrels);
+        if (_colorOfMine._color == levelGeneratorData.MapTexturePixelColor)
+            ActivateProps(Tile(_colorOfMine._prefab, levelGeneratorData), TileProps.PropsType.Mine);
+    }
+
+    private void CreateDoubleXpBoostZone(LevelGeneratorData levelGeneratorData)
+    {
+        if (_colorOfBoostZoneDoubleXp._color == levelGeneratorData.MapTexturePixelColor)
+        {
+            GameObject boostZone = Instantiate(_colorOfBoostZoneDoubleXp._prefab, levelGeneratorData.MapTexturePixelsCoordinate, Quaternion.identity, transform);
+            BoostZoneManager boostZoneManager = Get<BoostZoneManager>.From(boostZone);
+            boostZoneManager.Init(BoostZoneManager.Feature.XpBoost);
+        }
+    }
+
+    private void CreateSafeBoostZone(LevelGeneratorData levelGeneratorData)
+    {
+        if (_colorOfBoostZoneSafe._color == levelGeneratorData.MapTexturePixelColor)
+        {
+            GameObject boostZone = Instantiate(_colorOfBoostZoneSafe._prefab, levelGeneratorData.MapTexturePixelsCoordinate, Quaternion.identity, transform);
+            BoostZoneManager boostZoneManager = Get<BoostZoneManager>.From(boostZone);
+            boostZoneManager.Init(BoostZoneManager.Feature.SafeZone);
+        }
     }
 
     private void ActivateProps(GameObject tile, TileProps.PropsType propsType)

@@ -3,10 +3,16 @@ using UnityEngine;
 
 public class AmmoTabButton : MonoBehaviour
 {
-    public event Action OnAmmoTabActivity;
+    [SerializeField]
+    private Btn _btn;
 
-    public void OnClickButton()
-    {
-        OnAmmoTabActivity?.Invoke();
-    }
+    public event Action onAmmoTabActivity;
+
+
+
+    private void OnEnable() => _btn.onSelect += OnSelect;
+
+    private void OnDisable() => _btn.onSelect -= OnSelect;
+
+    private void OnSelect() => onAmmoTabActivity?.Invoke();
 }

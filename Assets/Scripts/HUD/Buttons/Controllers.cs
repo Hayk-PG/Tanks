@@ -8,36 +8,54 @@ public class Controllers : MonoBehaviour
 
     private FixedJoystick _movementJoystick;
 
+    [SerializeField]
+    private CanvasGroup[] _canvasGroups;
+
     public Action<Vector2> OnControllers { get; set; }
     public Action<float> OnHorizontalJoystick { get; set; }
 
 
-    private void Awake()
-    {
-        _movementJoystick = Get<FixedJoystick>.From(GameObject.Find("HorizontalJoystick"));
-    }
+
+
+    private void Awake() => _movementJoystick = Get<FixedJoystick>.From(GameObject.Find("HorizontalJoystick"));
 
     private void Update()
     {
         switch (_buttons)
         {
-            case Buttons.None: OnControllers?.Invoke(new Vector2(0, 0)); break;
-            case Buttons.Up: OnControllers?.Invoke(new Vector2(0, 1)); break;
-            case Buttons.Down: OnControllers?.Invoke(new Vector2(0, -1)); break;
-            case Buttons.Left: OnControllers?.Invoke(new Vector2(-1, 0)); break;
-            case Buttons.Right: OnControllers?.Invoke(new Vector2(1, 0)); break;
+            case Buttons.None:
+                OnControllers?.Invoke(new Vector2(0, 0)); 
+                break;
+
+            case Buttons.Up: 
+                OnControllers?.Invoke(new Vector2(0, 1));
+                break;
+
+            case Buttons.Down: 
+                OnControllers?.Invoke(new Vector2(0, -1)); 
+                break;
+
+            case Buttons.Left: 
+                OnControllers?.Invoke(new Vector2(-1, 0)); 
+                break;
+
+            case Buttons.Right: 
+                OnControllers?.Invoke(new Vector2(1, 0));
+                break;
         }
 
         OnHorizontalJoystick?.Invoke(_movementJoystick.Horizontal);
     }
 
-    public void OnPointerDown(int index)
-    {
-        _buttons = (Buttons)index;
-    }
+    public void OnPointerDown(int index) => _buttons = (Buttons)index;
 
-    public void OnPointerUp()
+    public void OnPointerUp() => _buttons = Buttons.None;
+
+    public void SetControllersActive(bool isActive)
     {
-        _buttons = Buttons.None;
+        GlobalFunctions.Loop<CanvasGroup>.Foreach(_canvasGroups, canvasGroup =>
+        {
+            GlobalFunctions.CanvasGroupActivity(canvasGroup, isActive);
+        });
     }
 }

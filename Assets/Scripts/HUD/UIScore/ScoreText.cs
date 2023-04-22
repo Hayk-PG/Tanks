@@ -1,27 +1,55 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class ScoreText : MonoBehaviour
 {
+    [SerializeField]
+    private TMP_Text _txt;
+
+    [SerializeField] [Space]
     private Animator _anim;
-    private Text _text;
 
-    private int Score
+    private ScoreController _playerScoreController;
+
+    private int _score = 0;
+
+
+
+    private void Awake() => UpdateScoreText();
+
+    private void OnEnable() => GameSceneObjectsReferences.GameManager.OnGameStarted += GetPlayerScoreController;
+
+    private void OnDisable() => GameSceneObjectsReferences.GameManager.OnGameStarted -= GetPlayerScoreController;
+
+    private void GetPlayerScoreController()
     {
-        get => int.Parse(_text.text);
-        set => _text.text = value.ToString();
+        _playerScoreController = GlobalFunctions.ObjectsOfType<TankController>.Find(tc => tc.BasePlayer != null)?.GetComponent<ScoreController>();
+
+        _playerScoreController.onDisplayPlayerScore += OnDisplayPlayerScore;
     }
 
-
-    private void Awake()
+    private void OnDisplayPlayerScore(int score, float waitForSeconds = 0)
     {
-        _anim = GetComponent<Animator>();
-        _text = GetComponent<Text>();
+        _score += score;
+
+        UpdateScoreText();
+
+        PlayAnimation();
     }
 
-    public void UpdateScoreText(int score)
+    private void UpdateScoreText()
     {
-        Score += score;
-        if(_anim != null) _anim.SetTrigger(Names.Play);
+        if (_txt == null)
+            return;
+
+        _txt.text = Converter.DecimalString(_score, 5);
+    }
+
+    private void PlayAnimation()
+    {
+        if (_anim == null)
+            return;
+
+        _anim.SetTrigger(Names.Play);
     }
 }

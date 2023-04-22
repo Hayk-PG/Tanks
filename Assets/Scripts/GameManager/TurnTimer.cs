@@ -12,8 +12,7 @@ public class TurnTimer : MonoBehaviourPun
     private TurnController _turnController;
     private MyPlugins _myPlugins;
 
-    private int _turnTime;
-
+    public int RoundTime { get; private set; }
     public int Seconds { get; set; }
     public bool IsTurnChanged { get; internal set; }
     public Action<TurnState, int> OnTurnTimer { get; set; }
@@ -24,6 +23,11 @@ public class TurnTimer : MonoBehaviourPun
         _gameManager = Get<GameManager>.From(gameObject);
         _turnController = Get<TurnController>.From(gameObject);
         _myPlugins = FindObjectOfType<MyPlugins>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(RunTimerOnEditorMode());
     }
 
     private void OnEnable()
@@ -41,23 +45,17 @@ public class TurnTimer : MonoBehaviourPun
 
     private void OnGameStarted()
     {
-        _turnTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.RoundTime : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.RoundTime];
-        Seconds = _turnTime;
+        RoundTime = MyPhotonNetwork.IsOfflineMode ? Data.Manager.RoundTime : (int)MyPhotonNetwork.CurrentRoom.CustomProperties[Keys.RoundTime];
+        Seconds = RoundTime;
     }
 
-    private void UnsubscribeFromPluginService()
-    {
-        _myPlugins.OnPluginService -= OnPluginService;
-    }
+    private void UnsubscribeFromPluginService() => _myPlugins.OnPluginService -= OnPluginService;
 
-    private void SubscribeToPluginService()
-    {
-        _myPlugins.OnPluginService += OnPluginService;
-    }
+    private void SubscribeToPluginService() => _myPlugins.OnPluginService += OnPluginService;
 
     private void OnTurnChanged(TurnState currentState)
     {
-        Seconds = currentState == TurnState.Player1 || currentState == TurnState.Player2 ? _turnTime : 0;
+        Seconds = currentState == TurnState.Player1 || currentState == TurnState.Player2 ? RoundTime : 0;
         UnsubscribeFromPluginService();
 
         if (currentState == TurnState.Player1 || currentState == TurnState.Player2)
@@ -67,34 +65,28 @@ public class TurnTimer : MonoBehaviourPun
         }           
     }
 
-#if UNITY_EDITOR
-    private void Start()
-    {
-        StartCoroutine(RunTimerOnEditorMode());
-    }
-
     private IEnumerator RunTimerOnEditorMode()
     {
-        while (true)
+        if (MyPhotonNetwork.IsOfflineMode && PlatformChecker.IsEditor)
         {
-            RunTimer();
-            yield return new WaitForSeconds(1);
+            while (true)
+            {
+                RunTimer();
+                yield return new WaitForSeconds(1);
+            }
         }
     }
-#endif
 
     private void OnPluginService()
     {
-        if (MyPhotonNetwork.IsOfflineMode || MyPhotonNetwork.AmPhotonViewOwner(photonView))
-        {
+        if (MyPhotonNetwork.IsOfflineMode)
             RunTimer();
-        }
+
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+            photonView.RPC("RunTimerRPC", RpcTarget.AllViaServer);
     } 
 
-    private void Timer()
-    {
-        Seconds--;       
-    }
+    private void Timer() => Seconds--;
 
     private void SetNextTurn()
     {
@@ -125,5 +117,11 @@ public class TurnTimer : MonoBehaviourPun
         Conditions<int>.Compare(Seconds, 0, SetNextTurn, Timer, null);
         OnTurnTimer?.Invoke(_turnController._turnState, Seconds);
         _textTimer.text = "00:" + Seconds.ToString("D2");
+    }
+
+    [PunRPC]
+    private void RunTimerRPC()
+    {
+        RunTimer();
     }
 }

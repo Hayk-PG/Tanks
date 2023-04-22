@@ -1,43 +1,43 @@
-using System;
+using System.Collections;
 using UnityEngine;
 
-public abstract class Tab_BaseSignUp : Tab_Base
+public abstract class Tab_BaseSignUp : Tab_Base, ITabOperation
 {
-    [SerializeField] protected CustomInputField[] _customInputFields;
+    [SerializeField] 
+    protected CustomInputField[] _customInputFields;
+
+    [SerializeField] [Space]
+    protected Tab_Options _tabOptions;
+
+    [SerializeField] [Space]
+    protected TabLoading _tabOptionsLoading;
+
     protected OptionsGameMode _optionsGameMode;
+
     protected OptionsLogOut _optionsLogOut;
+
     protected MyPhotonCallbacks _myPhotonCallbacks;
+
+    protected float _waitTime = 10, _elapsedTime;
+
+    protected bool _isCallbackDelayCounterRunning;
 
     protected virtual CustomInputField CustomInputFieldEmail { get; }
     protected virtual CustomInputField CustomInputFieldID { get; }
     protected virtual CustomInputField CustomInputFieldPassword { get; }
 
 
+
+
     protected override void Awake()
     {
         base.Awake();
+
         _optionsGameMode = FindObjectOfType<OptionsGameMode>();
+
         _optionsLogOut = FindObjectOfType<OptionsLogOut>();
+
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
-    }
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        MenuTabs.Tab_Initialize.onJumpTabSignUp += Authoirize;
-        MenuTabs.Tab_StartGame.onPlayOnline += Authoirize;
-        _optionsGameMode.onJumpTabSignUp += Authoirize;
-        _optionsLogOut.onJumpTabSignUp += Authoirize;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        MenuTabs.Tab_Initialize.onJumpTabSignUp -= Authoirize;
-        MenuTabs.Tab_StartGame.onPlayOnline -= Authoirize;
-        _optionsGameMode.onJumpTabSignUp -= Authoirize;
-        _optionsLogOut.onJumpTabSignUp -= Authoirize;
     }
 
     protected virtual void Update() => SetInteractability();
@@ -46,18 +46,50 @@ public abstract class Tab_BaseSignUp : Tab_Base
     {
         MyPhoton.LeaveRoom();
         MyPhoton.LeaveLobby();
+
+        CloseOptionsTabs();
+
         base.OpenTab();
+    }
+
+    protected virtual void CloseOptionsTabs()
+    {
+        _tabOptions.GetOptionsActivityHolder(false);
+
+        _tabOptionsLoading.Close();
     }
 
     protected override void GoForward()
     {
+        OperationHandler = This;
+
         base.GoForward();
+
         Confirm();
     }
 
-    protected abstract void Authoirize();
+    protected override void OnOperationSubmitted(ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    {
+        if (operation == TabsOperation.Operation.Authenticate)
+        {
+            OperationHandler = handler;
 
-    protected virtual void Confirm() => OpenLoadingTab();
+            Authenticate();
+        }
+    }
+
+    protected abstract void Authenticate();
+
+    protected virtual void OnAuthenticationFailed() => OperationHandler?.OnOperationFailed();
+
+    protected virtual void Confirm()
+    {
+        OpenLoadingTab();
+
+        ResetPlayfabCallbackDelayCounter();
+
+        StartCoroutine(CountPlayfabCallbackDelay());
+    }
 
     protected virtual Data.NewData NewData(string userId, string userPassword)
     {
@@ -77,10 +109,26 @@ public abstract class Tab_BaseSignUp : Tab_Base
 
     protected virtual void CacheUserStatisticsData(string playfabId) => User.UpdateStats(playfabId, null, createdStatisticsOutput => { Data.Manager.Statistics = createdStatisticsOutput; });
 
-    protected virtual void ConnectToPhoton(string photonNetworkNickname, string photonNetworkUserId)
+    protected virtual void SendUserCredentialsToTabHomeOnline(string photonNetworkNickname, string photonNetworkUserId)
     {
-        MyPhoton.Connect(photonNetworkNickname, photonNetworkUserId);
+        TabsOperation.Handler.SubmitOperation(OperationHandler, TabsOperation.Operation.PlayOnline, new object[] { photonNetworkNickname, photonNetworkUserId });
     }
 
     protected virtual void SetInteractability() => _btnForward.IsInteractable = CustomInputFieldID.Text.Length > 6 && CustomInputFieldPassword.Text.Length > 4 ? true : false;
+
+    protected virtual IEnumerator CountPlayfabCallbackDelay()
+    {
+        _elapsedTime = 0;
+
+        _isCallbackDelayCounterRunning = true;
+
+        while(_isCallbackDelayCounterRunning && _elapsedTime < _waitTime)
+        {
+            _elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+    }
+
+    protected virtual void ResetPlayfabCallbackDelayCounter() => _isCallbackDelayCounterRunning = false;
 }

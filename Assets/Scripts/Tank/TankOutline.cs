@@ -1,44 +1,59 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+
 
 public class TankOutline : MonoBehaviour
 {
-    [SerializeField] private Color[] _outlineColors;
-    private GameManager _gameManager;
+    private Outline _outline;
+    private List<Outline> _outlines = new List<Outline>();
     private PlayerTurn _playerTurn;
-    private MeshRenderer _meshRenderer;
 
 
     private void Awake()
     {
-        _gameManager = FindObjectOfType<GameManager>();
         _playerTurn = Get<PlayerTurn>.From(gameObject);
+
+        AddOutline();
     }
 
     private void OnEnable()
     {
-        _gameManager.OnGameStarted += OnGameStarted;
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += turnState => 
+        {
+            if (turnState == _playerTurn.MyTurn)
+                SetOutlineActive(true);
+            else
+                SetOutlineActive(false);
+        };
     }
 
     private void OnDisable()
     {
-        _gameManager.OnGameStarted -= OnGameStarted;
+        GameSceneObjectsReferences.TurnController.OnTurnChanged -= turnState =>
+        {
+            if (turnState == _playerTurn.MyTurn)
+                SetOutlineActive(true);
+            else
+                SetOutlineActive(false);
+        };
     }
 
-    private void OnGameStarted()
+    private void AddOutline()
     {
-        if(_playerTurn != null)
+        GlobalFunctions.Loop<MeshRenderer>.Foreach(transform.parent.GetComponentsInChildren<MeshRenderer>(), meshRenderer =>
         {
-            for (int i = 0; i < _playerTurn.GetComponentsInChildren<MeshRenderer>(true).Length; i++)
-            {                
-                Outline outline = _playerTurn.GetComponentsInChildren<MeshRenderer>(true)[i].gameObject.AddComponent<Outline>();
+            _outline = meshRenderer.gameObject.AddComponent<Outline>();
+            _outline.OutlineMode = Outline.Mode.OutlineVisible;
+            _outline.OutlineWidth = 1;
+            _outline.OutlineColor = Color.white;
 
-                if (outline != null)
-                {
-                    outline.OutlineMode = Outline.Mode.OutlineVisible;
-                    outline.OutlineWidth = 1;
-                    outline.OutlineColor = _playerTurn.MyTurn == TurnState.Player1 ? _outlineColors[0] : _outlineColors[1];
-                }
-            }
-        }  
+            _outlines.Add(_outline);
+        });
+    }
+
+    private void SetOutlineActive(bool isActive)
+    {
+        foreach (var outline in _outlines)
+            outline.enabled = isActive;
     }
 }

@@ -3,36 +3,70 @@ using UnityEngine;
 
 public class BulletMotionSoundFX : MonoBehaviour
 {
-    [SerializeField] private AudioSource _audioSrc;
-    [SerializeField] private float _volume;
-    private bool _isSoundPlayed;
+    [SerializeField]
+    private AudioSource _audioSrc;
+    
+    [SerializeField] [Space]
     private Rigidbody _rigidbody;
 
+    [SerializeField] [Space]
+    private float _volume;
+
+    [SerializeField] [Space]
+    private bool _noVolumeControlling;
+
+    private bool _isSoundPlayed;
 
 
-    private void Awake()
+
+
+    private void Start() => PlayOnShot();
+
+    private void FixedUpdate() => PlaySoundOnDescending();
+
+    private void PlayOnShot()
     {
-        _rigidbody = GetComponentInParent<Rigidbody>();
+        if (_noVolumeControlling)
+            StartCoroutine(PlayOnShotCoroutine());
     }
 
-    private void FixedUpdate()
+    private void PlaySoundOnDescending()
     {
-        if (_rigidbody != null && _rigidbody.velocity.y < 0 && !_isSoundPlayed)
+        if (!_noVolumeControlling && _rigidbody != null && _rigidbody.velocity.y < 0 && !_isSoundPlayed)
         {
-            StartCoroutine(SoundCoroutine());
+            StartCoroutine(PlaySoundOnDescendingCoroutine());
+
             _isSoundPlayed = true;
         }
     }
 
-    private IEnumerator SoundCoroutine()
+    private IEnumerator PlayOnShotCoroutine()
+    {
+        _audioSrc.enabled = true;
+        _audioSrc.loop = true;
+        _audioSrc.Play();
+
+        while (!SoundController.IsSoundMuted)
+        {
+            _audioSrc.volume = 1;
+
+            yield return null;
+        }
+
+        _audioSrc.mute = true;
+    }
+
+    private IEnumerator PlaySoundOnDescendingCoroutine()
     {
         _audioSrc.enabled = true;
         _audioSrc.Play();
 
-        while (true)
+        while (_volume > 0.05f && !SoundController.IsSoundMuted)
         {
             _volume -= 0.5f * Time.deltaTime;
+
             _audioSrc.volume = _volume;
+
             yield return null;
         }
     }

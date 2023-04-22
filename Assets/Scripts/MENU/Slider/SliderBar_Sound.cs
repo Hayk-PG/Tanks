@@ -17,7 +17,7 @@ public class SliderBar_Sound : Button_Sound
     {
         _previousValue = _slider.value;
 
-        if(_currentValue + 50 <= _previousValue)
+        if(_currentValue + 5 <= _previousValue)
         {
             PlaySound();           
             _currentValue = _previousValue;

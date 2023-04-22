@@ -4,8 +4,10 @@ using UnityEngine;
 public class TankController : MonoBehaviour
 {
     private BasePlayer _basePlayer;
-    private Controllers _controllers; 
+
     private ShootButton _shootButton;
+
+    private JumpButton _jumpButton;
 
     internal BasePlayer BasePlayer
     {
@@ -17,11 +19,21 @@ public class TankController : MonoBehaviour
     internal Action<bool> OnShootButtonClick { get; set; }
     internal Action OnInitialize { get; set; }
 
+    internal event Action onSelectJumpButton;
+
+
+
 
     private void Awake()
     {
-        _controllers = FindObjectOfType<Controllers>();
         _shootButton = FindObjectOfType<ShootButton>();
+
+        _jumpButton = FindObjectOfType<JumpButton>();
+    }
+
+    private void OnDisable()
+    {
+        ManageJumpButtonSubscription(false);
     }
 
     public void GetTankControl(BasePlayer player)
@@ -30,10 +42,25 @@ public class TankController : MonoBehaviour
 
         if(BasePlayer != null)
         {
-            _controllers.OnControllers += OnControllers;
-            _controllers.OnHorizontalJoystick += OnMovementDirection;
+            GameSceneObjectsReferences.Controllers.OnControllers += OnControllers;
+            GameSceneObjectsReferences.Controllers.OnHorizontalJoystick += OnMovementDirection;
+
             _shootButton.OnClick += OnShootButtonClick;
+
+            ManageJumpButtonSubscription(true);
+
             OnInitialize?.Invoke();
         }
+    }
+
+    private void ManageJumpButtonSubscription(bool isSubscribing)
+    {
+        if (_jumpButton == null)
+            return;
+
+        if(isSubscribing)
+            _jumpButton.onJump += delegate { onSelectJumpButton?.Invoke(); };
+        else
+            _jumpButton.onJump -= delegate { onSelectJumpButton?.Invoke(); };
     }
 }

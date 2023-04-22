@@ -7,15 +7,16 @@ using UnityEngine;
 public class ChangeTiles : BaseChangeTiles
 {
     private List<Vector3> _optimizedTilesList;
-    private float second;
     private IEnumerator _coroutine;
+
+    private float second;  
 
     public event Action<TilesData> OnTilesUpdated;
 
 
-    protected override void Awake()
+
+    private void Awake()
     {
-        base.Awake();
         _coroutine = UpdateTilesCoroutine(second, null);
     }
 
@@ -82,12 +83,14 @@ public class ChangeTiles : BaseChangeTiles
 
                 if (HasTile(_thisTilePos - Horizontal) && !HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical) && !HasTile(_thisTilePos - Vertical + Horizontal))
                 {
-                    CreateTopRightTile();
+                    //CreateTopRightTile();
+                    CreateLeftSlope();
                 }
 
                 if (HasTile(_thisTilePos + Horizontal) && !HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos - Vertical) && !HasTile(_thisTilePos - Vertical - Horizontal))
                 {
-                    CreateTopLeftTile();
+                    //CreateTopLeftTile();
+                    CreateRightSlope();
                 }
 
                 if (!HasTile(_thisTilePos - Horizontal) && HasTile(_thisTilePos + Horizontal) && HasTile(_thisTilePos - Vertical) && HasTile(_thisTilePos - Vertical - Horizontal))
@@ -99,8 +102,6 @@ public class ChangeTiles : BaseChangeTiles
                 {
                     CreateLeftSlope();
                 }
-
-                
             }
             else
             {
@@ -184,14 +185,12 @@ public class ChangeTiles : BaseChangeTiles
     {
         if (currentTilePosition != null)
         {
-            _tileCreationMode = TileCreationMode.Pool;
             StoreInOptimizedTilesList(currentTilePosition.Value);
             yield return null;
             CreateTilesFromOptimizedTilesList();
         }
         else
         {
-            _tileCreationMode = TileCreationMode.Instantiate;
             CreateTilesFromTilesDict();
         }
 

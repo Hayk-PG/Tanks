@@ -2,24 +2,21 @@
 
 public partial class Data
 {
-    [Header("Level")]
-    [SerializeField] ScriptableObject_BadgesSprites _scriptableBadgeSprites;
-    public int Points => PlayerPrefs.GetInt(Keys.Points, 0);
-    public int Level => PlayerPrefs.GetInt(Keys.Level, 0);
+    [Header("Level")] [SerializeField] ScriptableObject_BadgesSprites _scriptableBadgeSprites;
     public int MaxLevel => _scriptableBadgeSprites.BadgesCount;
     public int[,] PointsSliderMinAndMaxValues { get; private set; } = new int[,]
     {
-      { 0, 9900},
-      {9900, 24560},
-      {24560, 39060 },
-      {39060, 56560 },
-      {56560, 76625 },
-      {76625, 102475 },
-      {102475, 137475 },
-      {137475, 196075 },
-      {196075, 291075 },
-      {291075, 416075 },
-      {416075, 591075 },
-      {591075, 826075 }
+      { 0, 90000},
+      {90000, 190000 },
+      {190000, 315000 },
+      {315000, 465000 },
+      {465000, 640000 },
+      {640000, 840000 },
+      {840000, 1065000 },
+      {1065000, 1315000 },
+      {1315000, 1590000 },
+      {1590000, 1890000 },
+      {1890000, 2215000 },
+      {2215000, 2565000 }
     };     
 }

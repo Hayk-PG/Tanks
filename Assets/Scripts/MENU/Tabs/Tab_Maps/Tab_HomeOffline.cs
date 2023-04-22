@@ -1,12 +1,16 @@
 using System;
 using UnityEngine;
+using TMPro;
 
 public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
 {
-    [SerializeField] private Btn _btnTank, _btnAITank;
+    [SerializeField] 
+    private Btn _btnTank, _btnAITank;
+
+    [SerializeField] [Space]
+    private TMP_Text _txtMapName;
 
     private ITab_Base _iTabBase;
-    private MyPhotonCallbacks _myPhotonCallbacks;
 
     public event Action<ITab_Base> onSendTab;
     public event Action<ITab_Base> onOpenTabTanks;
@@ -16,39 +20,55 @@ public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
     protected override void Awake()
     {
         base.Awake();
+
         _iTabBase = Get<ITab_Base>.From(gameObject);
-        _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        _myPhotonCallbacks._OnConnectedToMaster += OpenTab;
-        MenuTabs.Tab_Initialize.onJumpTabOffline += OpenTab;
+
         MenuTabs.Tab_Tanks.onSendTab += OpenTab;
+
         MenuTabs.Tab_AITanks.onSendTab += OpenTab;
+
         _btnTank.onSelect += delegate { onOpenTabTanks?.Invoke(_iTabBase); };
+
         _btnAITank.onSelect += delegate { onOpenTabAITanks?.Invoke(_iTabBase); };
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        _myPhotonCallbacks._OnConnectedToMaster -= OpenTab;
-        MenuTabs.Tab_Initialize.onJumpTabOffline -= OpenTab;
+
         MenuTabs.Tab_Tanks.onSendTab -= OpenTab;
+
         MenuTabs.Tab_AITanks.onSendTab -= OpenTab;
+
         _btnTank.onSelect -= delegate { onOpenTabTanks?.Invoke(_iTabBase); };
+
         _btnAITank.onSelect -= delegate { onOpenTabAITanks?.Invoke(_iTabBase); };
+    }
+
+    protected override void OnOperationSubmitted(ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    {
+        if(operation == TabsOperation.Operation.PlayOffline)
+        {
+            OperationHandler = handler;
+
+            OpenTab();
+        }
     }
 
     public override void OpenTab()
     {
-        if (!MyPhotonNetwork.IsOfflineMode)
-            return;
+        MyPhoton.GameModeRegistered = MyPhoton.RegisteredGameMode.Offline;
+
+        MyPhotonNetwork.ManageOfflineMode(true);
+
+        OperationHandler.OnOperationSucceded();
 
         base.OpenTab();
-        MyPhoton.GameModeRegistered = MyPhoton.RegisteredGameMode.Offline;
     }
 
     private void OpenTab(ITab_Base iTabBase)
@@ -60,12 +80,19 @@ public class Tab_HomeOffline : Tab_Base, ITab_Base, IReset
     protected override void GoForward()
     {
         OpenLoadingTab();
+
         MyScene.Manager.LoadScene(MyScene.SceneName.Game);
+    }
+
+    public void DisplayMapName(Map map)
+    {
+        _txtMapName.text = $"{Data.Manager.MapIndex + 1}: {map.MapName}";
     }
 
     public void SetDefault()
     {
         _btnTank.Deselect();
+
         _btnAITank.Deselect();
     }
 }

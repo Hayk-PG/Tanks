@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 916338432794638902}
   - component: {fileID: 8013175727772427910}
   - component: {fileID: 7083431368811378178}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sensor_Left
   m_TagString: Platform
   m_Icon: {fileID: 0}
@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6052541195068806553}
   m_RootOrder: 3
@@ -69,7 +70,7 @@ GameObject:
   - component: {fileID: 267618535684090943}
   - component: {fileID: 4648971303613771652}
   - component: {fileID: 1680814749367734205}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sensor_Right
   m_TagString: Platform
   m_Icon: {fileID: 0}
@@ -86,6 +87,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6052541195068806553}
   m_RootOrder: 2
@@ -125,12 +127,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6052541195068806553}
-  - component: {fileID: 2798824069396154464}
   - component: {fileID: 3017539439413362393}
   - component: {fileID: 8133864786516173913}
-  - component: {fileID: 8937049981597977293}
   - component: {fileID: 662536500372302502}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Platform
   m_TagString: Platform
   m_Icon: {fileID: 0}
@@ -147,6 +147,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2733367116426061378}
   - {fileID: 8452153207721770461}
@@ -155,22 +156,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &2798824069396154464
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3640183349027334371}
-  serializedVersion: 2
-  m_Mass: 1e+9
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &3017539439413362393
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -197,18 +182,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.5, z: 1}
   m_Center: {x: 0, y: 0.27, z: 0}
---- !u!114 &8937049981597977293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3640183349027334371}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2179aa618d903744b92079e50222c106, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &662536500372302502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,11 +196,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _direction: 0
   _platformType: 0
-  _rigidBody: {fileID: 2798824069396154464}
-  _startPoint: {x: -8, y: 1.45, z: 0}
-  _endPoint: {x: -1.5, y: 1.45, z: 0}
-  _smoothTime: 0.1
-  _maxSpeed: 1
 --- !u!1 &7462227686156349476
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,7 +207,7 @@ GameObject:
   - component: {fileID: 2733367116426061378}
   - component: {fileID: 4039056437558218519}
   - component: {fileID: 7364515532198821413}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mesh
   m_TagString: Platform
   m_Icon: {fileID: 0}
@@ -256,6 +224,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.025, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6052541195068806553}
   m_RootOrder: 0
@@ -279,10 +248,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -307,6 +278,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7626027189023002825
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,7 +290,7 @@ GameObject:
   - component: {fileID: 8452153207721770461}
   - component: {fileID: 4935361512171656893}
   - component: {fileID: 7088288926748071577}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sensor_Bottom
   m_TagString: Platform
   m_Icon: {fileID: 0}
@@ -335,6 +307,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6052541195068806553}
   m_RootOrder: 1

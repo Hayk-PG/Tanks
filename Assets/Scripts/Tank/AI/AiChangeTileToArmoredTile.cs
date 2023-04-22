@@ -6,7 +6,7 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
     private ScoreController _scoreController;
     private PlayerTurn _playerTurn;
     private TurnController _turnController;
-    private Tab_TileModify _tab_TileModify;
+    private TileModifyManager _tileModifyManager;
     private GlobalTileController _globalTileController;
     private ChangeTiles _changeTiles;
     private TilesData _tilesData;
@@ -21,7 +21,7 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
         _scoreController = Get<ScoreController>.From(gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
         _turnController = FindObjectOfType<TurnController>();
-        _tab_TileModify = FindObjectOfType<Tab_TileModify>();
+        _tileModifyManager = FindObjectOfType<TileModifyManager>();
         _globalTileController = FindObjectOfType<GlobalTileController>();
         _changeTiles = FindObjectOfType<ChangeTiles>();
         _tilesData = FindObjectOfType<TilesData>();
@@ -42,7 +42,7 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
     {
         if (turnState == _playerTurn.MyTurn)
         {
-            if (_scoreController.Score >= _tab_TileModify.NewPrices[2].Price && _canUseAgain)
+            if (_scoreController.Score >= _tileModifyManager.NewPrices[2].Price && _canUseAgain)
             {
                 foreach (var tile in _tilesData.TilesDict)
                 {
@@ -69,7 +69,7 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
     {
         yield return new WaitForSeconds(0.3f);
         tileProps.ActiveProps(TileProps.PropsType.MetalGround, true, null);
-        _scoreController.Score -= _tab_TileModify.NewPrices[2].Price;
+        _scoreController.Score -= _tileModifyManager.NewPrices[2].Price;
         _canUseAgain = false;
         yield return new WaitForSeconds(60);
         _canUseAgain = true;

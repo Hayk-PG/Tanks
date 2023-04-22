@@ -38,6 +38,7 @@ public class AIEnemyDataGetter : MonoBehaviour
         while (Enemy != null)
         {
             Distance = Vector3.Distance(transform.position, Enemy.position);
+
             yield return new WaitForSeconds(1);
         }
     }

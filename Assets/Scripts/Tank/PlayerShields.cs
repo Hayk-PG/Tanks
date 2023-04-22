@@ -1,68 +1,50 @@
-﻿public class PlayerShields : PlayerDeployProps
+﻿using UnityEngine;
+using System;
+
+public class PlayerShields : MonoBehaviour
 {
     protected Shields _shields;
-    private GlobalActivityTimer _globalActivityTimer;
-    private int _endTime = 60;
+
     public bool IsShieldActive { get; set; }
-  
 
-    protected override void Awake()
-    {
-        base.Awake();
-        _shields = Get<Shields>.FromChild(gameObject);
-        _globalActivityTimer = FindObjectOfType<GlobalActivityTimer>();
-    }
 
-    protected override void Start()
-    {
-        InitializeRelatedPropsButton(Names.Shield);
-    }
+    public event Action<bool> onShieldActivity;
 
-    protected override void OnDisable()
-    {
-        _tankController.OnInitialize -= OnInitialize;
-        _propsTabCustomization.OnActivateShields -= OnActivateShields;
-    }
 
-    protected override void SubscribeToPropsEvent()
-    {
-        _propsTabCustomization.OnActivateShields += OnActivateShields;
-    }
+
+
+    public void SetShield(Shields shields) => _shields = shields;
 
     public void ActivateShields(int index)
     {
-        IsShieldActive = true;
-        _shields.Activity(0, IsShieldActive);
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => RunTimerDirectly(), () => RunTimerViaMasterClient(index)); 
+        if (_shields == null)
+            return;
+
+        if (IsShieldActive == false)
+        {
+            IsShieldActive = true;
+
+            _shields.Activity(index, IsShieldActive);
+
+            onShieldActivity?.Invoke(true);
+        }
     }
 
     public void DeactivateShields()
     {
-        IsShieldActive = false;
+        if (_shields == null)
+            return;
 
-        for (int i = 0; i < 2; i++)
+        if (IsShieldActive == true)
         {
-            _shields.Activity(i, IsShieldActive);
-        }
-    }
+            IsShieldActive = false;
 
-    private void RunTimerViaMasterClient(int index)
-    {
-        _globalActivityTimer._playersActiveShieldsTimer[index] = _endTime;
-    }
+            for (int i = 0; i < 2; i++)
+            {
+                _shields.Activity(i, IsShieldActive);
+            }
 
-    private void RunTimerDirectly()
-    {
-        _shields.RunTimerCoroutine(_endTime);
-    }
-
-    private void OnActivateShields()
-    {
-        if (_playerTurn.IsMyTurn)
-        {
-            int index = _playerTurn.MyTurn == TurnState.Player1 ? 0 : 1;
-            _iPlayerDeployProps?.ActivateShields(index);         
-            _propsTabCustomization.OnSupportOrPropsChanged?.Invoke(_relatedPropsTypeButton);
+            onShieldActivity?.Invoke(false);
         }
     }
 }

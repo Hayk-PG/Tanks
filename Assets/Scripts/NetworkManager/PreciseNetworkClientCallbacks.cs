@@ -6,14 +6,15 @@ using System;
 
 public class PreciseNetworkClientCallbacks : MonoBehaviour
 {
-    [SerializeField] private ClientState _previousClientState;
-    [SerializeField] private ClientState _currentClientState;
+    [SerializeField]
+    private ClientState _previousClientState, _currentClientState;
 
     public ClientState PreviousClientState { get => _previousClientState; private set => _previousClientState = value; }
     public ClientState CurrentClientState { get => _currentClientState; private set => _currentClientState = value; }
 
-
     public event Action<ClientState, ClientState> onNetworkClientState;
+
+
 
 
     private void Start()
@@ -25,8 +26,10 @@ public class PreciseNetworkClientCallbacks : MonoBehaviour
     {
         if(CurrentClientState != PhotonNetwork.NetworkClientState)
         {
-            PreviousClientState = CurrentClientState;            
+            PreviousClientState = CurrentClientState;   
+            
             CurrentClientState = PhotonNetwork.NetworkClientState;
+
             onNetworkClientState?.Invoke(PreviousClientState, CurrentClientState);
         } 
     }
@@ -36,6 +39,7 @@ public class PreciseNetworkClientCallbacks : MonoBehaviour
         while (true)
         {
             GetCurrentNetworkClientState();
+
             yield return new WaitForSeconds(1);
         }
     }

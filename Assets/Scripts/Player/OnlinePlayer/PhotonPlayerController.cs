@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class PhotonPlayerController : BasePlayer
 {
-    [SerializeField] private PhotonView _photonView;
-    [SerializeField] private string _nickName;
-    [SerializeField] private int _actorNumber;
+    [SerializeField] 
+    private PhotonView _photonView;
+
+    [SerializeField] [Space]
+    private string _nickName;
+
+    [SerializeField] [Space]
+    private int _actorNumber;
+
     public PhotonView PhotonView
     {
         get => _photonView;
@@ -33,8 +39,11 @@ public class PhotonPlayerController : BasePlayer
     {
         NickName = player.NickName;
         ActorNumber = player.ActorNumber;
+
         AssignGameObjectName(NickName);
+
         Get<PhotonPlayerTankSpawner>.From(gameObject).SpawnTanks(spawnTankIndex, player.IsMasterClient ? 0 : 1);
+
         PlayerReady(player.IsMasterClient ? 0 : 1);
     }
 }

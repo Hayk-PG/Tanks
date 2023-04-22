@@ -57,6 +57,12 @@ public class ScriptableComponentsCustomEditor : Editor
         {
             tankScriptableComponents.OnClickAddComponnets();
         }
+
+        GUI.backgroundColor = Color.red;
+        if (GUILayout.Button("Destroy target's components", GUILayout.Height(40)))
+        {
+            tankScriptableComponents.OnClickRemoveComponents();
+        }
     }
 }
 
@@ -81,6 +87,27 @@ public class WeaponPropertiesCustomEditor: Editor
     }
 }
 
+[CustomEditor(typeof(WeaponPropertiesDirect))]
+public class WeaponPropertiesDirectCustomEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        WeaponPropertiesDirect weaponPropertiesDirect = (WeaponPropertiesDirect)target;
+
+        if (GUILayout.Button("Randomize", GUILayout.Height(40)))
+        {
+            weaponPropertiesDirect.Randomize();
+        }
+
+        if (GUILayout.Button("Set properties", GUILayout.Height(40)))
+        {
+            weaponPropertiesDirect.OnClickSetWeaponProperties();
+        }
+    }
+}
+
 [CustomEditor(typeof(DetailsLevel))]
 public class DetailsLevelCustomEditor : Editor
 {
@@ -93,6 +120,22 @@ public class DetailsLevelCustomEditor : Editor
         if (GUILayout.Button("Place", GUILayout.Height(40)))
         {
             detailsLevel.Place();
+        }
+    }
+}
+
+[CustomEditor(typeof(PrefabsFontResetter))]
+public class PrefabsFontResetterCustomEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        PrefabsFontResetter prefabsFontResetter = (PrefabsFontResetter)target;
+
+        if (GUILayout.Button("Place", GUILayout.Height(40)))
+        {
+            prefabsFontResetter.ResetFonts();
         }
     }
 }

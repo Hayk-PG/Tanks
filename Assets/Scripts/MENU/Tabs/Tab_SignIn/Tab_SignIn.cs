@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class Tab_SignIn : Tab_BaseSignUp
 {
-    [SerializeField] private Btn _btnSignUp;
+    [SerializeField] [Space]
+    private Btn _btnSignUp;
+
     private CustomToggle _customToggleAutoSignIn;
 
     protected override CustomInputField CustomInputFieldID => _customInputFields[0];
     protected override CustomInputField CustomInputFieldPassword => _customInputFields[1];
+
     public bool IsAutoSignInChecked { get => _customToggleAutoSignIn.IsOn; set => _customToggleAutoSignIn.IsOn = value; }
 
     public event Action onOpenTabSignUp;
@@ -17,30 +20,38 @@ public class Tab_SignIn : Tab_BaseSignUp
     protected override void Awake()
     {
         base.Awake();
+
         _customToggleAutoSignIn = Get<CustomToggle>.FromChild(gameObject);
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
+
         MenuTabs.Tab_SignUp.onOpenTabSignIn += OpenTab;
+
         _btnSignUp.onSelect += delegate { onOpenTabSignUp?.Invoke(); };
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+
         MenuTabs.Tab_SignUp.onOpenTabSignIn -= OpenTab;
+
         _btnSignUp.onSelect -= delegate { onOpenTabSignUp?.Invoke(); };
     }
 
-    protected override void Authoirize()
+    protected override void Authenticate()
     {
         if (Data.Manager.IsAutoSignInChecked)
         {
             CustomInputFieldID.Text = Data.Manager.Id;
+
             CustomInputFieldPassword.Text = Data.Manager.Password;
+
             IsAutoSignInChecked = true;
+
             Confirm();
         }
     }
@@ -51,18 +62,34 @@ public class Tab_SignIn : Tab_BaseSignUp
 
         User.Login(CustomInputFieldID.Text, CustomInputFieldPassword.Text, result =>
         {
+            if (_elapsedTime > _waitTime)
+            {
+                ResetTab();
+
+                return;
+            }
+
             if (result != null)
             {
-                DeleteOrEnableAutoSignInData(); 
+                DeleteOrEnableAutoSignInData();
+
                 SaveUserCredentials(NewData(CustomInputFieldID.Text, CustomInputFieldPassword.Text));
+
                 CacheUserIds(result.PlayFabId, result.EntityToken.Entity.Id, result.EntityToken.Entity.Type);
+
                 CacheUserItemsData(result.PlayFabId);
+
                 CacheUserStatisticsData(result.PlayFabId);
-                ConnectToPhoton(CustomInputFieldID.Text, result.PlayFabId);
+
+                SendUserCredentialsToTabHomeOnline(CustomInputFieldID.Text, result.PlayFabId);
+
+                ResetPlayfabCallbackDelayCounter();
             }
             else
             {
                 ResetTab();
+
+                OnAuthenticationFailed();
             }
         });
     }
@@ -92,4 +119,18 @@ public class Tab_SignIn : Tab_BaseSignUp
     }
 
     protected override void CacheUserStatisticsData(string playfabId) => User.GetStats(playfabId, result => { Data.Manager.Statistics = result; });
+
+    public override void OnOperationFailed()
+    {
+        if (OperationHandler == This)
+        {
+            IsAutoSignInChecked = false;
+
+            base.OpenTab();
+        }
+        else
+        {
+            OperationHandler.OnOperationFailed();
+        }
+    }
 }

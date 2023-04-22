@@ -3,30 +3,39 @@ using UnityEngine;
 
 public class LoadLevel : MonoBehaviour
 {
-    private Tab_Room _tabRoom;   
+    private Tab_Room _tabRoom;
+    
     private MyPlugins _myPlugins;
+
     private Network _network;
+
     private MyPhotonCallbacks _myPhotonCallbacks;
 
 
     private void Awake()
     {
         _tabRoom = FindObjectOfType<Tab_Room>();
+
         _myPlugins = FindObjectOfType<MyPlugins>();
+
         _network = FindObjectOfType<Network>();
+
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
     }
 
     private void OnEnable()
     {
         _network.OnLoadLevelRPC += OnLoadLevelRPC;
+
         _myPhotonCallbacks._OnLeftRoom += OnLeftRoom;
     }
 
     private void OnDisable()
     {
         UnsuscribeFromPluginService();
+
         _network.OnLoadLevelRPC -= OnLoadLevelRPC;
+
         _myPhotonCallbacks._OnLeftRoom -= OnLeftRoom;
     }
 
@@ -45,6 +54,7 @@ public class LoadLevel : MonoBehaviour
         if (localPlayer.IsMasterClient)
         {
             UnsuscribeFromPluginService();
+
             SubscribeToPluginService();
         }
     }
@@ -76,6 +86,7 @@ public class LoadLevel : MonoBehaviour
         if (readyPlayersCount == MyPhotonNetwork.PlayersList.Length)
         {
             UnsuscribeFromPluginService();
+
             MyPhotonNetwork.LoadLevel();
         }
     }

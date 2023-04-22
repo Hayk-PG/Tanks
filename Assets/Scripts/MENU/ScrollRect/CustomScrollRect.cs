@@ -31,11 +31,7 @@ public class CustomScrollRect : MonoBehaviour, IReset
         _rectTransformContent = _scrollRect.content;
     }
 
-    private void Update()
-    {
-        _scrollRect.onValueChanged.RemoveAllListeners();
-        _scrollRect.onValueChanged.AddListener(OnValueChanged);
-    }
+    private void Start() => _scrollRect.onValueChanged.AddListener(OnValueChanged);
 
     public void OnValueChanged(Vector2 position)
     {
@@ -56,6 +52,7 @@ public class CustomScrollRect : MonoBehaviour, IReset
     private IEnumerator SetNormalizedPositionCoroutine(float position)
     {
         yield return null;
+
         _scrollRect.verticalNormalizedPosition = position;
     }
 

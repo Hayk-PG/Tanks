@@ -1,121 +1,88 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 
-public class PlayerFeedback : BaseAnnouncer
+public class PlayerFeedback : MonoBehaviour
 {
-    private HealthController _playerHealthController;
-    private ScoreController _scoreController;
-    private PlayerTurn _playerTurn;
+    [SerializeField] [Space]
+    private Tab_HitText _tabHitText;
 
-    private int _playerHitsIndex;
-    private int _playerTurnIndex;
+    private SoundController _soundController;
 
 
-    protected override void OnDisable()
+
+
+    private void Awake() => _soundController = FindObjectOfType<SoundController>();
+
+    public HitTextManager CurrentHitTextManager(string tankName)
     {
-        base.OnDisable();
-
-        if (_playerHealthController != null) _playerHealthController.OnTakeDamage -= OnTakeDamage;
-        if (_scoreController != null) _scoreController.OnHitEnemy -= OnGetPoints;
+        return tankName == Names.Tank_FirstPlayer ? _tabHitText.HitTexManagerForPlayer1 : _tabHitText.HitTextManagerForPlayer2;
     }
 
-    public void CallPlayerEvents(HealthController playerHealth, ScoreController scoreController, PlayerTurn playerTurn)
+    public void DisplayDamageText(string tankName, int damage)
     {
-        _playerHealthController = playerHealth;
-        _scoreController = scoreController;
-        _playerTurn = playerTurn;
+        HitTextManager.TextType textType = damage <= 15 ? HitTextManager.TextType.Damage : damage > 15 && damage < 30 ? HitTextManager.TextType.CriticalDamage :
+                                               damage >= 30 && damage < 40 ? HitTextManager.TextType.CriticalStun : damage >= 40 ? HitTextManager.TextType.FatalStun : HitTextManager.TextType.None;
 
-        if (_playerHealthController != null) _playerHealthController.OnTakeDamage += OnTakeDamage;
-        if (_scoreController != null) _scoreController.OnHitEnemy += OnGetPoints;
+        string colorCode = textType == HitTextManager.TextType.Damage ? "#D45719" : textType == HitTextManager.TextType.CriticalDamage ? "#EB4C28" :
+                           textType == HitTextManager.TextType.CriticalStun ? "#D42019" : textType == HitTextManager.TextType.FatalStun ? "#F61E74" : "#F6861E";
+
+        DisplayHitText(CurrentHitTextManager(tankName), textType, GlobalFunctions.TextWithColorCode(colorCode, (-damage).ToString()));
     }
 
-    private void OnTakeDamage(BasePlayer basePlayer, int damage)
+    public void OnHitEnemy(string tankName, int playerHitsIndex, int[] scores)
     {
-        if (basePlayer != null)
+        int total = 0;
+
+        GlobalFunctions.Loop<int>.Foreach(scores, value => { total += value; });
+
+        Conditions<bool>.Compare(playerHitsIndex < 3, () => OnSingleHit(tankName, total), () => OnBackToBackHit(tankName, playerHitsIndex, total));
+    }
+
+    private void OnSingleHit(string tankName, int total)
+    {
+        for (int i = 0; i < _soundController.SoundsList[1]._clips.Length; i++)
         {
-            //_playerDamageScreenText.Display(-damage);
-        }        
+            if (_soundController.SoundsList[1]._clips[i]._score >= total)
+            {
+                DisplayHitText(CurrentHitTextManager(tankName), HitTextManager.TextType.Hit, "");
+
+                break;
+            }
+        }
     }
 
-    private void OnGetPoints(int[] scoreValues)
+    private void OnBackToBackHit(string tankName, int playerHitsIndex, int total)
     {
-        StartCoroutine(OnGetPointsCoroutine(scoreValues));
+        for (int i = 0; i < _soundController.SoundsList[2]._clips.Length; i++)
+        {
+            if (_soundController.SoundsList[2]._clips[i]._score >= playerHitsIndex)
+            {
+                GetComboScore(tankName, total, i);
+
+                DisplayHitText(CurrentHitTextManager(tankName), HitTextManager.TextType.HitCombo, GlobalFunctions.BlueColorText("+" + (playerHitsIndex - 2)));
+
+                break;
+            }
+        }
     }
 
-    private void GetComboScore(int total, int index)
+    private void GetComboScore(string tankName, int total, int index)
     {
         float a = _soundController.SoundsList[2]._clips[index]._score;
         float b = a * 0.1f;
         float c = (total * b);
 
-        _scoreController.GetScore(Mathf.RoundToInt(c), null);
+        ScoreController sc = GlobalFunctions.ObjectsOfType<ScoreController>.Find(s => s.gameObject.name == tankName);
+        sc?.GetScore(Mathf.RoundToInt(c), null);
     }
 
-    private IEnumerator OnGetPointsCoroutine(int[] scoreValues)
+    public void DisplayWeaponChangeText(string tankName, string weaponType)
     {
-        _playerHitsIndex = _playerTurnIndex + 1;
-
-        int total = 0;
-        int index = 0;
-
-        GlobalFunctions.Loop<int>.Foreach(scoreValues, value => { total += value; });
-
-        if (_playerHitsIndex < 3)
-        {
-            for (int i = 0; i < _soundController.SoundsList[1]._clips.Length; i++)
-            {
-                if(_soundController.SoundsList[1]._clips[i]._score >= total)
-                {
-                    index = i;                   
-                    break;
-                }
-            }
-
-            yield return null;
-
-            TextAnnouncement(0, _soundController.SoundsList[1]._clips[index]._clipName, true);
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-            SoundController.PlaySound(1, index, out float clipLength);
-            yield return new WaitForSeconds(clipLength);
-            TextAnnouncement(0, "", false);
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
-        }
-
-        else
-        {
-            for (int i = 0; i < _soundController.SoundsList[2]._clips.Length; i++)
-            {
-                if (_soundController.SoundsList[2]._clips[i]._score >= _playerHitsIndex)
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            yield return null;
-
-            GetComboScore(total, index);
-            TextAnnouncement(0, _soundController.SoundsList[2]._clips[index]._clipName, true);
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
-            SoundController.PlaySound(2, index, out float clipLength);
-            yield return new WaitForSeconds(clipLength);
-            TextAnnouncement(0, "", false);
-            SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
-        }      
+        DisplayHitText(CurrentHitTextManager(tankName), HitTextManager.TextType.Hint, weaponType);
     }
 
-    protected override void OnTurnChanged(TurnState turnState)
+    private void DisplayHitText(HitTextManager hitTextManager, HitTextManager.TextType textType, string text)
     {
-        if(turnState == _playerTurn.MyTurn)
-        {
-            _playerTurnIndex++;
-
-            if (_playerTurnIndex > _playerHitsIndex)
-            {
-                _playerTurnIndex = 0;
-                _playerHitsIndex = 0;
-            }
-        }
+        hitTextManager.Display(textType, text);
     }
 }

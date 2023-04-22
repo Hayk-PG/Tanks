@@ -6,16 +6,22 @@ using System;
 public class PlayerAmmoType : MonoBehaviour
 {
     private TankController _tankController;
+
     private ShootController _shootController;
-    private AmmoTabCustomization _ammoTabCustomization;
-    private NewWeaponFromWoodBox _newWeaponFromWoodBox;
+
+    private ScoreController _scoreController;
+
     
     [Header("Scriptable objects")]
+
     public WeaponProperties[] _weapons;
-    private WeaponProperties[] _tempWeaponsIncludedNewFromWoodBox;
+
 
     [Header("Cached bullets count from scriptable objects")]
+
     public List<int> _weaponsBulletsCount;
+
+    private int _defaultWeaponsLength;
 
     //Serialized
     public int[] WeaponsBulletsCount
@@ -26,39 +32,51 @@ public class PlayerAmmoType : MonoBehaviour
 
     internal Action<int> OnWeaponChanged { get; set; }
 
+    internal event Action<bool, int> onRocketSelected;
+
+
 
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
+
         _shootController = Get<ShootController>.From(gameObject);
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-        _newWeaponFromWoodBox = FindObjectOfType<NewWeaponFromWoodBox>();
+
+        _scoreController = Get<ScoreController>.From(gameObject);
     }
 
     private void OnEnable()
     {
         _tankController.OnInitialize += OnInitialize;
+
+        DropBoxSelectionHandler.onItemSelect += AddWeaponFromDropBoxPanel;
+
+        DropBoxSelectionHandler.onItemSelect += UpdateAmmoFromDropBoxPanel;
     }
-   
+
     private void OnDisable()
     {
         _tankController.OnInitialize -= OnInitialize;
-        _ammoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
-        _newWeaponFromWoodBox.OnAddNewWeaponFromWoodBox -= OnAddNewWeaponFromWoodBox;
+
+        GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged -= OnPlayerWeaponChanged;
+
+        DropBoxSelectionHandler.onItemSelect -= AddWeaponFromDropBoxPanel;
+
+        DropBoxSelectionHandler.onItemSelect -= UpdateAmmoFromDropBoxPanel;
     }
 
     private void OnInitialize()
     {
-        _ammoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
-        _newWeaponFromWoodBox.OnAddNewWeaponFromWoodBox += OnAddNewWeaponFromWoodBox;
+        GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
 
         InitializeBulletsCountList();
+
         InstantiateAmmoTypeButton();       
     }
 
     private void InitializeBulletsCountList()
     {
-        GlobalFunctions.Loop<WeaponProperties>.Foreach(_weapons, weapon => { _weaponsBulletsCount.Add(0); });
+        GlobalFunctions.Loop<WeaponProperties>.Foreach(_weapons, weapon => { _weaponsBulletsCount.Add(weapon._value); });
     }
 
     private void InstantiateAmmoTypeButton()
@@ -67,7 +85,9 @@ public class PlayerAmmoType : MonoBehaviour
         {
             for (int i = 0; i < _weapons.Length; i++)
             {
-                _ammoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
+                GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
+
+                _defaultWeaponsLength++;
             }
         }
     }
@@ -80,21 +100,54 @@ public class PlayerAmmoType : MonoBehaviour
             _shootController.ActiveAmmoIndex = _weapons.Length - 1;
 
         GetMoreBullets(ammoTypeButton);
+
         UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
+
         SetBulletSpecs(ammoTypeButton);
+
+        OnPlayerSelectedRocket(ammoTypeButton);
 
         OnWeaponChanged?.Invoke(_shootController.ActiveAmmoIndex);
     }
 
+    private void OnPlayerSelectedRocket(AmmoTypeButton ammoTypeButton)
+    {
+        if(ammoTypeButton._properties._buttonType == ButtonType.Rocket && ammoTypeButton._properties.Quantity > 0)
+        {
+            for (int i = 0; i < GameSceneObjectsReferences.DropBoxSelectionPanelRockets.Length; i++)
+            {
+                if (GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Weapon == _weapons[ammoTypeButton._properties.Index])
+                {
+                    int id = GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Id;
+
+                    RaiseOnRocketSelectedEvent(true, id);
+
+                    break;
+                }
+                else
+                    RaiseOnRocketSelectedEvent(false);
+            }
+        }
+        else
+            RaiseOnRocketSelectedEvent(false);
+    }
+
+    private void RaiseOnRocketSelectedEvent(bool isSelected, int id = 0)
+    {
+        onRocketSelected?.Invoke(isSelected, id);
+    }
+
     private void GetMoreBullets(AmmoTypeButton ammoTypeButton)
     {
+        return;
+
         if (_weaponsBulletsCount[_shootController.ActiveAmmoIndex] <= 0)
-            _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += ammoTypeButton._properties.Value;
+            _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += ammoTypeButton._properties.Quantity;
     }
 
     public void UpdateDisplayedWeapon(int index)
     {
-        _ammoTabCustomization.OnUpdateDisplayedWeapon?.Invoke(_weapons[index], _weaponsBulletsCount[index]); 
+        GameSceneObjectsReferences.AmmoTabCustomization.OnUpdateDisplayedWeapon?.Invoke(_weapons[index], _weaponsBulletsCount[index]); 
     }
 
     public void SetBulletSpecs(AmmoTypeButton ammoTypeButton)
@@ -108,36 +161,49 @@ public class PlayerAmmoType : MonoBehaviour
     public void SwitchToDefaultWeapon(int index)
     {
         if (_weaponsBulletsCount[index] <= 0)
-            _ammoTabCustomization.SetDefaultAmmo(null);
+            GameSceneObjectsReferences.AmmoTabCustomization.SetDefaultAmmo(null);
     }
 
-    public void GetMoreBulletsFromWoodBox(out bool isDone, out string text)
+    public void AddWeaponFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
     {
-        isDone = false;
-        text = "";
-
-        if (_tankController.BasePlayer != null)
+        if(dropBoxItemType == DropBoxItemType.Rocket && _tankController.BasePlayer != null)
         {
-            int active = _shootController.ActiveAmmoIndex;
-            int bulletsCount = _weapons[active]._value / 4 > 0 ? _weapons[active]._value / 4 : 1;
-            _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += bulletsCount;
+            WeaponProperties newWeapon = (WeaponProperties)data[0];
+
+            int id = (int)data[1];
+            int price = (int)data[2];
+
+            WeaponProperties[] weaponsTempCollection = new WeaponProperties[_weapons.Length + 1];
+
+            for (int i = 0; i < _weapons.Length; i++)
+                weaponsTempCollection[i] = _weapons[i];
+
+            weaponsTempCollection[weaponsTempCollection.Length - 1] = newWeapon;
+
+            _weapons = weaponsTempCollection;
+
+            _weaponsBulletsCount.Add(newWeapon._value);
+
+            _scoreController.GetScore(price, null);
+
+            GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(newWeapon, 1);
+
+            GameSceneObjectsReferences.AmmoTabButtonNotification.NewAvailableWeaponNotificationHolder();
+        }
+    }
+
+    private void UpdateAmmoFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
+    {
+        if (dropBoxItemType == DropBoxItemType.Ammo && _tankController.BasePlayer != null)
+        {
+            int price = (int)data[0];
+
+            for (int i = 0; i < _defaultWeaponsLength; i++)
+                _weaponsBulletsCount[i] += UnityEngine.Random.Range(0, 10);
+
+            _scoreController.GetScore(price, null);
+
             UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
-            isDone = true;
-            text = "+" + bulletsCount;
         }
-    }
-
-    private void OnAddNewWeaponFromWoodBox(WeaponProperties newWeaponProperty)
-    {
-        _tempWeaponsIncludedNewFromWoodBox = new WeaponProperties[_weapons.Length + 1];
-
-        for (int i = 0; i < _weapons.Length; i++)
-        {
-            _tempWeaponsIncludedNewFromWoodBox[i] = _weapons[i];
-        }
-        _tempWeaponsIncludedNewFromWoodBox[_weapons.Length] = newWeaponProperty;
-
-        _weapons = _tempWeaponsIncludedNewFromWoodBox;
-        _weaponsBulletsCount.Add(0);
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, IBulletVelocity<BulletController.VelocityData>, ITurnController
+public class BulletController : MonoBehaviour, IBulletID, IBulletCollision, IBulletLimit, IBulletVelocity<BulletController.VelocityData>, ITurnController
 {
-    public Rigidbody RigidBody { get; protected set; }
+    public Rigidbody RigidBody { get; set; }
     public IScore OwnerScore { get; set; }
     public Vector3 StartPosition { get; set; }
     public float Distance
@@ -11,16 +12,10 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
         get => Vector3.Distance(StartPosition, transform.position);
     }
     public bool IsLastShellOfBarrage { get; set; }
-
-    public Action<Collider, IScore, float> OnCollision { get; set; }
-    public Action<IScore, float> OnExplodeOnCollision { get; set; }
-    public Action<bool> OnExplodeOnLimit { get; set; }
-    public Action<VelocityData> OnBulletVelocity { get; set; }
-    public Action OnExitCollision { get; set; }
-
     public TurnController TurnController { get; set; }
-
+  
     protected WindSystemController _windSystemController;
+    [SerializeField] private bool _dontDestroyOnTimeLimit;
     protected bool _isWindActivated;
     protected int _collisionsCount;
     public struct VelocityData
@@ -42,6 +37,14 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     }
 
 
+    public Action<Collider, IScore, float> OnCollision { get; set; }
+    public Action<IScore, float> OnExplodeOnCollision { get; set; }
+    public Action<bool> OnExplodeOnLimit { get; set; }
+    public Action OnDestroyTimeLimit { get; set; }
+    public Action<VelocityData> OnBulletVelocity { get; set; }
+    public Action OnExitCollision { get; set; }
+
+    
 
     protected virtual void Awake()
     {
@@ -55,8 +58,8 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
     protected virtual void Start()
     {
         TurnController.SetNextTurn(TurnState.Other);
-
-        Invoke("ActivateWindForce", 0.5f);
+        StartCoroutine(ActivateWindForce(0.5f));
+        StartCoroutine(DestroyOnTimeLimit(8));
     }
    
     protected virtual void OnEnable()
@@ -101,8 +104,16 @@ public class BulletController : MonoBehaviour, IBulletCollision, IBulletLimit, I
                                  _isWindActivated));
     } 
 
-    protected virtual void ActivateWindForce() => _isWindActivated = true;
+    protected virtual IEnumerator ActivateWindForce(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _isWindActivated = true;
+    }
+
+    protected virtual IEnumerator DestroyOnTimeLimit(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (!_dontDestroyOnTimeLimit)
+            OnDestroyTimeLimit?.Invoke();
+    }
 }
-
-    
-

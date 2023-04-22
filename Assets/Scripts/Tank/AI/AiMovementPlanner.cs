@@ -3,128 +3,95 @@ using UnityEngine;
 
 public class AiMovementPlanner : MonoBehaviour
 {
-    private ChangeTiles _changeTiles;
-    private TilesData _tilesGenerator;
+    [SerializeField] [Space]
     private Raycasts _rayCasts;
 
-    private class InitializedValues
-    {
-        internal int _stepsLength;
-        internal int _direction;
-        internal Vector3 _destination;
+    [SerializeField] [Space]
+    private AIState _aiState;
 
-        internal InitializedValues(int stepsLength, int direction, Vector3 destination)
-        {
-            _stepsLength = stepsLength;
-            _direction = direction;
-            _destination = destination;
-        }
-    }
-    private class UpdatedValues
-    {
-        internal Vector3 _currentTilePos;
-        internal Vector3 _nextTilePos;
-        internal Vector3 _aboveNextTilePos;
-        internal float _desiredDirection;
-        internal float _y;
+    private Vector3 _nextTilePosition;
 
-        internal UpdatedValues(Vector3 currentTilePos, float desiredDirection, float y)
-        {
-            _currentTilePos = currentTilePos;
-            _aboveNextTilePos = new Vector3(0, 0.5f, 0);
-            _desiredDirection = desiredDirection;
-            _y = y;
-        }
+    public event System.Action<Vector3, int> onAiMovementPlanner;
+
+
+
+
+    private void OnEnable()
+    {
+        _aiState.onMove += (int stepsLength, int direction) => { StartCoroutine(Execute(stepsLength, direction)); };
     }
 
-    private InitializedValues _initializedValues;
-    private UpdatedValues _updatedValues;
-
-
-    public System.Action<Vector3, int> OnAIMovementPlanner { get; set; }
-
-
-    private void Awake()
+    private void OnDisable()
     {
-        _rayCasts = Get<Raycasts>.FromChild(gameObject);
-        _changeTiles = FindObjectOfType<ChangeTiles>();
-        _tilesGenerator = FindObjectOfType<TilesData>();
+        _aiState.onMove -= (int stepsLength, int direction) => { StartCoroutine(Execute(stepsLength, direction)); };
     }
 
-
-    private void IncreaseY(float i)
-    {
-        _updatedValues._y += -0.5f;
-        _updatedValues._nextTilePos = _updatedValues._currentTilePos - new Vector3(_updatedValues._desiredDirection > 0 ? i : -i, _updatedValues._y, 0);
-    }
-
-    private void DecreaseY()
-    {
-        _updatedValues._y -= -0.5f;
-    }
-
-    private bool Slope(Vector3 nextTilePos, string name)
-    {
-        return _tilesGenerator.TilesDict.ContainsKey(nextTilePos) && _tilesGenerator.TilesDict[nextTilePos].gameObject != null && _tilesGenerator.TilesDict[nextTilePos].name == name;
-    }
-
-    private bool IsNextPositionAvailable(string name)
-    {
-        return name == Names.LS || name == Names.RS || name == Names.T;
-    }
-
-    private IEnumerator InvokeOnActionPlanner(Vector3 destination, int direction)
-    {
-        yield return new WaitForSeconds(3);
-
-        OnAIMovementPlanner?.Invoke(destination, direction);
-    }
-
-    internal void MovementPlanner()
+    internal IEnumerator Execute(int stepsLength, int direction)
     {
         _rayCasts.CastRays(Vector3.zero, Vector3.zero);
-        _initializedValues = new InitializedValues(Random.Range(0, 4), 0, Vector3.zero);
+
+        _nextTilePosition = transform.position;
 
         if (_rayCasts.DownHit.collider?.tag == Tags.Tile)
         {
-            _updatedValues = new UpdatedValues(_rayCasts.DownHit.collider.transform.position,
-                _rayCasts.DownHit.collider.name == Names.RS ? 1 :
-                _rayCasts.DownHit.collider.name == Names.LS ? -1 : Random.Range(-1, 2), 0);
+            _nextTilePosition = _rayCasts.DownHit.collider.transform.position;
 
-            for (float i = 0.5f; i < _initializedValues._stepsLength; i += 0.5f)
+            for (float i = 0; i < stepsLength; i += 0.5f)
             {
-                _updatedValues._nextTilePos = _updatedValues._currentTilePos - new Vector3(_updatedValues._desiredDirection > 0 ? i : -i, _updatedValues._y, 0);
+                Vector3 horTile = new Vector3(direction < 0 ? 0.5f : -0.5f, 0, 0);
+                Vector3 vertTile = new Vector3(0, 0.5f, 0);
 
-                if (_updatedValues._desiredDirection > 0)
-                {
-                    Conditions<bool>.Compare(Slope(_updatedValues._nextTilePos + _updatedValues._aboveNextTilePos, Names.LS), Slope(_updatedValues._nextTilePos, Names.RS),
-                        delegate { IncreaseY(i); },
-                        delegate { DecreaseY(); },
-                        null,
-                        null);
-                }
-                else
-                {
-                    Conditions<bool>.Compare(Slope(_updatedValues._nextTilePos, Names.LS), Slope(_updatedValues._nextTilePos + _updatedValues._aboveNextTilePos, Names.RS),
-                        delegate { DecreaseY(); },
-                        delegate { IncreaseY(i); },
-                        null,
-                        null);
-                }
-
-                if (_changeTiles.HasTile(_updatedValues._nextTilePos) && IsNextPositionAvailable(_tilesGenerator.TilesDict[_updatedValues._nextTilePos].name))
-                {
-                    _initializedValues._destination = _updatedValues._nextTilePos;
-                    _initializedValues._direction = _updatedValues._desiredDirection > 0 ? 1 : -1;
-                }
-
-                else
-                {
-                    break;
-                }
+                yield return StartCoroutine(CheckNextTilePosition(horTile, vertTile));
+                yield return StartCoroutine(CheckNextTilePositionVertically(horTile, vertTile));
             }
         }
 
-        StartCoroutine(InvokeOnActionPlanner(_initializedValues._destination, _initializedValues._direction));
-    }   
+        Vector3 destination = new Vector3(direction == -1 ? _nextTilePosition.x - 0.5f : direction == 1 ? _nextTilePosition.x + 0.5f : 0, _nextTilePosition.y, _nextTilePosition.z);
+
+        onAiMovementPlanner?.Invoke(destination, direction);
+    }
+
+    private IEnumerator CheckNextTilePosition(Vector3 horTile, Vector3 vertTile)
+    {
+        Vector3 nextTilePosition = _nextTilePosition + horTile;
+
+        if (!GameSceneObjectsReferences.ChangeTiles.HasTile(nextTilePosition))
+            yield break;
+
+        bool hasTileAbove = GameSceneObjectsReferences.ChangeTiles.HasTile(nextTilePosition + vertTile);
+
+        bool isSlope = hasTileAbove && GameSceneObjectsReferences.TilesData.TilesDict[nextTilePosition + vertTile].name == Names.RS ||
+                       hasTileAbove && GameSceneObjectsReferences.TilesData.TilesDict[nextTilePosition + vertTile].name == Names.LS;
+
+        bool shouldAvoid = Get<TileProps>.From(GameSceneObjectsReferences.TilesData.TilesDict[nextTilePosition])?.ShouldAvoid ?? false;
+
+        if (!shouldAvoid)
+            if (isSlope || !hasTileAbove)
+                _nextTilePosition = nextTilePosition;
+
+        yield return null;
+    }
+
+    private IEnumerator CheckNextTilePositionVertically(Vector3 horTile, Vector3 vertTile)
+    {
+        Vector3 nextTilePosition = _nextTilePosition + horTile;
+
+        bool hasTile = GameSceneObjectsReferences.ChangeTiles.HasTile(nextTilePosition);
+        bool hasTileBottom = GameSceneObjectsReferences.ChangeTiles.HasTile(nextTilePosition - vertTile);
+
+        if (!hasTile)
+        {
+            for (int y = 0; y < 5; y++)
+            {
+                if (hasTileBottom)
+                {
+                    _nextTilePosition = nextTilePosition;
+
+                    yield return null;
+
+                    yield break;
+                }
+            }
+        }
+    }
 }

@@ -3,31 +3,37 @@ using TMPro;
 
 public class PlayerHUDHealthTempValue : MonoBehaviour
 {
-    [SerializeField] private Color[] _colors;
+    [SerializeField] 
+    private Color[] _colors;
+
     private Animator _animator;
+
     private TMP_Text _text;
+
     private HealthController _healthController;
 
     private int _healthOldValue, _healthNewValue;
 
+
+
+
     private void Awake()
     {
         _animator = Get<Animator>.From(gameObject);
+
         _text = Get<TMP_Text>.From(gameObject);
+
         _healthController = Get<HealthController>.From(transform.parent.gameObject);
+
         _healthOldValue = _healthController.Health;
     }
 
     private void OnEnable()
     {
-        if (_healthController != null)
-            _healthController.OnUpdateHealthBar += OnUpdateHealthBar;
-    }
+        if (_healthController == null)
+            return;
 
-    private void OnDisable()
-    {
-        if (_healthController != null)
-            _healthController.OnUpdateHealthBar -= OnUpdateHealthBar;
+        _healthController.OnUpdateHealthBar += OnUpdateHealthBar;
     }
 
     private void OnUpdateHealthBar(int health)
@@ -41,8 +47,6 @@ public class PlayerHUDHealthTempValue : MonoBehaviour
         _text.text = _healthNewValue > 0 ? "+" + _healthNewValue : _healthNewValue.ToString();
 
         if (_healthNewValue != 0)
-        {
             _animator.SetTrigger("play");
-        }
     }
 }

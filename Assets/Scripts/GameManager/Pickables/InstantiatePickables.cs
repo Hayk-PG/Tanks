@@ -4,69 +4,86 @@ using UnityEngine;
 
 public class InstantiatePickables : MonoBehaviourPun
 {
-    [SerializeField]
-    private ParachuteWithWoodBoxController _woodBoxControllerPrefab, _instantiatedWoodBoxController;
+    [SerializeField] 
+    private ParachuteWithWoodBoxController _woodBoxControllerPrefab;
 
-    private GameManager _gameManager;
+    private ParachuteWithWoodBoxController _parachuteWithWoodBoxController;
+
     private Transform _player1, _player2;
-    private Vector3 _spawnPosition;
 
 
 
-    private void Awake()
-    {
-        _gameManager = Get<GameManager>.From(gameObject);
-    }
 
-    private void OnEnable()
-    {
-        _gameManager.OnGameStarted += OnGameStarted;
-    }
+    private void OnEnable() => GameSceneObjectsReferences.GameManager.OnGameStarted += OnGameStarted;
 
-    private void OnDisable()
-    {
-        _gameManager.OnGameStarted -= OnGameStarted;
-    }
+    private void OnDisable() => GameSceneObjectsReferences.GameManager.OnGameStarted -= OnGameStarted;
 
     private void OnGameStarted()
     {
-        _player1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player1).transform;
-        _player2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player2).transform;
+        GetPlayers();
 
         StartCoroutine(InstantiateCoroutine());
     }
 
-    private void SpawnWoodBox(Vector3 position)
+    private void GetPlayers()
     {
-        _instantiatedWoodBoxController = Instantiate(_woodBoxControllerPrefab, position, Quaternion.identity);
-    }
-
-    [PunRPC]
-    private void SpawnWoodBoxRPC(Vector3 position)
-    {
-        SpawnWoodBox(position);
+        _player1 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player1).transform;
+        _player2 = GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(turn => turn.MyTurn == TurnState.Player2).transform;
     }
 
     private IEnumerator InstantiateCoroutine()
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(30, 120));
+            yield return new WaitForSeconds(Random.Range(0, 5));
 
-            if (_instantiatedWoodBoxController == null)
-            {
-                _spawnPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
-
-                if (MyPhotonNetwork.IsOfflineMode)
-                {
-                    SpawnWoodBox(_spawnPosition);
-                }
-
-                if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
-                {
-                    photonView.RPC("SpawnWoodBoxRPC", RpcTarget.AllViaServer, _spawnPosition);
-                }
-            }            
+            if (FindObjectOfType<ParachuteWithWoodBoxController>() == null && _player1 != null && _player2 != null)
+                InstantiateWoodBox(WoodBoxSpawnPosition());
         }
+    }
+
+    private void InstantiateWoodBox(Vector3 position)
+    {
+        float randomTime = Random.Range(30, 90);
+
+        if (MyPhotonNetwork.IsOfflineMode)
+            InstantiateWoodBox(position, randomTime);
+
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+            photonView.RPC("InstantiateWoodBoxRPC", RpcTarget.AllViaServer, position, randomTime);
+    }
+
+    private void InstantiateWoodBox(Vector3 position, float randomTime)
+    {
+        _parachuteWithWoodBoxController = Instantiate(_woodBoxControllerPrefab, position, Quaternion.identity);
+
+        _parachuteWithWoodBoxController.Id = position;
+
+        _parachuteWithWoodBoxController.RandomDestroyTime = randomTime;
+    }
+
+    [PunRPC]
+    private void InstantiateWoodBoxRPC(Vector3 position, float randomTime)
+    {
+        InstantiateWoodBox(position, randomTime);
+    }
+
+    private Vector3 WoodBoxSpawnPosition()
+    {
+        Vector3 tempPosition = new Vector3(Random.Range(_player1.position.x, _player2.position.x), 5, 0);
+
+        Vector3 tilePosition = tempPosition;
+
+        foreach (var tileDict in GameSceneObjectsReferences.TilesData.TilesDict)
+        {
+            if (tileDict.Key.x >= tempPosition.x - 1 && tileDict.Key.x <= tempPosition.x + 1)
+            {
+                tilePosition.x = tileDict.Key.x;
+
+                break;
+            }
+        }
+
+        return tilePosition;
     }
 }

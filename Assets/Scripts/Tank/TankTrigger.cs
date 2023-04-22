@@ -7,10 +7,9 @@ public class TankTrigger : MonoBehaviour
     private int _damageValue = 10;
     private float _time;
 
-    private void Awake()
-    {
-        _iDamage = Get<IDamage>.From(gameObject);
-    }
+
+
+    private void Awake() => _iDamage = Get<IDamage>.From(gameObject);
 
     private void OnTriggerStay(Collider other)
     {

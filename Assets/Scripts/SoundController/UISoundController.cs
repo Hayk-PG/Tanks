@@ -3,25 +3,42 @@ using UnityEngine;
 
 public class UISoundController : MonoBehaviour
 {
-    private static UISoundController _inst;
+    public static UISoundController Instance { get; private set; }
+
     private AudioSource _audioSRC;
 
-    [Serializable] private struct ClipsList
+    [Serializable] 
+    private struct ClipsList
     {
-        [SerializeField] private string _title;
+        [SerializeField]
+        private string _title;
+
         public AudioClip[] _clips;
     }
-    [SerializeField] private ClipsList[] _clipsList;
+
+    [SerializeField] 
+    private ClipsList[] _clipsList;
+
+
 
 
     private void Awake()
     {
-        _inst = this;
+        Instance = this;
+
+        DontDestroyOnLoad(gameObject);
+
         _audioSRC = Get<AudioSource>.From(transform.Find("SoundSRC_UI").gameObject);
     }
 
     public static void PlaySound(int listIndex, int clipIndex)
     {
-        _inst._audioSRC.PlayOneShot(_inst._clipsList[listIndex]._clips[clipIndex]);
+        if (Instance == null)
+            Instance = FindObjectOfType<UISoundController>();
+
+        if (listIndex >= Instance._clipsList.Length || clipIndex >= Instance._clipsList[listIndex]._clips.Length)
+            return;
+
+        Instance._audioSRC.PlayOneShot(Instance._clipsList[listIndex]._clips[clipIndex]);
     }
 }

@@ -4,8 +4,12 @@ using TMPro;
 
 public class Tab_Room : Tab_Base
 {
-    [SerializeField] private PlayerInRoom[] _playersInRoom;
-    [SerializeField] private TMP_Text _txtRoomName;
+    [SerializeField]
+    private PlayerInRoom[] _playersInRoom;
+
+    [SerializeField] [Space]
+    private TMP_Text _txtRoomName;
+
     private MyPhotonCallbacks _myPhotonCallbacks;
 
     public string RoomName
@@ -14,27 +18,38 @@ public class Tab_Room : Tab_Base
         private set => _txtRoomName.text = value;
     }
 
+
+
     protected override void Awake()
     {
         base.Awake();
+
         _myPhotonCallbacks = FindObjectOfType<MyPhotonCallbacks>();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
+
         _myPhotonCallbacks._OnJoinedRoom += OnJoinedRoom;
+
         _myPhotonCallbacks._OnPlayerEnteredRoom += OnPlayerEnteredRoom;
+
         _myPhotonCallbacks._OnPlayerLeftRoom += OnPlayerLeftRoom;
+
         _myPhotonCallbacks._OnLeftRoom += OnLeftRoom;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+
         _myPhotonCallbacks._OnJoinedRoom += OnJoinedRoom;
+
         _myPhotonCallbacks._OnPlayerEnteredRoom -= OnPlayerEnteredRoom;
+
         _myPhotonCallbacks._OnPlayerLeftRoom -= OnPlayerLeftRoom;
+
         _myPhotonCallbacks._OnLeftRoom -= OnLeftRoom;
     }
 
@@ -48,6 +63,7 @@ public class Tab_Room : Tab_Base
         RoomName = (string)room.CustomProperties[Keys.RoomFakeName];
 
         string[][] itemsName = (string[][])room.CustomProperties[Keys.ItemName];
+
         int[][] itemsAmount = (int[][])room.CustomProperties[Keys.ItemAmount];
 
         for (int i = 0, j = 0; i < itemsName[0].Length; i++, j ++)
@@ -56,6 +72,7 @@ public class Tab_Room : Tab_Base
         }
         
         UpdatePlayersInRoom();
+
         base.OpenTab();
     }
 
@@ -77,6 +94,7 @@ public class Tab_Room : Tab_Base
     private void UpdatePlayersInRoom()
     {
         ResetPlayersInRoom();
+
         AssignPlayersInRoom();
     }
 
@@ -95,8 +113,11 @@ public class Tab_Room : Tab_Base
             PlayerInRoom.Properties properties = new PlayerInRoom.Properties
             {
                 _playerName = MyPhotonNetwork.PlayersList[i].NickName,
+
                 _actorNumber = MyPhotonNetwork.PlayersList[i].ActorNumber,
+
                 _playerLevel = 1,
+
                 _isPlayerReady = IsPlayerReady(MyPhotonNetwork.PlayersList[i])
             };
 

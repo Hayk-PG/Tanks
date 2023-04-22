@@ -1,67 +1,88 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class BulletExplosion : GetBulletController, IBulletExplosion
-{
-    protected CameraShake _cameraShake;
+public class BulletExplosion : MonoBehaviour, IBulletExplosion
+{    
+    protected IBulletCollision _iBulletCollision;
+    protected IBulletLimit _iBulletLimit;
+    protected IBulletID _iBulletId;
+    protected ITurnController _iTurnController;
     protected LavaSplash _lavaSplash;
 
     public Action<IScore, float> OnBulletExplosion { get; set; }
-    public Action OnBulletExplosionWithoutHitting { get; set; }
     public Action<IScore, float, Vector3?> OnFlareBulletExplosion { get; set; }
 
-    public UnityEvent OnCameraShake;
 
 
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
-
-        _cameraShake = FindObjectOfType<CameraShake>();
+        GetIBulletCollision();
+        _iBulletLimit = Get<IBulletLimit>.From(gameObject);
+        _iBulletId = Get<IBulletID>.From(gameObject);
+        _iTurnController = Get<ITurnController>.From(gameObject);
         _lavaSplash = FindObjectOfType<LavaSplash>();
     }
 
     protected virtual void OnEnable()
     {
-        if (_iBulletCollision != null) _iBulletCollision.OnExplodeOnCollision = OnExplodeOnCollision;
-        if (_iBulletLimit != null) _iBulletLimit.OnExplodeOnLimit = OnExplodeOnLimit;
+        ListenIBulletCollision(true);
+        ListenIBulletLimit(true);
+    }
+
+    protected virtual void OnDisable()
+    {
+        ListenIBulletCollision(false);
+        ListenIBulletLimit(false);
+    }
+
+    protected virtual void GetIBulletCollision() => _iBulletCollision = Get<IBulletCollision>.From(gameObject);
+
+    protected virtual void ListenIBulletCollision(bool isSubscribing)
+    {
+        if (_iBulletCollision == null)
+            return;
+
+        if (isSubscribing)
+            _iBulletCollision.OnExplodeOnCollision += OnExplodeOnCollision;
+        else
+            _iBulletCollision.OnExplodeOnCollision -= OnExplodeOnCollision;
+    }
+
+    protected virtual void ListenIBulletLimit(bool isSubscribing)
+    {
+        if (_iBulletLimit == null)
+            return;
+
+        if (isSubscribing)
+        {
+            _iBulletLimit.OnDestroyTimeLimit += delegate { OnExplodeOnCollision(_iBulletId.OwnerScore, 0); };
+            _iBulletLimit.OnExplodeOnLimit += OnExplodeOnLimit;
+        }
+        else
+        {
+            _iBulletLimit.OnDestroyTimeLimit -= delegate { OnExplodeOnCollision(_iBulletId.OwnerScore, 0); };
+            _iBulletLimit.OnExplodeOnLimit -= OnExplodeOnLimit;
+        }
     }
 
     protected virtual void OnExplodeOnCollision(IScore ownerScore, float distance)
     {
         OnBulletExplosion?.Invoke(ownerScore, distance);
-        OnCameraShake?.Invoke();
-
         DestroyBullet();
-    }
-
-    public void CameraShake()
-    {
-        _cameraShake.Shake();
-    }
-
-    public void CameraBigShake()
-    {
-        _cameraShake.BigShake();
     }
 
     protected virtual void OnExplodeOnLimit(bool isTrue)
     {
         if (isTrue)
         {
-            //OnBulletExplosionWithoutHitting?.Invoke();
             _lavaSplash.ActivateSmallSplash(transform.position);
             DestroyBullet();
         }
     }
 
-    protected virtual void SetTurnToTransition()
-    {
-        _iTurnController.TurnController.SetNextTurn(TurnState.Transition);
-    }
+    protected virtual void SetTurnToTransition() => _iTurnController.TurnController.SetNextTurn(TurnState.Transition);
 
-    protected virtual void DestroyBullet()
+    public virtual void DestroyBullet()
     {
         SetTurnToTransition();
         Destroy(gameObject);

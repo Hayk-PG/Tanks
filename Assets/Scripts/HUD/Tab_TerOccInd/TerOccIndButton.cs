@@ -2,18 +2,16 @@
 
 public class TerOccIndButton : MonoBehaviour
 {
-    private CanvasGroup _canvasGroup;
-    private CanvasGroup _upperTabCanvasGroup;
+    [SerializeField] [Space]
+    private CanvasGroup _canvasGroup, _upperTabCanvasGroup;
+
+    [SerializeField] [Space]
     private GameManager _gameManager;
 
     private bool _isOpened;
 
-    private void Awake()
-    {
-        _canvasGroup = Get<CanvasGroup>.FromChild(gameObject);
-        _upperTabCanvasGroup = Get<CanvasGroup>.From(FindObjectOfType<UpperTab>().gameObject);
-        _gameManager = FindObjectOfType<GameManager>();
-    }
+
+    
 
     public void OnButtonClick()
     {

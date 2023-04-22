@@ -11,16 +11,18 @@ public class ParachuteWithWoodBoxCollision : MonoBehaviour
         internal BulletController _bulletController;
     }
 
-    internal Action<CollisionData> OnCollision { get; set; }
+    internal event Action<CollisionData> onCollisionEnter;
 
 
     private void OnCollisionEnter(Collision collision)
     {
-        OnCollision?.Invoke(new CollisionData 
-        { 
+        onCollisionEnter?.Invoke(new CollisionData
+        {
             _collision = collision,
+
             _tankController = Get<TankController>.From(collision.gameObject),
+
             _bulletController = Get<BulletController>.From(collision.gameObject)
-    });
+        });
     }
 }

@@ -3,31 +3,39 @@ using TMPro;
 
 public class PropsGUI : MonoBehaviour
 {
-    [SerializeField] private Canvas _canvas;   
-    [SerializeField] private Animator _animator;
-    [SerializeField ]private TMP_Text _text;
-    private Tile _tile;
+    [SerializeField]
+    protected Canvas _canvas;
+    
+    [SerializeField] [Space]
+    protected Animator _animator;
+
+    [SerializeField] [Space]
+    protected TMP_Text _text;
+
+    protected Tile _tile;
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _canvas.worldCamera = Camera.main;
+
         _tile = Get<Tile>.From(gameObject);
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         _tile.OnTileHealth += OnTileHealth;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         _tile.OnTileHealth -= OnTileHealth;
     }
 
-    private void OnTileHealth(float health)
+    protected virtual void OnTileHealth(float health)
     {
         _text.text = health.ToString();
+
         _animator.SetTrigger("play");
     }
 }

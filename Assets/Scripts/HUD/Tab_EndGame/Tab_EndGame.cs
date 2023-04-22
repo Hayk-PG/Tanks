@@ -1,61 +1,104 @@
-﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
+using System.Collections;
 
-public partial class Tab_EndGame : MonoBehaviour
+
+//ADDRESSABLE
+public class Tab_EndGame : MonoBehaviour, IGameOutcomeHandler
 {
-    private enum GameResult { Win, Lose}
-    private GameResult _gameResult;
+    [SerializeField]
     private CanvasGroup _canvasGroup;
-    private BaseEndGame _baseEndGame;
-    private delegate bool Checker(TankController tank);
-    private Checker _successed;
-    private Checker _defeated;
-    
 
-    private void Awake()
+    [SerializeField] [Space]
+    private Image _imgBackground, _imgBackgroundBlue;
+
+    // If game result is a "Victory", use these sprites"
+    [SerializeField] [Space]
+    private AssetReferenceSprite _assetReferenceVicotryBgImg, _assetReferenceVictoryBlurredBgImg;
+
+    // If game result is a "Defeat", use these sprites"
+    [SerializeField] [Space]
+    private AssetReferenceSprite _assetReferenceDefeatBgImg, _assetReferenceDefeatBlurredBgImg;
+
+    private AssetReferenceSprite _currentAssetReferenceBgImg, _currentAssetReferenceBlurredBgImg;
+
+    [SerializeField] [Space]
+    private WinnerLoserIdentifier _winnerLoserIdentifier;
+
+    public IGameOutcomeHandler This { get; set; }
+    public IGameOutcomeHandler OperationHandler { get; set; }
+
+
+
+
+    private void Awake() => This = this;
+
+    private void OnEnable() => GameOutcomeHandler.onSubmit += OnSubmit;
+
+    private void OnDisable() => GameOutcomeHandler.onSubmit -= OnSubmit;
+
+    private void OnSubmit(IGameOutcomeHandler handler, GameOutcomeHandler.Operation operation, Animator animator, object[] data)
     {
-        _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _baseEndGame = MyPhotonNetwork.IsOfflineMode ? (BaseEndGame)FindObjectOfType<EndOfflineGame>() : FindObjectOfType<EndOnlineGame>();
+        if (operation != GameOutcomeHandler.Operation.Start)
+            return;
 
-        _successed = delegate (TankController successedTank) { return MyPhotonNetwork.IsOfflineMode && successedTank?.BasePlayer != null || !MyPhotonNetwork.IsOfflineMode && successedTank?.BasePlayer != null && successedTank.BasePlayer.photonView.IsMine; };
-        _defeated = delegate (TankController defeatedTank) { return MyPhotonNetwork.IsOfflineMode && defeatedTank?.BasePlayer != null || !MyPhotonNetwork.IsOfflineMode && defeatedTank?.BasePlayer != null && defeatedTank.BasePlayer.photonView.IsMine; };
+        OperationHandler = handler;
+
+        InitializeBackgroundImage((ScoreController)data[0], (bool)data[1]);
     }
 
-    private void OnEnable()
+    private void InitializeBackgroundImage(ScoreController scoreController, bool isWin)
     {
-        _baseEndGame.OnEndGameTab += OnEndGameTab;
+        _currentAssetReferenceBgImg = isWin ? _assetReferenceVicotryBgImg : _assetReferenceDefeatBgImg;
+
+        _currentAssetReferenceBgImg.LoadAssetAsync().Completed += background => 
+        { 
+            _imgBackground.sprite = background.Result;
+
+            StartCoroutine(Execute(scoreController, isWin));
+        };
     }
 
-    private void OnDisable()
+    private IEnumerator Execute(ScoreController scoreController, bool isWin)
     {
-        _baseEndGame.OnEndGameTab -= OnEndGameTab;
+        yield return StartCoroutine(SetActive(isWin));
+
+        yield return StartCoroutine(Submit(scoreController, isWin));
     }
 
-    private void OnEndGameTab(string successedPlayerName, string defeatedPlayerName)
+    private IEnumerator SetActive(bool isWin)
     {
-        TankController successedTank = GameObject.Find(successedPlayerName)?.GetComponent<TankController>();
-        TankController defeatedTank = GameObject.Find(defeatedPlayerName)?.GetComponent<TankController>();
-        OnGameEndScreen(successedTank, defeatedTank);
+        yield return new WaitForSeconds(5);
+
+        _currentAssetReferenceBlurredBgImg = isWin ? _assetReferenceVictoryBlurredBgImg : _assetReferenceDefeatBlurredBgImg;
+
+        GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
+
+        GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.WrapUp);
     }
 
-    private void OnGameEndScreen(TankController successedTank, TankController defeatedTank)
+    private IEnumerator Submit(ScoreController scoreController, bool isWin)
     {
-        ScoreController successedTanksScore = successedTank?.GetComponent<ScoreController>();
-        ScoreController defeatedTanksScore = defeatedTank?.GetComponent<ScoreController>();
+        yield return new WaitForSeconds(2);
 
-        if (_successed(successedTank))
+        _currentAssetReferenceBlurredBgImg.LoadAssetAsync().Completed += blurredBackground =>
         {
-            Display(GameResult.Win, new Values(Data.Manager.Level, 50, 150, 300, (int)(_ui._sliderXP.value), successedTanksScore.Score));          
-        }
-        else if(_defeated(defeatedTank))
-        {
-            Display(GameResult.Lose, new Values(Data.Manager.Level, 50, 150, 0, (int)(_ui._sliderXP.value), defeatedTanksScore.Score));
-        }
+            _imgBackground.sprite = blurredBackground.Result;
+
+            _imgBackgroundBlue.gameObject.SetActive(true);
+
+            GameOutcomeHandler.SubmitOperation(this, GameOutcomeHandler.Operation.GameResultTab, new object[] { scoreController, isWin });
+        };
     }
 
-    private void Display(GameResult gameResult, Values values)
+    public void OnSucceed()
     {
-        DisplayGameResult(gameResult);
-        StartCoroutine(DisplayController(_isCoroutineRunning, values, gameResult));
+        
+    }
+
+    public void OnFailed()
+    {
+        
     }
 }

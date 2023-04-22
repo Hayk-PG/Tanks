@@ -2,53 +2,84 @@
 using System.Collections;
 using UnityEngine;
 
-public class Tab_StartGame : Tab_Base
+public class Tab_StartGame : Tab_Base, ITabOperation
 {
-    [SerializeField] private Btn _btnOffline;
-    [SerializeField] private Btn _btnOnline;
+    [SerializeField]
+    private Btn _btnOffline, _btnOnline;
 
-    public event Action onPlayOffline;
-    public event Action onPlayOnline;
 
 
     protected override void OnEnable()
     {
-        MenuTabs.Tab_Initialize.onOpenTabStartGame += OpenTab;
+        base.OnEnable();
+
+        MenuTabs.Tab_SignUp.onGoBack += OpenTab;
+        MenuTabs.Tab_SignIn.onGoBack += OpenTab;
+
         _btnOffline.onSelect += SelectOffline;
+
         _btnOnline.onSelect += SelectOnline;
     }
 
     protected override void OnDisable()
     {
-        MenuTabs.Tab_Initialize.onOpenTabStartGame -= OpenTab;
+        base.OnDisable();
+
+        MenuTabs.Tab_SignUp.onGoBack -= OpenTab;
+        MenuTabs.Tab_SignIn.onGoBack -= OpenTab;
+
         _btnOffline.onSelect -= SelectOffline;
+
         _btnOnline.onSelect -= SelectOnline;
     }
-   
+
+    protected override void OnOperationSubmitted(ITabOperation handler, TabsOperation.Operation operation, object[] data)
+    {
+        if (operation == TabsOperation.Operation.Start)
+        {
+            OperationHandler = handler;
+
+            OpenTab();
+        }
+    }
+
     public override void OpenTab()
     {
         MyPhoton.LeaveRoom();
         MyPhoton.LeaveLobby();
         MyPhoton.Disconnect();
+
         base.OpenTab();
     }
 
     public void SelectOffline()
     {
-        _tabLoading.Open();
-        StartCoroutine(Execute(true, onPlayOffline));
+        StartCoroutine(Execute(delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.PlayOffline); }));
     }
 
     public void SelectOnline()
     {
-        _tabLoading.Open();
-        StartCoroutine(Execute(false, onPlayOnline));
+        StartCoroutine(Execute(delegate { TabsOperation.Handler.SubmitOperation(this, TabsOperation.Operation.Authenticate); }));
     }
 
-    private IEnumerator Execute(bool isOfflineMode, Action onPlay)
+    private IEnumerator Execute(Action onPlay)
     {
+        _tabLoading.Open(10);
+
         yield return new WaitForSeconds(0.5f);
-        MyPhotonNetwork.OfflineMode(isOfflineMode);
+
         onPlay?.Invoke();
+    }
+
+    public override void OnOperationFailed()
+    {
+        print("Can't authorize");
+
+        _tabLoading.Close();
+    }
+
+    public override void OnOperationSucceded()
+    {
+        
     }
 }

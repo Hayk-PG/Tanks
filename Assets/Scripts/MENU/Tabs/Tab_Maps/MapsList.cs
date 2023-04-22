@@ -1,22 +1,37 @@
+using System.Collections;
 using UnityEngine;
 
-public class MapsList : MonoBehaviour
+public class MapsList : MonoBehaviour, IReset
 {  
-    [SerializeField] private Transform _content;    
-    [SerializeField] private Maps _maps;
+    [SerializeField]
+    private Transform _content;
+    
+    [SerializeField] [Space]
+    private Maps _maps;
+
+    [SerializeField] [Space]
+    private CustomScrollRect _customScrollRect;
+
+    [SerializeField] [Space]
+    private MapSelector _randomMapSelector;
+
     private MapSelector[] _mapSelectors;
+
     private Btn[] _btns;
+
+    private IReset[] _btnResets;
+
+
 
 
     private void Awake()
     {
-        _btns = _content.GetComponentsInChildren<Btn>();        
+        _btns = _content.GetComponentsInChildren<Btn>();
+
+        _btnResets = _content.GetComponentsInChildren<IReset>();
     }
 
-    private void Start()
-    {
-        AddMapSelectors();
-    }
+    private void Start() => AddMapSelectors();
 
     private void OnEnable()
     {
@@ -24,6 +39,8 @@ public class MapsList : MonoBehaviour
         { 
             btn.onSelect += delegate { DeselectOtherBtns(btn); }; 
         });
+
+        _randomMapSelector.onRandomMapSelected += () => GlobalFunctions.Loop<IReset>.Foreach(_btnResets, btnReset => { btnReset.SetDefault(); });
     }
 
     private void OnDisable()
@@ -32,6 +49,8 @@ public class MapsList : MonoBehaviour
         { 
             btn.onSelect += delegate { DeselectOtherBtns(btn); };
         });
+
+        _randomMapSelector.onRandomMapSelected -= () => GlobalFunctions.Loop<IReset>.Foreach(_btnResets, btnReset => { btnReset.SetDefault(); });
     }
 
     private void AddMapSelectors()
@@ -40,11 +59,35 @@ public class MapsList : MonoBehaviour
 
         for (int i = 0; i < _mapSelectors.Length; i++)
         {
+            int mapIndex = i - 1;
+
             _mapSelectors[i] = Get<MapSelector>.From(_btns[i].gameObject);
 
-            if (i < _maps.All.Length)
-                _mapSelectors[i].Initialize(_maps.All[i], i);
+            if (i == 0)
+            {
+                _mapSelectors[i].Initialize();
+                _mapSelectors[i].AssignMapSelector(true, _maps);
+
+                continue;
+            }
+
+            if (mapIndex < _maps.All.Length)
+            {
+                _mapSelectors[i].Initialize(_maps.All[mapIndex], mapIndex);
+                _mapSelectors[i].AssignMapSelector(false, null);
+            }
         }
+    }
+
+    private IEnumerator SetCustomScrollRectNormalizedPosition()
+    {
+        float horizontalBarsCount = _content.childCount;
+        float currentHorizontalBarIndex = (Data.Manager.MapIndex / 3) < 0 ? 0 : Data.Manager.MapIndex / 3;
+        float normalizedPosition = Mathf.InverseLerp(horizontalBarsCount, 1, currentHorizontalBarIndex + 1);
+
+        yield return null;
+
+        _customScrollRect.SetNormalizedPosition(normalizedPosition);
     }
 
     private void DeselectOtherBtns(Btn btn)
@@ -54,5 +97,10 @@ public class MapsList : MonoBehaviour
             if (b != btn)
                 b.Deselect();
         });
+    }
+
+    public void SetDefault()
+    {
+        StartCoroutine(SetCustomScrollRectNormalizedPosition());
     }
 }

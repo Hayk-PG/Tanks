@@ -2,41 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//USED COMMENTS
 public class AmmoTabButtonNotification : MonoBehaviour
 {
     public List<AmmoTypeButton> _weapons = new List<AmmoTypeButton>();
     public List<AmmoTypeButton> _availableWeapons;
 
-    private AmmoTabCustomization _ammoTabCustomization;
-    private ScoreController _playerScoreController;
-    private AmmoTypeController _ammoTypeController;
-
-    [SerializeField]
+    [SerializeField] [Space]
     private GameObject _notificationsIcon;
 
+    private ScoreController _playerScoreController;
+    
     private bool _isNewWeaponAvailable;
     private bool _isAmmoTabOpen;
 
-    public Action OnNewAwailableWeaponNotification { get; set; }
+    // NewAvailableWeaponNotificationHolder is used for public access to OnNewAvailableWeaponNotification
+    public Action NewAvailableWeaponNotificationHolder => OnNewAvailableWeaponNotification;
+
     public Action<List<AmmoTypeButton>, bool> OnDisplayAvailableWeapons { get; set; }
 
 
-    private void Awake()
-    {
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-        _ammoTypeController = FindObjectOfType<AmmoTypeController>();
-    }
+    
 
     private void OnEnable()
     {
-        _ammoTabCustomization.OnSendWeaponPointsToUnlock += CacheWeaponsPointsToUnlock;
-        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
+        GameSceneObjectsReferences.AmmoTabCustomization.OnSendWeaponPointsToUnlock += CacheWeaponsPointsToUnlock;
+
+        GameSceneObjectsReferences.AmmoTypeController.OnInformAboutTabActivityToTabsCustomization += OnWeaponsTabActivity;
     }
 
     private void OnDisable()
     {
-        _ammoTabCustomization.OnSendWeaponPointsToUnlock -= CacheWeaponsPointsToUnlock;
-        _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
+        GameSceneObjectsReferences.AmmoTabCustomization.OnSendWeaponPointsToUnlock -= CacheWeaponsPointsToUnlock;
+
+        GameSceneObjectsReferences.AmmoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnWeaponsTabActivity;
 
         if (_playerScoreController != null)
             _playerScoreController.OnPlayerGetsPoints -= PlayerGetsPoints;
@@ -44,7 +43,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
 
     public void CacheWeaponsPointsToUnlock(AmmoTypeButton ammoTypeButton)
     {
-        if(ammoTypeButton._properties.RequiredScoreAmmount > 0) 
+        if(ammoTypeButton._properties.Price > 0) 
             _weapons.Add(ammoTypeButton);
     }
 
@@ -67,10 +66,12 @@ public class AmmoTabButtonNotification : MonoBehaviour
 
         for (int i = _weapons.Count - 1; i >= 0; i--)
         {
-            if (points >= _weapons[i]._properties.RequiredScoreAmmount)
+            if (points >= _weapons[i]._properties.Price)
             {
                 _availableWeapons.Add(_weapons[i]);
+
                 _weapons.RemoveAt(i);
+
                 _isNewWeaponAvailable = true;
 
                 break;
@@ -80,15 +81,19 @@ public class AmmoTabButtonNotification : MonoBehaviour
         Conditions<bool>.Compare(_isNewWeaponAvailable, OnNewAvailableWeaponNotification, null);
     }
 
+    // This method is held by NewAvailableWeaponNotificationHolder delegate for public use only
+
     private void OnNewAvailableWeaponNotification()
     {
         OnNotificationIcon(true && !_isAmmoTabOpen);
-        OnNewAwailableWeaponNotification?.Invoke();
+
+        UISoundController.PlaySound(7, 0);
     }
 
     private void OnNotificationIcon(bool isActive)
     {
         _notificationsIcon.SetActive(isActive);
+
         OnDisplayAvailableWeapons?.Invoke(_availableWeapons, isActive);
     }
 
@@ -99,6 +104,7 @@ public class AmmoTabButtonNotification : MonoBehaviour
         if (_isAmmoTabOpen)
         {
             OnNotificationIcon(false);
+
             OnDisplayAvailableWeapons?.Invoke(_availableWeapons, false);
         }
     }

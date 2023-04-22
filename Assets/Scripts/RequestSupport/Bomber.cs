@@ -1,65 +1,81 @@
 ﻿using UnityEngine;
 
+public enum BomberType { Light, Medium, Heavy, Nuke }
+
+
 public class Bomber : MonoBehaviour
 {
-    [SerializeField] private Transform _propeller, _bombSpwnPoint;
-    [SerializeField] private BombController _bombPrefab;
+    [SerializeField] [Space]
+    private Transform _bombSpwnPoint;
 
-    private BombController _bomb;
-    private GameManagerBulletSerializer _gameManagerBulletSerializer;
-    private MainCameraController _mainCameraController;
+    [SerializeField] [Space]
+    private Rigidbody _rigidbody;
+
+    [SerializeField] [Space]
+    private BombController _bombPrefab;
+
+    [SerializeField] [Space]
+    private BomberAddressable _bomberAddressable;
+
+    [SerializeField] [Space]
+    private ExternalSoundSource _externalSoundSource;
 
     public IScore OwnerScore { get; set; }
+
     public PlayerTurn OwnerTurn { get; set; }
+
     public Vector3 DropPoint { get; set; }
+
     public float MinX { get; set; }
     public float MaxX { get; set; }
-    private bool isOutOfBoundaries
+
+    private bool IsOutOfBoundaries
     {
-        get => transform.position.x < MinX || transform.position.x > MaxX;
+        get => _rigidbody.position.x < MinX || _rigidbody.position.x > MaxX;
     }
     private bool IsBombDropped { get; set; }
 
 
-    private void Awake()
+
+
+
+    private void OnEnable()
     {
-        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
-        _mainCameraController = FindObjectOfType<MainCameraController>();
+        _bomberAddressable.LoadMeshes();
+
+        _externalSoundSource.Play(ExternalSoundSource.PlayMode.OnReference);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Movement();
+        DropBomb();
 
-        if (transform.position.x >= DropPoint.x - 0.1f && transform.position.x <= DropPoint.x + 0.1f)
-        {
-            DropBomb();
-        }
-
-        Conditions<bool>.Compare(isOutOfBoundaries, Deactivate, null);
-    }
-
-    private void Movement()
-    {
-        transform.Translate(-transform.forward * 2 * Time.deltaTime);
-        _propeller.Rotate(Vector3.right, -1000 * Time.deltaTime);
+        Conditions<bool>.Compare(IsOutOfBoundaries, Deactivate, null);
     }
 
     public void DropBomb()
     {
         if (!IsBombDropped)
         {
-            _bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
-            _gameManagerBulletSerializer.BulletController = _bomb;
-            _bomb.OwnerScore = OwnerScore;
-            IsBombDropped = true;
+            if (_rigidbody.position.x >= DropPoint.x - 0.1f && _rigidbody.position.x <= DropPoint.x + 0.1f)
+            {
+                BaseBulletController bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
+
+                GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = bomb;
+
+                bomb.OwnerScore = OwnerScore;
+
+                IsBombDropped = true;
+            }
         }
     }
 
     private void Deactivate()
     {
         gameObject.SetActive(false);
+
         IsBombDropped = false;
-        _mainCameraController.ResetTargets();
+
+        GameSceneObjectsReferences.MainCameraController.ResetTargets();
     }
 }

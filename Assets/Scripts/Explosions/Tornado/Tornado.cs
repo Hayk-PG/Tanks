@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class Tornado : MonoBehaviour
 {
-    [SerializeField] 
-    private float _boxHeight, _force;
+    [SerializeField] private float _boxHeight, _force;
     private int _lifeTime;
     private string _iScoreName;  
     private List<string> _colliderNames = new List<string>();
-
     private GameObject _colliderGameObject;
-    [SerializeField] [Header("Fake explosion")]
-    private GameObject _fakeExplosion;
-
+    [SerializeField] [Header("Fake explosion")] private GameObject _fakeExplosion;
     private ParticleSystem _particles;
     private Collider[] _colliders;
     private Explosion _explosion;
@@ -64,11 +60,6 @@ public class Tornado : MonoBehaviour
         Destroy(transform.parent.gameObject);
     }
 
-    private void CallDestroyTornado()
-    {
-        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, DestroyTornado, () => _gameManagerBulletSerializer.DestroyTornado(name));
-    }
-
     private void FakeExplosion()
     {
         _fakeExplosion.SetActive(true);
@@ -106,5 +97,10 @@ public class Tornado : MonoBehaviour
 
             yield return new WaitForSeconds(1.5f);
         }
+    }
+
+    private void CallDestroyTornado()
+    {
+        Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, DestroyTornado, () => _gameManagerBulletSerializer.DestroyTornado(name));
     }
 }

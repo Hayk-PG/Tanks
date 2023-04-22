@@ -28,7 +28,7 @@ public class VerticalLimitDeath : MonoBehaviour
 
     private void GetRigidBodyPosition(Rigidbody rigidbody)
     {
-        if (rigidbody.position.y <= VerticalLimit.Min && _iDamage.Health > 0)
+        if (rigidbody.position.y <= VerticalLimit.Min)
         {
             _lavaSplash.ActivateLargeSplash(rigidbody.position);
             _iDamage.Damage(1000);

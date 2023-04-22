@@ -1,13 +1,16 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 [CreateAssetMenu(menuName = "Scriptable objects/Tanks/New tank")]
+
+//ADDRESSABLE
 public class TankProperties : ScriptableObject
 {
     public int _tankIndex;
 
-    [Header("UI")]
-    public Sprite _iconTank;
+    [Header("Addressable")]
+    public AssetReferenceSprite assetReferenceIcon;
 
     [Header("Prefab")]
     public TankController _tank;
@@ -30,7 +33,16 @@ public class TankProperties : ScriptableObject
     public float _normalSpeed;
     public float _maxBrake;
     public float _accelerated;
+
+    [Space]
+    public float _speedOnNormal;
+    public float _speedOnRain;
+    public float _speedOnSnow;
+    public float _brakeOnNormal;
+    public float _brakeOnRain;
+    public float _brakeOnSnow;
     public int _damageFactor;
+      
     public Vector3 _normalCenterOfMass;
 
     [Header("Tank prefab canon parameters")]
@@ -38,6 +50,9 @@ public class TankProperties : ScriptableObject
     public float _maxEulerAngleX;
     public float _rotationSpeed;
     public Vector3 _rotationStabilizer;
+
+    [Header("Tank prefab shoot parameters")]
+    public float _rigidbodyForceMultiplier;
 
     [Header("Weapons")]
     public WeaponProperties[] _weapons;
@@ -50,6 +65,12 @@ public class TankProperties : ScriptableObject
     public int _tileModifyCutPercent;
     public int _armoredCubeCutPercent;
     public int _armoredTileCutPercent;
+    public int _extendTileCutPercent;
+
+    [Header("Tank btn stats")]
+    public float _mobility;
+    public float _protection;
+    public float _firePower;
 
 
     public virtual void GetValuesFromTankPrefab()
@@ -60,7 +81,6 @@ public class TankProperties : ScriptableObject
         BaseShootController baseShootController = Get<BaseShootController>.From(_tank.gameObject);
         PlayerAmmoType playerAmmoType = Get<PlayerAmmoType>.From(_tank.gameObject);
         HealthController healthController = Get<HealthController>.From(_tank.gameObject);
-        PropsPriceByVehicle propsPriceByVehicle = Get<PropsPriceByVehicle>.From(_tank.gameObject);
 
         if (tankInfo != null)
         {
@@ -86,6 +106,13 @@ public class TankProperties : ScriptableObject
             _accelerated = baseTankMovement._accelerated;
             _damageFactor = baseTankMovement._damageFactor;
             _normalCenterOfMass = baseTankMovement._normalCenterOfMass;
+
+            _speedOnNormal = baseTankMovement._speedOnNormal;
+            _speedOnRain = baseTankMovement._speedOnRain;
+            _speedOnSnow = baseTankMovement._speedOnSnow;
+            _brakeOnNormal = baseTankMovement._brakeOnNormal;
+            _brakeOnRain = baseTankMovement._brakeOnRain;
+            _brakeOnSnow = baseTankMovement._brakeOnSnow;
         }
 
         if(baseShootController != null)
@@ -94,6 +121,7 @@ public class TankProperties : ScriptableObject
             _maxEulerAngleX = baseShootController._canon._maxEulerAngleX;
             _rotationSpeed = baseShootController._canon._rotationSpeed;
             _rotationStabilizer = baseShootController._canon._rotationStabilizer;
+            _rigidbodyForceMultiplier = baseShootController._shoot._rigidbodyForceMultiplier;
         }
 
         if(playerAmmoType != null)
@@ -106,13 +134,8 @@ public class TankProperties : ScriptableObject
             _armor = healthController.Armor;
         }
 
-        if(propsPriceByVehicle != null)
-        {
-            _shieldCutPerecent = propsPriceByVehicle.ShieldPriceReducePercent;
-            _tileModifyCutPercent = propsPriceByVehicle.TileModifyPriceReducePercent;
-            _armoredCubeCutPercent = propsPriceByVehicle.ArmoredCubePriceReducePercent;
-            _armoredTileCutPercent = propsPriceByVehicle.ArmoredTilePriceReducePrecent;
-        }
+        CalculateTankBtnStats();
+
 
 #if UNITY_EDITOR
         EditorUtility.SetDirty(this);
@@ -150,12 +173,20 @@ public class TankProperties : ScriptableObject
                 baseTankMovement._accelerated = _accelerated;
                 baseTankMovement._maxBrake = _maxBrake;
                 baseTankMovement._normalCenterOfMass = _normalCenterOfMass;
+
+                baseTankMovement._speedOnNormal = _speedOnNormal;
+                baseTankMovement._speedOnRain = _speedOnRain;
+                baseTankMovement._speedOnSnow = _speedOnSnow;
+                baseTankMovement._brakeOnNormal = _brakeOnNormal;
+                baseTankMovement._brakeOnRain = _brakeOnRain;
+                baseTankMovement._brakeOnSnow = _brakeOnSnow;
             }
 
             if (baseShootController != null)
             {
                 baseShootController._canon._minEulerAngleX = _minEulerAngleX;
                 baseShootController._canon._maxEulerAngleX = _maxEulerAngleX;
+                baseShootController._shoot._rigidbodyForceMultiplier = _rigidbodyForceMultiplier;
             }
 
             if (healthController != null)
@@ -163,5 +194,24 @@ public class TankProperties : ScriptableObject
                 healthController.Armor = _armor;
             }
         }
+    }
+
+    private void CalculateTankBtnStats()
+    {
+        _mobility = ((_normalSpeed + _accelerated) / 4000f * 100f) / 100f;
+
+        float p = _shieldCutPerecent + _armoredCubeCutPercent + _armoredTileCutPercent + _armor + _damageFactor;
+        _protection = (p / 500 * 100f) / 100f;
+
+        float v = 0f;
+        float divider = 0f;
+
+        foreach (var item in _weapons)
+        {
+            v += item._damageValue + item._radius + item._destructDamage + item._bulletMaxForce;
+            divider += 100f + 1f + 100f + 20f;
+        }
+
+        _firePower = (v / divider * 100f) / 100f;
     }
 }

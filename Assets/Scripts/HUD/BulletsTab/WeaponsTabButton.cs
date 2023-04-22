@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class WeaponsTabButton : MonoBehaviour
 {
     private Image _image;
+
     private Text _buttonText;
 
     public Color Color
@@ -26,11 +27,9 @@ public class WeaponsTabButton : MonoBehaviour
     private void Awake()
     {
         _image = GetComponent<Image>();
+
         _buttonText = Get<Text>.FromChild(gameObject);
     }
 
-    public void OnClick()
-    {
-        OnWeaponsTabButtonClicked?.Invoke(this);
-    }
+    public void OnClick() => OnWeaponsTabButtonClicked?.Invoke(this);
 }

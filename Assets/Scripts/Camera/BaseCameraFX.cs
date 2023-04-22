@@ -2,11 +2,6 @@
 
 public class BaseCameraFX : MonoBehaviour
 {
+    [SerializeField]
     protected MobilePostProcessing _pp;
-
-
-    protected virtual void Awake()
-    {
-        _pp = Get<MobilePostProcessing>.From(gameObject);
-    }
 }

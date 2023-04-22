@@ -5,11 +5,12 @@ using UnityEngine;
 public abstract class BaseBtnTankLogic : MonoBehaviour, IReset 
 {
     protected BaseTab_Tanks _tabTanks;
-    [SerializeField] protected Btn_Tank _btnTank;
-    [SerializeField] protected Sprite _sprtButtonReleased;
-    [SerializeField] protected Sprite _sprtButtonPressed;
-    [SerializeField] protected Color _clrTankReleased;  
-    [SerializeField] protected Color _clrTankPressed;
+
+    [SerializeField]
+    protected Btn_Tank _btnTank;
+
+    public event System.Action<TankProperties> onTankSelected;
+
 
 
 
@@ -18,25 +19,30 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
     protected virtual void OnEnable()
     {
         _btnTank._onAutoSelect += AutoSelect;
+
         _btnTank._onClick += Select;
     }
 
     protected virtual void OnDisable()
     {
         _btnTank._onAutoSelect -= AutoSelect;
+
         _btnTank._onClick -= Select;
     }
 
     protected virtual void SetScrollRectPosition(int horizontalGroupsLength)
     {
         int horizontalGroupIndex = transform.parent.GetSiblingIndex() + 1;
+
         float value = Mathf.InverseLerp(horizontalGroupsLength, 1, horizontalGroupIndex);
-        _tabTanks.CustomScrollRect.SetNormalizedPosition(value);
+
+        //_tabTanks.CustomScrollRect.SetNormalizedPosition(value);
     }
 
     protected virtual void AutoSelect(int relatedTankIndex, int horizontalGroupsLength)
     {
         Select(relatedTankIndex);
+
         SetScrollRectPosition(horizontalGroupsLength);
     }
 
@@ -46,19 +52,21 @@ public abstract class BaseBtnTankLogic : MonoBehaviour, IReset
     {
         SaveTankIndex(relatedTankIndex);
 
-        GlobalFunctions.Loop<IReset>.Foreach(_tabTanks.GetComponentsInChildren<IReset>(true), iReset =>
-        {
-            if (iReset.GetType() != typeof(CustomScrollRect))
-                iReset.SetDefault();
-        });
+        //GlobalFunctions.Loop<IReset>.Foreach(_tabTanks.GetComponentsInChildren<IReset>(true), iReset =>
+        //{
+        //    if (iReset.GetType() != typeof(CustomScrollRect))
+        //        iReset.SetDefault();
+        //});
 
-        _btnTank.SpriteButton = _sprtButtonPressed;
-        _btnTank.ImageTank.color = _clrTankPressed;
+        _tabTanks.SubTabUnlock?.Display(_btnTank.TankProperties, _btnTank.IsLocked);
+
+        _tabTanks.SubTabRepair?.Display(_btnTank.TankProperties);
+
+        onTankSelected?.Invoke(Data.Manager.AvailableTanks[relatedTankIndex]);
     }
 
     public void SetDefault()
     {
-        _btnTank.SpriteButton = _sprtButtonReleased;
-        _btnTank.ImageTank.color = _clrTankReleased;
+        
     }
 }

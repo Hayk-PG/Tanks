@@ -17,23 +17,26 @@ public class BaseWeaponProperties<T> : ScriptableObject
     [Header("Weapons type")]
     public int _index;
     public int _value;  
-    [Range(0, 10)]
-    public int _minutes;
-    [Range(0, 60)]
-    public int _seconds;
+    [Range(0, 10)] public int _minutes;
+    [Range(0, 60)] public int _seconds;
+    [Space]
     public Type _type;
     public Range _range;
-  
-    [Range(0, 70)]
-    public int _damageValue;
-    [Range(0.3f, 0.4f)]
-    public float _radius;
-    [Range(0, 20)]
-    public int _destructDamage;    
-    [Range(3, 50)] public float _bulletMaxForce;
+    [Space]
+    [Range(10, 100)] public int _damageValue;
+    [Range(0.3f, 1f)] public float _radius;
+    [Range(10, 100)] public int _destructDamage;    
+    [Range(1, 20)] public float _bulletMaxForce;
     [Range(1, 10)] public float _bulletForceMaxSpeed;
+    [Space]
+    [Range(0, 100)] public float _gravityForcePercentage;
+    [Range(0, 100)] public float _windForcePercentage;
+    [Space]
     public int _tileParticleIndex;   
     public string _weaponType;  
+    
+    [Header("Description")]
+    public string description;
 
     [Header("Support or props type")]
     public string _supportType;

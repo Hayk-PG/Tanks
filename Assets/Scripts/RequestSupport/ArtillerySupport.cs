@@ -3,33 +3,29 @@ using UnityEngine;
 
 public class ArtillerySupport : MonoBehaviour
 {
-    [SerializeField] private BulletController _artillerPrefab;
-    [SerializeField] private float _deviation;
-    private MainCameraController _mainCameraController;
+    [SerializeField] 
+    private BaseBulletController _shellPrefab;
+ 
 
 
-
-    private void Awake()
+    public void Call(object[] data)
     {
-        _mainCameraController = FindObjectOfType<MainCameraController>();
+        StartCoroutine(InstantiateShells((PlayerTurn)data[0], (IScore)data[1], (float[])data[2], (Vector3)data[3]));
     }
 
-    public void Call(Vector3 coordinate, IScore ownerScore, PlayerTurn ownerTurn)
+    private IEnumerator InstantiateShells(PlayerTurn ownerTurn, IScore ownerScore, float[] shellSpreadValues, Vector3 target)
     {
-        StartCoroutine(InstantiateArtilleryShells(coordinate, 5, ownerScore, ownerTurn));
-    }
+        yield return null;
 
-    private IEnumerator InstantiateArtilleryShells(Vector3 coordinate, int shellsCount, IScore ownerScore, PlayerTurn ownerTurn)
-    {        
-        yield return new WaitForSeconds(1);
-
-        for (int i = 0; i < shellsCount; i++)
+        for (int i = 0; i < shellSpreadValues.Length; i++)
         {
-            float randomDeviation = Random.Range(-_deviation, _deviation);
-            BulletController artillery = Instantiate(_artillerPrefab, new Vector3(coordinate.x + randomDeviation, coordinate.y + 10, coordinate.z), Quaternion.identity);
-            artillery.OwnerScore = ownerScore;
-            artillery.IsLastShellOfBarrage = i < shellsCount - 1 ? false : true;
-            _mainCameraController.CameraOffset(ownerTurn, artillery.transform, null, null);
+            BaseBulletController shell = Instantiate(_shellPrefab, new Vector3(target.x + shellSpreadValues[i], target.y + 10, 0), Quaternion.identity);
+
+            shell.OwnerScore = ownerScore;
+            shell.IsLastShellOfBarrage = i < shellSpreadValues.Length - 1 ? false : true;
+
+            GameSceneObjectsReferences.MainCameraController.CameraOffset(null, shell.RigidBody, null, null);
+
             yield return new WaitForSeconds(0.5f);
         }
     }

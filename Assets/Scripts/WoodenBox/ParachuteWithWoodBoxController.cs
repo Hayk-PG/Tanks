@@ -1,119 +1,121 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
-
 
 
 public class ParachuteWithWoodBoxController : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _parachute, _sparkles, _woodBoxExplosion;
-
-    public Rigidbody RigidBody { get; set; }
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
-    private BoxTrigger _boxTrigger;
-    private WoodenBoxSerializer _woodenBoxSerializer;
+
+    [SerializeField] [Space]
+    private Rigidbody _rigidbody;
+
+    [SerializeField] [Space]
+    private GameObject _sparkles, _woodBoxExplosion;
+
+    private bool _isOutOfBounds;
 
     private delegate float Value();
     private Value _gravity;
 
-    public float RandomDestroyTime { get; set; }
+    private Action DestroyGameobjectFunction;
 
-    internal System.Action<WoodenBoxSerializer> OnInitialized { get; set; }
+    internal GameObject ParachuteObj { get; set; }
+
+    public Rigidbody RigidBody => _rigidbody;
+    public Vector3 Id { get; set; }
+    public float RandomDestroyTime { get; set; }
 
 
 
 
     private void Awake()
-    {       
-        RigidBody = Get<Rigidbody>.From(gameObject);
-        _parachuteWithWoodBoxCollision = Get<ParachuteWithWoodBoxCollision>.From(gameObject);
-        _boxTrigger = Get<BoxTrigger>.FromChild(gameObject);
+    {
         _gravity = delegate { return 30 * Time.fixedDeltaTime; };
-        _woodenBoxSerializer = FindObjectOfType<WoodenBoxSerializer>();       
+
+        DestroyGameobjectFunction = MyPhotonNetwork.IsOfflineMode ? DestroyGameobject : DestroyGameobjectRPC;
     }
 
-    private void Start()
-    {
-        Initialized();
-        StartCoroutine(DestroyAfterTime());
-    }
+    private void Start() => DestroyAfterDelay();
 
-    private void OnEnable()
-    {
-        _parachuteWithWoodBoxCollision.OnCollision += OnCollision;
-        _boxTrigger.OnBoxTriggerEntered += OnBoxTriggerEntered;
-    }
+    private void OnEnable() => _parachuteWithWoodBoxCollision.onCollisionEnter += OnCollision;
 
-    private void OnDisable()
-    {
-        _parachuteWithWoodBoxCollision.OnCollision -= OnCollision;
-        _boxTrigger.OnBoxTriggerEntered -= OnBoxTriggerEntered;
-    }
+    private void OnDisable() => _parachuteWithWoodBoxCollision.onCollisionEnter -= OnCollision;
 
     private void FixedUpdate()
     {
-        Rigidbody();
+        ControlRigidbodyMovement();
+
+        DetectOutOfBounds();
     }
 
-    private void Initialized()
+    private void DestroyAfterDelay() => StartCoroutine(DestroyAfterTime());
+
+    private IEnumerator DestroyAfterTime()
     {
-        _woodenBoxSerializer.ParachuteWithWoodBoxController = this;
-        RandomDestroyTime = Random.Range(60, 91);
-        OnInitialized?.Invoke(_woodenBoxSerializer);
+        yield return new WaitForSeconds(RandomDestroyTime);
+
+        DestroyGameobjectFunction();
     }
 
     private void OnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)
     {
         OnLand();
 
+        DestroyOnCollision(collisionData);
+    }
+
+    private void DestroyOnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)
+    {
         if (collisionData._tankController != null || collisionData._bulletController != null)
-        {
-            DestroyGameobject();
-        }      
+            DestroyGameobjectFunction();
     }
 
-    private void OnBoxTriggerEntered()
-    {
-        DestroyGameobject();
-    }
-
-    private IEnumerator DestroyAfterTime()
-    {
-        yield return new WaitForSeconds(RandomDestroyTime);
-        DestroyGameobject();
-    }
-
-    private void Rigidbody()
+    private void ControlRigidbodyMovement()
     {
         RigidBody.velocity = new Vector3(RigidBody.velocity.x, RigidBody.velocity.y * _gravity(), 0);
         RigidBody.position = new Vector3(RigidBody.position.x, RigidBody.position.y, 0);
         RigidBody.rotation = Quaternion.Euler(0, 0, RigidBody.rotation.z);
+    }
 
-        if (RigidBody.position.y <= -5)
-            DestroyGameobject();
+    private void DetectOutOfBounds()
+    {
+        if (RigidBody.position.y <= VerticalLimit.Min && !_isOutOfBounds)
+        {
+            GameSceneObjectsReferences.LavaSplash.ActivateSmallSplash(RigidBody.position);
+
+            DestroyGameobjectFunction();
+
+            _isOutOfBounds = true;
+        }
     }
 
     private void OnLand()
     {
-        if (_parachute.activeInHierarchy)
+        if (ParachuteObj == null)
+            return;
+
+        if (ParachuteObj.activeInHierarchy)
         {
-            _parachute.SetActive(false);
+            ParachuteObj.SetActive(false);
+
             _sparkles.SetActive(true);
+
             _gravity = delegate { return 1; };
         }
     }
 
-    private void DestroyGameobject()
+    public void DestroyGameobject()
     {
-        if (MyPhotonNetwork.IsOfflineMode)
-        {
-            Explosion();
-            Destroy(gameObject);
-        }
-        else
-        {
-            _woodenBoxSerializer.DestroyParachuteWithWoodBoxController();
-        }       
+        Explosion();
+
+        Destroy(gameObject);
+    }
+
+    private void DestroyGameobjectRPC()
+    {
+        GameSceneObjectsReferences.WoodBoxSerializer.DestroyParachuteWithWoodBoxController(Id);
     }
 
     public void Explosion()

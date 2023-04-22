@@ -13,7 +13,6 @@
     protected override void OnExplodeOnCollision(IScore ownerScore, float distance)
     {
         OnBulletExplosion?.Invoke(ownerScore, distance);
-        OnCameraShake?.Invoke();
 
         _hitsCount++;
         if (_hitsCount >= _bulletWithMultipleHitParticles._explosionsCount)

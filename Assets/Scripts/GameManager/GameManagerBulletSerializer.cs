@@ -6,17 +6,18 @@ using UnityEngine;
 
 public class GameManagerBulletSerializer : MonoBehaviourPun
 {
-    [SerializeField] 
-    BulletController _bulletController;
-    [SerializeField] 
-    BulletController[] _multipleBulletsController = new BulletController[10];
+    [SerializeField]
+    private BaseBulletController _bulletController;
 
-    public BulletController BulletController
+    [SerializeField] [Space]
+    private BaseBulletController[] _multipleBulletsController = new BaseBulletController[10];
+
+    public BaseBulletController BaseBulletController
     {
         get => _bulletController;
         set => _bulletController = value;
     }
-    public BulletController[] MultipleBulletsController
+    public BaseBulletController[] MultipleBaseBulletController
     {
         get => _multipleBulletsController;
         set => _multipleBulletsController = value;
@@ -25,30 +26,38 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     public Action<object[]> OnTornado { get; set; }
 
 
+
+
+
     #region Collison
     public void CallOnCollisionRPC(Collider collider, IScore iScore, int destructDamage)
     {
-        if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
         {
-            string colliderName = collider.name;
-            string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(score => score.GetComponent<IScore>() == iScore).name;
+            string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(sc => Get<IScore>.From(sc.gameObject) == iScore).name;
+
             Vector3 colliderPosition = collider.transform.position;
 
-            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, colliderName, ownerName, colliderPosition, destructDamage);
+            photonView.RPC("OnCollisionRPC", RpcTarget.AllViaServer, ownerName, colliderPosition, destructDamage);
         }
     }
 
     [PunRPC]
-    private void OnCollisionRPC(string colliderName, string ownerName, Vector3 colliderPosition, int destructDamage)
+    private void OnCollisionRPC(string ownerName, Vector3 colliderPosition, int destructDamage)
     {
-        GlobalFunctions.Loop<Collider>.Foreach(FindObjectsOfType<Collider>(), collider => 
+        if (GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(colliderPosition))
         {
-            if (collider.name == colliderName && collider.transform.position == colliderPosition)
-                Get<IDestruct>.From(collider.gameObject)?.Destruct(destructDamage, 0);
-        });
+            IDestruct iDestruct = Get<IDestruct>.From(GameSceneObjectsReferences.TilesData.TilesDict[colliderPosition]);
 
-        IScore iScore = GameObject.Find(ownerName)?.GetComponent<IScore>();
-        iScore?.GetScore(10, null);
+            IScore iScore = Get<IScore>.From(GameObject.Find("ownerName") ?? gameObject);
+
+            if (iDestruct == default)
+                return;
+
+            iDestruct.Destruct(destructDamage, 0);
+
+            iScore?.GetScore(UnityEngine.Random.Range(10, 110), null);
+        }
     }
     #endregion
 
@@ -59,6 +68,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
         {
             string iDamageOwnerName = GlobalFunctions.ObjectsOfType<HealthController>.Find(health => health.GetComponent<IDamage>() == iDamage).name;
             string ownerName = GlobalFunctions.ObjectsOfType<ScoreController>.Find(score => score.GetComponent<IScore>() == iScore).name;
+
             object[] data = new object[]
             {
                 iDamageOwnerName,
@@ -77,23 +87,41 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     {
         if(data != null)
         {
-            IDamage iDamage = GameObject.Find((string)data[0])?.GetComponent<IDamage>();
-            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>();
-            iDamage?.Damage((int)data[2]);
-            int[] scoreValues = (int[])data[3];
-            iScore?.GetScore(scoreValues[0] + scoreValues[1], iDamage);
-            iScore?.HitEnemyAndGetScore(scoreValues, iDamage);
+            IDamage iDamage = GameObject.Find((string)data[0]).GetComponent<IDamage>() ?? null;
 
-            if ((int)data[4] == 1)
-                iDamage.CameraChromaticAberrationFX();
+            IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>() ?? null;
+
+            Damage(iDamage, (int)data[2], (int)data[4]);
+
+            Score(iScore, iDamage, (int[])data[3]);
         }
+    }
+
+    private void Damage(IDamage iDamage, int damage, int damagetypeIndex)
+    {
+        if (iDamage == default)
+            return;
+
+        iDamage.Damage(damage);
+
+        if (damagetypeIndex == 1)
+            iDamage.CameraChromaticAberrationFX();
+    }
+
+    private void Score(IScore iScore, IDamage iDamage, int[] scoreValues)
+    {
+        if (iScore == default)
+            return;
+
+        iScore.GetScore(scoreValues[0] + scoreValues[1], iDamage);
+        iScore.HitEnemyAndGetScore(scoreValues, iDamage);
     }
     #endregion
 
     #region Tornado
     public void TornadoDamage(string damagableName, int damage, string iScoreName)
     {       
-        if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        if (MyPhotonNetwork.IsOfflineMode || !MyPhotonNetwork.IsOfflineMode && MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
         {
             EventInfo.Content_TornadoDamage = new object[]
             {
@@ -105,13 +133,13 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
             //OFFLINE
             OnTornado?.Invoke(EventInfo.Content_TornadoDamage);
             //ONLINE
-            PhotonNetwork.RaiseEvent(EventInfo.Code_TornadoDamage, EventInfo.Content_TornadoDamage, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendUnreliable);
+            PhotonNetwork.RaiseEvent(EventInfo.Code_TornadoDamage, EventInfo.Content_TornadoDamage, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
         }
     }
 
     public void DestroyTornado(string tornadoName)
     {
-        if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
+        if (MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
             photonView.RPC("DestroyTornadoRPC", RpcTarget.AllViaServer, tornadoName);
     }
 
@@ -119,7 +147,18 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     private void DestroyTornadoRPC(string tornadoName)
     {
         Tornado tornado = GameObject.Find(tornadoName)?.GetComponent<Tornado>();
-        tornado?.DestroyTornado();
+
+        if(tornado == null)
+        {
+            BulletController bulletController = FindObjectOfType<BulletController>();
+
+            if (bulletController != null)
+                Destroy(bulletController.gameObject);
+        }
+        else
+        {
+            tornado.DestroyTornado();
+        }
     }
     #endregion
 }

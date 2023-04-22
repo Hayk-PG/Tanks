@@ -5,29 +5,27 @@ using UnityEngine;
 
 public class BaseEndGame : MonoBehaviourPun
 {
+    [SerializeField]
     protected GameManager _gameManager;
+
     protected MyPlugins _myPlugins;
 
     protected HealthController _healthTank1;
     protected HealthController _healthTank2;
 
-    public Action<string, string> OnEndGameTab { get; set; }
+    public event Action<string, string> onEndGame;
 
 
-    protected virtual void Awake()
-    {
-        _gameManager = Get<GameManager>.From(gameObject);
-        _myPlugins = FindObjectOfType<MyPlugins>();      
-    }
 
-    protected virtual void OnEnable()
-    {
-        _gameManager.OnGameStarted += OnGameStarted;
-    }
+
+    protected virtual void Awake() => _myPlugins = FindObjectOfType<MyPlugins>();
+
+    protected virtual void OnEnable() => _gameManager.OnGameStarted += OnGameStarted;
 
     protected virtual void OnDisable()
     {
         _gameManager.OnGameStarted -= OnGameStarted;
+
         UnsubscribeFromPluginService();
     }
 
@@ -43,23 +41,9 @@ public class BaseEndGame : MonoBehaviourPun
         else
         {
             UnsubscribeFromPluginService();
+
             SubscribeToPluginService();
         }
-    }
-
-    protected void UnsubscribeFromPluginService()
-    {
-        _myPlugins.OnPluginService -= OnPluginService;
-    }
-
-    protected void SubscribeToPluginService()
-    {
-        _myPlugins.OnPluginService += OnPluginService;
-    } 
-
-    protected virtual void OnPluginService()
-    {
-        GameEndChecker();
     }
 
     protected IEnumerator RunningGameEndChecker()
@@ -67,19 +51,30 @@ public class BaseEndGame : MonoBehaviourPun
         while (!_gameManager.IsGameEnded)
         {
             GameEndChecker();
+
             yield return new WaitForSeconds(1);
         }
     }
+
+    protected void UnsubscribeFromPluginService() => _myPlugins.OnPluginService -= OnPluginService;
+
+    protected void SubscribeToPluginService() => _myPlugins.OnPluginService += OnPluginService;
+
+    protected virtual void OnPluginService() => GameEndChecker();
 
     protected virtual void GameEndChecker()
     {
         if (TanksSet())
         {
             if (FirstPlayerWon())
+            {
                 OnGameEnded(_healthTank1.name, _healthTank2.name);
+            }
 
             if (SecondPlayerWon())
+            {
                 OnGameEnded(_healthTank2.name, _healthTank1.name);
+            }
         }
     }
 
@@ -101,8 +96,9 @@ public class BaseEndGame : MonoBehaviourPun
     protected virtual void OnGameEnded(string successedPlayerName, string defeatedPlayerName)
     {
         UnsubscribeFromPluginService();
-        _gameManager.OnGameEnded?.Invoke();
-        OnEndGameTab?.Invoke(successedPlayerName, defeatedPlayerName);
+       
         _gameManager.IsGameEnded = true;
+
+        onEndGame?.Invoke(successedPlayerName, defeatedPlayerName);
     }
 }

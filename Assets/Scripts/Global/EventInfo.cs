@@ -12,4 +12,10 @@ public static class EventInfo
 
     public static byte Code_WoodBoxTriggerEntered { get; private set; } = 3;
     public static object[] Content_WoodBoxTriggerEntered { get; set; }
+
+    public static byte Code_LaunchBarrel { get; private set; } = 4;
+    public static object[] Content_LaunchBarrel { get; set; }
+
+    public static byte Code_BarrelCollision { get; private set; } = 5;
+    public static object[] Content_BarrelCollision { get; set; }
 }

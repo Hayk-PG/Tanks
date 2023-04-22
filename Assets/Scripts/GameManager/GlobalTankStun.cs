@@ -1,7 +1,12 @@
 ﻿using Photon.Pun;
+using UnityEngine;
+
 
 public class GlobalTankStun : MonoBehaviourPun
 {
+    private GameObject _stunnedTank;
+
+
     public void OnStunned(TurnState turnState, float duration)
     {
         if(MyPhotonNetwork.AmPhotonViewOwner(photonView))
@@ -11,8 +16,13 @@ public class GlobalTankStun : MonoBehaviourPun
     [PunRPC]
     private void StunnedRPC(TurnState turnState, float duration)
     {
-        Stun stun = Get<Stun>.FromChild(GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(tank => tank.MyTurn == turnState).gameObject);
-        stun.OnStunned(duration);
+        _stunnedTank = (GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(tank => tank.MyTurn == turnState)?.gameObject);
+
+        if(_stunnedTank != null)
+        {
+            Stun stun = Get<Stun>.FromChild(_stunnedTank);
+            stun?.OnStunned(duration);
+        }
     }
 
     public void OnDisableStunningEffect(TurnState turnState)
@@ -24,7 +34,12 @@ public class GlobalTankStun : MonoBehaviourPun
     [PunRPC]
     private void DisableStunningEffectRPC(TurnState turnState)
     {
-        Stun stun = Get<Stun>.FromChild(GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(tank => tank.MyTurn == turnState).gameObject);
-        stun.OnDisableStunningEffect();
+        _stunnedTank = (GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(tank => tank.MyTurn == turnState)?.gameObject);
+
+        if (_stunnedTank != null)
+        {
+            Stun stun = Get<Stun>.FromChild(_stunnedTank);
+            stun?.OnDisableStunningEffect();
+        }
     }
 }

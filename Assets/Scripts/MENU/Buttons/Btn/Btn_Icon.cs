@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,18 +7,27 @@ public class Btn_Icon : MonoBehaviour
     private Image _imgIcon;
     private Btn _btn;
 
-    [SerializeField] private Sprite _sprtPressed;
-    [SerializeField] private Color _clrPressed;
+    [SerializeField] 
+    private Sprite _sprtPressed;
     private Sprite _sprtReleased;
+
+    [SerializeField] [Space]
+    private Color _clrPressed;
     private Color _clrReleased;
+
+    // ChangeIconHolder is used for public access to ChangeIconSprite
+    public Action<Sprite> ChangeIconHolder => ChangeIconSprite;
 
 
 
     private void Awake()
     {
         _imgIcon = Get<Image>.From(gameObject);
+
         _btn = Get<Btn>.From(gameObject);
+
         _sprtReleased = _imgIcon.sprite;
+
         _clrReleased = _imgIcon.color;
 
         CacheIconDefaultLook();
@@ -26,18 +36,21 @@ public class Btn_Icon : MonoBehaviour
     private void OnEnable()
     {
         _btn.onSelect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
-        _btn.onDeselect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
+
+        _btn.onDeselect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtReleased, _clrReleased); };
     }
 
     private void OnDisable()
     {
         _btn.onSelect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
-        _btn.onDeselect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
+
+        _btn.onDeselect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtReleased, _clrReleased); };
     }
 
     private void CacheIconDefaultLook()
     {
         _sprtReleased = _imgIcon.sprite;
+
         _clrReleased = _imgIcon.color;
     }
 
@@ -45,12 +58,25 @@ public class Btn_Icon : MonoBehaviour
     {
         switch (buttonClickType)
         {
-            case Btn.ButtonClickType.ChangeSprite: ChangeIconSprite(_sprtPressed); break;
-            case Btn.ButtonClickType.ChangeColor: ChangeIconColor(_clrPressed); break;
-            case Btn.ButtonClickType.Both: ChangeIconSprite(_sprtPressed); ChangeIconColor(_clrPressed); break;
+            case 
+            Btn.ButtonClickType.ChangeSprite: 
+                ChangeIconSprite(sprite); 
+                break;
+
+            case 
+            Btn.ButtonClickType.ChangeColor: 
+                ChangeIconColor(color); 
+                break;
+
+            case 
+            Btn.ButtonClickType.Both: 
+                ChangeIconSprite(sprite); 
+                ChangeIconColor(color);
+                break;
         }
     }
 
+    // This method is held by ChangeIconHolder delegate for public use only
     private void ChangeIconSprite(Sprite sprite)
     {
         if (sprite == null)
@@ -59,8 +85,5 @@ public class Btn_Icon : MonoBehaviour
         _imgIcon.sprite = sprite;
     }
 
-    private void ChangeIconColor(Color color)
-    {
-        _imgIcon.color = color;
-    }
+    private void ChangeIconColor(Color color) => _imgIcon.color = color;
 }

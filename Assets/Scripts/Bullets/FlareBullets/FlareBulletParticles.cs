@@ -18,13 +18,17 @@ public class FlareBulletParticles : BulletParticles
     protected override void OnEnable()
     {
         base.OnEnable();
-        _bulletRaycastReceiver2.OnCollision += OnCollision;
+
+        if (_bulletRaycastReceiver2 != null)
+            _bulletRaycastReceiver2.OnCollision += OnCollision;
     }
 
     protected override void OnDisable()
     {
         base.OnEnable();
-        _bulletRaycastReceiver2.OnCollision -= OnCollision;
+
+        if (_bulletRaycastReceiver2 != null)
+            _bulletRaycastReceiver2.OnCollision -= OnCollision;
     }
 
     protected virtual void ActivateExplosion(RaycastHit hit)

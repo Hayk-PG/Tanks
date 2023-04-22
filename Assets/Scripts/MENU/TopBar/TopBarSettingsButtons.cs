@@ -21,16 +21,16 @@ public class TopBarSettingsButtons : BaseButtonWithUnityEvent
 
     private void Start()
     {  
-        if (_buttonPurpose == ButtonPurpose.Music)
-        {
-            OnStart(Keys.IsMusicOn);
-            SoundController.MusicSRCCondition(_isOn);
-        }  
+        //if (_buttonPurpose == ButtonPurpose.Music)
+        //{
+        //    OnStart(Keys.IsMusicOn);
+        //    SoundController.MusicSRCCondition(_isOn);
+        //}  
         
-        if (_buttonPurpose == ButtonPurpose.Sound)
-        {
-            OnStart(Keys.IsSoundOn);
-        }
+        //if (_buttonPurpose == ButtonPurpose.Sound)
+        //{
+        //    OnStart(Keys.IsSoundOn);
+        //}
     }
 
     private void GetCurrentCondition(string key)
@@ -66,7 +66,7 @@ public class TopBarSettingsButtons : BaseButtonWithUnityEvent
     public void OnClickMusicButton()
     {
         Result(Keys.IsMusicOn);
-        SoundController.MusicSRCCondition(_isOn);
+        //SoundController.MusicSRCCondition(_isOn);
     }
 
     private void Result(string key)

@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a64e6ba919aa85b4d9f0020ed917aff4, type: 3}
+  m_Name: (Artillery Tank) Thunderbolt
+  m_EditorClassIdentifier: 
+  _tankIndex: 0
+  assetReferenceIcon:
+    m_AssetGUID: c7702456aea4bb94b9e356a93f9e185e
+    m_SubObjectName: 'Tank_(Artillery Tank) Thunderbolt '
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_EditorAssetChanged: 0
+  _tank: {fileID: -3843789852886863906, guid: 066efaf4b4c264868b03f91cd4ef5b58, type: 3}
+  _aiTank: {fileID: 0}
+  _tankName: Thunderbolt
+  _starsCount: 3
+  _getItNowPrice: 159
+  _initialBuildHours: 5
+  _initialBuildMinutes: 30
+  _initialBuildSeconds: 22
+  _requiredItems:
+  - _item: {fileID: 0}
+    _number: 5
+  - _item: {fileID: 0}
+    _number: 1
+  _availableInLevel: 3
+  _rigidbodyMass: 499.99997
+  _normalSpeed: 325
+  _maxBrake: 325
+  _accelerated: 2500
+  _speedOnNormal: 325
+  _speedOnRain: 227.5
+  _speedOnSnow: 130
+  _brakeOnNormal: 325
+  _brakeOnRain: 10
+  _brakeOnSnow: 0
+  _damageFactor: 47
+  _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
+  _minEulerAngleX: -56.438
+  _maxEulerAngleX: 4.904
+  _rotationSpeed: 32
+  _rotationStabilizer: {x: 0, y: 0, z: 0}
+  _rigidbodyForceMultiplier: 250
+  _weapons:
+  - {fileID: 11400000, guid: d117b99a9622d614b86957b8b055871f, type: 2}
+  - {fileID: 11400000, guid: f3778d98baea6d344bfc775c5fe05042, type: 2}
+  - {fileID: 11400000, guid: d2bdd7b789c892d4684cc61ae6c78c82, type: 2}
+  - {fileID: 11400000, guid: 0e34c29cce8ba4616bf58e12aec47ecc, type: 2}
+  _armor: 2
+  _shieldCutPerecent: 0
+  _tileModifyCutPercent: 0
+  _armoredCubeCutPercent: 0
+  _armoredTileCutPercent: 0
+  _extendTileCutPercent: 0
+  _mobility: 0.70625
+  _protection: 0.098
+  _firePower: 0.44346154

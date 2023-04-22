@@ -3,90 +3,181 @@ using Photon.Pun;
 using System;
 using UnityEngine;
 
-public class HealthController : MonoBehaviour, IDamage
+public class HealthController : MonoBehaviour, IDamage, IEndGame
 {
     private TankController _tankController;
-    private VehiclePool _vehiclePool;
+
     private PlayerShields _playerShields;
-    private GameManagerBulletSerializer _gameManagerBulletSerializer;
-  
-    [SerializeField][Range(0, 100)] private int _armor;
-    private int _currentHealth;
-    private int _minHealth = 0;
-    private int _maxHealth = 100;
-    public int Health
-    {
-        get => _currentHealth;
-        set => _currentHealth = value;
-    }
+
+    [SerializeField]
+    private Collider _weakSpot, _center, _strongSpot;
+
+    [SerializeField] [Space] [Range(0, 50)] [Tooltip("Light => 0 - 10: Medium => 15 - 30: Heavy => 35 - 50")]
+    private int _armor;
+
+    public int Health { get; set; }
+    public int ShieldHealth { get; set; }
     public int Armor
     {
         get => _armor;
         set => _armor = value;
     }
-  
+
+    public bool IsShieldActive
+    {
+        get
+        {
+            bool isShieldActiive = _playerShields != null && _playerShields.IsShieldActive ? true :
+                                   _playerShields == null || _playerShields != null && !_playerShields.IsShieldActive ? false : false;
+
+            return isShieldActiive;
+        }
+    }
+    public bool IsSafeZone { get; set; }
+
     public Action<BasePlayer, int> OnTakeDamage { get; set; }
     public Action<int> OnUpdateHealthBar { get; set; }
+
+    public event Action<int> onUpdateArmorBar;
     public Action<int> OnTankDamageFire { get; set; }
+
+
 
 
     private void Awake()
     {
-        Health = _maxHealth;
         _tankController = Get<TankController>.From(gameObject);
-        _vehiclePool = Get<VehiclePool>.FromChild(gameObject);
+
         _playerShields = Get<PlayerShields>.From(gameObject);
-        _gameManagerBulletSerializer = FindObjectOfType<GameManagerBulletSerializer>();
+
+        Health = 100;
     }
 
     private void OnEnable()
     {
-        if (MyPhotonNetwork.IsOfflineMode)
-            _gameManagerBulletSerializer.OnTornado += OnTornadoDamage;
-        else
-            PhotonNetwork.NetworkingClient.EventReceived += OnTornadoDamage;
+        ManageTornadoEventSubscription(true);
+
+        ManageShieldActivityEventSubscription(true);
     }
 
     private void OnDisable()
     {
-        if (MyPhotonNetwork.IsOfflineMode)
-            _gameManagerBulletSerializer.OnTornado -= OnTornadoDamage;
+        ManageTornadoEventSubscription(false);
+
+        ManageShieldActivityEventSubscription(false);
+    }
+
+    private void ManageTornadoEventSubscription(bool isSubscribing)
+    {
+        if (isSubscribing)
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado += OnTornadoDamage, () => PhotonNetwork.NetworkingClient.EventReceived += OnTornadoDamage);
         else
-            PhotonNetwork.NetworkingClient.EventReceived -= OnTornadoDamage;
+            Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, () => GameSceneObjectsReferences.GameManagerBulletSerializer.OnTornado -= OnTornadoDamage, () => PhotonNetwork.NetworkingClient.EventReceived -= OnTornadoDamage);
     }
 
-    private void ReceiveTornadoDamage(object[] data)
+    private void ManageShieldActivityEventSubscription(bool isSubscribing)
     {
-        if ((string)data[0] == name)
-        {           
-            Damage((int)data[1]);
-        }
+        if (isSubscribing)
+            _playerShields.onShieldActivity += OnShieldActivity;
+        else
+            _playerShields.onShieldActivity -= OnShieldActivity;
     }
 
-    private void OnTornadoDamage(object[] data)
-    {
-        ReceiveTornadoDamage(data);
-    }
-
-    private void OnTornadoDamage(EventData data)
-    {
-        if(data.Code == EventInfo.Code_TornadoDamage)
-        {
-            ReceiveTornadoDamage((object[])data.CustomData);
-        }
-    }
+    public void BoostSafeZone(bool isSafeZone) => IsSafeZone = isSafeZone;
 
     public void Damage(int damage)
     {
-        if (_playerShields == null || !_playerShields.IsShieldActive)
-        {
-            Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
-            _vehiclePool.Pool(0, null);
+        if (Health <= 0)
+            return;
 
-            OnUpdateHealthBar?.Invoke(Health);
-            OnTakeDamage?.Invoke(_tankController.BasePlayer ,DamageValue(DamageValue(damage)));
-            OnTankDamageFire?.Invoke(Health);
+        if (!IsSafeZone)
+        {
+            if (IsShieldActive)
+                ApplyArmorDamage(damage);
+            else
+                ApplyHealthDamage(damage);
         }
+    }
+
+    public void Damage(Collider collider, int damage)
+    {
+        float fixedDamage = damage;
+        float newDamage = 0;
+
+        if (collider == _weakSpot)
+        {
+            newDamage = fixedDamage * 1.5f;
+        }
+
+        if(collider == _center)
+        {
+            newDamage = fixedDamage;
+
+            SecondarySoundController.PlaySound(0, 2);
+        }
+
+        if(collider == _strongSpot)
+        {
+            newDamage = fixedDamage / 1.5f;
+
+            SecondarySoundController.PlaySound(0, 2);
+        }
+
+        Damage(Mathf.RoundToInt(newDamage));
+    }
+
+    private void ApplyHealthDamage(int damage)
+    {
+        if (DamageValue(damage) <= 0)
+            return;
+
+        Health = (Health - DamageValue(damage)) > 0 ? Health - DamageValue(damage) : 0;
+        
+        OnUpdateHealthBar?.Invoke(Health);
+
+        OnTakeDamage?.Invoke(_tankController.BasePlayer, DamageValue(damage));
+
+        OnTankDamageFire?.Invoke(Health);
+
+        PlayDamageSoundFX();
+    }
+
+    private void ApplyArmorDamage(int damage)
+    {
+        if (DamageValue(damage) <= 0)
+            return;
+
+        int shieldHealth = DamageValue(damage) - ShieldHealth;
+
+        Conditions<int>.Compare(shieldHealth, 0,
+            delegate 
+            {
+                ShieldHealth = 0;
+
+                _playerShields.DeactivateShields();
+            }, 
+            delegate 
+            {
+                ShieldHealth = 0;
+
+                ApplyHealthDamage(shieldHealth);
+
+                _playerShields.DeactivateShields();
+            }, 
+            delegate
+            {
+                ShieldHealth = Mathf.Abs(shieldHealth);
+            });
+
+        PlayDamageSoundFX();
+
+        onUpdateArmorBar?.Invoke(ShieldHealth);
+    }
+
+    private void PlayDamageSoundFX()
+    {
+        if (_tankController.BasePlayer != null)
+            SecondarySoundController.PlaySound(0, 5);
     }
 
     public int DamageValue(int damage)
@@ -94,34 +185,64 @@ public class HealthController : MonoBehaviour, IDamage
         float d = damage;
         float d1 = d / 100;
         float a = 100 - Armor;
+
         return Mathf.FloorToInt(d1 * a);        
     }
 
-    public void GetHealthFromWoodBox(out bool isDone, out string text)
+    private void ReceiveTornadoDamage(object[] data)
     {
-        isDone = false;
-        text = "";
+        if ((string)data[0] == name)
+            Damage((int)data[1]);
+    }
 
-        if (_tankController.BasePlayer != null)
-        {
-            if (Health + 20 <= 100)
-                Health += 20;
-            else
-                Health = 100;
+    private void OnTornadoDamage(object[] data) => ReceiveTornadoDamage(data);
 
-            isDone = true;
-            text = "+" + 20;
+    private void OnTornadoDamage(EventData data)
+    {
+        if (data.Code == EventInfo.Code_TornadoDamage)
+            ReceiveTornadoDamage((object[])data.CustomData);
+    }
 
-            OnUpdateHealthBar?.Invoke(Health);
-            OnTankDamageFire?.Invoke(Health);
-        }
+    public void BoostHealth(int hp)
+    {
+        if (Health + hp <= 100)
+            Health += hp;
+        else
+            Health = 100;
+
+        OnUpdateHealthBar?.Invoke(Health);
+
+        OnTankDamageFire?.Invoke(Health);
     }
 
     public void CameraChromaticAberrationFX()
     {
-        if(_tankController.BasePlayer != null)
-        {
+        if (_tankController.BasePlayer != null)
             FindObjectOfType<CameraChromaticAberration>().CameraGlitchFX(60);
+    }
+
+    private void OnShieldActivity(bool isActive)
+    {
+        if(isActive)
+        {
+            ShieldHealth = 100;
+
+            onUpdateArmorBar?.Invoke(ShieldHealth);
         }
+    }
+
+    public void OnGameEnd(object[] data = null)
+    {
+        if (_tankController.BasePlayer != null)
+            GameSceneObjectsReferences.GameplayAnnouncer.AnnounceGameResult(Health > 0);
+
+        if (Health <= 0)
+            gameObject.SetActive(false);
+    }
+
+    public void WrapUpGame(object[] data = null)
+    {
+        if (gameObject.activeInHierarchy)
+            gameObject.SetActive(false);
     }
 }

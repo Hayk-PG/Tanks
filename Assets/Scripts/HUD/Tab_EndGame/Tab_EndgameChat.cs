@@ -1,11 +1,10 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Tab_EndgameChat : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup _canvasGroupChat;
-    [SerializeField] private CanvasGroup _canvasGroupTabResult;
+    [SerializeField] 
+    private CanvasGroup _canvasGroupChat, _canvasGroupTabResult;
 
     public bool IsChatOpened
     {
@@ -18,6 +17,7 @@ public class Tab_EndgameChat : MonoBehaviour
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroupChat, true);
         GlobalFunctions.CanvasGroupActivity(_canvasGroupTabResult, false);
+
         OnChatOpen?.Invoke();
     }
 

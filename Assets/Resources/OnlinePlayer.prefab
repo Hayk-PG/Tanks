@@ -13,10 +13,13 @@ GameObject:
   - component: {fileID: 1474987463332547003}
   - component: {fileID: 1980135472982103695}
   - component: {fileID: 607266726504936728}
+  - component: {fileID: 8280482648393353042}
   - component: {fileID: 7232368143159944182}
-  - component: {fileID: 5986968466572651487}
-  - component: {fileID: 8488972197896908870}
-  - component: {fileID: 8067335823373235192}
+  - component: {fileID: 5372494820170780769}
+  - component: {fileID: 2559943797716330180}
+  - component: {fileID: 2812900857424218911}
+  - component: {fileID: 4622853699216124714}
+  - component: {fileID: 4066912488654630126}
   - component: {fileID: 8429997468953363312}
   m_Layer: 0
   m_Name: OnlinePlayer
@@ -103,6 +106,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tankController: {fileID: 0}
+--- !u!114 &8280482648393353042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e343edddde86ccf42bec95876c993a61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7232368143159944182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d234103535ac9954e84cc777f536edb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5986968466572651487
+--- !u!114 &5372494820170780769
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,10 +139,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8394664441692255489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b573a9116f08f849be0d396ef6e87e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 563faac7f0ac74a8e8ef29c65bcff6ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8488972197896908870
+--- !u!114 &2559943797716330180
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -136,10 +151,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8394664441692255489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70bdd59844b077b4b95ad59e1bd245bf, type: 3}
+  m_Script: {fileID: 11500000, guid: e77dfd4f75a5053439cf6a98820f3641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8067335823373235192
+  _photonPlayerController: {fileID: 1474987463332547003}
+--- !u!114 &2812900857424218911
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,10 +164,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 8394664441692255489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e8cff2a8b96082468215faf29f70706, type: 3}
+  m_Script: {fileID: 11500000, guid: f29c76f8f452ab24cac1fc3a3d9f3711, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isReadyToRematch: 0
+  _playerTankController: {fileID: 607266726504936728}
+  _photonPlayerController: {fileID: 1474987463332547003}
+--- !u!114 &4622853699216124714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fb6f09153fb9aa4f9ee67b379678ac8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 607266726504936728}
+  _photonPlayerController: {fileID: 1474987463332547003}
+--- !u!114 &4066912488654630126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f315578b2374f2b8809c17908a3a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 607266726504936728}
+  _photonPlayerController: {fileID: 1474987463332547003}
 --- !u!114 &8429997468953363312
 MonoBehaviour:
   m_ObjectHideFlags: 0

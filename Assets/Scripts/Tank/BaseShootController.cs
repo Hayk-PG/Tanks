@@ -5,12 +5,12 @@ public class BaseShootController: MonoBehaviour
 {
     protected Transform _canonPivotPoint;
     protected Transform _shootPoint;
+    protected Transform _rocketSpawnPoint;
     protected BaseTrajectory _trajectory;
     protected AICanonRaycast _aiCanonRaycast;
     protected PlayerTurn _playerTurn;
     protected ScoreController _scoreController;
     protected Stun _stun;
-    protected MainCameraController mainCameraController;
 
     protected bool _isStunned;
     internal Transform CanonPivotPoint => _canonPivotPoint;
@@ -34,6 +34,7 @@ public class BaseShootController: MonoBehaviour
         internal float _maxSpeed;
         internal float _currentVelocity;
         internal bool _isApplyingForce;
+        [SerializeField] internal float _rigidbodyForceMultiplier;
     }
 
     public Canon _canon;
@@ -47,13 +48,14 @@ public class BaseShootController: MonoBehaviour
     protected virtual void Awake()
     {
         FindCanonPivotPoint();
-        _shootPoint = Get<BaseTrajectory>.FromChild(_canonPivotPoint.gameObject).transform;
+
+        _shootPoint = Get<BaseTrajectory>.FromChild(_canonPivotPoint.gameObject, true).transform;
+        _rocketSpawnPoint = transform.Find("RocketSpawnPoint");
         _trajectory = Get<BaseTrajectory>.From(_shootPoint.gameObject);
         _aiCanonRaycast = Get<AICanonRaycast>.From(_trajectory.gameObject);
         _playerTurn = Get<PlayerTurn>.From(gameObject);
         _scoreController = Get<ScoreController>.From(gameObject);
         _stun = Get<Stun>.FromChild(gameObject);
-        mainCameraController = FindObjectOfType<MainCameraController>();
     }
 
     protected virtual void OnEnable()
@@ -72,8 +74,10 @@ public class BaseShootController: MonoBehaviour
     {
         if (transform.Find("CanonPivotPoint") != null)
             _canonPivotPoint = transform.Find("CanonPivotPoint");
+
         else if (transform.Find("Turret") != null)
             _canonPivotPoint = transform.Find("Turret").Find("CanonPivotPoint");
+
         else
             _canonPivotPoint = transform.Find("Body").Find("Turret").Find("CanonPivotPoint");
     }

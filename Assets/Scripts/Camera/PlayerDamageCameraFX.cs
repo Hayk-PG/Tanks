@@ -1,42 +1,15 @@
 ﻿using UnityEngine;
 
-public class PlayerDamageCameraFX : BaseCameraFX
+public class PlayerDamageCameraFX : BasePlayerDependentCameraEffects<HealthController>
 {
-    private Animator _animator;  
-    private GameManager _gameManager;
-    private HealthController _localHp;
+    [SerializeField] [Space]
+    private Animator _animator;
+
     private const string _damageFX = "PPImageFilteringAnim";
 
-    protected override void Awake()
-    {
-        base.Awake();
-        _animator = Get<Animator>.From(transform.parent.gameObject);
-        _gameManager = FindObjectOfType<GameManager>();
-    }
 
-    private void OnEnable()
-    {
-        _gameManager.OnGameStarted += GetLocalPlayerOnGameStart;
-    }
 
-    private void OnDisable()
-    {
-        _gameManager.OnGameStarted -= GetLocalPlayerOnGameStart;
+    protected override void Execute() => _t.OnTakeDamage += PlayerDamageFX;
 
-        if (_localHp != null)
-            _localHp.OnTakeDamage -= PlayerDamageFX;
-    }
-
-    private void GetLocalPlayerOnGameStart()
-    {
-        _localHp = GlobalFunctions.ObjectsOfType<TankController>.Find(tank => tank.BasePlayer != null).GetComponent<HealthController>();
-
-        if (_localHp != null)
-            _localHp.OnTakeDamage += PlayerDamageFX;
-    }
-
-    public void PlayerDamageFX(BasePlayer basePlayer,int damage)
-    {
-        _animator.Play(_damageFX);
-    }
+    private void PlayerDamageFX(BasePlayer basePlayer, int damage) => _animator.Play(_damageFX);
 }

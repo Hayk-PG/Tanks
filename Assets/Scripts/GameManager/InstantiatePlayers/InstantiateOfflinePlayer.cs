@@ -2,25 +2,16 @@
 
 public class InstantiateOfflinePlayer : MonoBehaviour
 {
+    [SerializeField]
     private GameManager _gameManager;
+
+    [SerializeField]
     private OfflinePlayerController _offlinePlayer;
 
 
-    private void Awake()
-    {
-        _gameManager = Get<GameManager>.From(gameObject);
-        _offlinePlayer = Resources.Load<OfflinePlayerController>("OfflinePlayer");
-    }
+    private void OnEnable() => _gameManager.OnInstantiateOfflinePlayers += Instantiate;
 
-    private void OnEnable()
-    {
-        _gameManager.OnInstantiateOfflinePlayers += Instantiate;
-    }
-
-    private void OnDisable()
-    {
-        _gameManager.OnInstantiateOfflinePlayers -= Instantiate;
-    }
+    private void OnDisable() => _gameManager.OnInstantiateOfflinePlayers -= Instantiate;
 
     private void Instantiate()
     {

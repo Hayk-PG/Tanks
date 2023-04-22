@@ -97,29 +97,32 @@ public class PlayerShootTrajectory : BaseTrajectory
         }
     }
 
-    public override void PointsOverlapSphere()
+    public override void PointsOverlapSphere(bool isLocalPlayer)
     {
-        _pointTarget.SetActive(false);
-
-        for (int i = 0; i < points.Length; i++)
+        if (isLocalPlayer && gameObject.activeInHierarchy)
         {
-            _colliders = Physics.OverlapSphere(points[i].transform.position, 0.1f, 1, QueryTriggerInteraction.Ignore);
+            _pointTarget.SetActive(false);
 
-            if(_colliders.Length > 0)
+            for (int i = 0; i < points.Length; i++)
             {
-                for (int x = i; x < points.Length; x++)
+                _colliders = Physics.OverlapSphere(points[i].transform.position, 0.1f, 1, QueryTriggerInteraction.Ignore);
+
+                if (_colliders.Length > 0)
                 {
-                    points[x].SetActive(false);
-                }
+                    for (int x = i; x < points.Length; x++)
+                    {
+                        points[x].SetActive(false);
+                    }
 
-                _pointTarget.SetActive(true);
-                _pointTarget.transform.position = _colliders[0].ClosestPoint(points[i].transform.position);
-                _pointTarget.transform.Rotate(Vector3.forward);
-                break;
-            }
-            else
-            {
-                points[i].SetActive(true);
+                    _pointTarget.SetActive(true);
+                    _pointTarget.transform.position = _colliders[0].ClosestPoint(points[i].transform.position);
+                    _pointTarget.transform.Rotate(Vector3.forward);
+                    break;
+                }
+                else
+                {
+                    points[i].SetActive(true);
+                }
             }
         }
     }

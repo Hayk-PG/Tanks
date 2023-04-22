@@ -17,14 +17,17 @@ public class MultipleShootController : ShootController
         for (int i = 0; i < _shootPointsCount; i++)
         {
             float randomForce = i < lastIndex ? Random.Range(force - 0.5f, force + 0.5f) : force;
+
             Bullet = Instantiate(_playerAmmoType._weapons[ActiveAmmoIndex]._prefab, _shootPoint.position, _canonPivotPoint.rotation);
             Bullet.OwnerScore = _iScore;
             Bullet.RigidBody.velocity = Bullet.transform.forward * randomForce;
-            _gameManagerBulletSerializer.BulletController = Bullet;
+
+            GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = Bullet;
             
             if (i == lastIndex)
             {
-                mainCameraController.CameraOffset(_playerTurn, Bullet.transform, null, null);
+                GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, null, null);
+
                 Bullet.IsLastShellOfBarrage = true;
             }
             yield return new WaitForSeconds(0.4f);

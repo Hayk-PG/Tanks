@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
-public enum ButtonType { Weapon, Support, Props }
+public enum ButtonType { Shell, Rocket}
 public enum DisplayType { MainWeaponsList, AvailableWeapon}
 
 public class AmmoTypeButton : MonoBehaviour
@@ -16,276 +16,190 @@ public class AmmoTypeButton : MonoBehaviour
     public struct Properties
     {
         public ButtonType _buttonType;
-        public DisplayType _displayType;
-        [SerializeField] private Button _button;
-        [SerializeField] private CanvasGroup _canvasGroupWeaponsTab;
-        [SerializeField] private CanvasGroup _canvasGroupSupportTab;
-        [SerializeField] private CanvasGroup _canvasGroupTabScoresToUnlock;
-        [SerializeField] private CanvasGroup _canvasGroupTimer;
-        [SerializeField] private CanvasGroup _canvasGroupAmmount;
-        [SerializeField] private CanvasGroup _canvasGroupIconInfinity;
-        [SerializeField] private Image _imageWoodBoxIcon;
-        [SerializeField] private Image _imageWalkieTalkieIcon;
-        [SerializeField] private Image _imageWeaponsTabCheckBox;
-        [SerializeField] private Image _imageSupportTabCheckBox;
-        [SerializeField] private Image _imageButton;
-        [SerializeField] private TMP_Text _textTimer;
-        [SerializeField] private TMP_Text _textValue;
-        [SerializeField] private TMP_Text _textRequiredScoreAmmount;
-        [SerializeField] private TMP_Text _textSupportType;
-        [SerializeField] private TMP_Text[] _textStatsValues;
-        [SerializeField] private TMP_Text[] _textStatsNames;
-        [SerializeField] private Sprite[] _sprites;
 
+        public DisplayType _displayType;
+
+        [SerializeField] [Space]
+        private Button _button;
+
+        [SerializeField] [Space]
+        private CanvasGroup _canvasGroupLock, _canvasGroupPrice;
+
+        [SerializeField] [Space]
+        private Image _imgWeapon, _imgFrame;
+
+        [SerializeField] [Space]
+        private TMP_Text _txtName, _txtPrice, _txtQuantity;
+
+        [SerializeField] [Space]
+        public Color[] _colors; //0: Selected 1: Available 2: Locked
         
         public Button Button
         {
             get => _button;
         }
-        public CanvasGroup CanvasGroupWeaponsTab
+
+        public CanvasGroup CanvasGroupLock => _canvasGroupLock;
+        public CanvasGroup CanvasGroupPrice => _canvasGroupPrice;
+
+        public Sprite Image
         {
-            get => _canvasGroupWeaponsTab;
+            get => _imgWeapon.sprite;
+            set => _imgWeapon.sprite = value;
         }
-        public CanvasGroup CanvasGroupSupportTab
+
+        public string Name
         {
-            get => _canvasGroupSupportTab;
+            get => _txtName.text;
+
+            set => _txtName.text = value;
         }
-        public CanvasGroup CanvasGroupTabScoresToUnlock
+
+        public Color ColorFrame
         {
-            get => _canvasGroupTabScoresToUnlock;
+            get => _imgFrame.color;
+            set => _imgFrame.color = value;
         }
-        public CanvasGroup CanvasGroupTimer
-        {
-            get => _canvasGroupTimer;
-        }
-        public CanvasGroup CanvasGroupAmmount
-        {
-            get => _canvasGroupAmmount;
-        }
-        public Sprite Icon
+
+        public int Index { get; set; }
+        public int Quantity
         {
             get
             {
-                if (_canvasGroupWeaponsTab.interactable)
-                    return _imageWoodBoxIcon.sprite;
-                else
-                    return _imageWalkieTalkieIcon.sprite;
+                return int.Parse(_txtQuantity.text);
             }
+
             set
             {
-                if (_canvasGroupWeaponsTab.interactable)
-                    _imageWoodBoxIcon.sprite = value;
-                else
-                    _imageWalkieTalkieIcon.sprite = value;
+                _txtQuantity.text = Converter.DecimalString(value, 3);
             }
         }
-        public int Index { get; set; }
-        public int Value
+        public int Price
         {
-            get => int.Parse(_textValue.text);
-            set 
+            get
             {
-                _textValue.text = value.ToString();
-
-                GlobalFunctions.CanvasGroupActivity(_canvasGroupAmmount, value < 100);
-                GlobalFunctions.CanvasGroupActivity(_canvasGroupIconInfinity, value >= 100);
+                return int.Parse(_txtPrice.text);
             }
-        }
-        public int CurrentValue { get; set; }
-        public int RequiredScoreAmmount
-        {
-            get => int.Parse(_textRequiredScoreAmmount.text);
+
             set
             {
-                _textRequiredScoreAmmount.text = value.ToString();
-
-                if(value <= 0)
-                {
-                    GlobalFunctions.CanvasGroupActivity(_canvasGroupTabScoresToUnlock, false);
-                }
+                _txtPrice.text = value.ToString();
             }
         }
-        public int CurrentScoreAmmount { get; set; }
-        public int DamageValue
-        {
-            get => int.Parse(_textStatsValues[0].text);
-            set => _textStatsValues[0].text = value.ToString();
-        }
-        public int Minutes { get; set; }
-        public int Seconds { get; set; }
+        public int PlayerScore { get; set; }
+
         public float BulletMaxForce { get; set; }
         public float BulletForceMaxSpeed { get; set; }
-        public float Radius
+
+        public bool IsUnlocked
         {
-            get => float.Parse(_textStatsValues[1].text);
-            set => _textStatsValues[1].text = value.ToString();
-        }
-        public string WeaponType
-        {
-            get => _textStatsValues[2].text;
-            set 
+            get
             {
-                if (value.Length > 0 && _buttonType == ButtonType.Weapon && _displayType == DisplayType.MainWeaponsList)
-                {
-                    string w = value.Substring(0, value.Length - 3);                  
-                    string r = value.Substring(value.Length - 3);
-                    _textStatsValues[2].text = w + "<color=#FD0D3D>" + r + "</color>";
-                }
-                else
-                    _textStatsValues[2].text = value;
+                return Button.interactable && ColorFrame != _colors[2];
             }
-        }
-        public string SupportOrPropsType
-        {
-            get => _textSupportType.text;
+
             set
             {
-                int parentheses = value.IndexOf("(");
+                Button.interactable = value;
 
-                if(parentheses > 0)
-                {
-                    string a = value.Substring(0, parentheses);
-                    string b = value.Substring(parentheses);
-                    string c = a + "<color=#FD0D3D>" + b + "</color>";
-                    _textSupportType.text = c;
-                }
-                else
-                {
-                    _textSupportType.text = value;
-                }
+                GlobalFunctions.CanvasGroupActivity(_canvasGroupLock, !value);
+
+                ColorFrame = value ? _colors[1] : _colors[2];
             }
         }
-        public string Timer
-        {
-            get => _textTimer.text;
-            set => _textTimer.text = value;
-        }
-        public bool IsUnlocked { get; set; }
         public bool IsSelected
         {
             get
             {
-                if (_canvasGroupWeaponsTab.interactable)
-                    return _imageWeaponsTabCheckBox.gameObject.activeInHierarchy;
-                else
-                    return _imageSupportTabCheckBox.gameObject.activeInHierarchy;
+                return ColorFrame == _colors[0] && IsUnlocked;
             }
             set
             {
-                if (_canvasGroupWeaponsTab.interactable)
-                {
-                    _imageWeaponsTabCheckBox.gameObject.SetActive(value);
-                    MainSprite = MainSpriteVariations[0];
-                }
-                else
-                {
-                    _imageSupportTabCheckBox.gameObject.SetActive(value);
-                    MainSprite = MainSpriteVariations[0];
-                }
+                ColorFrame = value ? _colors[0] : _colors[1];
             }
         }  
-        public Sprite MainSprite
-        {
-            get => _imageButton.sprite;
-            set => _imageButton.sprite = value;
-        }
-        public Sprite[] MainSpriteVariations
-        {
-            get => _sprites;
-        }
     }
 
     public Properties _properties;
 
-    private int _minutes;
-    private int _seconds;
-    private bool _isTimerFinished;
+    [SerializeField] [Space]
+    private CanvasGroup _canvasGroupDisplay, _canvasGroupDescription;
 
-    public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }   
-    public Action<AmmoTypeButton> OnClickSupportTypeButton { get; set; }
-    public Action<AmmoTypeButton> OnClickPropsTypeButton { get; set; }
+    [SerializeField] [Space]
+    private TMP_Text _txtTop, _txtBottom;
+
+    private bool _isAutoSelected;
+
+    public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }
 
 
+
+
+    private void Awake() => SetGroupsActive(GameSceneObjectsReferences.AmmoTabDescriptionButton.IsActive);
+
+    private void OnEnable() => GameSceneObjectsReferences.AmmoTabDescriptionButton.onDescriptionActivity += SetGroupsActive;
 
     public virtual void OnClickButton()
     {
-        if (!_properties.IsSelected)
-        {
-            if (_properties._buttonType == ButtonType.Weapon) OnClickAmmoTypeButton?.Invoke(this);
-            if (_properties._buttonType == ButtonType.Support) OnClickSupportTypeButton?.Invoke(this);
-            if (_properties._buttonType == ButtonType.Props) OnClickPropsTypeButton?.Invoke(this);
-        }
+        if (!_properties.IsSelected && _properties.IsUnlocked)
+            OnClickAmmoTypeButton?.Invoke(this);
+    }
+
+    private void SetGroupsActive(bool isDescription)
+    {
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupDisplay, !isDescription);
+        GlobalFunctions.CanvasGroupActivity(_canvasGroupDescription, isDescription);
     }
 
     public void DisplayScoresToUnlock(int playerScore, int bulletsCount)
     {
-        _properties.CurrentScoreAmmount = playerScore;
-        _properties.CurrentValue = bulletsCount;
+        ControlPriceTagActivity();
 
-        if (_properties.CurrentValue > 0)
+        _properties.PlayerScore = playerScore;
+
+        _properties.Quantity = bulletsCount;
+
+        Conditions<bool>.Compare(_properties.PlayerScore >= _properties.Price, Unlock, Lock);
+
+        AutoSelect();
+    }
+
+    public void PrintDescription(string title, string text)
+    {
+        if (_txtTop == null || _txtBottom == null)
+            return;
+
+        _txtTop.text = title;
+        _txtBottom.text = text;
+    }
+
+    private void ControlPriceTagActivity() => GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupPrice, _properties.Price <= 0 ? false : true);
+
+    private void Unlock()
+    {
+        if (_properties.IsUnlocked)
+            return;
+
+        _properties.IsUnlocked = true;
+    }
+
+    private void Lock()
+    {
+        if (_properties.IsUnlocked)
+            return;
+
+        _properties.IsUnlocked = false;
+    }
+
+    private void AutoSelect()
+    {
+        if (_properties.Index == 0 && !_isAutoSelected)
         {
             _properties.IsUnlocked = true;
-            _properties.MainSprite = _properties.MainSpriteVariations[_properties.IsSelected ? 0: 1];
+
+            _properties.IsSelected = true;
+
+            _isAutoSelected = true;
         }
-        else
-        {
-            _properties.IsUnlocked = false;
-            _properties.MainSprite = _properties.MainSpriteVariations[2];
-
-            if (_properties.CurrentScoreAmmount < _properties.RequiredScoreAmmount || _properties.CanvasGroupTimer.interactable)
-            {
-                _properties.Button.interactable = false;
-            }
-            else if (_properties.CurrentScoreAmmount >= _properties.RequiredScoreAmmount && !_properties.CanvasGroupTimer.interactable)
-            {
-                _properties.Button.interactable = true;
-                _properties.MainSprite = _properties.MainSpriteVariations[1];
-            }
-        }
-
-        if(_properties._buttonType == ButtonType.Weapon)
-            GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTabScoresToUnlock, !_properties.IsUnlocked);
-    }
-
-    public void StartTimerCoroutine()
-    {
-        StartCoroutine(TimerCoroutine());
-    }
-
-    private IEnumerator TimerCoroutine()
-    {
-        OnTimerActivity(true);
-        _minutes = _properties.Minutes;
-        _seconds = _properties.Seconds;
-        _isTimerFinished = false;
-
-        while (!_isTimerFinished)
-        {
-            _seconds--;
-
-            if (_seconds <= 0)
-                Conditions<int>.Compare(_minutes, 0, OnReset, OnDecrease, OnReset);
-
-            _properties.Timer = _minutes.ToString("D2") + ":" + _seconds.ToString("D2");
-            yield return new WaitForSeconds(1);
-        }
-    }
-
-    private void OnTimerActivity(bool isActive)
-    {
-        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTimer, isActive);
-        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupAmmount, !isActive);
-    }
-
-    private void OnDecrease()
-    {
-        _seconds = 60;
-        _minutes--;
-    }
-
-    private void OnReset()
-    {
-        _isTimerFinished = true;
-        OnTimerActivity(false);
     }
 }

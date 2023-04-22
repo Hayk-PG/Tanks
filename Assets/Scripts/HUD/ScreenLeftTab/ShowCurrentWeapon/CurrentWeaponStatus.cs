@@ -1,20 +1,22 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CurrentWeaponStatus : MonoBehaviour
 {
-    private AmmoTabCustomization _ammoTabCustomization;
+    [SerializeField]
+    private CanvasGroup _canvasGroup;
+
+    [SerializeField] [Space]
     private Animator _animator;
 
-    [Serializable]
+    [Serializable] 
     private struct Properties
     {
-        [SerializeField]
-        private Image _currentWeaponIcon;
+        [SerializeField] private Image _currentWeaponIcon;
 
-        [SerializeField]
-        private Text _bulletsLeftText;
+        [SerializeField] private TMP_Text _bulletsLeftText;
 
         public Sprite CurrentWeaponIcon
         {
@@ -28,30 +30,23 @@ public class CurrentWeaponStatus : MonoBehaviour
         }
     }
 
-    [SerializeField]
+    [SerializeField] [Space]
     private Properties _properties;
 
-   
+    public CanvasGroup CanvasGroup => _canvasGroup;
 
-    private void Awake()
-    {
-        _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-        _animator = GetComponentInChildren<Animator>();
-    }
 
-    private void OnEnable()
-    {
-        _ammoTabCustomization.OnUpdateDisplayedWeapon += OnUpdateDisplayedWeapon;
-    }
 
-    private void OnDisable()
-    {
-        _ammoTabCustomization.OnUpdateDisplayedWeapon -= OnUpdateDisplayedWeapon;
-    }
+  
+
+    //private void OnEnable() => GameSceneObjectsReferences.AmmoTabCustomization.OnUpdateDisplayedWeapon += OnUpdateDisplayedWeapon;
+
+    //private void OnDisable() => GameSceneObjectsReferences.AmmoTabCustomization.OnUpdateDisplayedWeapon -= OnUpdateDisplayedWeapon;
 
     private void OnUpdateDisplayedWeapon(WeaponProperties weaponProperty, int bulletsLeft)
     {
         _properties.CurrentWeaponIcon = weaponProperty._icon;
+
         _properties.Text = bulletsLeft < 100 ? bulletsLeft.ToString() : "∞";
 
         if (_animator != null)

@@ -3,18 +3,21 @@ using UnityEngine.UI;
 
 public class TimerIcon : MonoBehaviour
 {
-    [SerializeField] TurnState _corespondentIcon;
-    [SerializeField] private Sprite[] _sprtIcons;
-    private Image _img;    
+    [SerializeField]
+    private Image _img; 
+    
+    [SerializeField] [Space]
+    private Sprite[] _sprtIcons;
+    
+    [SerializeField] [Space] 
+    TurnState _corespondentIcon;
+
+    [SerializeField] [Space]
     private TurnTimer _turnTimer;
 
 
 
-    private void Awake()
-    {
-        _img = Get<Image>.From(gameObject);
-        _turnTimer = FindObjectOfType<TurnTimer>();       
-    }
+
 
     private void OnEnable() => _turnTimer.OnTurnTimer += OnTurnTimer;
 

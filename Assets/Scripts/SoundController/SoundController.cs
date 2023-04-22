@@ -4,7 +4,9 @@ using UnityEngine;
 [Serializable] public struct Clips
 {
     public AudioClip _clip;
+
     public string _clipName;
+
     public int _score;
 }
 
@@ -14,78 +16,128 @@ using UnityEngine;
     public Clips[] _clips;
 }
 
+
 public class SoundController : MonoBehaviour
 {
-    private static SoundController _inst;
-    private MyScene _myScene;
-    private AudioSource _musicSRC;
-    private AudioSource _soundSRC;
-    private Animator _musicAnimator;
-    
+    public static SoundController Instance { get; private set; }
+
     public enum MusicVolume { Down, Up}
 
-    [SerializeField] private SoundsList[] _soundsList;
+    private AudioSource _musicSRC;
+    private AudioSource _soundSRC;
+
+    [SerializeField]
+    private AudioSource[] _allAudioSources;
+
+    private Animator _musicAnimator;
+
+    [SerializeField]
+    private SoundsList[] _soundsList;
+
     public SoundsList[] SoundsList
     {
         get => _soundsList;
     }
 
+    public static bool IsMusicMuted
+    {
+        get => Instance._musicSRC.mute;
+
+        private set => Instance._musicSRC.mute = value;
+    }
+    public static bool IsSoundMuted
+    {
+        get => Instance._soundSRC.mute;
+
+        private set => Instance._soundSRC.mute = value;
+    }
+    
+
+    public static event Action<bool> onAudioSourceMute;
+
+
+
 
     private void Awake()
     {
-        Instance();
-        _myScene = FindObjectOfType<MyScene>();
+        CreateInstance();
+
         _musicSRC = Get<AudioSource>.From(transform.Find("MusicSRC").gameObject);
+
         _soundSRC = Get<AudioSource>.From(transform.Find("SoundSRC").gameObject);
+
         _musicAnimator = Get<Animator>.From(_musicSRC.gameObject);       
     }
 
-    private void OnEnable()
-    {
-        _myScene.OnDestroyOnLoadMenuScene += OnDestroyOnLoadMenuScene;
-    }
+    private void Start() => GetDefaultSettings();
 
-    private void OnDisable()
+    private void CreateInstance()
     {
-        _myScene.OnDestroyOnLoadMenuScene -= OnDestroyOnLoadMenuScene;
-    }
+        if(Instance == null)
+        {
+            Instance = this;
 
-    private void Instance()
-    {
-        if (_inst != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            _inst = this;
             DontDestroyOnLoad(gameObject);
-        }
-    }
 
-    private void OnDestroyOnLoadMenuScene()
-    {
+            return;
+        }
+
         Destroy(gameObject);
     }
 
-    public static void MusicSRCCondition(bool isMuted)
+    private void GetDefaultSettings()
     {
-        _inst._musicSRC.mute = !isMuted;
+        bool isMusicMuted = PlayerPrefs.GetInt(Keys.IsMusicOn, 1) > 0 ? false : true;
+        bool isSoundMuted = PlayerPrefs.GetInt(Keys.IsSoundOn, 1) > 0 ? false : true;
+
+        ToggleMusicActivity(isMusicMuted);
+
+        ToggleSoundActivity(isSoundMuted);
     }
 
-    public static void SoundSRCCondition(bool isMuted)
+    public static void ToggleMusicActivity(bool? isMuted, ISoundController observer = null)
     {
-        _inst._soundSRC.mute = !isMuted;
+        if (isMuted.HasValue)
+            IsMusicMuted = isMuted.Value;
+        else
+            IsMusicMuted = !IsMusicMuted;
+
+        PlayerPrefs.SetInt(Keys.IsMusicOn, IsMusicMuted ? 0 : 1);
+
+        observer?.Set(IsMusicMuted);
+    }
+
+    public static void ToggleSoundActivity(bool? isMuted, ISoundController observer = null)
+    {
+        if (isMuted.HasValue)
+        {
+            IsSoundMuted = isMuted.Value;
+
+            GlobalFunctions.Loop<AudioSource>.Foreach(Instance._allAudioSources, audioSource => { audioSource.mute = IsSoundMuted; });
+        }
+        else
+        {
+            IsSoundMuted = !IsSoundMuted;
+
+            GlobalFunctions.Loop<AudioSource>.Foreach(Instance._allAudioSources, audioSource => { audioSource.mute = IsSoundMuted; });
+        }
+
+        PlayerPrefs.SetInt(Keys.IsSoundOn, IsSoundMuted ? 0 : 1);
+
+        observer?.Set(IsSoundMuted);
+
+        onAudioSourceMute?.Invoke(IsSoundMuted);
     }
 
     public static void PlaySound(int soundsListIndex, int clipIndex, out float clipLength)
     {
         clipLength = 0;
 
-        if (soundsListIndex < _inst._soundsList.Length && clipIndex < _inst._soundsList[soundsListIndex]._clips.Length)
+        if (soundsListIndex < Instance._soundsList.Length && clipIndex < Instance._soundsList[soundsListIndex]._clips.Length)
         {
-            _inst._soundSRC.PlayOneShot(_inst._soundsList[soundsListIndex]._clips[clipIndex]._clip);
-            clipLength = _inst._soundsList[soundsListIndex]._clips[clipIndex]._clip.length;
+            Instance._soundSRC.PlayOneShot(Instance._soundsList[soundsListIndex]._clips[clipIndex]._clip);
+
+            clipLength = Instance._soundsList[soundsListIndex]._clips[clipIndex]._clip.length;
         }            
     }
 
@@ -93,8 +145,17 @@ public class SoundController : MonoBehaviour
     {
         switch (musicVolume)
         {
-            case MusicVolume.Down: _inst._musicAnimator.Play("MusicSRCVolumeDownAnim");  break;
-            case MusicVolume.Up: _inst._musicAnimator.Play("MusicSRCVolumeUpAnim"); break;
+            case MusicVolume.Down:
+
+                Instance._musicAnimator.Play("MusicSRCVolumeDownAnim"); 
+
+                break;
+
+            case MusicVolume.Up:
+
+                Instance._musicAnimator.Play("MusicSRCVolumeUpAnim"); 
+
+                break;
         }
     }
 }

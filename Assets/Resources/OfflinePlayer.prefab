@@ -13,8 +13,14 @@ GameObject:
   - component: {fileID: 7279568310620189095}
   - component: {fileID: 8013050927313243324}
   - component: {fileID: 1246140350265481623}
-  - component: {fileID: 3193688128675001082}
-  - component: {fileID: 6339640248844814162}
+  - component: {fileID: 5126428423983181353}
+  - component: {fileID: 3757426036502326577}
+  - component: {fileID: 8224468277446759576}
+  - component: {fileID: 2955065943357310285}
+  - component: {fileID: 4653928821420911188}
+  - component: {fileID: 1138323815013261195}
+  - component: {fileID: 5139273662871200164}
+  - component: {fileID: 5703981635898069219}
   m_Layer: 0
   m_Name: OfflinePlayer
   m_TagString: Untagged
@@ -32,6 +38,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -85,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed5dcb53ebe3194c8c094bed7186f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3193688128675001082
+--- !u!114 &5126428423983181353
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,10 +101,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8394664441692255489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31ceeb31a985ccc41a2d57de77db63da, type: 3}
+  m_Script: {fileID: 11500000, guid: cae87254b5986914f8105b94ac5d4a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6339640248844814162
+--- !u!114 &3757426036502326577
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,6 +113,85 @@ MonoBehaviour:
   m_GameObject: {fileID: 8394664441692255489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f2c3016d502fef4d97470ed59fc6d1e, type: 3}
+  m_Script: {fileID: 11500000, guid: ed0dacfba369e7e4e9dad384fcf89e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 8013050927313243324}
+--- !u!114 &8224468277446759576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11109479e09804a40af345a76d7d4349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 8013050927313243324}
+--- !u!114 &2955065943357310285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01d16f5eba5094143816ba2a3b4098c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 8013050927313243324}
+--- !u!114 &4653928821420911188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 748801d1bc4e343d3a3c3ff05f74dd68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 8013050927313243324}
+--- !u!114 &1138323815013261195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63867df3472924553a3f12195088aa92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 8013050927313243324}
+--- !u!114 &5139273662871200164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f6446a86451447869635260bafae089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 8013050927313243324}
+--- !u!114 &5703981635898069219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394664441692255489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f867a95944f34bbea1c34690390e8aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerTankController: {fileID: 8013050927313243324}

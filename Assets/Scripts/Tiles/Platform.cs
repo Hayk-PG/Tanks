@@ -2,79 +2,79 @@
 
 public class Platform : MonoBehaviour
 {
-    private enum Direction { ToEndPoint, ToStartPoint}
-    private enum PlatformType { Horizontal, Vertical}
+    private enum Direction { ToEndPoint, ToStartPoint }
+    private enum PlatformType { Horizontal, Vertical }
 
     [SerializeField] private Direction _direction;
     [SerializeField] private PlatformType _platformType;
-    [SerializeField] private Rigidbody _rigidBody;
 
     private PlatformSensors[] _platformSensors;
-    private PlatformSerializer _platformSerializer;
     private TankController _collidedTanksController;
 
-    private Vector3 _startPoint, _endPoint;
+    private Vector3 _startPoint;
+    private Vector3 _endPoint;
     private Vector3 _target;
-    private Vector3 _currentVelocity;
 
-    [SerializeField] private float _smoothTime, _maxSpeed;
+    private float DistanceFromStartPoint => Vector3.Distance(transform.position, _startPoint);
+    private float DistanceFromEndPoint => Vector3.Distance(transform.position, _endPoint);
 
-    private float DistanceFromStartPoint
-    {
-        get
-        {
-            return Vector3.Distance(_rigidBody.transform.position, _startPoint);
-        }
-    }
-    private float DistanceFromEndPoint
-    {
-        get
-        {
-            return Vector3.Distance(_rigidBody.transform.position, _endPoint);
-        }
-    }
+    public Vector3? SynchedPosition { get; set; }
+
 
 
     private void Awake()
     {
-        _rigidBody.useGravity = false;
-        _rigidBody.transform.position = _startPoint;
+        transform.position = _startPoint;
         _platformSensors = GetComponentsInChildren<PlatformSensors>();
-        _platformSerializer = FindObjectOfType<PlatformSerializer>();
-    }
-
-    private void Start()
-    {
-        InitializePlatformSerializer();
     }
 
     private void OnEnable()
     {
-        GlobalFunctions.Loop<PlatformSensors>.Foreach(_platformSensors, platformSensor => 
-        {
-            platformSensor.OnTriggerEntered += OnPlatformSensorTriggerEntered;
-        });
+        //GlobalFunctions.Loop<PlatformSensors>.Foreach(_platformSensors, platformSensor =>
+        //{
+        //    platformSensor.OnTriggerEntered += OnPlatformSensorTriggerEntered;
+        //});
     }
 
     private void OnDisable()
     {
-        GlobalFunctions.Loop<PlatformSensors>.Foreach(_platformSensors, platformSensor =>
-        {
-            platformSensor.OnTriggerEntered -= OnPlatformSensorTriggerEntered;
-        });
+        //GlobalFunctions.Loop<PlatformSensors>.Foreach(_platformSensors, platformSensor =>
+        //{
+        //    platformSensor.OnTriggerEntered -= OnPlatformSensorTriggerEntered;
+        //});
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (DistanceFromStartPoint <= 0.1f && _direction != Direction.ToEndPoint)
-            _direction = Direction.ToEndPoint;
+        if (MyPhotonNetwork.IsOfflineMode || MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+        {
+            if (DistanceFromStartPoint <= 0.1f && _direction != Direction.ToEndPoint)
+                _direction = Direction.ToEndPoint;
 
-        if(DistanceFromEndPoint <= 0.1f && _direction != Direction.ToStartPoint)
-            _direction = Direction.ToStartPoint;
+            if (DistanceFromEndPoint <= 0.1f && _direction != Direction.ToStartPoint)
+                _direction = Direction.ToStartPoint;
 
-        _target = _direction == Direction.ToEndPoint ? _endPoint : _direction == Direction.ToStartPoint ? _startPoint : _rigidBody.transform.position;
-        _rigidBody.transform.position = Vector3.SmoothDamp(_rigidBody.transform.position, _target, ref _currentVelocity, _smoothTime, _maxSpeed);
-        _rigidBody.rotation = Quaternion.identity;
+            _target = _direction == Direction.ToEndPoint ? _endPoint : _direction == Direction.ToStartPoint ? _startPoint : transform.position;
+            transform.position = Vector3.MoveTowards(transform.position, _target, 1 * Time.deltaTime);
+            transform.rotation = Quaternion.identity;
+            SynchedPosition = transform.position;
+        }
+        else if (!MyPhotonNetwork.IsOfflineMode && !MyPhotonNetwork.IsMasterClient(MyPhotonNetwork.LocalPlayer))
+        {
+            if(SynchedPosition.HasValue)
+            {
+                if(Vector3.Distance(transform.position, SynchedPosition.Value) <= 1)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, SynchedPosition.Value, 1 * Time.deltaTime);
+                }
+                else
+                {
+                    transform.position = SynchedPosition.Value;
+                }
+             
+                transform.rotation = Quaternion.identity;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -88,7 +88,7 @@ public class Platform : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(_collidedTanksController != null && _collidedTanksController == Get<TankController>.From(other.gameObject))
+        if (_collidedTanksController != null && _collidedTanksController == Get<TankController>.From(other.gameObject))
         {
             _collidedTanksController.transform.SetParent(null);
             _collidedTanksController = null;
@@ -99,15 +99,6 @@ public class Platform : MonoBehaviour
     {
         _startPoint = start;
         _endPoint = end;
-    }
-
-    private void InitializePlatformSerializer()
-    {
-        if (_platformType == PlatformType.Horizontal)
-            _platformSerializer.RigidbodyPlatformHor = _rigidBody;
-
-        else
-            _platformSerializer.RigidbodyPlatformVert = _rigidBody;
     }
 
     private void OnPlatformSensorTriggerEntered(PlatformSensors.SensorDirection sensorDirection, Vector3 newPosition)

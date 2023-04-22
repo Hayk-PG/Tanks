@@ -4,11 +4,12 @@ using System;
 public interface IScore
 {
     int Score { get; set; }
+    int MainScore { get; set; }
 
     IDamage IDamage { get; set; }
     PlayerTurn PlayerTurn { get; set; }
 
-    Action<int, float> OnDisplayTempPoints { get; set; }
+    public event Action<int, float> onDisplayPlayerScore;
     Action<int> OnPlayerGetsPoints { get; set; }
     Action<int[]> OnHitEnemy { get; set; }
 
