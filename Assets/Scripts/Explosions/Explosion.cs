@@ -34,7 +34,7 @@ public class Explosion : BaseExplosion
         _colliders = Physics.OverlapSphere(transform.position, _radius);
     }
 
-    protected virtual void Start()
+    protected override void Start()
     {
         base.Start();
 
