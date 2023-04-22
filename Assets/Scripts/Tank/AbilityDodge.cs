@@ -2,91 +2,72 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class AbilityDodge : MonoBehaviour, IPlayerAbility
+public class AbilityDodge : BaseAbility, IPlayerAbility
 {
-    private enum AbilitiesOrders { First, Second}
-
-    [SerializeField]
-    private AbilitiesOrders _abilitiesOrders;
-
     [SerializeField] [Space]
     private Rigidbody _rigidbody;
 
-    [SerializeField] [Space]
-    private PlayerTurn _playerTurn;
-
     private BaseBulletController _projectile;
-
-    private IPlayerAbility _iPlayerAbility;
 
     private MeshRenderer[] _meshes;
 
-    private bool _isActive;
     private bool _isDodged;
     private bool _isOpponentsTurn;
 
     private Vector3 _positionCurrentTile;
     private Vector3 _positionNextTile;
-    private Vector3 _positionLast;
 
-    private int Price { get; set; } = 1300;
-    private int Quantity { get; set; } = 0;
-    private int UsageFrequency { get; set; } = 3;
-    private int Turns { get; set; } = 3;
+    protected override int Price { get; set; } = 1300;
+    protected override int Quantity { get; set; } = 0;
+    protected override int UsageFrequency { get; set; } = 3;
+    protected override int Turns { get; set; } = 3;
 
-    private string Title { get; set; } = "Dodge";
-    private string Ability { get; set; } = "Avoid next incoming attacks for 3 turn.";
-
-    public event Action onDodge;
+    protected override string Title { get; set; } = "Dodge";
+    protected override string Ability { get; set; } = "Avoid next incoming attacks for 3 turn.";
 
 
 
 
 
-    private void Awake() => _iPlayerAbility = this;
+    protected virtual void FixedUpdate() => Conditions<bool>.Compare(IsAbilityActive, () => UseAbility(), null);
 
-    private void Start()
+    protected override void OnAbilitySelect(DropBoxItemType dropBoxItemType, object[] data)
     {
-        GameSceneObjectsReferences.DropBoxSelectionPanelPlayerAbilities[(int)_abilitiesOrders].Initialize(_iPlayerAbility, Title, Ability, Price, Quantity, UsageFrequency, Turns);
-    }
-
-    private void OnEnable()
-    {
-        DropBoxSelectionHandler.onItemSelect += OnDropBoxItemSelect;
-
-        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
-    }
-
-    private void FixedUpdate()
-    {
-        if (_isActive)
+        if (dropBoxItemType == DropBoxItemType.Ability && (IPlayerAbility)data[0] == _iPlayerAbility)
         {
-            if (!_isDodged && _isOpponentsTurn && ProjectileDistane() < 5)
-                Dodge();
+            IsAbilityActive = true;
+
+            UsedTime = 0;
+
+            print($"Dodge is activated!"); 
         }
     }
 
-    private void OnDropBoxItemSelect(DropBoxItemType dropBoxItemType, object[] data)
+    protected override void UseAbility(object[] data = null)
     {
-        if(dropBoxItemType == DropBoxItemType.Ability && (IPlayerAbility)data[0] == _iPlayerAbility)
+        bool canUseDodgeAbility = !_isDodged && _isOpponentsTurn && ProjectileDistane() < 2.5f;
+
+        if (canUseDodgeAbility)
         {
-            _isActive = true;
+            SetMeshesActive(false);
 
-            print($"Dodge is activated!");
+            transform.position = _positionNextTile;
 
-            //Extend this
-            //Attach script to offline player 
+            _isDodged = true;
         }
     }
 
-    private void Dodge()
+    protected override void OnTurnChanged(TurnState turnState)
     {
-        SetMeshesActive(false);
+        if (IsAbilityActive)
+        {
+            OnMyTurn();
 
-        transform.position = _positionNextTile; 
-        
-        _isDodged = true; 
-    }
+            OnOpponentTurn(turnState);
+
+            OnOtherTurn(turnState);
+        }
+    }    
 
     private void SetMeshesActive(bool isActive)
     {
@@ -96,21 +77,9 @@ public class AbilityDodge : MonoBehaviour, IPlayerAbility
         if (_meshes == null)
             return;
 
-        onDodge?.Invoke();
+        RaiseAbilityEvent();
 
         GlobalFunctions.Loop<MeshRenderer>.Foreach(_meshes, meshes => { meshes.gameObject.SetActive(isActive); });
-    }
-
-    private void OnTurnChanged(TurnState turnState)
-    {
-        if (_isActive)
-        {
-            OnMyTurn();
-
-            OnOpponentTurn(turnState);
-
-            OnOtherTurn(turnState);
-        }
     }
 
     private void OnMyTurn()
@@ -129,8 +98,6 @@ public class AbilityDodge : MonoBehaviour, IPlayerAbility
         {
             StartCoroutine(RunIterations());
 
-            GetLastPosition();
-
             _isOpponentsTurn = true;
         }
     }
@@ -147,20 +114,16 @@ public class AbilityDodge : MonoBehaviour, IPlayerAbility
 
         if (_isDodged)
         {
-            SetMeshesActive(true);
-
             if (GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(_positionCurrentTile - new Vector3(0, 0.5f, 0)))
-            {
                 transform.position = _positionCurrentTile + new Vector3(0, 0.5f, 0);
 
-                //transform.position = _positionLast;
-            }
-            
+            SetMeshesActive(true);
+
+            DeactivateAbilityAfterLimit();
+
             _isDodged = false;
         }
     }
-
-    private void GetLastPosition() => _positionLast = transform.position;
 
     private void GetProjectile() => _projectile = FindObjectOfType<BaseBulletController>();
 

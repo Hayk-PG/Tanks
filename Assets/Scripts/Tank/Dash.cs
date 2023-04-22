@@ -23,7 +23,7 @@ public class Dash : MonoBehaviour
         _baseShootController.OnDash += OnDash;
 
         if (_abilityDodge != null)
-            _abilityDodge.onDodge += PlayParticles;
+            _abilityDodge.onAbilityActive += delegate { PlayParticles(); };
     }
 
     private void OnDash(float direction)
