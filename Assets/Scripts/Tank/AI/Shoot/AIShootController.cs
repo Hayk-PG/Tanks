@@ -282,6 +282,8 @@ public class AIShootController : BaseShootController
 
             _rigidBody.AddForce(transform.forward * _target.magnitude * _shoot._rigidbodyForceMultiplier, ForceMode.Impulse);
 
+            GameSceneObjectsReferences.MainCameraController.GetProjectileRigidbody(baseBulletController.RigidBody);
+
             //GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, baseBulletController.RigidBody, 5, null);
 
             _currentTrajectoryTime = _defaultTrajectoryTime;

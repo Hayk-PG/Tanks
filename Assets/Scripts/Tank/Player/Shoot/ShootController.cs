@@ -245,6 +245,8 @@ public class ShootController : BaseShootController, IEndGame
 
         GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = Bullet;
 
+        GameSceneObjectsReferences.MainCameraController.GetProjectileRigidbody(Bullet.RigidBody);
+
         //GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, 5, null);
     }
 

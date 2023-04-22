@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class MainCameraController : MonoBehaviour
 {
@@ -16,12 +17,16 @@ public class MainCameraController : MonoBehaviour
 
     [SerializeField] [Space]
     private float _smoothTime, _maxTime;
+    [SerializeField] [Space]
+    private float _smoothTimeExtraVerticalPosition, _maxTimeExtraVerticalPosition;
     private float _currentVelocityfloat;
+    private float _currentExtraVerticalPositionVelocity;
     private float _ortographicSize;  
     private float _minPosX, _maxPosX, _newPosX;
     [SerializeField] [Space]
     private float _yDefaultPosition;
     private float _yPosition;
+    private float _yExtraPosition;
     private float _desiredHeightOffset = 0;
 
     private bool _isLocked;
@@ -121,7 +126,7 @@ public class MainCameraController : MonoBehaviour
     {
         if (PlayersInitialized)
         {
-            Vector3 targetPosition = new Vector3(Center.x, Center.y + _yPosition, _rb.position.z);
+            Vector3 targetPosition = new Vector3(Center.x, Center.y + _yPosition + _yExtraPosition, _rb.position.z);
 
             Vector3 smoothPosition = Vector3.SmoothDamp(_rb.position, targetPosition, ref _currentVelocity, _smoothTime, _maxTime);
 
@@ -171,6 +176,24 @@ public class MainCameraController : MonoBehaviour
         SetVerticalPos(_yDefaultPosition);
 
         DesiredHeightOffset(0);
+    }
+
+    public void GetProjectileRigidbody(Rigidbody rigidbody) => StartCoroutine(FollowProjectileVerticalPosition(rigidbody));
+
+    private IEnumerator FollowProjectileVerticalPosition(Rigidbody rigidbody)
+    {
+        while(rigidbody != null && rigidbody.velocity.y > 0)
+        {
+            //_yExtraPosition = Mathf.Lerp(_yExtraPosition, rigidbody.position.y, 1 * Time.deltaTime);
+
+            //_yExtraPosition += (Mathf.Abs(rigidbody.position.y) - _yExtraPosition) * Time.deltaTime;
+
+            _yExtraPosition = Mathf.SmoothDamp(_yExtraPosition, rigidbody.position.y, ref _currentExtraVerticalPositionVelocity, _smoothTimeExtraVerticalPosition, _maxTimeExtraVerticalPosition);
+
+            yield return null;
+        }
+
+        _yExtraPosition = 0;
     }
 
     public void CameraOffset(PlayerTurn playerTurn, Rigidbody target, float? yOffset, float? desiredHeightOffset, CameraUser cameraUser = CameraUser.None, bool isLocked = false)
