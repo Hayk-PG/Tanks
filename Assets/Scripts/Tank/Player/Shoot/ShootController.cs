@@ -245,7 +245,7 @@ public class ShootController : BaseShootController, IEndGame
 
         GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = Bullet;
 
-        GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, -1, null);
+        //GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, 5, null);
     }
 
     public virtual void LaunchRocket(int id)

@@ -133,7 +133,7 @@ public class MainCameraController : MonoBehaviour
     {
         if (PlayersInitialized)
         {
-            _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + _desiredHeightOffset, ref _currentVelocityfloat, _smoothTime, _maxTime);
+            _ortographicSize = Mathf.SmoothDamp(_camera.orthographicSize, DesiredHeight + (Vector3.Distance(new Vector3(0, Point1().y, 0), new Vector3(0, Point2().y, 0))) / 2, ref _currentVelocityfloat, _smoothTime, _maxTime);
 
             _camera.orthographicSize = Mathf.Clamp(_ortographicSize, 2, 10);
 
