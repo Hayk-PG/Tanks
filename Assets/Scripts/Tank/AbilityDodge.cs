@@ -21,13 +21,8 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
     private Vector3 _positionCurrentTile;
     private Vector3 _positionNextTile;
 
-    protected override int Price { get; set; } = 1300;
-    protected override int Quantity { get; set; } = 0;
-    protected override int UsageFrequency { get; set; } = 3;
-    protected override int Turns { get; set; } = 3;
-
-    protected override string Title { get; set; } = "Dodge";
-    protected override string Ability { get; set; } = "Avoid next incoming attacks for 3 turn.";
+    protected override string Title => "Dodge";
+    protected override string Ability => $"Avoid incoming attacks for {Turns} turn.";
 
 
 

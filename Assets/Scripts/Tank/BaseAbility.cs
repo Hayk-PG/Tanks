@@ -13,17 +13,19 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility
 
     protected IPlayerAbility _iPlayerAbility;
 
-    protected virtual bool IsAbilityActive { get; set; } = false;
+    [SerializeField] [Space]
+    protected int _price, _quantity, _usageFrequency, _turns;
 
+    protected virtual bool IsAbilityActive { get; set; } = false;
+    
+    protected virtual int Price => _price;
+    protected virtual int Quantity => _quantity;
+    protected virtual int UsageFrequency => _usageFrequency;
+    protected virtual int Turns => _turns;
     protected virtual int UsedTime { get; set; } = 0;
 
-    protected abstract int Price { get; set; }
-    protected abstract int Quantity { get; set; }
-    protected abstract int UsageFrequency { get; set; }
-    protected abstract int Turns { get; set; }
-
-    protected abstract string Title { get; set; }
-    protected abstract string Ability { get; set; }
+    protected abstract string Title { get; }
+    protected abstract string Ability { get; }
 
     public event Action<object[]> onAbilityActive;
 
