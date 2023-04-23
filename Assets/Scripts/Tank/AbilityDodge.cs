@@ -7,6 +7,9 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
     [SerializeField] [Space]
     private Rigidbody _rigidbody;
 
+    [SerializeField] [Space]
+    private Transform _shootPoint;
+
     private BaseBulletController _projectile;
 
     private MeshRenderer[] _meshes;
@@ -14,6 +17,7 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
     private bool _isDodged;
     private bool _isOpponentsTurn;
 
+    private Vector3 _shootPointDefaultPosition;
     private Vector3 _positionCurrentTile;
     private Vector3 _positionNextTile;
 
@@ -28,6 +32,14 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
 
 
 
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _shootPointDefaultPosition = _shootPoint.localPosition;
+    }
 
     protected virtual void FixedUpdate() => Conditions<bool>.Compare(IsAbilityActive, () => UseAbility(), null);
 
@@ -50,6 +62,8 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
         if (canUseDodgeAbility)
         {
             SetMeshesActive(false);
+
+            SetShootPointLocalPosition(true);
 
             transform.position = _positionNextTile;
 
@@ -81,6 +95,8 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
 
         GlobalFunctions.Loop<MeshRenderer>.Foreach(_meshes, meshes => { meshes.gameObject.SetActive(isActive); });
     }
+
+    protected virtual void SetShootPointLocalPosition(bool isAbilityActive) => _shootPoint.localPosition = isAbilityActive ? new Vector3(0, 1000, 0) : _shootPointDefaultPosition;
 
     private void OnMyTurn()
     {
@@ -118,6 +134,8 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
                 transform.position = _positionCurrentTile + new Vector3(0, 0.5f, 0);
 
             SetMeshesActive(true);
+
+            SetShootPointLocalPosition(false);
 
             DeactivateAbilityAfterLimit();
 
