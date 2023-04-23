@@ -44,21 +44,41 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility
         GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
-    protected abstract void OnAbilitySelect(DropBoxItemType dropBoxItemType, object[] data);
+    protected virtual void OnAbilitySelect(DropBoxItemType dropBoxItemType, object[] data)
+    {
+        if (dropBoxItemType == DropBoxItemType.Ability && (IPlayerAbility)data[0] == _iPlayerAbility)
+            OnAbilityActivated();
+    }
 
-    protected abstract void UseAbility(object[] data = null);
+    protected virtual void OnAbilityActivated(object[] data = null)
+    {
+        IsAbilityActive = true;
+
+        UsedTime = 0;
+
+        print($"{Title} is activated!");
+    }
 
     protected virtual void DeactivateAbilityAfterLimit()
     {
         UsedTime++;
 
-        print($"{name}: {UsedTime}/{UsageFrequency}");
+        print($"{name}: {UsedTime}/{Turns}");
 
-        if (UsedTime >= UsageFrequency)
-            IsAbilityActive = false;
+        if (UsedTime >= Turns)
+        {
+            OnAbilityDeactivated();
+
+            return;
+        }
     }
 
-    protected abstract void OnTurnChanged(TurnState turnState);
+    protected virtual void OnAbilityDeactivated() => IsAbilityActive = false;
+
+    protected virtual void OnTurnChanged(TurnState turnState)
+    {
+
+    }
 
     protected virtual void RaiseAbilityEvent(object[] data = null) => onAbilityActive?.Invoke(data);
 }

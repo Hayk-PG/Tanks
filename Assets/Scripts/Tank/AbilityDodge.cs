@@ -36,21 +36,9 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
         _shootPointDefaultPosition = _shootPoint.localPosition;
     }
 
-    protected virtual void FixedUpdate() => Conditions<bool>.Compare(IsAbilityActive, () => UseAbility(), null);
+    private void FixedUpdate() => Conditions<bool>.Compare(IsAbilityActive, () => UseAbility(), null);
 
-    protected override void OnAbilitySelect(DropBoxItemType dropBoxItemType, object[] data)
-    {
-        if (dropBoxItemType == DropBoxItemType.Ability && (IPlayerAbility)data[0] == _iPlayerAbility)
-        {
-            IsAbilityActive = true;
-
-            UsedTime = 0;
-
-            print($"Dodge is activated!"); 
-        }
-    }
-
-    protected override void UseAbility(object[] data = null)
+    private void UseAbility(object[] data = null)
     {
         bool canUseDodgeAbility = !_isDodged && _isOpponentsTurn && ProjectileDistane() < 2.5f;
 
@@ -76,7 +64,7 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
 
             OnOtherTurn(turnState);
         }
-    }    
+    }
 
     private void SetMeshesActive(bool isActive)
     {
@@ -91,7 +79,7 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
         GlobalFunctions.Loop<MeshRenderer>.Foreach(_meshes, meshes => { meshes.gameObject.SetActive(isActive); });
     }
 
-    protected virtual void SetShootPointLocalPosition(bool isAbilityActive) => _shootPoint.localPosition = isAbilityActive ? new Vector3(0, 1000, 0) : _shootPointDefaultPosition;
+    private void SetShootPointLocalPosition(bool isAbilityActive) => _shootPoint.localPosition = isAbilityActive ? new Vector3(0, 1000, 0) : _shootPointDefaultPosition;
 
     private void OnMyTurn()
     {
