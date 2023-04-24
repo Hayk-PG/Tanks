@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
-using UnityEngine.AddressableAssets;
-using System;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Animator))]
 
-//ADDRESSABLE
 public class ExternalSoundSource : MonoBehaviour
 {
-    public enum PlayMode { OnAwake, OnEnable, OnStart, OnReference}
+    public enum SoundControllerType { SoundController, SecondarySoundController, ExplosionSoundController, UiSoundController}
+    public enum PlayMode { OnAwake, OnEnable, OnStart}
+
+    [SerializeField]
+    private SoundControllerType _soundControllerType;
+
+    [SerializeField] [Space]
+    private PlayMode _playMode;
 
     [SerializeField] [Space]
     private AudioSource _audioSource;
@@ -17,25 +21,20 @@ public class ExternalSoundSource : MonoBehaviour
     private Animator _animator;
 
     [SerializeField] [Space]
-    private AssetReferenceAudioClip _assetReferenceClip;
-
-    [SerializeField] [Space]
-    private PlayMode _playMode;
+    private int _collectionIndex, _clipIndex;
 
     [SerializeField] [Space]
     private bool _isDestroyable, _dontPlayAnimation;
 
     
-
+    
 
 
     private void Awake()
     {
-        _audioSource = Get<AudioSource>.From(gameObject);
+        OnMute(SoundController.IsSoundMuted);
 
-        _animator = Get<Animator>.From(gameObject);
-
-        _audioSource.mute = SoundController.IsSoundMuted;
+        LoadAudioClip();
 
         Play(PlayMode.OnAwake);
     }
@@ -44,48 +43,45 @@ public class ExternalSoundSource : MonoBehaviour
 
     private void OnEnable()
     {
-        Play(PlayMode.OnEnable);
-
         SoundController.onAudioSourceMute += OnMute;
+
+        Play(PlayMode.OnEnable);
     }
 
     private void OnDisable() => SoundController.onAudioSourceMute -= OnMute;
 
-    private void OnDestroy() => ReleaseAsset();
-
-    private void LoadClipAndPlay()
+    private void LoadAudioClip()
     {
-        if (String.IsNullOrEmpty(_assetReferenceClip.AssetGUID))
+        switch (_soundControllerType)
         {
-            SetClipAndPlay();
+            case SoundControllerType.SoundController:
+                
+                AssignAudioClip(SoundController.Instance.SoundsList[_collectionIndex]._clips[_clipIndex]._clip);
+                break;
 
-            print($"ExternalSoundSource is not using addressables: / {transform.parent?.name}");
+            case SoundControllerType.SecondarySoundController:
 
-            return;
+                AssignAudioClip(SecondarySoundController.Clips[_collectionIndex]._clips[_clipIndex]);
+                break;
+
+            case SoundControllerType.ExplosionSoundController:
+
+                AssignAudioClip(ExplosionsSoundController.Clips[_collectionIndex]._clips[_clipIndex]);
+                break;
+
+            case SoundControllerType.UiSoundController:
+
+                AssignAudioClip(UISoundController.Clips[_collectionIndex]._clips[_clipIndex]);
+                break;
         }
-
-        if (_assetReferenceClip.IsValid())
-            SetClipAndPlay((AudioClip)_assetReferenceClip.OperationHandle.Result);
-        else
-            _assetReferenceClip.LoadAssetAsync().Completed += asset => { SetClipAndPlay(asset.Result); };
     }
 
-    private void SetClipAndPlay(AudioClip audioClip = null)
+    private void AssignAudioClip(AudioClip audioClip)
     {
-        if (audioClip != null)
-            _audioSource.clip = audioClip;
-
-        _audioSource.Play();
-    }
-
-    private void ReleaseAsset()
-    {
-        if (String.IsNullOrEmpty(_assetReferenceClip.AssetGUID))
+        if (audioClip == null)
             return;
 
-        if (_assetReferenceClip.IsValid())
-            _assetReferenceClip.ReleaseAsset();
-
+        _audioSource.clip = audioClip;
     }
 
     private void OnMute(bool isMuted) => _audioSource.mute = isMuted;
@@ -94,10 +90,21 @@ public class ExternalSoundSource : MonoBehaviour
     {
         if (playMode == _playMode)
         {
-            LoadClipAndPlay();
+            _audioSource.Play();
 
             PlayAnimation(true);
         }
+    }
+
+    private void PlayAnimation(bool play = false)
+    {
+        if (_dontPlayAnimation)
+            return;
+
+        if (play)
+            _animator.SetTrigger("play");
+        else
+            _animator.SetTrigger("stop");
     }
 
     public void Stop(bool unparent, bool stop = false)
@@ -113,25 +120,6 @@ public class ExternalSoundSource : MonoBehaviour
 
     public void OnAnimationEnd()
     {
-        if (_isDestroyable)
-            DestroyGameobject();
-    }
-
-    private void PlayAnimation(bool play)
-    {
-        if (_dontPlayAnimation)
-            return;
-
-        if (play)
-            _animator.SetTrigger("play");
-        else
-            _animator.SetTrigger("stop");
-    }
-
-    private void DestroyGameobject()
-    {
-        ReleaseAsset();
-
-        Destroy(gameObject);
+        
     }
 }
