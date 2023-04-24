@@ -612,6 +612,7 @@ GameObject:
   - component: {fileID: 7687926300055572910}
   - component: {fileID: 5807344742463515218}
   - component: {fileID: 9064884703340809528}
+  - component: {fileID: 3698825555466651088}
   m_Layer: 10
   m_Name: (AI) Tank
   m_TagString: AI
@@ -788,6 +789,7 @@ MonoBehaviour:
   _brakeOnNormal: 500
   _brakeOnRain: 50
   _brakeOnSnow: 25
+  fuelConsumptionPercent: 0
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
 --- !u!114 &9016647994722164227
 MonoBehaviour:
@@ -898,6 +900,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6056d41e9ee3c744581746f2d0158bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3698825555466651088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7732026768825822125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eb3a264d39ad4d66914091c38156b7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7732026769330850872
