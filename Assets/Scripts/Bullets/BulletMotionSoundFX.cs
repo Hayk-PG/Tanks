@@ -9,65 +9,94 @@ public class BulletMotionSoundFX : MonoBehaviour
     [SerializeField] [Space]
     private Rigidbody _rigidbody;
 
-    [SerializeField] [Space]
-    private float _volume;
+    //SecondarySoundController falling sound clips
+    [Tooltip("SecondarySoundController falling sound clips")] [SerializeField] [Space]
+    private int _clipIndex;
+
+    private float _volume = 1;
 
     [SerializeField] [Space]
-    private bool _noVolumeControlling;
+    private bool _notVelocityBased, _isDynamic, _isLoop;
 
-    private bool _isSoundPlayed;
-
-
+    private bool _isCoroutineStarted;
 
 
-    private void Start() => PlayOnShot();
 
-    private void FixedUpdate() => PlaySoundOnDescending();
 
-    private void PlayOnShot()
+
+    private void Awake()
     {
-        if (_noVolumeControlling)
-            StartCoroutine(PlayOnShotCoroutine());
+        _audioSrc.clip = SecondarySoundController.Clips[2]._clips[_clipIndex < 2 ? 2 : _clipIndex];
     }
 
-    private void PlaySoundOnDescending()
+    private void FixedUpdate()
     {
-        if (!_noVolumeControlling && _rigidbody != null && _rigidbody.velocity.y < 0 && !_isSoundPlayed)
+        if (!_isCoroutineStarted)
         {
-            StartCoroutine(PlaySoundOnDescendingCoroutine());
+            StartCoroutine(Play());
 
-            _isSoundPlayed = true;
+            _isCoroutineStarted = true;
         }
     }
 
-    private IEnumerator PlayOnShotCoroutine()
+    private IEnumerator Play()
     {
-        _audioSrc.enabled = true;
-        _audioSrc.loop = true;
+        yield return StartCoroutine(PlayIndependentAudioClip());
+        yield return StartCoroutine(PlayVelocityBasedAudioClip());
+    }
+
+    // Suitable for short loop audio clips.
+    private IEnumerator PlayIndependentAudioClip()
+    {
+        if (!_notVelocityBased)
+            yield break;
+
         _audioSrc.Play();
+        _audioSrc.loop = _isLoop;
 
         while (!SoundController.IsSoundMuted)
         {
-            _audioSrc.volume = 1;
-
             yield return null;
         }
 
         _audioSrc.mute = true;
     }
 
-    private IEnumerator PlaySoundOnDescendingCoroutine()
+    // Suitable for long audio clips.
+    private IEnumerator PlayVelocityBasedAudioClip()
     {
-        _audioSrc.enabled = true;
-        _audioSrc.Play();
+        if (_notVelocityBased)
+            yield break;
 
-        while (_volume > 0.05f && !SoundController.IsSoundMuted)
+        if (_rigidbody == null)
+            yield break;
+
+        _audioSrc.loop = _isLoop;
+
+        bool isPlayed = false;
+
+        while (_volume > 0.1f && !SoundController.IsSoundMuted)
         {
-            _volume -= 0.5f * Time.deltaTime;
+            if (_rigidbody.velocity.y < 0)
+            {
+                if (!isPlayed)
+                {
+                    _audioSrc.Play();
 
-            _audioSrc.volume = _volume;
+                    isPlayed = true;
+                }
+
+                if (_isDynamic)
+                {
+                    _volume -= 0.5f * Time.deltaTime;
+
+                    _audioSrc.volume = _volume;
+                }
+            }
 
             yield return null;
         }
+
+        _audioSrc.mute = true;
     }
 }

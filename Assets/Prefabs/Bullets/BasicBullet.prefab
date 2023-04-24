@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e562cbcaafe1b0943b9f39c779c9d4b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dontDestroyOnTimeLimit: 0
+  _rigidbody: {fileID: 0}
 --- !u!114 &957142614107478491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,8 +125,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314de377ae1d4ee489a67986af0a51a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseBulletController: {fileID: 0}
   _destructDamage: 19
   _tileParticleIndex: 1000
+  _bulletSensor: {fileID: 0}
 --- !u!114 &6634318501530076048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +141,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a26af5fc1e80bb14288cc7fda3b663e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseBulletVelocity: {fileID: 0}
+  _baseBulletCollision: {fileID: 0}
+  _dontDestroyOnTimeLimit: 0
+  _baseBulletController: {fileID: 0}
 --- !u!114 &3305094699231359355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -561,18 +567,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2736938696367441883, guid: 0273878734653874a86f0ff1654bb8d3,
         type: 3}
-      propertyPath: _volume
-      value: 0.4
-      objectReference: {fileID: 0}
+      propertyPath: _rigidbody
+      value: 
+      objectReference: {fileID: 465195278674726440}
     - target: {fileID: 3387799501024452718, guid: 0273878734653874a86f0ff1654bb8d3,
         type: 3}
       propertyPath: m_Name
       value: BulletMotionSoundFX
-      objectReference: {fileID: 0}
-    - target: {fileID: 5651784162578890739, guid: 0273878734653874a86f0ff1654bb8d3,
-        type: 3}
-      propertyPath: m_Pitch
-      value: 0.73
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0273878734653874a86f0ff1654bb8d3, type: 3}

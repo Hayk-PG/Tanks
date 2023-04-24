@@ -22,7 +22,7 @@ public class InstantiatePickables : MonoBehaviourPun
     {
         GetPlayers();
 
-        StartCoroutine(InstantiateCoroutine());
+        //StartCoroutine(InstantiateCoroutine());
     }
 
     private void GetPlayers()

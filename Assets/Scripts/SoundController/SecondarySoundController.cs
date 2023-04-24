@@ -8,7 +8,7 @@ public class SecondarySoundController : MonoBehaviour
     private AudioSource _audioSRC;
 
     [Serializable]
-    private struct ClipsList
+    public struct ClipsList
     {
         [SerializeField]
         private string _title;
@@ -18,6 +18,8 @@ public class SecondarySoundController : MonoBehaviour
 
     [SerializeField]
     private ClipsList[] _clipsList;
+
+    public static ClipsList[] Clips => Instance._clipsList;
 
 
 
