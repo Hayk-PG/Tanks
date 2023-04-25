@@ -37,6 +37,8 @@ public class Tab_DropBoxItemSelection : MonoBehaviour, IHudTabsObserver, IEndGam
 
         ResetCustomScrollRect(isActive);
 
+        PlaySoundFX(isActive);
+
         onDropBoxItemSelectionTabActivity?.Invoke(isActive);
     }
 
@@ -46,6 +48,12 @@ public class Tab_DropBoxItemSelection : MonoBehaviour, IHudTabsObserver, IEndGam
             return;
 
         _customScrollRect.SetDefault();
+    }
+
+    private void PlaySoundFX(bool isActive)
+    {
+        if (isActive)
+            UISoundController.PlaySound(1, 6);
     }
 
     public void OnGameEnd(object[] data = null)
