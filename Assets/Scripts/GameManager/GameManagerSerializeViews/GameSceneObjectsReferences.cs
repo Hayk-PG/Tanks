@@ -133,6 +133,12 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private GameplayAnnouncer _gamePlayAnnouncer;
 
+    [SerializeField]
+    private EnemyPlayerIcon _enemyPlayerIcon;
+
+    [SerializeField]
+    private ParachuteIcon _parachuteIcon;
+
 
 
     //GameManager
@@ -186,8 +192,8 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static Tab_RocketController TabRocketController => Instance._tabRocketController;
     public static Controllers Controllers => Instance._controllers;
     public static GameplayAnnouncer GameplayAnnouncer => Instance._gamePlayAnnouncer;
-
-
+    public static EnemyPlayerIcon EnemyPlayerIcon => Instance._enemyPlayerIcon;
+    public static ParachuteIcon ParachuteIcon => Instance._parachuteIcon;
 
     //LavaSplash
     public static LavaSplash LavaSplash { get; private set; }

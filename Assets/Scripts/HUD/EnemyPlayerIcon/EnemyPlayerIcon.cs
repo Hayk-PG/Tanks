@@ -1,59 +1,16 @@
 ﻿using UnityEngine;
 
-public class EnemyPlayerIcon : MonoBehaviour
+public class EnemyPlayerIcon : BaseOutOfBoundsIndicator
 {
-    private RectTransform _rectTransform;
-    public Transform EnemyPlayer { get; set; }
-    private Vector2 Size
-    {
-        get => _rectTransform.sizeDelta;
-    }
-    private Vector2 FaceDirection
-    {
-        get => _rectTransform.localScale;
-        set => _rectTransform.localScale = value;
-    }  
-    private struct Temp
-    {
-        internal Vector2 _iconMovementPosition;
-        internal float _x, _y; 
-    }
-    private Temp _temp;
+    private void FixedUpdate() => ControlMovement();
 
-    private CanvasGroup _canvasGroup;
-    private HUDBounds _hudBounds;
-
-
-    private void Awake()
+    public override void Init(Transform target)
     {
-        _rectTransform = Get<RectTransform>.From(gameObject);
-        _canvasGroup = Get<CanvasGroup>.From(gameObject);
-        _hudBounds = Get<HUDBounds>.From(gameObject);
-    }
+        if (target == null)
+            return;
 
-    private void Update()
-    {
-        IconMovement();
-    }
+        FaceDirection = target.name == Names.Tank_FirstPlayer ? new Vector2(-1, 1) : new Vector2(1, 1);
 
-    public void SetInitialCoordinates(Transform enemyPlayer)
-    {
-        if(enemyPlayer != null)
-        {
-            FaceDirection = enemyPlayer.name == Names.Tank_FirstPlayer ? new Vector2(-1, 1): new Vector2(1, 1);
-            EnemyPlayer = enemyPlayer;
-        }
-    }
-
-    public void IconMovement()
-    {
-        if(EnemyPlayer != null)
-        {
-            _temp._iconMovementPosition = CameraSight.ScreenPoint(EnemyPlayer.position);
-            _temp._x = Mathf.Clamp(_temp._iconMovementPosition.x, _hudBounds._canvasPixelRectMin.x + Size.x, _hudBounds._canvasPixelRectMax.x - Size.x);
-            _temp._y = Mathf.Clamp(_temp._iconMovementPosition.y, -_hudBounds._canvasPixelRectMin.y + Size.y, _hudBounds._canvasPixelRectMax.y - Size.y);
-            transform.position = new Vector2(_temp._x, _temp._y);
-            GlobalFunctions.CanvasGroupActivity(_canvasGroup, !CameraSight.IsInCameraSight(EnemyPlayer.position));
-        }
+        Target = target;
     }
 }

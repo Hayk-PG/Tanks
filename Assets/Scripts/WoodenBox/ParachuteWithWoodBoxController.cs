@@ -30,6 +30,7 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
 
 
+
     private void Awake()
     {
         _gravity = delegate { return 30 * Time.fixedDeltaTime; };
@@ -37,7 +38,12 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
         DestroyGameobjectFunction = MyPhotonNetwork.IsOfflineMode ? DestroyGameobject : DestroyGameobjectRPC;
     }
 
-    private void Start() => DestroyAfterDelay();
+    private void Start()
+    {
+        DestroyAfterDelay();
+
+        GameSceneObjectsReferences.ParachuteIcon.Init(transform);
+    }
 
     private void OnEnable() => _parachuteWithWoodBoxCollision.onCollisionEnter += OnCollision;
 
