@@ -1,17 +1,34 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using System;
+using System.Collections;
 
 
+//ADDRESSABLE
 public class AbilityCloak : BaseAbility
 {
+    [Serializable]
+    private class AssetReferenceData
+    {
+        public AssetReference _assetReferenceParticles;
+        public Vector3 localPosition;
+        public Vector3 localScale;
+    }
+
     [SerializeField] [Space]
     private BaseShootController _baseShootController;
+
+    [SerializeField] [Space]
+    private AssetReferenceData _assetReferenceData; // Note: When assigning this asset in the inspector, make sure to also set its local position and local scale accordingly.
+
+    private Transform[] _transforms;
+
+    private ParticleSystem _particles; // Cached on Addressable instantiate
 
     private int[] _defaultLayers;
 
     private object[] _active = new object[] { true };
     private object[] _inactive = new object[] { false };
-
-    private Transform[] _transforms;
 
     protected override string Title => "Cloak";
     protected override string Ability => $"Become invisible for {Turns} turn.";
@@ -19,6 +36,13 @@ public class AbilityCloak : BaseAbility
 
 
 
+
+    protected override void Start()
+    {
+        base.Start();
+
+        InstantiateParticlesAsync();
+    }
 
     protected override void OnAbilityActivated(object[] data = null)
     {
@@ -44,26 +68,39 @@ public class AbilityCloak : BaseAbility
         RaiseAbilityEvent(_inactive);
     }
 
+    private void InstantiateParticlesAsync()
+    {
+        if (_assetReferenceData == null)
+            return;
+
+        _assetReferenceData._assetReferenceParticles.InstantiateAsync(transform).Completed += asset =>
+        {
+            _particles = Get<ParticleSystem>.From(asset.Result);
+            _particles.transform.localPosition = _assetReferenceData.localPosition;
+            _particles.transform.localScale = _assetReferenceData.localScale;
+        };
+    }
+
     private void SetInvisible(bool isInvisible)
     {
         if (_transforms == null)
         {
-            GetTransforms();
+            GetAllChildTransforms();
 
-            CacheDefaultLayers();
+            CacheDefaultLayersRecursively();
         }
 
         if (_transforms == null && _defaultLayers == null)
             return;
 
-        ChangeLayers(isInvisible);
+        StartCoroutine(PlayParticleAndHide(isInvisible));
 
         SetLayersDefault(isInvisible);
     }
 
-    private  void GetTransforms() => _transforms = GetComponentsInChildren<Transform>(true);
+    private  void GetAllChildTransforms() => _transforms = GetComponentsInChildren<Transform>(true);
 
-    private void CacheDefaultLayers()
+    private void CacheDefaultLayersRecursively()
     {
         _defaultLayers = new int[_transforms.Length + 1];
 
@@ -71,7 +108,7 @@ public class AbilityCloak : BaseAbility
         {
             int index = i + 1;
 
-            if(i < 0)
+            if (IsIterationEmpty(i))
             {
                 _defaultLayers[index] = transform.gameObject.layer;
 
@@ -82,6 +119,22 @@ public class AbilityCloak : BaseAbility
         }
     }
 
+    private IEnumerator PlayParticleAndHide(bool isInvisible)
+    {
+        if (_particles == null)
+        {
+            ChangeLayers(isInvisible);
+
+            yield break;
+        }
+
+        yield return null;
+
+        PlayParticles();
+
+        ChangeLayers(isInvisible);
+    }
+
     private void ChangeLayers(bool isInvisible)
     {
         if (!isInvisible)
@@ -89,12 +142,15 @@ public class AbilityCloak : BaseAbility
 
         for (int i = -1; i < _transforms.Length; i++)
         {
-            if(i < 0)
+            if (IsIterationEmpty(i))
             {
                 transform.gameObject.layer = 12;
 
                 continue;
             }
+
+            if (IsParticlesTransform(_transforms[i]))
+                continue;
 
             _transforms[i].gameObject.layer = 12;
         }
@@ -105,18 +161,35 @@ public class AbilityCloak : BaseAbility
         if (isInvisible)
             return;
 
+        PlayParticles();
+
         for (int i = -1; i < _transforms.Length; i++)
         {
             int index = i + 1;
 
-            if(i < 0)
+            if (IsIterationEmpty(i))
             {
                 transform.gameObject.layer = _defaultLayers[index];
 
                 continue;
             }
 
+            if (IsParticlesTransform(_transforms[i]))
+                continue;
+
             _transforms[i].gameObject.layer = _defaultLayers[index];
         }
     }
+
+    private bool IsIterationEmpty(int i)
+    {
+        return i < 0;
+    }
+
+    private bool IsParticlesTransform(Transform transform)
+    {
+        return transform == _particles?.transform || transform.IsChildOf(_particles?.transform);
+    }
+
+    private void PlayParticles() => _particles.Play(true);
 }

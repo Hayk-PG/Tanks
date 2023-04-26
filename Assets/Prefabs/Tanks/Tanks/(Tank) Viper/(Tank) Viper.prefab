@@ -640,7 +640,6 @@ GameObject:
   - component: {fileID: 8928546144712614119}
   - component: {fileID: 4626187521478387294}
   - component: {fileID: 1328918425193716112}
-  - component: {fileID: 7473517453377897356}
   m_Layer: 9
   m_Name: (Tank) Viper
   m_TagString: Player
@@ -943,6 +942,14 @@ MonoBehaviour:
   _usageFrequency: 1
   _turns: 5
   _baseShootController: {fileID: -1463280264785166630}
+  _assetReferenceData:
+    _assetReferenceParticles:
+      m_AssetGUID: 5ddfbf7547bdf4f4dbf79efa9729e937
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    localPosition: {x: 0, y: -0.82, z: 0}
+    localScale: {x: 5, y: 5, z: 5}
 --- !u!114 &4626187521478387294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -964,18 +971,6 @@ MonoBehaviour:
   _rigidbody: {fileID: -8914335130417401845}
   _shootPoint: {fileID: 3045319008272278512}
 --- !u!114 &1328918425193716112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8630744161122963453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2eb3a264d39ad4d66914091c38156b7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7473517453377897356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1271,6 +1266,11 @@ PrefabInstance:
       objectReference: {fileID: 6444394097005110602}
     - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
         type: 3}
+      propertyPath: _uniqueAssets.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
+        type: 3}
       propertyPath: _transformWheels.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -1321,8 +1321,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
         type: 3}
+      propertyPath: _uniqueAssets.Array.data[0].parent
+      value: 
+      objectReference: {fileID: 7893780686837114732}
+    - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
+        type: 3}
       propertyPath: assetReferencePeripherals.Array.size
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
+        type: 3}
+      propertyPath: _uniqueAssets.Array.data[0].adjustScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
+        type: 3}
+      propertyPath: _uniqueAssets.Array.data[0].localScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
+        type: 3}
+      propertyPath: _uniqueAssets.Array.data[0].localScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
+        type: 3}
+      propertyPath: _uniqueAssets.Array.data[0].localScale.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
+        type: 3}
+      propertyPath: _uniqueAssets.Array.data[0].localPosition.y
+      value: -0.82
       objectReference: {fileID: 0}
     - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
         type: 3}
@@ -1388,6 +1418,11 @@ PrefabInstance:
         type: 3}
       propertyPath: assetReferencePeripherals.Array.data[5].m_AssetGUID
       value: bcaaa129a71f01d41b1965e01bc98dcc
+      objectReference: {fileID: 0}
+    - target: {fileID: 6922296350498535961, guid: 0ebd5babbebd2a441a47517135351696,
+        type: 3}
+      propertyPath: _uniqueAssets.Array.data[0].assetReference.m_AssetGUID
+      value: 5ddfbf7547bdf4f4dbf79efa9729e937
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ebd5babbebd2a441a47517135351696, type: 3}
