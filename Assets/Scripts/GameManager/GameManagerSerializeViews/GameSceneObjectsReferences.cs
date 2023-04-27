@@ -43,6 +43,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private PhotonNetworkMineController _photonNetworkMineController;
 
+    [SerializeField]
+    private PhotonNetworkSmokeScreenDetector _photonNetworkSmokeScreenDetector;
+
 
     [Header("Tab_Ammo")]
 
@@ -130,6 +133,15 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private GameplayAnnouncer _gamePlayAnnouncer;
 
+    [SerializeField]
+    private PlayerFeedback _playerFeedback;
+
+    [SerializeField]
+    private EnemyPlayerIcon _enemyPlayerIcon;
+
+    [SerializeField]
+    private ParachuteIcon _parachuteIcon;
+
 
 
     //GameManager
@@ -147,7 +159,8 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static WoodBoxSerializer WoodBoxSerializer => Instance._woodBoxSerializer;
     public static WoodBoxSerializeView WoodBoxSerializeView => Instance._woodBoxSerializeView;
     public static PhotonNetworkWeatherManager PhotonNetworkWeatherManager => Instance._photonNetworkWeatherManager;
-    public static PhotonNetworkMineController PhotonNetworkMineController => Instance._photonNetworkMineController;  
+    public static PhotonNetworkMineController PhotonNetworkMineController => Instance._photonNetworkMineController;
+    public static PhotonNetworkSmokeScreenDetector PhotonNetworkSmokeScreenDetector => Instance._photonNetworkSmokeScreenDetector;
 
     //Tab_Ammo
     public static Tab_WoodboxContent Tab_WoodboxContent => Instance._tabWoodboxContent;
@@ -182,8 +195,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static Tab_RocketController TabRocketController => Instance._tabRocketController;
     public static Controllers Controllers => Instance._controllers;
     public static GameplayAnnouncer GameplayAnnouncer => Instance._gamePlayAnnouncer;
-
-
+    public static PlayerFeedback PlayerFeedback => Instance._playerFeedback;
+    public static EnemyPlayerIcon EnemyPlayerIcon => Instance._enemyPlayerIcon;
+    public static ParachuteIcon ParachuteIcon => Instance._parachuteIcon;
 
     //LavaSplash
     public static LavaSplash LavaSplash { get; private set; }

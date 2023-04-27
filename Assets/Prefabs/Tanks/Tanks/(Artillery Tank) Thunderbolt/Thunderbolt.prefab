@@ -374,6 +374,7 @@ GameObject:
   - component: {fileID: 3964969616985380406}
   - component: {fileID: -3817067011666268407}
   - component: {fileID: -8986376403666236814}
+  - component: {fileID: 2460747858513708219}
   m_Layer: 10
   m_Name: Thunderbolt
   m_TagString: Player
@@ -517,6 +518,7 @@ MonoBehaviour:
   _brakeOnNormal: 325
   _brakeOnRain: 10
   _brakeOnSnow: 0
+  fuelConsumptionPercent: 0
   _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
   _isJumpButtonPressed: 0
   _isJumped: 0
@@ -657,6 +659,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6cf250706e0ab874c8c6289ce59f3471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2460747858513708219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5488871166444948941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eb3a264d39ad4d66914091c38156b7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5836534057001456573

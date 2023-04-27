@@ -1,26 +1,60 @@
 using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.Events;
 
 
 //ADDRESSABLE
 public class TankAddressableLoader : MonoBehaviour
 {
-    [Header("MESHES")]
-    [SerializeField] private AssetReference[] _assetReferencesBody;
-    [SerializeField] private AssetReference[] _assetReferenceTurret;
-    [SerializeField] private AssetReference[] _assetReferenceCanon;
-    [SerializeField] private AssetReference[] _assetReferenceWheels;
+    [Serializable] private class UniqueAssets
+    {
+        public AssetReference assetReference;
+        public Transform parent;
+        public Vector3 localPosition;
+        public Vector3 localEulerAngles;
+        public Vector3 localScale;
 
-    [Header("PERIPHERALS")]
-    [SerializeField] private AssetReference[] assetReferencePeripherals;
+        public bool adjustRotation;
+        public bool adjustScale;
+    }
+
+
+    [Header("MESHES")]
+    [SerializeField] [Space]
+    private AssetReference[] _assetReferencesBody;
+
+    [SerializeField] [Space]
+    private AssetReference[] _assetReferenceTurret;
+
+    [SerializeField] [Space]
+    private AssetReference[] _assetReferenceCanon;
+
+    [SerializeField] [Space]
+    private AssetReference[] _assetReferenceWheels;
+
+    [Header("PERIPHERALS")] 
+    [SerializeField] [Space]
+    private AssetReference[] assetReferencePeripherals;
+
+    [Header("UNIQUE ASSETS")]
+    [SerializeField] [Space]
+    private UniqueAssets[] _uniqueAssets;
 
     [Header("PARENTS")]
-    [SerializeField] private Transform _transformBody;
-    [SerializeField] private Transform _transformTurret;
-    [SerializeField] private Transform _transformCanon;
-    [SerializeField] private Transform[] _transformWheels;
+    [SerializeField] [Space]
+    private Transform _transformBody;
+
+    [SerializeField] [Space]
+    private Transform _transformTurret;
+
+    [SerializeField] [Space]
+    private Transform _transformCanon;
+
+    [SerializeField] [Space]
+    private Transform[] _transformWheels;
 
 
 
@@ -34,6 +68,7 @@ public class TankAddressableLoader : MonoBehaviour
         yield return StartCoroutine(InstantiateAsync(_assetReferenceCanon, _transformCanon));
         yield return StartCoroutine(InstantiateAsync(_assetReferenceWheels, _transformWheels));
         yield return StartCoroutine(InstantiateAsync(assetReferencePeripherals, transform.parent));
+        yield return StartCoroutine(InstantiateUniqueAssets());
     }
 
     private IEnumerator InstantiateAsync(AssetReference[] assetReferences, Transform transform)
@@ -75,6 +110,25 @@ public class TankAddressableLoader : MonoBehaviour
                 yield return new WaitUntil(() => isInstantiated == true);
             }
         }
+        yield return null;
+    }
+
+    private IEnumerator InstantiateUniqueAssets()
+    {
+        foreach (var uniqueAsset in _uniqueAssets)
+        {
+            uniqueAsset.assetReference.InstantiateAsync(uniqueAsset.parent).Completed += asset => 
+            {
+                asset.Result.transform.localPosition = uniqueAsset.localPosition;
+
+                if (uniqueAsset.adjustRotation)
+                    asset.Result.transform.localEulerAngles = uniqueAsset.localEulerAngles;
+
+                if(uniqueAsset.adjustScale)
+                    asset.Result.transform.localScale = uniqueAsset.localScale;
+            };
+        }
+
         yield return null;
     }
 }

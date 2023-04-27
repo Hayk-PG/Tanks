@@ -2,90 +2,68 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class AbilityDodge : MonoBehaviour, IPlayerAbility
+public class AbilityDodge : BaseAbility, IPlayerAbility
 {
-    private enum AbilitiesOrders { First, Second}
-
-    [SerializeField]
-    private AbilitiesOrders _abilitiesOrders;
-
     [SerializeField] [Space]
     private Rigidbody _rigidbody;
 
     [SerializeField] [Space]
-    private PlayerTurn _playerTurn;
+    private Transform _shootPoint;
 
     private BaseBulletController _projectile;
 
-    private IPlayerAbility _iPlayerAbility;
-
     private MeshRenderer[] _meshes;
 
-    private bool _isActive;
     private bool _isDodged;
     private bool _isOpponentsTurn;
 
+    private Vector3 _shootPointDefaultPosition;
     private Vector3 _positionCurrentTile;
     private Vector3 _positionNextTile;
-    private Vector3 _positionLast;
 
-    private int Price { get; set; } = 1300;
-    private int Quantity { get; set; } = 0;
-    private int UsageFrequency { get; set; } = 3;
-    private int Turns { get; set; } = 3;
-
-    private string Title { get; set; } = "Dodge";
-    private string Ability { get; set; } = "Avoid next incoming attacks for 3 turn.";
-
-    public event Action onDodge;
+    protected override string Title => "Dodge";
+    protected override string Ability => $"Avoid incoming attacks for {Turns} turn.";
 
 
 
 
 
-    private void Awake() => _iPlayerAbility = this;
 
-    private void Start()
+    protected override void Awake()
     {
-        GameSceneObjectsReferences.DropBoxSelectionPanelPlayerAbilities[(int)_abilitiesOrders].Initialize(_iPlayerAbility, Title, Ability, Price, Quantity, UsageFrequency, Turns);
+        base.Awake();
+
+        _shootPointDefaultPosition = _shootPoint.localPosition;
     }
 
-    private void OnEnable()
-    {
-        DropBoxSelectionHandler.onItemSelect += OnDropBoxItemSelect;
+    private void FixedUpdate() => Conditions<bool>.Compare(IsAbilityActive, () => UseAbility(), null);
 
-        GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
-    }
-
-    private void FixedUpdate()
+    private void UseAbility(object[] data = null)
     {
-        if (_isActive)
+        bool canUseDodgeAbility = !_isDodged && _isOpponentsTurn && ProjectileDistane() < 2.5f;
+
+        if (canUseDodgeAbility)
         {
-            if (!_isDodged && _isOpponentsTurn && ProjectileDistane() < 5)
-                Dodge();
+            SetMeshesActive(false);
+
+            SetShootPointLocalPosition(true);
+
+            transform.position = _positionNextTile;
+
+            _isDodged = true;
         }
     }
 
-    private void OnDropBoxItemSelect(DropBoxItemType dropBoxItemType, object[] data)
+    protected override void OnTurnChanged(TurnState turnState)
     {
-        if(dropBoxItemType == DropBoxItemType.Ability && (IPlayerAbility)data[0] == _iPlayerAbility)
+        if (IsAbilityActive)
         {
-            _isActive = true;
+            OnMyTurn();
 
-            print($"Dodge is activated!");
+            OnOpponentTurn(turnState);
 
-            //Extend this
-            //Attach script to offline player 
+            OnOtherTurn(turnState);
         }
-    }
-
-    private void Dodge()
-    {
-        SetMeshesActive(false);
-
-        transform.position = _positionNextTile; 
-        
-        _isDodged = true; 
     }
 
     private void SetMeshesActive(bool isActive)
@@ -96,22 +74,12 @@ public class AbilityDodge : MonoBehaviour, IPlayerAbility
         if (_meshes == null)
             return;
 
-        onDodge?.Invoke();
+        RaiseAbilityEvent();
 
         GlobalFunctions.Loop<MeshRenderer>.Foreach(_meshes, meshes => { meshes.gameObject.SetActive(isActive); });
     }
 
-    private void OnTurnChanged(TurnState turnState)
-    {
-        if (_isActive)
-        {
-            OnMyTurn();
-
-            OnOpponentTurn(turnState);
-
-            OnOtherTurn(turnState);
-        }
-    }
+    private void SetShootPointLocalPosition(bool isAbilityActive) => _shootPoint.localPosition = isAbilityActive ? new Vector3(0, 1000, 0) : _shootPointDefaultPosition;
 
     private void OnMyTurn()
     {
@@ -129,8 +97,6 @@ public class AbilityDodge : MonoBehaviour, IPlayerAbility
         {
             StartCoroutine(RunIterations());
 
-            GetLastPosition();
-
             _isOpponentsTurn = true;
         }
     }
@@ -147,20 +113,18 @@ public class AbilityDodge : MonoBehaviour, IPlayerAbility
 
         if (_isDodged)
         {
-            SetMeshesActive(true);
-
             if (GameSceneObjectsReferences.TilesData.TilesDict.ContainsKey(_positionCurrentTile - new Vector3(0, 0.5f, 0)))
-            {
                 transform.position = _positionCurrentTile + new Vector3(0, 0.5f, 0);
 
-                //transform.position = _positionLast;
-            }
-            
+            SetMeshesActive(true);
+
+            SetShootPointLocalPosition(false);
+
+            DeactivateAbilityAfterLimit();
+
             _isDodged = false;
         }
     }
-
-    private void GetLastPosition() => _positionLast = transform.position;
 
     private void GetProjectile() => _projectile = FindObjectOfType<BaseBulletController>();
 
@@ -214,4 +178,6 @@ public class AbilityDodge : MonoBehaviour, IPlayerAbility
     {
         return _projectile != null ? Vector3.Distance(_rigidbody.position, _projectile.RigidBody.position) : 100;
     }
+
+    public override void AssignBuffDebuffUIElement(BuffDebuffUIElement buffDebuffUIElement) => BuffDebuffUIElement = buffDebuffUIElement;
 }

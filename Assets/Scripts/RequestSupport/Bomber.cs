@@ -17,9 +17,6 @@ public class Bomber : MonoBehaviour
     [SerializeField] [Space]
     private BomberAddressable _bomberAddressable;
 
-    [SerializeField] [Space]
-    private ExternalSoundSource _externalSoundSource;
-
     public IScore OwnerScore { get; set; }
 
     public PlayerTurn OwnerTurn { get; set; }
@@ -42,8 +39,6 @@ public class Bomber : MonoBehaviour
     private void OnEnable()
     {
         _bomberAddressable.LoadMeshes();
-
-        _externalSoundSource.Play(ExternalSoundSource.PlayMode.OnReference);
     }
 
     private void FixedUpdate()
