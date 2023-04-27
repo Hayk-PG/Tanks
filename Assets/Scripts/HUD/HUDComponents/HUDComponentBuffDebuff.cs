@@ -14,7 +14,7 @@ public class HUDComponentBuffDebuff : MonoBehaviour
 
     private void OnDisable() => BuffDebuffHandler.onBuffDebuffIndicatorActivity -= OnActivationBuffDebuffIcon;
 
-    private void OnActivationBuffDebuffIcon(BuffDebuffType buffDebuffType, TurnState turnState, object[] data)
+    private void OnActivationBuffDebuffIcon(BuffDebuffType buffDebuffType, TurnState turnState, IBuffDebuffUIElementController buffDebuffUIElement, object[] data)
     {
         if (turnState != _turnState)
             return;
@@ -24,7 +24,7 @@ public class HUDComponentBuffDebuff : MonoBehaviour
             if (!element.gameObject.activeInHierarchy)
             {
                 element.gameObject.SetActive(true);
-                element.Set(buffDebuffType, (int)data[0]);
+                element.Set(buffDebuffType, buffDebuffUIElement, data);
 
                 return;
             }

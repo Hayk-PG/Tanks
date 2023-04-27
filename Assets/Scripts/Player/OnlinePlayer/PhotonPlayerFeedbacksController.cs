@@ -16,7 +16,7 @@ public class PhotonPlayerFeedbacksController : PlayerFeedbackController
     {
         // This method is called on the local side 
 
-        _playerFeedback.OnHitEnemy(_playerController.OwnTank.name, hitsCount(), scores);
+        GameSceneObjectsReferences.PlayerFeedback.OnHitEnemy(_playerController.OwnTank.name, hitsCount(), scores);
 
         // This method is called on the server side
         // And should not be called on the local side
@@ -29,14 +29,14 @@ public class PhotonPlayerFeedbacksController : PlayerFeedbackController
     [PunRPC]
     private void OnHitEnemyRPC(string tankName, int[] scores, int hitsCount)
     {
-        _playerFeedback.OnHitEnemy(tankName, hitsCount, scores);
+        GameSceneObjectsReferences.PlayerFeedback.OnHitEnemy(tankName, hitsCount, scores);
     }
 
     protected override void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
     {
         // This method is called on the local side 
 
-        _playerFeedback.DisplayWeaponChangeText(_playerController.OwnTank.name, ammoTypeButton._properties.Name);
+        GameSceneObjectsReferences.PlayerFeedback.DisplayWeaponChangeText(_playerController.OwnTank.name, ammoTypeButton._properties.Name);
 
         // This method is called on the server side
         // And should not be called on the local side
@@ -47,14 +47,14 @@ public class PhotonPlayerFeedbacksController : PlayerFeedbackController
     [PunRPC]
     private void OnPlayerWeaponChangedRPC(string tankName, string weaponType)
     {
-        _playerFeedback.DisplayWeaponChangeText(tankName, weaponType);
+        GameSceneObjectsReferences.PlayerFeedback.DisplayWeaponChangeText(tankName, weaponType);
     }
 
     protected override void OnTakeDamage(BasePlayer basePlayer, int damage)
     {
         // This method is called on the local side
 
-        _playerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
+        GameSceneObjectsReferences.PlayerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
 
         // This method is called on the server side
         // And should not be called on the local side
@@ -65,6 +65,6 @@ public class PhotonPlayerFeedbacksController : PlayerFeedbackController
     [PunRPC]
     private void OnTakeDamageRPC(string tankName, int damage)
     {
-        _playerFeedback.DisplayDamageText(tankName, damage);
+        GameSceneObjectsReferences.PlayerFeedback.DisplayDamageText(tankName, damage);
     }
 }

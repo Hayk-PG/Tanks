@@ -13,8 +13,6 @@ public abstract class PlayerFeedbackController : MonoBehaviour
 
     protected AmmoTabCustomization _ammoTabCustomization;
 
-    protected PlayerFeedback _playerFeedback;
-
     protected int _playerHitsIndex, _playerTurnIndex;
 
     protected abstract bool IsAllowed { get; }
@@ -29,8 +27,6 @@ public abstract class PlayerFeedbackController : MonoBehaviour
         _playerController = Get<BasePlayerTankController<BasePlayer>>.From(gameObject);
 
         _ammoTabCustomization = FindObjectOfType<AmmoTabCustomization>();
-
-        _playerFeedback = FindObjectOfType<PlayerFeedback>();
     }
 
     protected virtual void OnEnable()

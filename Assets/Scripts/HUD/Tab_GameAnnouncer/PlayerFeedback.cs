@@ -18,6 +18,8 @@ public class PlayerFeedback : MonoBehaviour
         return tankName == Names.Tank_FirstPlayer ? _tabHitText.HitTexManagerForPlayer1 : _tabHitText.HitTextManagerForPlayer2;
     }
 
+    public void DisplayDropBoxItemText(string tankname, string text) => DisplayHitText(CurrentHitTextManager(tankname), HitTextManager.TextType.Hint, text);
+
     public void DisplayDamageText(string tankName, int damage)
     {
         HitTextManager.TextType textType = damage <= 15 ? HitTextManager.TextType.Damage : damage > 15 && damage < 30 ? HitTextManager.TextType.CriticalDamage :

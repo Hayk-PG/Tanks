@@ -178,4 +178,6 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
     {
         return _projectile != null ? Vector3.Distance(_rigidbody.position, _projectile.RigidBody.position) : 100;
     }
+
+    public override void AssignBuffDebuffUIElement(BuffDebuffUIElement buffDebuffUIElement) => BuffDebuffUIElement = buffDebuffUIElement;
 }

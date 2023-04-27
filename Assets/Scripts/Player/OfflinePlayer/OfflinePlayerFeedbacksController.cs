@@ -6,13 +6,13 @@ public class OfflinePlayerFeedbacksController : PlayerFeedbackController
 
     protected override void OnHitEnemy(int[] scores, Func<int> hitsCount)
     {
-        _playerFeedback.OnHitEnemy(_playerController.OwnTank.name, hitsCount(), scores);
+        GameSceneObjectsReferences.PlayerFeedback.OnHitEnemy(_playerController.OwnTank.name, hitsCount(), scores);
     }
 
     protected override void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
     {
-        _playerFeedback.DisplayWeaponChangeText(_playerController.OwnTank.name, ammoTypeButton._properties.Name);
+        GameSceneObjectsReferences.PlayerFeedback.DisplayWeaponChangeText(_playerController.OwnTank.name, ammoTypeButton._properties.Name);
     }
 
-    protected override void OnTakeDamage(BasePlayer basePlayer, int damage) => _playerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
+    protected override void OnTakeDamage(BasePlayer basePlayer, int damage) => GameSceneObjectsReferences.PlayerFeedback.DisplayDamageText(_playerController.OwnTank.name, damage);
 }

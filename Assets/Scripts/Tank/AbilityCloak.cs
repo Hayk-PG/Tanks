@@ -192,4 +192,6 @@ public class AbilityCloak : BaseAbility
     }
 
     private void PlayParticles() => _particles.Play(true);
+
+    public override void AssignBuffDebuffUIElement(BuffDebuffUIElement buffDebuffUIElement) => BuffDebuffUIElement = buffDebuffUIElement;
 }

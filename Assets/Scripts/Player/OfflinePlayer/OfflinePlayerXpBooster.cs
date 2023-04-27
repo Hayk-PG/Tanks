@@ -24,7 +24,7 @@ public class OfflinePlayerXpBooster : PlayerDropBoxObserver
 
         ManageTurnControllerSubscription(true);
 
-        BuffDebuffHandler.RaiseEvent(_xpMultiplier <= 2 ? BuffDebuffType.Xp2 : BuffDebuffType.Xp3, _playerTurnState, _altData);
+        BuffDebuffHandler.RaiseEvent(_xpMultiplier <= 2 ? BuffDebuffType.Xp2 : BuffDebuffType.Xp3, _playerTurnState, null, _altData);
     }
 
     protected virtual void SetPlayerScoreMultiplier(int xpMultiplier) => _playerTankController._scoreController.SetScoreMultiplier(xpMultiplier);

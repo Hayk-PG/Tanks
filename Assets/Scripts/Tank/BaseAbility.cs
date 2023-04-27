@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class BaseAbility : MonoBehaviour, IPlayerAbility
+public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUIElementController
 {
     protected enum AbilitiesOrders { First, Second }
 
@@ -27,6 +27,9 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility
     protected abstract string Title { get; }
     protected abstract string Ability { get; }
 
+    public BuffDebuffUIElement BuffDebuffUIElement { get; set; }
+
+
     public event Action<object[]> onAbilityActive;
 
 
@@ -35,7 +38,10 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility
 
     protected virtual void Awake() => _iPlayerAbility = this;
 
-    protected virtual void Start() => GameSceneObjectsReferences.DropBoxSelectionPanelPlayerAbilities[(int)_abilityOrder].Initialize(_iPlayerAbility, Title, Ability, Price, Quantity, UsageFrequency, Turns);
+    protected virtual void Start()
+    {
+        GameSceneObjectsReferences.DropBoxSelectionPanelPlayerAbilities[(int)_abilityOrder].Initialize(_iPlayerAbility, Title, Ability, Price, Quantity, UsageFrequency, Turns);
+    }
 
     protected virtual void OnEnable()
     {
@@ -56,14 +62,23 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility
 
         UsedTime = 0;
 
-        print($"{Title} is activated!");
+        ActivateBuffDebuffIcon(data);
+
+        DisplayPlayerFeedbackText();
+    }
+
+    protected virtual void ActivateBuffDebuffIcon(object[] data = null) => BuffDebuffHandler.RaiseEvent(BuffDebuffType.Ability, _playerTurn.MyTurn, this, data);
+
+    protected virtual void DisplayPlayerFeedbackText()
+    {
+        GameSceneObjectsReferences.PlayerFeedback.DisplayDropBoxItemText(gameObject.name, $"{Title} is activated!");
     }
 
     protected virtual void DeactivateAbilityAfterLimit()
     {
-        UsedTime++;
+        CountAbilityUsage();
 
-        print($"{name}: {UsedTime}/{Turns}");
+        UpdateAbilityBuffIcon();
 
         if (UsedTime >= Turns)
         {
@@ -73,7 +88,35 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility
         }
     }
 
-    protected virtual void OnAbilityDeactivated() => IsAbilityActive = false;
+    protected virtual void CountAbilityUsage()
+    {
+        UsedTime++;
+
+        print($"{name}: {UsedTime}/{Turns}");
+    }
+
+    protected virtual void UpdateAbilityBuffIcon()
+    {
+        if (BuffDebuffUIElement == null)
+            return;
+
+        BuffDebuffUIElement.ControlImageFill(Mathf.InverseLerp(0, Turns, UsedTime));
+    }
+
+    protected virtual void OnAbilityDeactivated()
+    {
+        DeactivateBuffDebuffIcon();
+
+        IsAbilityActive = false;
+    }
+
+    protected virtual void DeactivateBuffDebuffIcon()
+    {
+        if (BuffDebuffUIElement == null)
+            return;
+
+        BuffDebuffUIElement.Deactivate();
+    }
 
     protected virtual void OnTurnChanged(TurnState turnState)
     {
@@ -81,4 +124,6 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility
     }
 
     protected virtual void RaiseAbilityEvent(object[] data = null) => onAbilityActive?.Invoke(data);
+
+    public abstract void AssignBuffDebuffUIElement(BuffDebuffUIElement buffDebuffUIElement);
 }
