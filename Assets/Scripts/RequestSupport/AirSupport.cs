@@ -28,6 +28,14 @@ public class AirSupport : MonoBehaviour
 
 
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Call(GlobalFunctions.ObjectsOfType<PlayerTurn>.Find(playerTurn => playerTurn.MyTurn == TurnState.Player1), null, new Vector3(5, 0, 0));
+        }
+    }
+
     public void Call(PlayerTurn ownerTurn, IScore ownerScore, Vector3 dropPoint)
     {
         _bomber.transform.position = StartPosition(ownerTurn);

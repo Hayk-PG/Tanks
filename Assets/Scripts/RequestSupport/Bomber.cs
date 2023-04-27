@@ -17,6 +17,14 @@ public class Bomber : MonoBehaviour
     [SerializeField] [Space]
     private BomberAddressable _bomberAddressable;
 
+    [SerializeField] [Space]
+    private Camera _cameraAirBomber;
+
+    [SerializeField] [Space]
+    private AirBomberCameraAnimationController _airBombCameraAnimationController;
+
+    private bool _isCameraBlurred;
+
     public IScore OwnerScore { get; set; }
 
     public PlayerTurn OwnerTurn { get; set; }
@@ -39,6 +47,10 @@ public class Bomber : MonoBehaviour
     private void OnEnable()
     {
         _bomberAddressable.LoadMeshes();
+
+        ResetCameraAirBomberSettings();
+
+        PlayerAirBomberCameraAnimation("Transition");
     }
 
     private void FixedUpdate()
@@ -48,21 +60,61 @@ public class Bomber : MonoBehaviour
         Conditions<bool>.Compare(IsOutOfBoundaries, Deactivate, null);
     }
 
+    private void ResetCameraAirBomberSettings()
+    {
+        _cameraAirBomber.orthographicSize = 1;
+
+        _isCameraBlurred = false;
+    }
+
     public void DropBomb()
     {
         if (!IsBombDropped)
         {
-            if (_rigidbody.position.x >= DropPoint.x - 0.1f && _rigidbody.position.x <= DropPoint.x + 0.1f)
+            bool isPreparingToDrop = _rigidbody.position.x >= DropPoint.x - 1f && _rigidbody.position.x <= DropPoint.x + 1f;
+            bool IsWithinXRangeOfDropPoint = _rigidbody.position.x >= DropPoint.x - 0.1f && _rigidbody.position.x <= DropPoint.x + 0.1f;
+
+            if (isPreparingToDrop)
             {
-                BaseBulletController bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
+                ZoomInCameraSmoothly();
 
-                GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = bomb;
-
-                bomb.OwnerScore = OwnerScore;
-
-                IsBombDropped = true;
+                BlurCamera();
             }
+
+            if (IsWithinXRangeOfDropPoint)
+                SpawnBomb();
         }
+    }
+
+    private void ZoomInCameraSmoothly() => _cameraAirBomber.orthographicSize = Mathf.Lerp(_cameraAirBomber.orthographicSize, 0.5f, 3 * Time.deltaTime);
+
+    private void SpawnBomb()
+    {
+        BaseBulletController bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
+
+        GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = bomb;
+
+        bomb.OwnerScore = OwnerScore;
+
+        IsBombDropped = true;
+    }
+
+    private void BlurCamera()
+    {
+        if (!_isCameraBlurred)
+        {
+            PlayerAirBomberCameraAnimation("Blur", 1);
+
+            _isCameraBlurred = true;
+        }
+    }
+
+    private void PlayerAirBomberCameraAnimation(string stateName = "", int layer = 0)
+    {
+        if (!_airBombCameraAnimationController.gameObject.activeInHierarchy)
+            _airBombCameraAnimationController.gameObject.SetActive(true);
+
+        _airBombCameraAnimationController.PlayAnimation(stateName, layer);
     }
 
     private void Deactivate()
@@ -71,6 +123,6 @@ public class Bomber : MonoBehaviour
 
         IsBombDropped = false;
 
-        GameSceneObjectsReferences.MainCameraController.ResetTargets();
+        //GameSceneObjectsReferences.MainCameraController.ResetTargets();
     }
 }
