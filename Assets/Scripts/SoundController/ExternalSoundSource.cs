@@ -26,7 +26,13 @@ public class ExternalSoundSource : MonoBehaviour
     [SerializeField] [Space]
     private bool _isDestroyable, _dontPlayAnimation;
 
-    
+    public float Volume
+    {
+        get => _audioSource.volume;
+        set => _audioSource.volume = value;
+    }
+
+
     
 
 

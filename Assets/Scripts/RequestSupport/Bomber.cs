@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public enum BomberType { Light, Medium, Heavy, Nuke }
 
@@ -23,7 +24,12 @@ public class Bomber : MonoBehaviour
     [SerializeField] [Space]
     private AirBomberCameraAnimationController _airBombCameraAnimationController;
 
+    [SerializeField] [Space]
+    private ExternalSoundSource _externalSoundSource;
+
     private bool _isCameraBlurred;
+    private bool _isExternalSoundSourceFadeOut;
+
 
     public IScore OwnerScore { get; set; }
 
@@ -50,7 +56,11 @@ public class Bomber : MonoBehaviour
 
         ResetCameraAirBomberSettings();
 
-        PlayerAirBomberCameraAnimation("Transition");
+        ResetExternalSoundSourceFadeOut();
+
+        StartCoroutine(FadeInExternalSoundSource());
+
+        PlayerAirBomberCameraAnimation("Transition");   
     }
 
     private void FixedUpdate()
@@ -65,6 +75,50 @@ public class Bomber : MonoBehaviour
         _cameraAirBomber.orthographicSize = 1;
 
         _isCameraBlurred = false;
+    }
+
+    private void ResetExternalSoundSourceFadeOut() => _isExternalSoundSourceFadeOut = false;
+
+    private IEnumerator FadeInExternalSoundSource()
+    {
+        float volume = _externalSoundSource.Volume = 0;
+
+        while (volume < 1)
+        {
+            volume += 2 * Time.deltaTime;
+
+            _externalSoundSource.Volume = volume;
+
+            yield return null;
+        }
+
+        _externalSoundSource.Volume = 1;
+    }
+
+    private void FadeOutExternalSoundSource()
+    {
+        if (!_isExternalSoundSourceFadeOut)
+        {
+            StartCoroutine(FadeOutExternalSoundSourceCoroutine());
+
+            _isExternalSoundSourceFadeOut = true;
+        }
+    }
+
+    private IEnumerator FadeOutExternalSoundSourceCoroutine()
+    {
+        float volume = _externalSoundSource.Volume;
+
+        while(volume > 0)
+        {
+            volume -= 2 * Time.deltaTime;
+
+            _externalSoundSource.Volume = volume;
+
+            yield return null;
+        }
+
+        _externalSoundSource.Volume = 0;
     }
 
     public void DropBomb()
@@ -82,7 +136,11 @@ public class Bomber : MonoBehaviour
             }
 
             if (IsWithinXRangeOfDropPoint)
+            {
                 SpawnBomb();
+
+                FadeOutExternalSoundSource();
+            }
         }
     }
 
