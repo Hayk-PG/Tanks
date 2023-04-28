@@ -122,7 +122,5 @@ public class Bomber : MonoBehaviour
         gameObject.SetActive(false);
 
         IsBombDropped = false;
-
-        //GameSceneObjectsReferences.MainCameraController.ResetTargets();
     }
 }
