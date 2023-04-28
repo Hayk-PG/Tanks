@@ -96,6 +96,16 @@ public class GameplayAnnouncer : MonoBehaviour
     {
         _txt.text = text;
         _txt.gameObject.SetActive(isActive);
+
+        PlayWhooshSoundFx(!String.IsNullOrWhiteSpace(text));
+    }
+
+    private void PlayWhooshSoundFx(bool canPlay)
+    {
+        if (!canPlay)
+            return;
+
+        UISoundController.PlaySound(5, UnityEngine.Random.Range(0, 2));
     }
 
     private void SetColorGradient(TMP_ColorGradient tMP_ColorGradient)
