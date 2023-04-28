@@ -60,8 +60,6 @@ public class AirSupport : MonoBehaviour
         _bomber.gameObject.SetActive(true);
 
         _rb.velocity = transform.right * 2;
-
-        GameSceneObjectsReferences.MainCameraController.CameraOffset(playerTurn, _rb, _bomber.transform.position.y - 2, 2);
     }
 
     private IEnumerator PlayAirSirenSound()

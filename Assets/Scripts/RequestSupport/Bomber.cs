@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public enum BomberType { Light, Medium, Heavy, Nuke }
 
@@ -16,6 +17,19 @@ public class Bomber : MonoBehaviour
 
     [SerializeField] [Space]
     private BomberAddressable _bomberAddressable;
+
+    [SerializeField] [Space]
+    private Camera _cameraAirBomber;
+
+    [SerializeField] [Space]
+    private AirBomberCameraAnimationController _airBombCameraAnimationController;
+
+    [SerializeField] [Space]
+    private ExternalSoundSource _externalSoundSource;
+
+    private bool _isCameraBlurred;
+    private bool _isExternalSoundSourceFadeOut;
+
 
     public IScore OwnerScore { get; set; }
 
@@ -39,6 +53,14 @@ public class Bomber : MonoBehaviour
     private void OnEnable()
     {
         _bomberAddressable.LoadMeshes();
+
+        ResetCameraAirBomberSettings();
+
+        ResetExternalSoundSourceFadeOut();
+
+        StartCoroutine(FadeInExternalSoundSource());
+
+        PlayerAirBomberCameraAnimation("Transition");   
     }
 
     private void FixedUpdate()
@@ -48,21 +70,109 @@ public class Bomber : MonoBehaviour
         Conditions<bool>.Compare(IsOutOfBoundaries, Deactivate, null);
     }
 
+    private void ResetCameraAirBomberSettings()
+    {
+        _cameraAirBomber.orthographicSize = 1;
+
+        _isCameraBlurred = false;
+    }
+
+    private void ResetExternalSoundSourceFadeOut() => _isExternalSoundSourceFadeOut = false;
+
+    private IEnumerator FadeInExternalSoundSource()
+    {
+        float volume = _externalSoundSource.Volume = 0;
+
+        while (volume < 1)
+        {
+            volume += 2 * Time.deltaTime;
+
+            _externalSoundSource.Volume = volume;
+
+            yield return null;
+        }
+
+        _externalSoundSource.Volume = 1;
+    }
+
+    private void FadeOutExternalSoundSource()
+    {
+        if (!_isExternalSoundSourceFadeOut)
+        {
+            StartCoroutine(FadeOutExternalSoundSourceCoroutine());
+
+            _isExternalSoundSourceFadeOut = true;
+        }
+    }
+
+    private IEnumerator FadeOutExternalSoundSourceCoroutine()
+    {
+        float volume = _externalSoundSource.Volume;
+
+        while(volume > 0)
+        {
+            volume -= 2 * Time.deltaTime;
+
+            _externalSoundSource.Volume = volume;
+
+            yield return null;
+        }
+
+        _externalSoundSource.Volume = 0;
+    }
+
     public void DropBomb()
     {
         if (!IsBombDropped)
         {
-            if (_rigidbody.position.x >= DropPoint.x - 0.1f && _rigidbody.position.x <= DropPoint.x + 0.1f)
+            bool isPreparingToDrop = _rigidbody.position.x >= DropPoint.x - 1f && _rigidbody.position.x <= DropPoint.x + 1f;
+            bool IsWithinXRangeOfDropPoint = _rigidbody.position.x >= DropPoint.x - 0.1f && _rigidbody.position.x <= DropPoint.x + 0.1f;
+
+            if (isPreparingToDrop)
             {
-                BaseBulletController bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
+                ZoomInCameraSmoothly();
 
-                GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = bomb;
+                BlurCamera();
+            }
 
-                bomb.OwnerScore = OwnerScore;
+            if (IsWithinXRangeOfDropPoint)
+            {
+                SpawnBomb();
 
-                IsBombDropped = true;
+                FadeOutExternalSoundSource();
             }
         }
+    }
+
+    private void ZoomInCameraSmoothly() => _cameraAirBomber.orthographicSize = Mathf.Lerp(_cameraAirBomber.orthographicSize, 0.5f, 3 * Time.deltaTime);
+
+    private void SpawnBomb()
+    {
+        BaseBulletController bomb = Instantiate(_bombPrefab, _bombSpwnPoint.position, Quaternion.identity);
+
+        GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = bomb;
+
+        bomb.OwnerScore = OwnerScore;
+
+        IsBombDropped = true;
+    }
+
+    private void BlurCamera()
+    {
+        if (!_isCameraBlurred)
+        {
+            PlayerAirBomberCameraAnimation("Blur", 1);
+
+            _isCameraBlurred = true;
+        }
+    }
+
+    private void PlayerAirBomberCameraAnimation(string stateName = "", int layer = 0)
+    {
+        if (!_airBombCameraAnimationController.gameObject.activeInHierarchy)
+            _airBombCameraAnimationController.gameObject.SetActive(true);
+
+        _airBombCameraAnimationController.PlayAnimation(stateName, layer);
     }
 
     private void Deactivate()
@@ -70,7 +180,5 @@ public class Bomber : MonoBehaviour
         gameObject.SetActive(false);
 
         IsBombDropped = false;
-
-        GameSceneObjectsReferences.MainCameraController.ResetTargets();
     }
 }
