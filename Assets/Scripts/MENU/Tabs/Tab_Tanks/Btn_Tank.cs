@@ -79,16 +79,7 @@ public class Btn_Tank : MonoBehaviour
 
     public void SetLevel(int level)
     {
-        if (MyPhotonNetwork.IsOfflineMode)
-        {
-            _btnTxtBottom.gameObject.SetActive(false);
-
-            return;
-        }
-
-        _btnTxtBottom.gameObject.SetActive(true);
-
-        _btnTxtBottom.SetButtonTitle($"Lv. {level}");
+        _btnTxtBottom.SetButtonTitle(MyPhotonNetwork.IsOfflineMode ? $"Unlocked" : $"Lv. {level}");
     }
 
     public void SetLockState(bool isLocked) => IsLocked = isLocked;

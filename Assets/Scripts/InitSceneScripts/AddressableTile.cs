@@ -43,13 +43,14 @@ public class AddressableTile : MonoBehaviour
     {
         foreach (var asset in _assetReferenceTilesMesh)
         {
-            if (asset.OperationHandle.IsValid())
+            bool isDone = asset.LoadAssetAsync<GameObject>().IsDone;
+            bool isValid = asset.OperationHandle.IsValid();
+
+            if (isValid)
                 continue;
 
-            yield return asset.LoadAssetAsync<GameObject>().IsDone;
+            yield return new WaitUntil(() => isDone && isValid);
         }
-
-        yield return null;
 
         _validationChecklist.CheckValidation(null, IsValid = true, null);
     }
