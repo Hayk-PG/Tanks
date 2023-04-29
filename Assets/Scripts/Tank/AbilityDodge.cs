@@ -48,6 +48,8 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
 
             SetShootPointLocalPosition(true);
 
+            PlaySoundFX(1);
+
             transform.position = _positionNextTile;
 
             _isDodged = true;

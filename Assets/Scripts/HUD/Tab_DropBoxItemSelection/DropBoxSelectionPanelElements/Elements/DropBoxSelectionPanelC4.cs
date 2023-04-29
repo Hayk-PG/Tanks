@@ -15,7 +15,7 @@ public class DropBoxSelectionPanelC4 : BaseDropBoxSelectionPanelElement
         _data[1] = NegativePrice;
         _data[2] = _quantity;
 
-        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.C4, _data);
+        StartCoroutine(RaiseEventAfterDelay(DropBoxItemType.C4, _data));
     }
 
     private Vector3? MinePosition(TankController tankController)

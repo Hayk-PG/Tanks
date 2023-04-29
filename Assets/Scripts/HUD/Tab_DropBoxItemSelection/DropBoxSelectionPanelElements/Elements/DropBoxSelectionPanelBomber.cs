@@ -13,6 +13,6 @@ public class DropBoxSelectionPanelBomber : BaseDropBoxSelectionPanelElement
         _data[1] = NegativePrice;
         _data[2] = _quantity;
 
-        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Bomber, _data);
+        StartCoroutine(RaiseEventAfterDelay(DropBoxItemType.Bomber, _data));
     }
 }

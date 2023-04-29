@@ -11,6 +11,6 @@ public class DropBoxSelectionPanelHealth : BaseDropBoxSelectionPanelElement
         _data[0] = NegativePrice;
         _data[1] = _health;
 
-        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.HpBoost, _data);
+        StartCoroutine(RaiseEventAfterDelay(DropBoxItemType.HpBoost, _data));
     }
 }

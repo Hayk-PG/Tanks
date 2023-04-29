@@ -96,6 +96,8 @@ public class AbilityCloak : BaseAbility
         StartCoroutine(PlayParticleAndHide(isInvisible));
 
         SetLayersDefault(isInvisible);
+
+        PlaySoundFX(0);
     }
 
     private  void GetAllChildTransforms() => _transforms = GetComponentsInChildren<Transform>(true);

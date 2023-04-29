@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-
+using System.Collections;
 
 public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
 {
@@ -70,6 +70,13 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
     }
 
     protected abstract void Use();
+
+    protected virtual IEnumerator RaiseEventAfterDelay(DropBoxItemType dropBoxItemType, object[] data = null)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        DropBoxSelectionHandler.RaiseEvent(dropBoxItemType, data);
+    }
 
     protected virtual void CloseTab() => GameSceneObjectsReferences.Tab_DropBoxItemSelection.SetActivity(false);
 

@@ -56,6 +56,8 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
             OnAbilityActivated();
     }
 
+    protected virtual void PlaySoundFX(int clipIndex) => SecondarySoundController.PlaySound(10, clipIndex);
+
     protected virtual void OnAbilityActivated(object[] data = null)
     {
         IsAbilityActive = true;

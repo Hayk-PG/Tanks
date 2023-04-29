@@ -5,6 +5,6 @@ public class DropBoxSelectionPanelShield : BaseDropBoxSelectionPanelElement
     {
         _data[0] = NegativePrice;
 
-        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Shield, _data);
+        StartCoroutine(RaiseEventAfterDelay(DropBoxItemType.Shield, _data));
     }
 }

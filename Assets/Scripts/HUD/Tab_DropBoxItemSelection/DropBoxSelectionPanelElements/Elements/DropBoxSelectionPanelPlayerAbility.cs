@@ -16,7 +16,7 @@ public class DropBoxSelectionPanelPlayerAbility : BaseDropBoxSelectionPanelEleme
         _data[1] = _turns;
         _data[2] = NegativePrice;
 
-        DropBoxSelectionHandler.RaiseEvent(DropBoxItemType.Ability, _data);
+        StartCoroutine(RaiseEventAfterDelay(DropBoxItemType.Ability, _data));
     }
 
     //For player's abilities
