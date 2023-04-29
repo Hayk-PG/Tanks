@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Coffee.UIEffects;
+using System.Collections;
 
 public class BuffDebuffUIElement : MonoBehaviour, IReset
 {
-    [SerializeField]
+    [SerializeField] [Space]
+    private CanvasGroup _canvasGroup;
+
+    [SerializeField] [Space]
     private Image _imgBg, _imgIcon, _imgFill;
 
     [SerializeField] [Space]
@@ -21,15 +25,30 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
 
     public void Set(BuffDebuffType buffDebuffType, IBuffDebuffUIElementController buffDebuffUIElement = null, object[] data = null)
     {
+        // Set inactive in case Deactivate method was not called yet
+
+        SetActive(false);
+
+        StartCoroutine(ExecuteAfterDelay(buffDebuffType, buffDebuffUIElement, data));
+    }
+
+    private IEnumerator ExecuteAfterDelay(BuffDebuffType buffDebuffType, IBuffDebuffUIElementController buffDebuffUIElement = null, object[] data = null)
+    {
+        yield return new WaitForSeconds(1f);
+
         SetIcon(buffDebuffType);
 
         ControlImageFill(0);
+
+        PlaySound();
+
+        SetActive(true);
 
         if (buffDebuffUIElement != null)
         {
             buffDebuffUIElement.AssignBuffDebuffUIElement(this);
 
-            return;
+            yield break;
         }
 
         GetCurrentTurnCyclesCount();
@@ -38,6 +57,10 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
 
         ManageTurnControllerSubscribtion(true);
     }
+
+    private void SetActive(bool isActive) => GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
+
+    private void PlaySound() => UISoundController.PlaySound(9, 0);
 
     private void SetIcon(BuffDebuffType buffDebuffType)
     {
@@ -101,7 +124,12 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
         ControlImageFill(FillRate());
     }
 
-    public void Deactivate() => gameObject.SetActive(false);
+    public void Deactivate()
+    {
+        SetActive(false);
+
+        gameObject.SetActive(false);
+    }
 
     public void SetDefault()
     {

@@ -24,6 +24,7 @@ public class HUDComponentBuffDebuff : MonoBehaviour
             if (!element.gameObject.activeInHierarchy)
             {
                 element.gameObject.SetActive(true);
+                element.gameObject.transform.SetAsFirstSibling();
                 element.Set(buffDebuffType, buffDebuffUIElement, data);
 
                 return;

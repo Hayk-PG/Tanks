@@ -8,6 +8,8 @@ public class DropBox : MonoBehaviour
     private WoodBoxDrop _woodBoxDrop;
     private WoodBox _woodBox;
 
+    private bool _isColliedWithGround;
+
 
 
     private void Awake()
@@ -42,16 +44,21 @@ public class DropBox : MonoBehaviour
 
     private void OnCollidedWithGround()
     {
+        if (_isColliedWithGround)
+            return;
+
         PlaySmokePoofParticle();
 
         PlayLightGlowParticle();
+
+        _isColliedWithGround = true;
     }
 
     private void OnPickDropBox() => PlayFlashParticle();
 
     private void PlaySmokePoofParticle()
     {
-        if (_particleSmokePoof.isPlaying)
+        if (_particleSmokePoof == null)
             return;
 
         _particleSmokePoof.Play(true);

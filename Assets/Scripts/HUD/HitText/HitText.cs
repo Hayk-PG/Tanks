@@ -19,6 +19,8 @@ public class HitText : MonoBehaviour
     {
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
 
+        UISoundController.PlaySound(9, 1);
+
         _img.sprite = sprt;
         _txt.text = txt;
     }

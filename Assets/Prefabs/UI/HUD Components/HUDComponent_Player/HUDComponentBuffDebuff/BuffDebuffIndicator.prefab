@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2734776179208979024}
   - component: {fileID: 1058635766683789706}
   - component: {fileID: 4232125174608506621}
+  - component: {fileID: 2458520935969616859}
   - component: {fileID: 2841123908841362673}
   m_Layer: 5
   m_Name: BuffDebuffIndicator
@@ -131,6 +132,18 @@ MonoBehaviour:
     loop: 0
     loopDelay: 0
     updateMode: 0
+--- !u!225 &2458520935969616859
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3607448195127420580}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &2841123908841362673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,6 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b63d6317bec7745518fefee29e763b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 2458520935969616859}
   _imgBg: {fileID: 2734776179208979024}
   _imgIcon: {fileID: 7467239892541072288}
   _imgFill: {fileID: 2232336164341561965}
