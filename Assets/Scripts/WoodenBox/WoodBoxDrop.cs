@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class WoodBoxDrop : MonoBehaviour
@@ -6,11 +7,9 @@ public class WoodBoxDrop : MonoBehaviour
     [SerializeField]
     private ParachuteWithWoodBoxCollision _parachuteWithWoodBoxCollision;
 
-    [SerializeField] [Space]
-    private GameObject _particles;
-
     private bool _isSoundPlayed;
-    private bool _isParticlesActivated;
+
+    public event Action onCollidedWithGround;
 
 
 
@@ -21,29 +20,30 @@ public class WoodBoxDrop : MonoBehaviour
 
     private void OnCollision(ParachuteWithWoodBoxCollision.CollisionData collisionData)
     {
-        if (collisionData._tankController == null && collisionData._bulletController == null && !_isSoundPlayed)
-            StartCoroutine(PlaySound());
+        bool isCollidedWithGround = collisionData._tankController == null && collisionData._bulletController == null;
+
+        if (isCollidedWithGround)
+            OnColliedWithGround();
+    }
+
+    private void OnColliedWithGround()
+    {
+        onCollidedWithGround?.Invoke();
+
+        StartCoroutine(PlaySound());
     }
 
     private IEnumerator PlaySound()
     {
-        SecondarySoundController.PlaySound(2, 1);
-
-        ActivateParticles();
-
-        _isSoundPlayed = true;
-
-        yield return new WaitForSeconds(1);
-
-        _isSoundPlayed = false;
-    }
-
-    private void ActivateParticles()
-    {
-        if (!_isParticlesActivated && _particles != null)
+        if (!_isSoundPlayed)
         {
-            _particles.gameObject.SetActive(true);
-            _particles.transform.SetParent(null);
+            _isSoundPlayed = true;
+
+            SecondarySoundController.PlaySound(2, 1);
+
+            yield return new WaitForSeconds(1);
+
+            _isSoundPlayed = false;
         }
     }
 }

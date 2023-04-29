@@ -11,9 +11,6 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
     [SerializeField] [Space]
     private Rigidbody _rigidbody;
 
-    [SerializeField] [Space]
-    private GameObject _sparkles, _woodBoxExplosion;
-
     private bool _isOutOfBounds;
 
     private delegate float Value();
@@ -104,17 +101,19 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
 
         if (ParachuteObj.activeInHierarchy)
         {
-            ParachuteObj.SetActive(false);
+            HideParachute();
 
-            _sparkles.SetActive(true);
-
-            _gravity = delegate { return 1; };
+            EnhanceGravity();
         }
     }
 
+    private void HideParachute() => ParachuteObj.SetActive(false);
+
+    private void EnhanceGravity() => _gravity = delegate { return 1; };
+
     public void DestroyGameobject()
     {
-        Explosion();
+        SecondarySoundController.PlaySound(9, 1);
 
         Destroy(gameObject);
     }
@@ -122,11 +121,5 @@ public class ParachuteWithWoodBoxController : MonoBehaviour
     private void DestroyGameobjectRPC()
     {
         GameSceneObjectsReferences.WoodBoxSerializer.DestroyParachuteWithWoodBoxController(Id);
-    }
-
-    public void Explosion()
-    {
-        _woodBoxExplosion.SetActive(true);
-        _woodBoxExplosion.transform.SetParent(null);
     }
 }

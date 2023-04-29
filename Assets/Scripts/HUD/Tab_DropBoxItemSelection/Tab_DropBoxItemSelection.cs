@@ -53,7 +53,7 @@ public class Tab_DropBoxItemSelection : MonoBehaviour, IHudTabsObserver, IEndGam
     private void PlaySoundFX(bool isActive)
     {
         if (isActive)
-            UISoundController.PlaySound(1, 6);
+            UISoundController.PlaySound(1, 0);
     }
 
     public void OnGameEnd(object[] data = null)
