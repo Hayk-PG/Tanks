@@ -175,6 +175,8 @@ public class TankMovement : BaseTankMovement
             Raycasts();
 
             UpdateSpeedAndPush();
+
+            RaiseOnVehicleMoveEvent(_wheelColliderController.WheelRPM());
         }
     }
 
@@ -183,11 +185,12 @@ public class TankMovement : BaseTankMovement
         _wheelColliderController.MotorTorque(Direction * Speed * SpeedInSandbags * _speedBlocker * Time.fixedDeltaTime);
         _wheelColliderController.RotateWheels();
 
-        OnVehicleMove?.Invoke(_wheelColliderController.WheelRPM());
         OnDirectionValue?.Invoke(Direction);
         OnFuel?.Invoke((_wheelColliderController.WheelRPM() / 100) * fuelConsumptionPercent, _playerTurn.IsMyTurn);
         OnRigidbodyPosition?.Invoke(_rigidBody);       
     }
+
+    private void RaiseOnVehicleMoveEvent(float value) => OnVehicleMove?.Invoke(Direction == 0 ? 0 : value);
 
     private void SynchVariables(bool onlyOnLocalPlayer)
     {

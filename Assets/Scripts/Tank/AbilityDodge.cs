@@ -124,6 +124,8 @@ public class AbilityDodge : BaseAbility, IPlayerAbility
 
             DeactivateAbilityAfterLimit();
 
+            PlaySoundFX(1);
+
             _isDodged = false;
         }
     }

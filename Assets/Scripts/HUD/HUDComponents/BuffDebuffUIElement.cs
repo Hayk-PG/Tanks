@@ -40,7 +40,7 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
 
         ControlImageFill(0);
 
-        PlaySound();
+        PlaySound(true);
 
         SetActive(true);
 
@@ -60,7 +60,10 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
 
     private void SetActive(bool isActive) => GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
 
-    private void PlaySound() => UISoundController.PlaySound(9, 0);
+    private void PlaySound(bool isActive)
+    {
+        UISoundController.PlaySound(9, isActive ? 0 : 1);
+    }
 
     private void SetIcon(BuffDebuffType buffDebuffType)
     {
@@ -126,6 +129,8 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
 
     public void Deactivate()
     {
+        PlaySound(false);
+
         SetActive(false);
 
         gameObject.SetActive(false);
