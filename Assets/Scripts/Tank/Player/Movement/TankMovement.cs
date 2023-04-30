@@ -170,13 +170,13 @@ public class TankMovement : BaseTankMovement
 
         RigidbodyEulerAngles();
 
+        RaiseOnVehicleMoveEvent(_wheelColliderController.WheelRPM());
+
         if (_playerTurn.IsMyTurn)
         {
             Raycasts();
 
             UpdateSpeedAndPush();
-
-            RaiseOnVehicleMoveEvent(_wheelColliderController.WheelRPM());
         }
     }
 
@@ -190,7 +190,7 @@ public class TankMovement : BaseTankMovement
         OnRigidbodyPosition?.Invoke(_rigidBody);       
     }
 
-    private void RaiseOnVehicleMoveEvent(float value) => OnVehicleMove?.Invoke(Direction == 0 ? 0 : value);
+    private void RaiseOnVehicleMoveEvent(float value) => OnVehicleMove?.Invoke(Direction == 0 || !_playerTurn.IsMyTurn ? 0 : value);
 
     private void SynchVariables(bool onlyOnLocalPlayer)
     {

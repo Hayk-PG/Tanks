@@ -38,8 +38,6 @@ public class MenuSceneProgressBar : MonoBehaviour
         {
             _imgFill.fillAmount = Mathf.SmoothDamp(_imgFill.fillAmount, _progress, ref _currentVelocity, 0.1f, 1f);
 
-            print($"Progress: {_imgFill.fillAmount}");
-
             yield return null;
         }
 
