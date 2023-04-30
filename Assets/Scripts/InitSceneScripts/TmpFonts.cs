@@ -54,15 +54,23 @@ public class TmpFonts : MonoBehaviour
     {
         for (int i = 0; i < _assetReferenceTmpFonts.Count; i++)
         {
-            bool isDone = _assetReferenceTmpFonts[i].LoadAssetAsync().IsDone;
             bool isValid = _assetReferenceTmpFonts[i].OperationHandle.IsValid();
 
             if (isValid)
                 continue;
 
-            yield return new WaitUntil(() => isDone && isValid);
+            yield return StartCoroutine(LoadAssets(i));
         }
 
         _validationChecklist.CheckValidation(null, null, IsValid = true);
+    }
+
+    private IEnumerator LoadAssets(int index)
+    {
+        bool isAssetLoaded = false;
+
+        _assetReferenceTmpFonts[index].LoadAssetAsync().Completed += asset => { isAssetLoaded = true; };
+
+        yield return new WaitUntil(() => isAssetLoaded == true);
     }
 }
