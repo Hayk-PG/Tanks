@@ -3,61 +3,98 @@ using UnityEngine;
 
 public class AcidExplosionParticleController : MonoBehaviour
 {
+    public IScore OwnerScore { get; set; }
+
     [SerializeField]
+    private ParticleSystem _particle;
+
+    [SerializeField] [Space]
     private GameObject _parentGameobject;
 
-    private Dictionary<IDamage, int> CollidedDamagables = new Dictionary<IDamage, int>();
+    [SerializeField] [Space]
+    private GameObject[] _bubbles;
+
+    private GameObject _collidedGameobject;
+
+    private List<ParticleCollisionEvent> _particleCollisionEvents = new List<ParticleCollisionEvent>();
+    private List<Vector3> _collisionsIntersectionPoints = new List<Vector3>();
+    private List<IDamage> _collidedDamagables = new List<IDamage>();
 
     private int _collisionsCount;
-    private int _damage;
+    private int _damage = 60;
 
-    
+    private bool _isBubblesActive;
 
-    
+
+
+
+
 
     private void OnParticleCollision(GameObject other)
     {
-        _collisionsCount++;
+        int collisionEventsNum = _particle.GetCollisionEvents(other, _particleCollisionEvents);
 
-        if (_collisionsCount % 100 == 0)
+        bool hasRemainingBubbles = _collisionsCount < _bubbles.Length;
+
+        if (hasRemainingBubbles)
         {
-            _damage = _collisionsCount / 10;
+            StoreCollisionsIntersectionPoints();
 
-            //print($"Damage: {_damage}");
-
-            GetCollidedDamagables(other, _damage);
+            TryGetIDamagables();
         }
+        else
+        {
+            ActivateBubbleCollisionEffect();
+        }
+
+        _collisionsCount++;
     }
 
-    private void OnParticleSystemStopped()
-    {
-        ApplyDamage();
+    private void OnParticleSystemStopped() => DestroyParticles();
 
-        DestroyParticles();
-    }
+    private void StoreCollisionsIntersectionPoints() => _collisionsIntersectionPoints.Add(_particleCollisionEvents[0].intersection);
 
-    private void GetCollidedDamagables(GameObject gameObject, int damage)
+    private void TryGetIDamagables()
     {
-        IDamage iDamage = Get<IDamage>.From(gameObject);
+        if (_collidedGameobject == _particleCollisionEvents[0].colliderComponent.gameObject)
+            return;
+
+        _collidedGameobject = _particleCollisionEvents[0].colliderComponent.gameObject;
+
+        IDamage iDamage = Get<IDamage>.From(_collidedGameobject);
 
         if (iDamage == null)
             return;
 
-        if (CollidedDamagables.ContainsKey(iDamage))
-            CollidedDamagables[iDamage] += damage;
+        if (_collidedDamagables.Contains(iDamage))
+            return;
         else
-            CollidedDamagables.Add(iDamage, damage);
+            StoreDamagablesApplyDamage(iDamage);
     }
 
-    private void ApplyDamage()
+    private void StoreDamagablesApplyDamage(IDamage iDamage)
     {
-        print($"CollidedDamagables: {CollidedDamagables.Count}");
+        _collidedDamagables.Add(iDamage);     
+    }
 
-        foreach (var collidedDamagable in CollidedDamagables)
+    private void ApplyDamageAndScore(IDamage iDamage)
+    {
+        if (MyPhotonNetwork.IsOfflineMode)
+            iDamage.Damage(_damage);
+    }
+
+    private void ActivateBubbleCollisionEffect()
+    {
+        if (_isBubblesActive)
+            return;
+
+        _isBubblesActive = true;
+
+        for (int i = 0; i < _bubbles.Length; i++)
         {
-            collidedDamagable.Key.Damage(collidedDamagable.Value);
-
-            print($"Damage: {collidedDamagable.Key}/{collidedDamagable.Value}");
+            _bubbles[i].transform.SetParent(null);
+            _bubbles[i].gameObject.SetActive(true);
+            _bubbles[i].transform.position = _collisionsIntersectionPoints[i];
         }
     }
 
