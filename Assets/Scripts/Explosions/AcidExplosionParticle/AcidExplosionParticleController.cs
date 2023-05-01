@@ -4,12 +4,10 @@ using UnityEngine;
 public class AcidExplosionParticleController : MonoBehaviour
 {
     public IScore OwnerScore { get; set; }
+    public IDamage IDamageAi { get; set; }
 
     [SerializeField]
     private ParticleSystem _particle;
-
-    [SerializeField] [Space]
-    private GameObject _parentGameobject;
 
     [SerializeField] [Space]
     private GameObject[] _bubbles;
@@ -21,10 +19,11 @@ public class AcidExplosionParticleController : MonoBehaviour
     private List<IDamage> _collidedDamagables = new List<IDamage>();
 
     private int _collisionsCount;
-    private int _damage = 60;
 
     private bool _isBubblesActive;
 
+    private int DamageValue => 60;
+    private int ScoreValue => Random.Range(500, 1500);
 
 
 
@@ -50,8 +49,6 @@ public class AcidExplosionParticleController : MonoBehaviour
         _collisionsCount++;
     }
 
-    private void OnParticleSystemStopped() => DestroyParticles();
-
     private void StoreCollisionsIntersectionPoints() => _collisionsIntersectionPoints.Add(_particleCollisionEvents[0].intersection);
 
     private void TryGetIDamagables()
@@ -69,18 +66,27 @@ public class AcidExplosionParticleController : MonoBehaviour
         if (_collidedDamagables.Contains(iDamage))
             return;
         else
-            StoreDamagablesApplyDamage(iDamage);
+        {
+            StoreDamagables(iDamage);
+
+            ApplyDamageAndScore(iDamage);
+        }
     }
 
-    private void StoreDamagablesApplyDamage(IDamage iDamage)
-    {
-        _collidedDamagables.Add(iDamage);     
-    }
+    private void StoreDamagables(IDamage iDamage) => _collidedDamagables.Add(iDamage);
 
     private void ApplyDamageAndScore(IDamage iDamage)
     {
         if (MyPhotonNetwork.IsOfflineMode)
-            iDamage.Damage(_damage);
+        {
+            iDamage.Damage(DamageValue);
+
+            OwnerScore.GetScore(ScoreValue, iDamage);
+        }
+        else
+        {
+            GameSceneObjectsReferences.GameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, DamageValue, new int[] { ScoreValue }, 0);
+        }
     }
 
     private void ActivateBubbleCollisionEffect()
@@ -97,6 +103,4 @@ public class AcidExplosionParticleController : MonoBehaviour
             _bubbles[i].transform.position = _collisionsIntersectionPoints[i];
         }
     }
-
-    private void DestroyParticles() => Destroy(_parentGameobject);
 }

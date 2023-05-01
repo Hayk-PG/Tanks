@@ -4898,6 +4898,8 @@ GameObject:
   - component: {fileID: 8739372277342846771}
   - component: {fileID: 8901344139438789667}
   - component: {fileID: 8900021789985899579}
+  - component: {fileID: 6246095042836408187}
+  - component: {fileID: 2135788559799265232}
   m_Layer: 0
   m_Name: TreasureTrail
   m_TagString: Untagged
@@ -4912,7 +4914,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8738046980503158699}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
@@ -4920,7 +4922,7 @@ Transform:
   - {fileID: 7499953720591724592}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &8901344139438789667
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -9779,3 +9781,27 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &6246095042836408187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8738046980503158699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd4b7dbff3a63b45a47a38060307c77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2135788559799265232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8738046980503158699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564ff136073d8e14594b1a39f9f94a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

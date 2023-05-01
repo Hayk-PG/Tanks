@@ -5,16 +5,17 @@ using UnityEngine.AddressableAssets;
 //ADDRESSABLES
 public class ExplosionAddressables : MonoBehaviour
 {
-    [SerializeField] private AssetReference _assetReferenceParticles;
+    [SerializeField] 
+    protected AssetReference _assetReferenceParticles;
 
 
 
-    private void Awake()
+    protected virtual void Awake() => _assetReferenceParticles.InstantiateAsync(transform).Completed += asset => OnAssetInstantiate(asset.Result);
+
+    protected virtual void OnAssetInstantiate(GameObject asset)
     {
-        _assetReferenceParticles.InstantiateAsync(transform).Completed += (asset) => 
-        {
-            asset.Result.transform.SetParent(null);
-            Destroy(gameObject);
-        };
+        asset.transform.SetParent(null);
+
+        Destroy(gameObject);
     }
 }

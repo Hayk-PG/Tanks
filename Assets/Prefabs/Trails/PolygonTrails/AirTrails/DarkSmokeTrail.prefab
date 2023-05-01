@@ -4902,6 +4902,8 @@ GameObject:
   - component: {fileID: 4163157133142510891}
   - component: {fileID: 4253870736786406195}
   - component: {fileID: 4254996631440495877}
+  - component: {fileID: 4515445637116952545}
+  - component: {fileID: 8034413714907533813}
   m_Layer: 0
   m_Name: DarkSmokeTrail
   m_TagString: Untagged
@@ -4916,7 +4918,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4165763078898468863}
-  m_LocalRotation: {x: -0.4999998, y: -0.5000002, z: 0.50000036, w: 0.49999973}
+  m_LocalRotation: {x: -0.5000001, y: -0.5000001, z: 0.4999999, w: 0.4999999}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
@@ -9783,3 +9785,27 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &4515445637116952545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4165763078898468863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd4b7dbff3a63b45a47a38060307c77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8034413714907533813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4165763078898468863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564ff136073d8e14594b1a39f9f94a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
