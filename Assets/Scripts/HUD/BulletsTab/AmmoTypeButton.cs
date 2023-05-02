@@ -23,7 +23,7 @@ public class AmmoTypeButton : MonoBehaviour
         private Button _button;
 
         [SerializeField] [Space]
-        private CanvasGroup _canvasGroupLock, _canvasGroupPrice;
+        private CanvasGroup _canvasGroupLock, _canvasGroupPrice, _canvasGroupTextOwned;
 
         [SerializeField] [Space]
         private Image _imgWeapon, _imgFrame;
@@ -41,6 +41,7 @@ public class AmmoTypeButton : MonoBehaviour
 
         public CanvasGroup CanvasGroupLock => _canvasGroupLock;
         public CanvasGroup CanvasGroupPrice => _canvasGroupPrice;
+        public CanvasGroup CanvasGroupTextOwned => _canvasGroupTextOwned;
 
         public Sprite Image
         {
@@ -153,7 +154,9 @@ public class AmmoTypeButton : MonoBehaviour
 
     public void DisplayScoresToUnlock(int playerScore, int bulletsCount)
     {
-        ControlPriceTagActivity();
+        SetPriceTagActive();
+
+        SetTextOwnedActive();
 
         _properties.PlayerScore = playerScore;
 
@@ -173,7 +176,9 @@ public class AmmoTypeButton : MonoBehaviour
         _txtBottom.text = text;
     }
 
-    private void ControlPriceTagActivity() => GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupPrice, _properties.Price <= 0 ? false : true);
+    private void SetPriceTagActive() => GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupPrice, _properties.Price <= 0 ? false : true);
+
+    private void SetTextOwnedActive() => GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTextOwned, _properties.Price <= 0 ? true : false);
 
     private void Unlock()
     {
