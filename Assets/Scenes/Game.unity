@@ -530,6 +530,42 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &224828244 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4507605740715824424, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcc80deab7b498e488436a2b08f4b520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &381356822 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6794962312854705682, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6e65ccddb49451479a7b4d225a110fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &381356823 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4765653311889434191, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 279360527758376169}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11cbf518f0c84d744aafc9917eb98d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &395831914 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2044703759105483582, guid: 8bb47859066a5bf46b4be5e41db5feb7,
@@ -855,7 +891,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: NaN, z: 0, w: 3.4e-44}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -2383,6 +2419,7 @@ MonoBehaviour:
   _playerFeedback: {fileID: 2128704644}
   _enemyPlayerIcon: {fileID: 279360527758376175}
   _parachuteIcon: {fileID: 279360527758376174}
+  _tileModifyManager: {fileID: 224828244}
 --- !u!114 &2025759544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3266,6 +3303,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4507605740715824424, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _tabModify
+      value: 
+      objectReference: {fileID: 381356823}
+    - target: {fileID: 4507605740715824424, guid: 8bb47859066a5bf46b4be5e41db5feb7,
+        type: 3}
+      propertyPath: _tileModifyTabButtonsListener
+      value: 
+      objectReference: {fileID: 381356822}
     - target: {fileID: 4760254826461333348, guid: 8bb47859066a5bf46b4be5e41db5feb7,
         type: 3}
       propertyPath: m_AnchorMax.y

@@ -6,18 +6,21 @@ using System.Collections;
 public class TileModifyManager : MonoBehaviour
 {
     public enum TileModifyType { BuildBasicTiles, ExtendBasicTiles, BuildConcreteTiles, UpgradeToConcreteTiles }
+
     private TileModifyType _tileModifyType;
 
+    [SerializeField]
     private Tab_Modify _tabModify;
 
+    [SerializeField] [Space]
     private TileModifyTabButtonsListener _tileModifyTabButtonsListener;
-
-    private TilesData _tilesData;
 
     private List<GameObject> foundTiles;
 
-    [SerializeField]
+    [SerializeField] [Space]
     private TMP_Text _txtScorePrice;
+
+
 
     private int Price { get; set; }
 
@@ -32,6 +35,9 @@ public class TileModifyManager : MonoBehaviour
         public int Price { get; set; }
     }
 
+    // Default values
+    // Will be used if the SetRequiredCost method has not been called.
+
     public Prices[] NewPrices = new Prices[4]
     {
         new Prices{Name = Names.ModifyGround, Price = 250},
@@ -43,14 +49,8 @@ public class TileModifyManager : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        _tabModify = Get<Tab_Modify>.From(gameObject);
 
-        _tileModifyTabButtonsListener = Get<TileModifyTabButtonsListener>.From(gameObject);
 
-        _tilesData = FindObjectOfType<TilesData>();
-    }
 
     private void OnEnable()
     {
@@ -66,6 +66,17 @@ public class TileModifyManager : MonoBehaviour
         _tileModifyTabButtonsListener.onExtendBasicTiles -= ExtendBasicTiles;
         _tileModifyTabButtonsListener.onBuildConcreteTiles -= BuildConcreteTiles;
         _tileModifyTabButtonsListener.onUpgradeToConcreteTiles -= UpgradeToConcreteTiles;
+    }
+
+    public void SetRquiredCost(int tileModiferCostPercentage, int armoredCubeCostPercentage, int armoredTileCostPercentage, int tileExtenderCostPercentage)
+    {
+        NewPrices = new Prices[]
+        {
+            new Prices{Name = Names.ModifyGround, Price = 250 / 100 * tileModiferCostPercentage},
+            new Prices{Name = Names.MetalCube, Price = 1000 / 100 * armoredCubeCostPercentage},
+            new Prices{Name = Names.MetalGround, Price = 1000 / 100 * armoredTileCostPercentage},
+            new Prices{Name = Names.Bridge, Price = 250 / 100 * tileExtenderCostPercentage}
+        };
     }
 
     private void SetScorePriceText(int score, int price)
@@ -132,11 +143,11 @@ public class TileModifyManager : MonoBehaviour
 
         foundTiles = new List<GameObject>();
 
-        foreach (var tile in _tilesData.TilesDict)
+        foreach (var tile in GameSceneObjectsReferences.TilesData.TilesDict)
         {
-            bool haveLeftTilesBeenFound = tile.Key.x <= _tabModify.LocalPlayerTransform.position.x - _tilesData.Size && tile.Key.x >= _tabModify.LocalPlayerTransform.position.x - (_tilesData.Size * 6);
-            bool haveRIghtTilesBeenFound = tile.Key.x >= _tabModify.LocalPlayerTransform.position.x + _tilesData.Size && tile.Key.x <= _tabModify.LocalPlayerTransform.position.x + (_tilesData.Size * 6);
-            bool foundNearTiles = tile.Key.x >= _tabModify.LocalPlayerTransform.position.x - (_tilesData.Size * 6) && tile.Key.x <= _tabModify.LocalPlayerTransform.position.x + (_tilesData.Size * 6);
+            bool haveLeftTilesBeenFound = tile.Key.x <= _tabModify.LocalPlayerTransform.position.x - GameSceneObjectsReferences.TilesData.Size && tile.Key.x >= _tabModify.LocalPlayerTransform.position.x - (GameSceneObjectsReferences.TilesData.Size * 6);
+            bool haveRIghtTilesBeenFound = tile.Key.x >= _tabModify.LocalPlayerTransform.position.x + GameSceneObjectsReferences.TilesData.Size && tile.Key.x <= _tabModify.LocalPlayerTransform.position.x + (GameSceneObjectsReferences.TilesData.Size * 6);
+            bool foundNearTiles = tile.Key.x >= _tabModify.LocalPlayerTransform.position.x - (GameSceneObjectsReferences.TilesData.Size * 6) && tile.Key.x <= _tabModify.LocalPlayerTransform.position.x + (GameSceneObjectsReferences.TilesData.Size * 6);
 
             if (_tileModifyType == TileModifyType.BuildConcreteTiles || _tileModifyType == TileModifyType.BuildBasicTiles)
             {

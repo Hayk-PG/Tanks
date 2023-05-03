@@ -634,6 +634,7 @@ GameObject:
   - component: {fileID: 236364695689851701}
   - component: {fileID: -7215371284864398658}
   - component: {fileID: -531475126321987354}
+  - component: {fileID: 2625248473172763200}
   - component: {fileID: -4407700459603914385}
   - component: {fileID: 5451351532935279731}
   - component: {fileID: -3590973241755557545}
@@ -772,7 +773,7 @@ MonoBehaviour:
   _normalSpeed: 310
   _maxBrake: 310
   _accelerated: 2600
-  _damageFactor: 30
+  _damageFactor: 41
   _speedOnNormal: 310
   _speedOnRain: 290
   _speedOnSnow: 210
@@ -780,7 +781,7 @@ MonoBehaviour:
   _brakeOnRain: 29
   _brakeOnSnow: 21
   fuelConsumptionPercent: 150
-  _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
+  _normalCenterOfMass: {x: 0, y: -0.13, z: 0}
   _isJumpButtonPressed: 0
   _isJumped: 0
 --- !u!114 &-3704403214412141524
@@ -818,7 +819,7 @@ MonoBehaviour:
   _canon:
     _minEulerAngleX: -50
     _maxEulerAngleX: 0
-    _rotationSpeed: 17
+    _rotationSpeed: 21
     _rotationStabilizer: {x: 0, y: 0, z: 0}
   _shoot:
     _rigidbodyForceMultiplier: 500
@@ -839,7 +840,7 @@ MonoBehaviour:
   _weakSpot: {fileID: 5805258271784140764}
   _center: {fileID: 1881966536695704929}
   _strongSpot: {fileID: 87684496358796318}
-  _armor: 41
+  _armor: 19
 --- !u!114 &4557018836594301562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -888,6 +889,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcde7a708184f0d49b043be34837c788, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2625248473172763200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8630744161122963453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a48c73a4b4ecec4bb103146302e628e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _requiredTileModifierCostPercentage: 90
+  _requiredArmoredCubeCostPercentage: 150
+  _requiredArmoredTileCostPercentage: 150
+  _requiredTileExtenderCostPercentage: 90
 --- !u!114 &-4407700459603914385
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -33,6 +33,7 @@ public class TankProperties : ScriptableObject
     public float _normalSpeed;
     public float _maxBrake;
     public float _accelerated;
+    public float _fuelConsumptionPercentage;
 
     [Space]
     public float _speedOnNormal;
@@ -60,12 +61,11 @@ public class TankProperties : ScriptableObject
     [Header("Health")]
     public int _armor;
 
-    [Header("Props cut")]
-    public int _shieldCutPerecent;
-    public int _tileModifyCutPercent;
-    public int _armoredCubeCutPercent;
-    public int _armoredTileCutPercent;
-    public int _extendTileCutPercent;
+    [Header("Tile modifiers percent cost")]
+    public int _requiredTileModifierCostPercentage;
+    public int _requiredArmoredCubeCostPercentage;
+    public int _requiredArmoredTileCostPercentage;
+    public int _requiredTileExtenderCostPercentage;
 
     [Header("Tank btn stats")]
     public float _mobility;
@@ -81,6 +81,7 @@ public class TankProperties : ScriptableObject
         BaseShootController baseShootController = Get<BaseShootController>.From(_tank.gameObject);
         PlayerAmmoType playerAmmoType = Get<PlayerAmmoType>.From(_tank.gameObject);
         HealthController healthController = Get<HealthController>.From(_tank.gameObject);
+        TileModifierPercentCost tileModifierPercentCost = Get<TileModifierPercentCost>.From(_tank.gameObject);
 
         if (tankInfo != null)
         {
@@ -113,6 +114,8 @@ public class TankProperties : ScriptableObject
             _brakeOnNormal = baseTankMovement._brakeOnNormal;
             _brakeOnRain = baseTankMovement._brakeOnRain;
             _brakeOnSnow = baseTankMovement._brakeOnSnow;
+
+            _fuelConsumptionPercentage = baseTankMovement.fuelConsumptionPercent;
         }
 
         if(baseShootController != null)
@@ -134,6 +137,14 @@ public class TankProperties : ScriptableObject
             _armor = healthController.Armor;
         }
 
+        if(tileModifierPercentCost != null)
+        {
+            _requiredTileModifierCostPercentage = tileModifierPercentCost.RequiredTileModifierCostPercentage;
+            _requiredArmoredCubeCostPercentage = tileModifierPercentCost.RequiredArmoredCubeCostPercentage;
+            _requiredArmoredTileCostPercentage = tileModifierPercentCost.RequiredArmoredTileCostPercentage;
+            _requiredTileExtenderCostPercentage = tileModifierPercentCost.RequiredTileExtenderCostPercentage;
+        }
+
         CalculateTankBtnStats();
 
 
@@ -150,7 +161,8 @@ public class TankProperties : ScriptableObject
             Rigidbody rigidbody = Get<Rigidbody>.From(_aiTank.gameObject);
             BaseTankMovement baseTankMovement = Get<BaseTankMovement>.From(_aiTank.gameObject);
             BaseShootController baseShootController = Get<BaseShootController>.From(_aiTank.gameObject);
-            HealthController healthController = Get<HealthController>.From(_aiTank.gameObject);          
+            HealthController healthController = Get<HealthController>.From(_aiTank.gameObject);
+            TileModifierPercentCost tileModifierPercentCost = Get<TileModifierPercentCost>.From(_aiTank.gameObject);
 
             if (tankInfo != null)
             {
@@ -180,6 +192,8 @@ public class TankProperties : ScriptableObject
                 baseTankMovement._brakeOnNormal = _brakeOnNormal;
                 baseTankMovement._brakeOnRain = _brakeOnRain;
                 baseTankMovement._brakeOnSnow = _brakeOnSnow;
+
+                baseTankMovement.fuelConsumptionPercent = _fuelConsumptionPercentage;
             }
 
             if (baseShootController != null)
@@ -193,25 +207,58 @@ public class TankProperties : ScriptableObject
             {
                 healthController.Armor = _armor;
             }
+
+            if (tileModifierPercentCost != null)
+            {
+                tileModifierPercentCost.RequiredTileModifierCostPercentage = _requiredTileModifierCostPercentage;
+                tileModifierPercentCost.RequiredArmoredCubeCostPercentage = _requiredArmoredCubeCostPercentage;
+                tileModifierPercentCost.RequiredArmoredTileCostPercentage = _requiredArmoredTileCostPercentage;
+                tileModifierPercentCost.RequiredTileExtenderCostPercentage = _requiredTileExtenderCostPercentage;
+            }
         }
     }
 
     private void CalculateTankBtnStats()
     {
-        _mobility = ((_normalSpeed + _accelerated) / 4000f * 100f) / 100f;
+        CalculateMoblity();
 
-        float p = _shieldCutPerecent + _armoredCubeCutPercent + _armoredTileCutPercent + _armor + _damageFactor;
-        _protection = (p / 500 * 100f) / 100f;
+        CalculateProtection();
 
-        float v = 0f;
-        float divider = 0f;
+        CalculateFirePower();
+    }
+
+    private void CalculateMoblity()
+    {
+        float normalSpeedLimit = 1000;
+        float accelerateLimit = 3000;
+        float damageFactorLimit = 100;
+
+        // If the _fuelConsumptionPercentage is less than or equal to 100, it means that no additional number will be added to the fuelConsumptionPercentageLimit, and therefore it will be set to 0. 
+        // If the _fuelConsumptionPercentage is greater than 100, the additional amount will be calculated using the formula '_fuelConsumptionPercentage - 100' and added to the fuelConsumptionPercentageLimit.
+
+        float fuelConsumptionPercentageLimit = _fuelConsumptionPercentage <= 100 ? 0 : _fuelConsumptionPercentage - 100;
+
+        _mobility = Mathf.InverseLerp(0, normalSpeedLimit + accelerateLimit + damageFactorLimit + fuelConsumptionPercentageLimit, _normalSpeed + _accelerated + _damageFactor);
+    }
+
+    private void CalculateProtection()
+    {
+        float protectionLimit = 50;
+
+        _protection = Mathf.InverseLerp(0, protectionLimit, _armor);
+    }
+
+    private void CalculateFirePower()
+    {        
+        float powerLimit = 0f;
+        float currenPower = 0f;
 
         foreach (var item in _weapons)
         {
-            v += item._damageValue + item._radius + item._destructDamage + item._bulletMaxForce;
-            divider += 100f + 1f + 100f + 20f;
+            currenPower += item._damageValue + item._radius + item._destructDamage + item._bulletMaxForce;
+            powerLimit += 100f + 1f + 100f + 20f;
         }
 
-        _firePower = (v / divider * 100f) / 100f;
+        _firePower = Mathf.InverseLerp(0, powerLimit, currenPower);
     }
 }

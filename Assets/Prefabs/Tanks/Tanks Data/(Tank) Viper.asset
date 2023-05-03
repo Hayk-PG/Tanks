@@ -30,33 +30,35 @@ MonoBehaviour:
   _requiredItems: []
   _availableInLevel: 3
   _rigidbodyMass: 499.99997
-  _normalSpeed: 275
-  _maxBrake: 275
-  _accelerated: 2750
-  _speedOnNormal: 325
-  _speedOnRain: 275
-  _speedOnSnow: 180
-  _brakeOnNormal: 325
-  _brakeOnRain: 5
-  _brakeOnSnow: 0
-  _damageFactor: 85
-  _normalCenterOfMass: {x: 0, y: -0.1, z: 0}
-  _minEulerAngleX: -58
+  _normalSpeed: 310
+  _maxBrake: 310
+  _accelerated: 2600
+  _fuelConsumptionPercentage: 150
+  _speedOnNormal: 310
+  _speedOnRain: 290
+  _speedOnSnow: 210
+  _brakeOnNormal: 310
+  _brakeOnRain: 29
+  _brakeOnSnow: 21
+  _damageFactor: 41
+  _normalCenterOfMass: {x: 0, y: -0.13, z: 0}
+  _minEulerAngleX: -50
   _maxEulerAngleX: 0
-  _rotationSpeed: 10
+  _rotationSpeed: 21
   _rotationStabilizer: {x: 0, y: 0, z: 0}
-  _rigidbodyForceMultiplier: 350
+  _rigidbodyForceMultiplier: 500
   _weapons:
   - {fileID: 11400000, guid: d117b99a9622d614b86957b8b055871f, type: 2}
   - {fileID: 11400000, guid: f3778d98baea6d344bfc775c5fe05042, type: 2}
   - {fileID: 11400000, guid: d2bdd7b789c892d4684cc61ae6c78c82, type: 2}
   - {fileID: 11400000, guid: 0e34c29cce8ba4616bf58e12aec47ecc, type: 2}
-  _armor: 41
-  _shieldCutPerecent: 0
-  _tileModifyCutPercent: 0
-  _armoredCubeCutPercent: 0
-  _armoredTileCutPercent: 0
-  _extendTileCutPercent: 0
-  _mobility: 0.75625
-  _protection: 0.252
-  _firePower: 0.44346154
+  - {fileID: 11400000, guid: ecb1d87f6524a1f4fa57f3d1bdce8427, type: 2}
+  - {fileID: 11400000, guid: 19105f6791c00034aac1820d92845d7e, type: 2}
+  _armor: 19
+  _requiredTileModifierCostPercentage: 90
+  _requiredArmoredCubeCostPercentage: 150
+  _requiredArmoredTileCostPercentage: 150
+  _requiredTileExtenderCostPercentage: 90
+  _mobility: 0.71108437
+  _protection: 0.38
+  _firePower: 0.34737554
