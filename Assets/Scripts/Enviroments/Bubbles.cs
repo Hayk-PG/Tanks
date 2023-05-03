@@ -3,24 +3,16 @@ using UnityEngine;
 
 public class Bubbles : MonoBehaviour
 {
-    [SerializeField] private ParticleBubbles[] _customParticles;
-    private GameManager _gameManager;
+    [SerializeField] 
+    private ParticleBubbles[] _customParticles;
 
 
 
-    private void Awake()
-    {
-        _gameManager = FindObjectOfType<GameManager>();
-    }
-
-    private void Start()
-    {
-        StartCoroutine(SpawnParticles());
-    }
+    private void Start() => StartCoroutine(SpawnParticles());
 
     private IEnumerator SpawnParticles()
     {
-        while (!_gameManager.IsGameEnded)
+        while (!GameSceneObjectsReferences.GameManager.IsGameEnded)
         {
             yield return new WaitForSeconds(Random.Range(0, 10));
 

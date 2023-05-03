@@ -32,6 +32,8 @@ public class ScoreController : MonoBehaviour, IScore
 
 
 
+
+
     private void Awake()
     {       
         IDamage = Get<IDamage>.From(gameObject);
@@ -130,7 +132,19 @@ public class ScoreController : MonoBehaviour, IScore
     public void HitEnemyAndGetScore(int[] scores, IDamage enemyDamage)
     {
         if (enemyDamage != IDamage)
+        {
+            PlayHitSoundEffect();
+
             OnHitEnemy?.Invoke(scores);
+        }
+    }
+
+    private void PlayHitSoundEffect()
+    {
+        if (_tankController.BasePlayer == null)
+            return;
+
+        SecondarySoundController.PlaySound(0, 1);
     }
 
     private void OnGetScoreFromTerOccInd() => UpdateScore(100, 0.5f);

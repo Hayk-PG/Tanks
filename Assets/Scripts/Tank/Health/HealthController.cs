@@ -44,6 +44,9 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
 
 
+
+
+
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
@@ -85,6 +88,10 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
     public void BoostSafeZone(bool isSafeZone) => IsSafeZone = isSafeZone;
 
+    /// <summary>
+    /// Use this method if damages apply by using Physics.OverlapSphere
+    /// </summary>
+    /// <param name="damage"></param>
     public void Damage(int damage)
     {
         if (Health <= 0)
@@ -99,6 +106,11 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
         }
     }
 
+    /// <summary>
+    /// Use this method if damages are applied by interacting directly with colliders
+    /// </summary>
+    /// <param name="collider"></param>
+    /// <param name="damage"></param>
     public void Damage(Collider collider, int damage)
     {
         float fixedDamage = damage;
@@ -108,19 +120,19 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
         {
             newDamage = fixedDamage * 1.5f;
         }
-
+        
         if(collider == _center)
         {
             newDamage = fixedDamage;
 
-            SecondarySoundController.PlaySound(0, 2);
+            PlayDamageSoundFX(2);
         }
 
         if(collider == _strongSpot)
         {
             newDamage = fixedDamage / 1.5f;
 
-            SecondarySoundController.PlaySound(0, 2);
+            PlayDamageSoundFX(2);
         }
 
         Damage(Mathf.RoundToInt(newDamage));
@@ -139,7 +151,7 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
         OnTankDamageFire?.Invoke(Health);
 
-        PlayDamageSoundFX();
+        PlayDamageSoundFX(5, true);
     }
 
     private void ApplyArmorDamage(int damage)
@@ -169,15 +181,17 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
                 ShieldHealth = Mathf.Abs(shieldHealth);
             });
 
-        PlayDamageSoundFX();
+        PlayDamageSoundFX(5, true);
 
         onUpdateArmorBar?.Invoke(ShieldHealth);
     }
 
-    private void PlayDamageSoundFX()
+    private void PlayDamageSoundFX(int clipIndex, bool onlyOnLocalPlayer = false)
     {
-        if (_tankController.BasePlayer != null)
-            SecondarySoundController.PlaySound(0, 5);
+        if (onlyOnLocalPlayer && _tankController.BasePlayer == null)
+            return;
+
+        SecondarySoundController.PlaySound(0, clipIndex);
     }
 
     public int DamageValue(int damage)
