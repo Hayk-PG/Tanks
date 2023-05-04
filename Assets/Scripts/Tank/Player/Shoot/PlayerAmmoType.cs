@@ -36,6 +36,10 @@ public class PlayerAmmoType : MonoBehaviour
 
 
 
+
+
+
+
     private void Awake()
     {
         _tankController = Get<TankController>.From(gameObject);
@@ -67,12 +71,14 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void OnInitialize()
     {
-        GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
+        SubscribeToAmmoTabCustomizationEvent();
 
         InitializeBulletsCountList();
 
         InstantiateAmmoTypeButton();       
     }
+
+    private void SubscribeToAmmoTabCustomizationEvent() => GameSceneObjectsReferences.AmmoTabCustomization.OnPlayerWeaponChanged += OnPlayerWeaponChanged;
 
     private void InitializeBulletsCountList()
     {
@@ -81,7 +87,9 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void InstantiateAmmoTypeButton()
     {
-        if(_weapons != null)
+        bool _hasWeapons = _weapons != null;
+
+        if (_hasWeapons)
         {
             for (int i = 0; i < _weapons.Length; i++)
             {
@@ -94,7 +102,9 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void OnPlayerWeaponChanged(AmmoTypeButton ammoTypeButton)
     {
-        if (ammoTypeButton._properties.Index < _weapons.Length)
+        bool isWeaponIndexWithinRange = ammoTypeButton._properties.Index < _weapons.Length;
+
+        if (isWeaponIndexWithinRange)
             _shootController.ActiveAmmoIndex = ammoTypeButton._properties.Index;
         else
             _shootController.ActiveAmmoIndex = _weapons.Length - 1;
@@ -114,11 +124,15 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void OnPlayerSelectedRocket(AmmoTypeButton ammoTypeButton)
     {
-        if(ammoTypeButton._properties._buttonType == ButtonType.Rocket && ammoTypeButton._properties.Quantity > 0)
+        bool hasAvailableRockets = ammoTypeButton._properties._buttonType == ButtonType.Rocket && ammoTypeButton._properties.Quantity > 0;
+
+        if (hasAvailableRockets)
         {
             for (int i = 0; i < GameSceneObjectsReferences.DropBoxSelectionPanelRockets.Length; i++)
             {
-                if (GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Weapon == _weapons[ammoTypeButton._properties.Index])
+                bool isWeaponMatchingSelectedRocket = GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Weapon == _weapons[ammoTypeButton._properties.Index];
+
+                if (isWeaponMatchingSelectedRocket)
                 {
                     int id = GameSceneObjectsReferences.DropBoxSelectionPanelRockets[i].Id;
 
@@ -134,17 +148,15 @@ public class PlayerAmmoType : MonoBehaviour
             RaiseOnRocketSelectedEvent(false);
     }
 
-    private void RaiseOnRocketSelectedEvent(bool isSelected, int id = 0)
-    {
-        onRocketSelected?.Invoke(isSelected, id);
-    }
+    private void RaiseOnRocketSelectedEvent(bool isSelected, int id = 0) => onRocketSelected?.Invoke(isSelected, id);
+
+    // Don't need GetMoreBullets method for now.
+    // Will come to this later.
 
     private void GetMoreBullets(AmmoTypeButton ammoTypeButton)
     {
-        return;
-
-        if (_weaponsBulletsCount[_shootController.ActiveAmmoIndex] <= 0)
-            _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += ammoTypeButton._properties.Quantity;
+        //if (_weaponsBulletsCount[_shootController.ActiveAmmoIndex] <= 0)
+        //    _weaponsBulletsCount[_shootController.ActiveAmmoIndex] += ammoTypeButton._properties.Quantity;
     }
 
     public void UpdateDisplayedWeapon(int index)
@@ -154,7 +166,13 @@ public class PlayerAmmoType : MonoBehaviour
 
     public void SetBulletSpecs(AmmoTypeButton ammoTypeButton)
     {
-        _shootController._shoot._minForce = ammoTypeButton._properties._buttonType == ButtonType.Railgun ? ammoTypeButton._properties.BulletMaxForce : 3;
+        bool isCurrentWeaponRailgun = ammoTypeButton._properties._buttonType == ButtonType.Railgun;
+
+        // To maintain the projectile's high velocity, set the minForce value equal to maxForce if the current weapon is a Railgun.
+
+        float minForce = isCurrentWeaponRailgun ? ammoTypeButton._properties.BulletMaxForce : 3;
+
+        _shootController._shoot._minForce = minForce;
         _shootController._shoot._smoothTime = 1;
         _shootController._shoot._maxForce = ammoTypeButton._properties.BulletMaxForce;
         _shootController._shoot._maxSpeed = ammoTypeButton._properties.BulletForceMaxSpeed;
@@ -164,13 +182,17 @@ public class PlayerAmmoType : MonoBehaviour
 
     public void SwitchToDefaultWeapon(int index)
     {
-        if (_weaponsBulletsCount[index] <= 0)
+        bool noAmmoAvailable = _weaponsBulletsCount[index] <= 0;
+
+        if (noAmmoAvailable)
             GameSceneObjectsReferences.AmmoTabCustomization.SetDefaultAmmo(null);
     }
 
     public void AddWeaponFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
     {
-        if(dropBoxItemType == DropBoxItemType.Rocket && _tankController.BasePlayer != null)
+        bool hasLocalPlayerPickedRocket = dropBoxItemType == DropBoxItemType.Rocket && _tankController.BasePlayer != null;
+
+        if (hasLocalPlayerPickedRocket)
         {
             WeaponProperties newWeapon = (WeaponProperties)data[0];
 
@@ -198,7 +220,9 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void UpdateAmmoFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
     {
-        if (dropBoxItemType == DropBoxItemType.Ammo && _tankController.BasePlayer != null)
+        bool hasLocalPlayerPickAmmo = dropBoxItemType == DropBoxItemType.Ammo && _tankController.BasePlayer != null;
+
+        if (hasLocalPlayerPickAmmo)
         {
             int price = (int)data[0];
 
