@@ -22,7 +22,7 @@ public class InstantiatePickables : MonoBehaviourPun
     {
         GetPlayers();
 
-        //StartCoroutine(InstantiateCoroutine());
+        StartCoroutine(InstantiateCoroutine());
     }
 
     private void GetPlayers()
@@ -35,9 +35,11 @@ public class InstantiatePickables : MonoBehaviourPun
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(0, 5));
+            yield return new WaitForSeconds(Random.Range(30, 90));
 
-            if (FindObjectOfType<ParachuteWithWoodBoxController>() == null && _player1 != null && _player2 != null)
+            bool canInstantiate = FindObjectOfType<ParachuteWithWoodBoxController>() == null && _player1 != null && _player2 != null;
+
+            if (canInstantiate)
                 InstantiateWoodBox(WoodBoxSpawnPosition());
         }
     }
