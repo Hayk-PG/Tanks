@@ -107,6 +107,8 @@ public class PlayerAmmoType : MonoBehaviour
 
         OnPlayerSelectedRocket(ammoTypeButton);
 
+        SetActiveWeaponType(ammoTypeButton._properties._buttonType);
+
         OnWeaponChanged?.Invoke(_shootController.ActiveAmmoIndex);
     }
 
@@ -152,11 +154,13 @@ public class PlayerAmmoType : MonoBehaviour
 
     public void SetBulletSpecs(AmmoTypeButton ammoTypeButton)
     {
-        _shootController._shoot._minForce = 3;
+        _shootController._shoot._minForce = ammoTypeButton._properties._buttonType == ButtonType.Railgun ? ammoTypeButton._properties.BulletMaxForce : 3;
         _shootController._shoot._smoothTime = 1;
         _shootController._shoot._maxForce = ammoTypeButton._properties.BulletMaxForce;
         _shootController._shoot._maxSpeed = ammoTypeButton._properties.BulletForceMaxSpeed;
     }
+
+    private void SetActiveWeaponType(ButtonType weaponType) => _shootController.GetActiveWeaponType(weaponType);
 
     public void SwitchToDefaultWeapon(int index)
     {

@@ -82,18 +82,18 @@ public class PlayerShootTrajectory : BaseTrajectory
         points[index].transform.localScale = new Vector3(points[index - 1].transform.localScale.x - s, points[index - 1].transform.localScale.y - s, points[index - 1].transform.localScale.z - s);
     }
 
-    internal Vector3 PointPosition(Vector3 direction, float force, float t)
+    internal Vector3 PointPosition(Vector3 direction, Vector3 gravity, float force, float t)
     {
-        Vector3 pointPos = transform.position + (direction.normalized * force * t) + 0.5f * Physics.gravity * (t * t);
+        Vector3 pointPos = transform.position + (direction.normalized * force * t) + 0.5f * gravity * (t * t);
         return pointPos;
     }
 
-    public override void PredictedTrajectory(float force)
+    public override void PredictedTrajectory(Vector3 gravity, float force)
     {
         for (int i = 0; i < points.Length; i++)
         {
             float dist = i * 0.02f;
-            points[i].transform.position = PointPosition(transform.forward, force, dist);
+            points[i].transform.position = PointPosition(transform.forward, gravity, force, dist);
         }
     }
 

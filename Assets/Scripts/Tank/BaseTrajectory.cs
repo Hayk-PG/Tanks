@@ -2,7 +2,7 @@
 
 public class BaseTrajectory : MonoBehaviour
 {
-    public virtual void PredictedTrajectory(float force)
+    public virtual void PredictedTrajectory(Vector3 gravity, float force)
     {
 
     }

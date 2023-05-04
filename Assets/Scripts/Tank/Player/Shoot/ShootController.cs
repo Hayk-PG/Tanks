@@ -158,6 +158,13 @@ public class ShootController : BaseShootController, IEndGame
 
     protected virtual void OnInitialize() => _iShoot = Get<IShoot>.From(_tankController.BasePlayer.gameObject);
 
+    public void GetActiveWeaponType(ButtonType weaponType)
+    {
+        _currentWeaponType = weaponType;
+
+        print($"Active weapon type: {_currentWeaponType}");
+    }
+
     protected virtual void OnRocketSelected(bool isSelected, int id)
     {
         _currentWeaponType = isSelected ? ButtonType.Rocket : ButtonType.Shell;
@@ -208,8 +215,8 @@ public class ShootController : BaseShootController, IEndGame
 
     protected virtual void ApplyForce()
     {
-        if(_shootPoint != null && _shootPoint.gameObject.activeInHierarchy)
-            _trajectory?.PredictedTrajectory(CurrentForce);
+        if (_shootPoint != null && _shootPoint.gameObject.activeInHierarchy)
+            _trajectory?.PredictedTrajectory(_currentWeaponType == ButtonType.Railgun ? Vector3.zero : Physics.gravity, CurrentForce);
     }
 
     protected virtual void OnTurnChanged(TurnState turnState) => _hasShot = false;
@@ -218,7 +225,7 @@ public class ShootController : BaseShootController, IEndGame
     {
         if (HaveEnoughBullets() && _playerTurn.IsMyTurn && !_isStunned && !_hasShot)
         {
-            Conditions<bool>.Compare(_currentWeaponType == ButtonType.Shell, () => _iShoot?.Shoot(CurrentForce), () => _iShoot.LaunchRocket(ActiveRocketId));
+            Conditions<bool>.Compare(_currentWeaponType == ButtonType.Shell || _currentWeaponType == ButtonType.Railgun, () => _iShoot?.Shoot(CurrentForce), () => _iShoot.LaunchRocket(ActiveRocketId));
             
             AmmoUpdate();
 
