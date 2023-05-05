@@ -56,10 +56,15 @@ public class BaseBulletParticles : MonoBehaviour
 
     protected virtual void InstantiateTrail()
     {
-        if (System.String.IsNullOrEmpty(_assetReferenceTrail.AssetGUID))
+        if (IsAssetReferenceTrailEmpty())
             return;
 
         _assetReferenceTrail.InstantiateAsync(transform);
+    }
+
+    protected bool IsAssetReferenceTrailEmpty()
+    {
+        return System.String.IsNullOrEmpty(_assetReferenceTrail.AssetGUID);
     }
 
     protected virtual void OnExplode()
