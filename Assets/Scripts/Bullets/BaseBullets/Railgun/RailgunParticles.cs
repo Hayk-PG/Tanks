@@ -42,6 +42,8 @@ public class RailgunParticles : BaseBulletParticles
 
             SetTrailLineRendererPosition(0, StartPosition);
             SetTrailLineRendererPosition(1, StartPosition);
+
+            SecondarySoundController.PlaySound(11, 0);
         };
     }
 
