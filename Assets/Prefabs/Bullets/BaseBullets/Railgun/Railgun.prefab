@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1352565610704002435}
   - component: {fileID: 8120596746064686883}
   - component: {fileID: 6392851577592160966}
-  - component: {fileID: 7368497702445505807}
+  - component: {fileID: 8324726211257678698}
   - component: {fileID: 4284111654392593450}
   - component: {fileID: 1588420913393417180}
   m_Layer: 0
@@ -50,7 +50,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7989973506247139125}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.011253357
   m_Height: 0.06639251
@@ -113,7 +113,7 @@ MonoBehaviour:
   _gravityForcePercentage: 99
   _windForcePercentage: 35
   _trailTime: 0
---- !u!114 &7368497702445505807
+--- !u!114 &8324726211257678698
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7989973506247139125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c67a3f85e9a95124ca38ef023032aa69, type: 3}
+  m_Script: {fileID: 11500000, guid: b0b1dfa8ace5e074bb2d1a0073a43fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _baseBulletController: {fileID: 8120596746064686883}
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _baseBulletVelocity: {fileID: 6392851577592160966}
-  _baseBulletCollision: {fileID: 7368497702445505807}
+  _baseBulletCollision: {fileID: 8324726211257678698}
   _dontDestroyOnTimeLimit: 0
 --- !u!114 &1588420913393417180
 MonoBehaviour:
