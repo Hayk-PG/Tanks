@@ -36,6 +36,10 @@ public class ShootController : BaseShootController, IEndGame
     protected GameplayAnnouncer _gameplayAnnouncer;
 
     protected ButtonType _currentWeaponType;
+
+    // This variable is used to store the current weapon type before using the Rocket weapon.
+
+    protected ButtonType _previousWeaponType;
     
     [HideInInspector] [SerializeField] 
     protected BaseBulletController _instantiatedBullet;
@@ -43,12 +47,21 @@ public class ShootController : BaseShootController, IEndGame
     [HideInInspector] [SerializeField] 
     protected int _activeAmmoIndex;
 
-    protected bool _hasShot, _isGameEnd;
+    protected bool _hasShot;
+    protected bool _isSandbagsTriggered;
+    protected bool _isGameplayAnnounced;
+    protected bool _isGameEnd;
 
     public BaseBulletController Bullet
     {
         get => _instantiatedBullet;
         set => _instantiatedBullet = value;
+    }
+
+    public Vector3 CanonPivotPointEulerAngles
+    {
+        get => _canonPivotPoint.eulerAngles;
+        set => _canonPivotPoint.eulerAngles = value;
     }
 
     public float Direction { get; set; }
@@ -63,26 +76,18 @@ public class ShootController : BaseShootController, IEndGame
         get => _activeAmmoIndex;
         set => _activeAmmoIndex = value;
     }
-
     public int ActiveRocketId { get; protected set; }
-
-    public Vector3 CanonPivotPointEulerAngles
-    {
-        get => _canonPivotPoint.eulerAngles;
-        set => _canonPivotPoint.eulerAngles = value;
-    }
 
     public bool IsApplyingForce
     {
         get => _shoot._isApplyingForce;
         set => _shoot._isApplyingForce = value;
-    }
-
-    protected bool _isSandbagsTriggered;
-    protected bool _isGameplayAnnounced;
+    }    
 
     public Action<bool> OnCanonRotation { get; set; }
     public Action<PlayerHUDValues> OnUpdatePlayerHUDValues { get; set; }
+
+
 
 
    
@@ -140,7 +145,9 @@ public class ShootController : BaseShootController, IEndGame
 
     protected virtual void FixedUpdate()
     {
-        if (_playerTurn.IsMyTurn && !_isStunned)
+        bool isActive = _playerTurn.IsMyTurn && !_isStunned;
+
+        if (isActive)
         {
             RotateCanon();
 
@@ -158,9 +165,20 @@ public class ShootController : BaseShootController, IEndGame
 
     protected virtual void OnInitialize() => _iShoot = Get<IShoot>.From(_tankController.BasePlayer.gameObject);
 
+    public void GetActiveWeaponType(ButtonType weaponType) => _currentWeaponType = weaponType;
+
     protected virtual void OnRocketSelected(bool isSelected, int id)
     {
-        _currentWeaponType = isSelected ? ButtonType.Rocket : ButtonType.Shell;
+        if (isSelected)
+        {
+            _previousWeaponType = _currentWeaponType;
+
+            _currentWeaponType = ButtonType.Rocket;
+        }
+        else
+        {
+            _currentWeaponType = _previousWeaponType;
+        }
 
         ActiveRocketId = id;
 
@@ -185,14 +203,13 @@ public class ShootController : BaseShootController, IEndGame
     protected virtual void OnMovementDirectionValue(float direction)
     {
         if (_tankController.BasePlayer != null)
-        {
             ShootPointGameobjectActivity(direction == 0);
-        }
     }
 
     protected virtual void OnControllers(Vector2 values)
     {
         Direction = -values.y;
+
         CurrentForce = Mathf.Clamp(CurrentForce + (_playerTurn.MyTurn == TurnState.Player1 ? values.x: -values.x) * 2 * Time.deltaTime, _shoot._minForce, _shoot._maxForce);       
     }
 
@@ -208,8 +225,12 @@ public class ShootController : BaseShootController, IEndGame
 
     protected virtual void ApplyForce()
     {
-        if(_shootPoint != null && _shootPoint.gameObject.activeInHierarchy)
-            _trajectory?.PredictedTrajectory(CurrentForce);
+        if (_shootPoint != null && _shootPoint.gameObject.activeInHierarchy)
+        {
+            // If the current weapon is Railgun, no gravity applies to the trajectory points.
+
+            _trajectory?.PredictedTrajectory(_currentWeaponType == ButtonType.Railgun ? Vector3.zero : Physics.gravity, CurrentForce);
+        }
     }
 
     protected virtual void OnTurnChanged(TurnState turnState) => _hasShot = false;
@@ -218,7 +239,7 @@ public class ShootController : BaseShootController, IEndGame
     {
         if (HaveEnoughBullets() && _playerTurn.IsMyTurn && !_isStunned && !_hasShot)
         {
-            Conditions<bool>.Compare(_currentWeaponType == ButtonType.Shell, () => _iShoot?.Shoot(CurrentForce), () => _iShoot.LaunchRocket(ActiveRocketId));
+            Conditions<bool>.Compare(_currentWeaponType == ButtonType.Shell || _currentWeaponType == ButtonType.Railgun, () => _iShoot?.Shoot(CurrentForce), () => _iShoot.LaunchRocket(ActiveRocketId));
             
             AmmoUpdate();
 
@@ -246,8 +267,6 @@ public class ShootController : BaseShootController, IEndGame
         GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = Bullet;
 
         GameSceneObjectsReferences.MainCameraController.GetProjectileRigidbody(Bullet.RigidBody);
-
-        //GameSceneObjectsReferences.MainCameraController.CameraOffset(_playerTurn, Bullet.RigidBody, 5, null);
     }
 
     public virtual void LaunchRocket(int id)

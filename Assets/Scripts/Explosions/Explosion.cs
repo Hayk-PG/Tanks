@@ -27,6 +27,8 @@ public class Explosion : BaseExplosion
 
 
 
+
+
     protected virtual void Awake()
     {
         _iDamages = new List<IDamage>();
@@ -38,25 +40,30 @@ public class Explosion : BaseExplosion
     {
         base.Start();
 
+        ApplyDamageToColliders();
+    }
+
+    protected virtual void ApplyDamageToColliders()
+    {
         for (int i = 0; i < _colliders.Length; i++)
         {
             _magnitude = (transform.position - _colliders[i].transform.position).magnitude;
 
-            GetIDamage(Get<IDamage>.From(_colliders[i].gameObject));           
+            TryGetDamagable(Get<IDamage>.From(_colliders[i].gameObject));
         }
     }
 
-    protected virtual void GetIDamage(IDamage iDamage)
+    protected virtual void TryGetDamagable(IDamage iDamage)
     {
-        Conditions<IDamage>.CheckNull(iDamage, null, () => CheckDuplicates(iDamage));
+        Conditions<IDamage>.CheckNull(iDamage, null, () => CheckDamagablesDuplicates(iDamage));
     }
 
-    protected virtual void CheckDuplicates(IDamage iDamage)
+    protected virtual void CheckDamagablesDuplicates(IDamage iDamage)
     {
-        Conditions<bool>.Compare(!_iDamages.Contains(iDamage), _iDamages.Contains(iDamage), () => Damage(iDamage), null, null, null);
+        Conditions<bool>.Compare(!_iDamages.Contains(iDamage), _iDamages.Contains(iDamage), () => CalculateDamage(iDamage), null, null, null);
     }
 
-    protected virtual void Damage(IDamage iDamage)
+    protected virtual void CalculateDamage(IDamage iDamage)
     {
         _iDamages.Add(iDamage);
 
@@ -66,10 +73,10 @@ public class Explosion : BaseExplosion
 
         _currentDamageValue = Mathf.RoundToInt((_maxDamageValue / 100 * _percentage) / 100 * _distanceFactorPercentage);
 
-        Conditions<bool>.Compare(_currentDamageValue * 10 > 0, ()=> DamageAndScore(iDamage), null);
+        Conditions<bool>.Compare(_currentDamageValue * 10 > 0, ()=> CalculateScoreAndApplyDamageAndGetScored(iDamage), null);
     }
 
-    protected virtual void DamageAndScore(IDamage iDamage)
+    protected virtual void CalculateScoreAndApplyDamageAndGetScored(IDamage iDamage)
     {
         int hitScore = (_currentDamageValue * 100);
         int distanceBonus = Mathf.FloorToInt(Distance * 10);
@@ -85,13 +92,17 @@ public class Explosion : BaseExplosion
         if (IDamageAi == iDamage)
             return;
 
-        iDamage.Damage(damageValue);
+        ApplyDamage(iDamage, damageValue);
 
-        Score(iDamage, scores);
+        GetScored(iDamage, scores);
     }
 
-    protected virtual void DamageAndScoreInOlineMode(IDamage iDamage, int damageValue, int[] scores)
+    protected virtual void ApplyDamage(IDamage iDamage, int damageValue, bool ignoreArmor = false) => iDamage.Damage(damageValue, ignoreArmor);
+
+    protected virtual void GetScored(IDamage iDamage, int[] scores) => Score(iDamage, scores);
+
+    protected virtual void DamageAndScoreInOlineMode(IDamage iDamage, int damageValue, int[] scores, bool ignoreArmor = false)
     {
-        GameSceneObjectsReferences.GameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scores, 0);
+        GameSceneObjectsReferences.GameManagerBulletSerializer.CallDamageAndScoreRPC(iDamage, OwnerScore, _currentDamageValue, scores, 0, ignoreArmor);
     }
 }

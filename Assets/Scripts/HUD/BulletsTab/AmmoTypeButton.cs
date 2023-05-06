@@ -2,10 +2,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 
-public enum ButtonType { Shell, Rocket}
+public enum ButtonType { Shell, Rocket, Railgun }
 public enum DisplayType { MainWeaponsList, AvailableWeapon}
 
 public class AmmoTypeButton : MonoBehaviour

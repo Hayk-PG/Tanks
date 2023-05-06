@@ -92,14 +92,14 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
     /// Use this method if damages apply by using Physics.OverlapSphere
     /// </summary>
     /// <param name="damage"></param>
-    public void Damage(int damage)
+    public void Damage(int damage, bool ignoreArmor = false)
     {
         if (Health <= 0)
             return;
 
         if (!IsSafeZone)
         {
-            if (IsShieldActive)
+            if (IsShieldActive && !ignoreArmor)
                 ApplyArmorDamage(damage);
             else
                 ApplyHealthDamage(damage);
@@ -111,7 +111,7 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
     /// </summary>
     /// <param name="collider"></param>
     /// <param name="damage"></param>
-    public void Damage(Collider collider, int damage)
+    public void Damage(Collider collider, int damage, bool ignoreArmor = false)
     {
         float fixedDamage = damage;
         float newDamage = 0;
@@ -135,7 +135,7 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
             PlayDamageSoundFX(2);
         }
 
-        Damage(Mathf.RoundToInt(newDamage));
+        Damage(Mathf.RoundToInt(newDamage), ignoreArmor);
     }
 
     private void ApplyHealthDamage(int damage)

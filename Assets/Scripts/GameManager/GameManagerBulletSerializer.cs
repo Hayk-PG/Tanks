@@ -62,7 +62,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
     #endregion
 
     #region Damage
-    public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int[] scoreValues, int damageTypeIndex)
+    public void CallDamageAndScoreRPC(IDamage iDamage, IScore iScore, int damageValue, int[] scoreValues, int damageTypeIndex, bool ignoreArmor = false)
     {
         if (MyPhotonNetwork.AmPhotonViewOwner(photonView))
         {
@@ -75,7 +75,8 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
                 ownerName,
                 damageValue,
                 scoreValues,
-                damageTypeIndex
+                damageTypeIndex,
+                ignoreArmor
             };
 
             photonView.RPC("DamageAndScoreRPC", RpcTarget.AllViaServer, data);
@@ -91,18 +92,18 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
             IScore iScore = GameObject.Find((string)data[1])?.GetComponent<IScore>() ?? null;
 
-            Damage(iDamage, (int)data[2], (int)data[4]);
+            Damage(iDamage, (int)data[2], (int)data[4], (bool)data[5]);
 
             Score(iScore, iDamage, (int[])data[3]);
         }
     }
 
-    private void Damage(IDamage iDamage, int damage, int damagetypeIndex)
+    private void Damage(IDamage iDamage, int damage, int damagetypeIndex, bool ignoreArmor = false)
     {
         if (iDamage == default)
             return;
 
-        iDamage.Damage(damage);
+        iDamage.Damage(damage, ignoreArmor);
 
         if (damagetypeIndex == 1)
             iDamage.CameraChromaticAberrationFX();
