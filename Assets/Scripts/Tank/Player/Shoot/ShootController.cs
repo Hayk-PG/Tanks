@@ -240,11 +240,13 @@ public class ShootController : BaseShootController, IEndGame
         if (HaveEnoughBullets() && _playerTurn.IsMyTurn && !_isStunned && !_hasShot)
         {
             Conditions<bool>.Compare(_currentWeaponType == ButtonType.Shell || _currentWeaponType == ButtonType.Railgun, () => _iShoot?.Shoot(CurrentForce), () => _iShoot.LaunchRocket(ActiveRocketId));
-            
+
             AmmoUpdate();
 
             _hasShot = true;
         }
+        else
+            PlayEmptyShotSoundEffect();
     }
 
     public virtual void ShootBullet(float force)
@@ -268,6 +270,8 @@ public class ShootController : BaseShootController, IEndGame
 
         GameSceneObjectsReferences.MainCameraController.GetProjectileRigidbody(Bullet.RigidBody);
     }
+
+    private void PlayEmptyShotSoundEffect() => SecondarySoundController.PlaySound(12, 9);
 
     public virtual void LaunchRocket(int id)
     {
