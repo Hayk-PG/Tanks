@@ -126,7 +126,7 @@ public class PlayerAmmoType : MonoBehaviour
 
         SetActiveWeaponType(ammoTypeButton._properties._buttonType);
 
-        PlayProjectileChangeSoundEffectAfterDelay(UnityEngine.Random.Range(0, 5));
+        PlaySoundEffectOnWeaponChange();
 
         OnWeaponChanged?.Invoke(_shootController.ActiveAmmoIndex);
     }
@@ -189,12 +189,19 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void SetActiveWeaponType(ButtonType weaponType) => _shootController.GetActiveWeaponType(weaponType);
 
+    private void PlaySoundEffectOnWeaponChange()
+    {
+        int clipIndex = _shootController.ActiveAmmoIndex < 3 ? _shootController.ActiveAmmoIndex : UnityEngine.Random.Range(0, 3);
+
+        PlayProjectileChangeSoundEffectAfterDelay(clipIndex);
+    }
+
     private void Reload(TurnState turnState)
     {
         bool canReload = GameSceneObjectsReferences.GameManager.IsGameStarted && !GameSceneObjectsReferences.GameManager.IsGameEnded && _playerTurn.IsMyTurn;
 
         if (canReload)
-            PlayProjectileChangeSoundEffectAfterDelay(5, 0.4f);
+            PlayProjectileChangeSoundEffectAfterDelay(UnityEngine.Random.Range(4, 9), 0.4f);
     }
 
     public void SwitchToDefaultWeapon(int index)
@@ -202,7 +209,11 @@ public class PlayerAmmoType : MonoBehaviour
         bool noAmmoAvailable = _weaponsBulletsCount[index] <= 0;
 
         if (noAmmoAvailable)
+        {
             GameSceneObjectsReferences.AmmoTabCustomization.SetDefaultAmmo(null);
+
+            PlayProjectileChangeSoundEffectAfterDelay(3);
+        }
     }
 
     public void AddWeaponFromDropBoxPanel(DropBoxItemType dropBoxItemType, object[] data)
