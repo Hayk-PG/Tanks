@@ -4,6 +4,14 @@ using UnityEngine;
 [Serializable]
 public class BaseTankMovement : MonoBehaviour
 {
+    protected Rigidbody _rigidBody;
+    protected PlayerTurn _playerTurn;
+    protected HealthController _healthController;
+    protected WheelColliderController _wheelColliderController;
+    protected Raycasts _rayCasts;
+    protected VehicleRigidbodyPosition _vehicleRigidbodyPosition;
+    protected Stun _stun;
+
     [Header("Movement parameters")] 
     [Range(0, 1000)] public float _normalSpeed;
     [Range(0, 1000)] public float _maxBrake;
@@ -23,21 +31,16 @@ public class BaseTankMovement : MonoBehaviour
     [Space] [Range(50, 500)]
     public float fuelConsumptionPercent;
 
-    [Space]
-    public Vector3 _normalCenterOfMass;
     protected float _currentBrake;
     protected float _currentSpeed;
-
-    protected Rigidbody _rigidBody;
-    protected PlayerTurn _playerTurn;
-    protected HealthController _healthController;
-    protected WheelColliderController _wheelColliderController;   
-    protected Raycasts _rayCasts;
-    protected VehicleRigidbodyPosition _vehicleRigidbodyPosition;
-    protected Stun _stun;
+    protected float _speedBlocker;
+    protected float _boostFactor = 1;
 
     protected bool _isOnRightSlope, _isOnLeftSlope, _isStunned;
     protected string[] _slopesNames;
+
+    [Space]
+    public Vector3 _normalCenterOfMass;
     protected Vector3 _vectorRight;
     protected Vector3 _vectorLeft;
 
@@ -56,12 +59,16 @@ public class BaseTankMovement : MonoBehaviour
     public virtual float Direction { get; set; }
     protected float RotationXAxis { get; set; }
     protected float InitialRotationYAxis { get; set; }   
-    protected float _speedBlocker;
+    
 
     internal Action<float> OnVehicleMove { get; set; }
     public Action<float> OnDirectionValue { get; set; }
     public Action<Rigidbody> OnRigidbodyPosition { get; set; }
     public Action<float, bool> OnFuel { get; set; }
+
+
+
+
 
 
     protected virtual void Awake()
@@ -140,4 +147,8 @@ public class BaseTankMovement : MonoBehaviour
     {
         _isStunned = isStunned;
     }
+
+    // Increases movement speed by 2 
+
+    public virtual void Boost(bool isMovementBoosted) => _boostFactor = isMovementBoosted ? 2 : 1;
 }

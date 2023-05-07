@@ -56,8 +56,6 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
             OnAbilityActivated();
     }
 
-    protected virtual void PlaySoundFX(int clipIndex) => SecondarySoundController.PlaySound(10, clipIndex);
-
     protected virtual void OnAbilityActivated(object[] data = null)
     {
         IsAbilityActive = true;
@@ -70,6 +68,8 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
     }
 
     protected virtual void ActivateBuffDebuffIcon(object[] data = null) => BuffDebuffHandler.RaiseEvent(BuffDebuffType.Ability, _playerTurn.MyTurn, this, data);
+
+    protected virtual void PlaySoundFX(int clipIndex) => SecondarySoundController.PlaySound(10, clipIndex);
 
     protected virtual void DisplayPlayerFeedbackText()
     {
