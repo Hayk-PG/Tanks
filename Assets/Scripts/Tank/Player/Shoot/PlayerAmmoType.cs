@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System;
 
@@ -10,6 +11,8 @@ public class PlayerAmmoType : MonoBehaviour
     private ShootController _shootController;
 
     private ScoreController _scoreController;
+
+    private PlayerTurn _playerTurn;
 
     
     [Header("Scriptable objects")]
@@ -47,6 +50,10 @@ public class PlayerAmmoType : MonoBehaviour
         _shootController = Get<ShootController>.From(gameObject);
 
         _scoreController = Get<ScoreController>.From(gameObject);
+
+        _playerTurn = Get<PlayerTurn>.From(gameObject);
+
+        GameSceneObjectsReferences.TurnController.OnTurnChanged += Reload;     
     }
 
     private void OnEnable()
@@ -119,6 +126,8 @@ public class PlayerAmmoType : MonoBehaviour
 
         SetActiveWeaponType(ammoTypeButton._properties._buttonType);
 
+        PlayProjectileChangeSoundEffectAfterDelay(UnityEngine.Random.Range(0, 5));
+
         OnWeaponChanged?.Invoke(_shootController.ActiveAmmoIndex);
     }
 
@@ -180,6 +189,14 @@ public class PlayerAmmoType : MonoBehaviour
 
     private void SetActiveWeaponType(ButtonType weaponType) => _shootController.GetActiveWeaponType(weaponType);
 
+    private void Reload(TurnState turnState)
+    {
+        bool canReload = GameSceneObjectsReferences.GameManager.IsGameStarted && !GameSceneObjectsReferences.GameManager.IsGameEnded && _playerTurn.IsMyTurn;
+
+        if (canReload)
+            PlayProjectileChangeSoundEffectAfterDelay(5, 0.4f);
+    }
+
     public void SwitchToDefaultWeapon(int index)
     {
         bool noAmmoAvailable = _weaponsBulletsCount[index] <= 0;
@@ -233,5 +250,14 @@ public class PlayerAmmoType : MonoBehaviour
 
             UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
         }
+    }
+
+    public void PlayProjectileChangeSoundEffectAfterDelay(int clipIndex, float delay = 0.2f) => StartCoroutine(PlayProjectileChangeSoundEffectAfterDelayCoroutine(clipIndex, delay));
+
+    private IEnumerator PlayProjectileChangeSoundEffectAfterDelayCoroutine(int clipIndex, float delay = 0.2f)
+    {
+        yield return new WaitForSeconds(delay);
+
+        SecondarySoundController.PlaySound(12, clipIndex);
     }
 }
