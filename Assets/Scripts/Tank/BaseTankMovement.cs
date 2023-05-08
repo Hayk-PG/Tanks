@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public class BaseTankMovement : MonoBehaviour
+public class BaseTankMovement : MonoBehaviour, IMovementBoostObserver
 {
     protected Rigidbody _rigidBody;
     protected PlayerTurn _playerTurn;
@@ -148,7 +148,5 @@ public class BaseTankMovement : MonoBehaviour
         _isStunned = isStunned;
     }
 
-    // Increases movement speed by 2 
-
-    public virtual void Boost(bool isMovementBoosted) => _boostFactor = isMovementBoosted ? 2 : 1;
+    public void SetMovementBoostActive(bool isMovementBoostActive) => _boostFactor = isMovementBoostActive ? 2 : 1;
 }

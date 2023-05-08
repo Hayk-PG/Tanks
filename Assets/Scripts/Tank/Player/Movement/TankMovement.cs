@@ -194,10 +194,15 @@ public class TankMovement : BaseTankMovement
 
     private void RaiseOnFuelEvent()
     {
-        float rpm = Mathf.Abs(Mathf.Clamp(_wheelColliderController.WheelRPM(), -500, 500));
-        float rpmWithBoostFactor = (rpm / _boostFactor) > 1 ? rpm / _boostFactor : 1;
+        // Here, the local variable 'rpm' represents the clamped value of the wheels' RPM combined with '_boostFactor'.
+        
+        float rpm = _boostFactor > 1 ? Mathf.Abs(Mathf.Clamp(_wheelColliderController.WheelRPM(), -100, 100)) : Mathf.Abs(Mathf.Clamp(_wheelColliderController.WheelRPM(), -500, 500));
 
-        OnFuel?.Invoke((rpmWithBoostFactor / 100) * fuelConsumptionPercent, _playerTurn.IsMyTurn);
+        // Calculate the fuel consumption percentage.
+
+        float fuelConsumptionPercentage = rpm / 100 * fuelConsumptionPercent;
+
+        OnFuel?.Invoke(fuelConsumptionPercentage, _playerTurn.IsMyTurn);
     }
 
     private void SynchVariables(bool onlyOnLocalPlayer)

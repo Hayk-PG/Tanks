@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class AbilityBoost : BaseAbility
 {
-    [SerializeField] [Space]
-    private BaseTankMovement _baseTankMovement;
+    private IMovementBoostObserver[] _iMovementBoostObservers;
+
+    private bool _isMovementObserversGet;
 
     protected override string Title => "Boost";
-
     protected override string Ability => "Increase movement speed by 2 for 4 turn";
 
 
@@ -33,7 +33,29 @@ public class AbilityBoost : BaseAbility
         Boost(false);
     }
 
-    private void Boost(bool isMovementBoosted) => _baseTankMovement.Boost(isMovementBoosted);
+    private void Boost(bool isMovementBoostActive)
+    {
+        GetMovementBoostObservers();
+
+        SetMovementBoostObserversActive(isMovementBoostActive);
+    }
+
+    // The boolean variable "_isMovementObserversGet" is used to ensure that the method is only executed once.
+
+    private void GetMovementBoostObservers()
+    {
+        if (_isMovementObserversGet)
+            return;
+
+        _isMovementObserversGet = true;
+
+        _iMovementBoostObservers = GetComponentsInChildren<IMovementBoostObserver>();
+    }
+
+    private void SetMovementBoostObserversActive(bool isMovementBoostActive)
+    {
+        GlobalFunctions.Loop<IMovementBoostObserver>.Foreach(_iMovementBoostObservers, observer => observer?.SetMovementBoostActive(isMovementBoostActive));
+    }
 
     public override void AssignBuffDebuffUIElement(BuffDebuffUIElement buffDebuffUIElement) => BuffDebuffUIElement = buffDebuffUIElement;
 }
