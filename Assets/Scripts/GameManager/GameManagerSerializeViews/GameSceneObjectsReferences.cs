@@ -134,6 +134,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     private GameplayAnnouncer _gamePlayAnnouncer;
 
     [SerializeField]
+    private PlayerFeedbackAnnouncer _playerFeedbackAnnouncer;
+
+    [SerializeField]
     private PlayerFeedback _playerFeedback;
 
     [SerializeField]
@@ -198,6 +201,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static Tab_RocketController TabRocketController => Instance._tabRocketController;
     public static Controllers Controllers => Instance._controllers;
     public static GameplayAnnouncer GameplayAnnouncer => Instance._gamePlayAnnouncer;
+    public static PlayerFeedbackAnnouncer PlayerFeedbackAnnouncer => Instance._playerFeedbackAnnouncer;
     public static PlayerFeedback PlayerFeedback => Instance._playerFeedback;
     public static EnemyPlayerIcon EnemyPlayerIcon => Instance._enemyPlayerIcon;
     public static ParachuteIcon ParachuteIcon => Instance._parachuteIcon;

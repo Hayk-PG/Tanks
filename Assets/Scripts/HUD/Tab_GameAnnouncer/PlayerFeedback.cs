@@ -6,12 +6,9 @@ public class PlayerFeedback : MonoBehaviour
     [SerializeField] [Space]
     private Tab_HitText _tabHitText;
 
-    private SoundController _soundController;
 
 
 
-
-    private void Awake() => _soundController = FindObjectOfType<SoundController>();
 
     public HitTextManager CurrentHitTextManager(string tankName)
     {
@@ -42,9 +39,9 @@ public class PlayerFeedback : MonoBehaviour
 
     private void OnSingleHit(string tankName, int total)
     {
-        for (int i = 0; i < _soundController.SoundsList[1]._clips.Length; i++)
+        for (int i = 0; i < SoundController.Instance.SoundsList[1]._clips.Length; i++)
         {
-            if (_soundController.SoundsList[1]._clips[i]._score >= total)
+            if (SoundController.Instance.SoundsList[1]._clips[i]._score >= total)
             {
                 DisplayHitText(CurrentHitTextManager(tankName), HitTextManager.TextType.Hit, "");
 
@@ -55,9 +52,9 @@ public class PlayerFeedback : MonoBehaviour
 
     private void OnBackToBackHit(string tankName, int playerHitsIndex, int total)
     {
-        for (int i = 0; i < _soundController.SoundsList[2]._clips.Length; i++)
+        for (int i = 0; i < SoundController.Instance.SoundsList[2]._clips.Length; i++)
         {
-            if (_soundController.SoundsList[2]._clips[i]._score >= playerHitsIndex)
+            if (SoundController.Instance.SoundsList[2]._clips[i]._score >= playerHitsIndex)
             {
                 GetComboScore(tankName, total, i);
 
@@ -70,7 +67,7 @@ public class PlayerFeedback : MonoBehaviour
 
     private void GetComboScore(string tankName, int total, int index)
     {
-        float a = _soundController.SoundsList[2]._clips[index]._score;
+        float a = SoundController.Instance.SoundsList[2]._clips[index]._score;
         float b = a * 0.1f;
         float c = (total * b);
 

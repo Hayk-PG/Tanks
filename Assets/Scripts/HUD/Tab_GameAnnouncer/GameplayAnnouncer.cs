@@ -59,10 +59,9 @@ public class GameplayAnnouncer : MonoBehaviour
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
     }
 
-    public void AnnounceGameResult(bool isWin)
-    {
-        StartCoroutine(AnnounceGameResultCoroutine(isWin));
-    }
+    public void AnnounceGameResult(bool isWin) => StartCoroutine(AnnounceGameResultCoroutine(isWin));
+
+    public void AnnouncePlayerFeedback(int soundListIndex, int clipIndex, bool isPositiveFeedback) => StartCoroutine(AnnouncePlayerFeedbackCoroutine(soundListIndex, clipIndex, isPositiveFeedback));
 
     private IEnumerator AnnounceGameResultCoroutine(bool isWin)
     {
@@ -86,6 +85,29 @@ public class GameplayAnnouncer : MonoBehaviour
 
         TextAnnouncement("", false);
         TextAnnouncement(_gameResultTexts[1], true);
+
+        yield return null;
+
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
+    }
+
+    private IEnumerator AnnouncePlayerFeedbackCoroutine(int soundListIndex, int clipIndex, bool isPositiveFeedback)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        SoundController.MusicSRCVolume(SoundController.MusicVolume.Down);
+
+        SoundController.PlaySound(soundListIndex, clipIndex, out float clipLength);
+
+        SetColorGradient(isPositiveFeedback ? __yellow : _red);
+
+        yield return null;
+
+        TextAnnouncement(SoundController.Instance.SoundsList[soundListIndex]._clips[clipIndex]._clipName, true);
+
+        yield return new WaitForSeconds(clipLength / 2.5f);
+
+        TextAnnouncement("", false);
 
         yield return null;
 
