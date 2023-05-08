@@ -54,10 +54,7 @@ public class TankMovement : BaseTankMovement
         SynchVariables(false);
     }
 
-    private void Start()
-    {
-        DefineFunctions();
-    }
+    private void Start() => DefineFunctions();
 
     protected override void OnEnable()
     {
@@ -182,15 +179,31 @@ public class TankMovement : BaseTankMovement
 
     private void MotorTorque()
     {
-        _wheelColliderController.MotorTorque(Direction * Speed * SpeedInSandbags * _speedBlocker * Time.fixedDeltaTime);
+        _wheelColliderController.MotorTorque((Direction * Speed * SpeedInSandbags * _speedBlocker * _boostFactor) * Time.fixedDeltaTime);
+
         _wheelColliderController.RotateWheels();
 
         OnDirectionValue?.Invoke(Direction);
-        OnFuel?.Invoke((_wheelColliderController.WheelRPM() / 100) * fuelConsumptionPercent, _playerTurn.IsMyTurn);
-        OnRigidbodyPosition?.Invoke(_rigidBody);       
+
+        OnRigidbodyPosition?.Invoke(_rigidBody);
+
+        RaiseOnFuelEvent();
     }
 
     private void RaiseOnVehicleMoveEvent(float value) => OnVehicleMove?.Invoke(Direction == 0 || !_playerTurn.IsMyTurn ? 0 : value);
+
+    private void RaiseOnFuelEvent()
+    {
+        // Here, the local variable 'rpm' represents the clamped value of the wheels' RPM combined with '_boostFactor'.
+        
+        float rpm = _boostFactor > 1 ? Mathf.Abs(Mathf.Clamp(_wheelColliderController.WheelRPM(), -100, 100)) : Mathf.Abs(Mathf.Clamp(_wheelColliderController.WheelRPM(), -500, 500));
+
+        // Calculate the fuel consumption percentage.
+
+        float fuelConsumptionPercentage = rpm / 100 * fuelConsumptionPercent;
+
+        OnFuel?.Invoke(fuelConsumptionPercentage, _playerTurn.IsMyTurn);
+    }
 
     private void SynchVariables(bool onlyOnLocalPlayer)
     {
@@ -242,7 +255,7 @@ public class TankMovement : BaseTankMovement
 
     private void Brake()
     {
-        _currentBrake = IsVehicleStopped(Direction) ? _maxBrake : 0;
+        _currentBrake = IsVehicleStopped(Direction) ? _maxBrake * _boostFactor : 0;
 
         _wheelColliderController.BrakeTorque(_currentBrake);
     }
