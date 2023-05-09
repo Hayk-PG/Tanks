@@ -42,7 +42,7 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
     {
         if (turnState == _playerTurn.MyTurn)
         {
-            if (_scoreController.Score >= _tileModifyManager.NewPrices[2].Price && _canUseAgain)
+            if (_scoreController.Score >= _tileModifyManager.NewPoints[2].RequiredPoints && _canUseAgain)
             {
                 foreach (var tile in _tilesData.TilesDict)
                 {
@@ -69,7 +69,7 @@ public class AiChangeTileToArmoredTile : MonoBehaviour
     {
         yield return new WaitForSeconds(0.3f);
         tileProps.ActiveProps(TileProps.PropsType.MetalGround, true, null);
-        _scoreController.Score -= _tileModifyManager.NewPrices[2].Price;
+        _scoreController.Score -= _tileModifyManager.NewPoints[2].RequiredPoints;
         _canUseAgain = false;
         yield return new WaitForSeconds(60);
         _canUseAgain = true;

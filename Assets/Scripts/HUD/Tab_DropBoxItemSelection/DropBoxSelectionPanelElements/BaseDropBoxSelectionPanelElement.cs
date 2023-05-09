@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
+public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour, IRequiredPointsManager
 {
     [SerializeField]
     protected Btn_DropBoxSelectionPanelElement _btnDropBoxSelectionPanelElement;
@@ -14,7 +14,7 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
     protected string _title, _ability;
 
     [SerializeField] [Space]
-    protected int _price, _quantity, _usageFrequency, _turns;
+    protected int _price, _requiredPointsIncrementAmount, _quantity, _usageFrequency, _turns;
     protected int _usedTimes;
 
     protected bool _hasStartedUse;
@@ -65,6 +65,8 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
         Use();
 
         CalculateUsedTimesAndCheckCanUseAgain();
+
+        IncrementRequiredPoints();
 
         CloseTab();
     }
@@ -137,5 +139,12 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour
     protected virtual string TimeUsageText(int timeUsage)
     {
         return timeUsage == 1 ? "once" : timeUsage == 2 ? "twice" : $"{timeUsage} time";
+    }
+
+    public void IncrementRequiredPoints(int amount = 0)
+    {
+        _price += _requiredPointsIncrementAmount;
+
+        DisplayPrice();
     }
 }
