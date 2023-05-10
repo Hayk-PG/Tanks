@@ -76,7 +76,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnInformAboutTabActivityToTabsCustomization;
     }
 
-    public virtual void AssignProperties(AmmoTypeButton button, Properties properties, AmmoTypeStars stars, ScoreController localPlayerScoreController)
+    public virtual void AssignProperties(AmmoTypeButton button, Properties properties, AmmoTypeStars stars, ScoreController localPlayerScoreController, PlayerAmmoType localPlayerAmmoType)
     {
         button._properties._buttonType = properties._buttonType;
 
@@ -101,7 +101,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         if (properties._bulletForceMaxSpeed.HasValue)
             button._properties.BulletForceMaxSpeed = properties._bulletForceMaxSpeed.Value;
 
-        button.GetLocalPlayerScoreController(localPlayerScoreController);
+        button.InitPlayerScoreAndAmmoType(localPlayerScoreController, localPlayerAmmoType);
 
         button.PrintDescription(properties._weaponType, properties._description);
 

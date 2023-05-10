@@ -14,11 +14,11 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         UnSubscribeFromAmmoTypeButtonEvents();
     }
 
-    public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, ScoreController localPlayerScoreController, int loopIndex)
+    public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, ScoreController localPlayerScoreController, PlayerAmmoType localPlayerAmmoType, int loopIndex)
     {
         InstantiatedButton(out AmmoTypeButton button);
 
-        AssignProperties(button, weaponProperty, localPlayerScoreController);
+        AssignProperties(button, weaponProperty, localPlayerScoreController, localPlayerAmmoType);
 
         OnSendWeaponPointsToUnlock?.Invoke(button);
 
@@ -29,7 +29,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
     public void InstantiatedButton(out AmmoTypeButton button) => button = Instantiate(_buttonPrefab, _container.transform);
 
-    public void AssignProperties(AmmoTypeButton button, WeaponProperties weaponProperty, ScoreController localPlayerScoreController)
+    public void AssignProperties(AmmoTypeButton button, WeaponProperties weaponProperty, ScoreController localPlayerScoreController, PlayerAmmoType localPlayerAmmoType)
     {
         AssignProperties(button, new BaseAmmoTabCustomization<AmmoTypeButton>.Properties
         {
@@ -65,7 +65,9 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
         weaponProperty._ammoTypeStars, 
 
-        localPlayerScoreController);
+        localPlayerScoreController,
+
+        localPlayerAmmoType);
     }
 
     public void SetDefaultAmmo(AmmoTypeButton button)

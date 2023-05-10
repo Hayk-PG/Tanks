@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Coffee.UIEffects;
 
 
 public enum ButtonType { Shell, Rocket, Railgun }
@@ -23,13 +24,16 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
         private CanvasGroup _canvasGroupLock, _canvasGroupPrice, _canvasGroupTextOwned;
 
         [SerializeField] [Space]
+        private UIShiny _uiShinyLock;
+
+        [SerializeField] [Space]
         private Image _imgWeapon, _imgFrame;
 
         [SerializeField] [Space]
         private TMP_Text _txtName, _txtPrice, _txtQuantity;
 
         [SerializeField] [Space]
-        public Color[] _colors; //0: Selected 1: Available 2: Locked
+        private Color[] _colors; //0: Selected 1: Available 2: Locked
 
         private bool _isUnlocked;
         
@@ -41,6 +45,8 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
         public CanvasGroup CanvasGroupLock => _canvasGroupLock;
         public CanvasGroup CanvasGroupPrice => _canvasGroupPrice;
         public CanvasGroup CanvasGroupTextOwned => _canvasGroupTextOwned;
+
+        public UIShiny UiShinyLock => _uiShinyLock;
 
         public Sprite Image
         {
@@ -107,6 +113,8 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
                     return;
                 }
 
+                GlobalFunctions.CanvasGroupActivity(_canvasGroupLock, !value);
+
                 ColorFrame = IsSelected ? _colors[0] : _colors[1];
             }
         }
@@ -144,6 +152,7 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
     private bool _isAutoSelected;
 
     private ScoreController LocalPlayerScoreController { get; set; }
+    private PlayerAmmoType LocalPlayerAmmoType { get; set; }
 
     public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }
 
@@ -162,12 +171,7 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
     private void OnEnable() => GameSceneObjectsReferences.AmmoTabDescriptionButton.onDescriptionActivity += SetGroupsActive;
 
-    private void SetDefaultQuantity()
-    {
-        _defaultQuantity = _properties.Quantity;
-
-        print(_defaultQuantity);
-    }
+    private void SetDefaultQuantity() => _defaultQuantity = _properties.Quantity;
 
     private void SetGroupsActive(bool isDescription)
     {
@@ -175,7 +179,12 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
         GlobalFunctions.CanvasGroupActivity(_canvasGroupDescription, isDescription);
     }
 
-    public void GetLocalPlayerScoreController(ScoreController scoreController) => LocalPlayerScoreController = scoreController;
+    public void InitPlayerScoreAndAmmoType(ScoreController localPlayerScoreController, PlayerAmmoType localPlayerAmmoType)
+    {
+        LocalPlayerScoreController = localPlayerScoreController;
+
+        LocalPlayerAmmoType = localPlayerAmmoType;
+    }
 
     public void PrintDescription(string title, string text)
     {
@@ -211,11 +220,13 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
         Unlock();
 
-        IncrementRequiredPoints(1000);
+        UpdatePlayerAmmoOnUnlock();
 
         LocalPlayerScoreController.GetScore(-_properties.Price, null);
 
         OnClickAmmoTypeButton?.Invoke(this);
+
+        IncrementRequiredPoints(1000);
     }
 
     public void HandleAmmoButtonAvailability(int ammoCount)
@@ -245,12 +256,24 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
             ToggleCostUIVisibility(false);
         }
 
+        PlayUiShinyEffect();
+
         AutoSelect();
     }
 
     private void GetLocaPlayerAmmoCount(int ammoCount) => _properties.Quantity = ammoCount;
 
     private void ResetQuantity() => _properties.Quantity = _defaultQuantity;
+
+    private void UpdatePlayerAmmoOnUnlock()
+    {
+        bool hasAmmoRemaining = LocalPlayerAmmoType._weaponsBulletsCount[_properties.Index] > 0;
+
+        if (hasAmmoRemaining)
+            return;
+
+        LocalPlayerAmmoType._weaponsBulletsCount[_properties.Index] = _defaultQuantity;
+    }
 
     private bool IsSelected()
     {
@@ -284,6 +307,8 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
     }
 
     private void HandleUnlockState(bool unlcok) => Conditions<bool>.Compare(unlcok, Unlock, Lock);
+
+    private void PlayUiShinyEffect() => _properties.UiShinyLock.Play();
 
     private void Unlock()
     {
