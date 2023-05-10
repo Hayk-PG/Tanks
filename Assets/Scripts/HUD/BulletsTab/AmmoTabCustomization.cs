@@ -39,7 +39,9 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
             _value = weaponProperty._value,
 
-            _requiredScoreAmmount = weaponProperty._requiredScoreAmmount,
+            _requiredPointsAmount = weaponProperty._requiredPointsAmmount,
+
+            _requirementPointsIncrementAmount = weaponProperty._requiredPointsIncrementAmount,
 
             _minutes = weaponProperty._minutes,
 

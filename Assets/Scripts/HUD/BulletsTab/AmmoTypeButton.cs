@@ -92,6 +92,7 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
                 _txtPrice.text = value.ToString();
             }
         }
+        public int RequiredPointsIncrementAmount { get; set; }
 
         public float BulletMaxForce { get; set; }
         public float BulletForceMaxSpeed { get; set; }
@@ -226,7 +227,7 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
         OnClickAmmoTypeButton?.Invoke(this);
 
-        IncrementRequiredPoints(1000);
+        IncrementRequiredPoints(_properties.RequiredPointsIncrementAmount);
     }
 
     public void HandleAmmoButtonAvailability(int ammoCount)

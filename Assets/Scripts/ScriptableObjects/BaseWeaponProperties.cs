@@ -9,7 +9,8 @@ public class BaseWeaponProperties<T> : ScriptableObject
     public ButtonType _buttonType;
     public Sprite _icon;
     public AmmoTypeStars _ammoTypeStars;
-    public int _requiredScoreAmmount;
+    public int _requiredPointsAmmount;
+    public int _requiredPointsIncrementAmount;
 
     public enum Type { Light, Medium, Heavy }
     public enum Range { Close, Medium, Long}

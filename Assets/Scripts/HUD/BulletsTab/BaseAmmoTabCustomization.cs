@@ -29,7 +29,8 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         public ButtonType _buttonType;      
         public int? _index;
         public int? _value;
-        public int? _requiredScoreAmmount;
+        public int? _requiredPointsAmount;
+        public int? _requirementPointsIncrementAmount;
         public int? _damageValue;
         public int? _minutes;
         public int? _seconds;
@@ -41,12 +42,13 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         public string _supportType;       
         public Sprite _icon;
 
-        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? damageValue, int? minutes, int? seconds, float? bulletMaxForce, float? bulletForceMaxSpeed, float? radius, string description, string weaponType, string supportType, Sprite icon)
+        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? requirementPointsIncrementAmount, int? damageValue, int? minutes, int? seconds, float? bulletMaxForce, float? bulletForceMaxSpeed, float? radius, string description, string weaponType, string supportType, Sprite icon)
         {
             _buttonType = buttonType;
             _index = index;
             _value = value;
-            _requiredScoreAmmount = requiredScoreAmmount;
+            _requiredPointsAmount = requiredScoreAmmount;
+            _requirementPointsIncrementAmount = requirementPointsIncrementAmount;
             _damageValue = damageValue;
             _minutes = minutes;
             _seconds = seconds;
@@ -92,8 +94,11 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         if (properties._value.HasValue) 
             button._properties.Quantity = properties._value.Value;
 
-        if (properties._requiredScoreAmmount.HasValue) 
-            button._properties.Price = properties._requiredScoreAmmount.Value;
+        if (properties._requiredPointsAmount.HasValue) 
+            button._properties.Price = properties._requiredPointsAmount.Value;
+
+        if (properties._requirementPointsIncrementAmount.HasValue)
+            button._properties.RequiredPointsIncrementAmount = properties._requirementPointsIncrementAmount.Value;
 
         if (properties._bulletMaxForce.HasValue)
             button._properties.BulletMaxForce = properties._bulletMaxForce.Value;

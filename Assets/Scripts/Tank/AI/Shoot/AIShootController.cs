@@ -117,7 +117,7 @@ public class AIShootController : BaseShootController
 
     private bool HaveRequiredScoreAmmount(int index)
     {
-        return _scoreController.Score >= _bulletsPrefab[_activeBulletIndex]._requiredScoreAmmount;
+        return _scoreController.Score >= _bulletsPrefab[_activeBulletIndex]._requiredPointsAmmount;
     }
 
     private bool IsCurrentWeaponUnclockingTimerRunning(int index)
@@ -151,7 +151,7 @@ public class AIShootController : BaseShootController
         {         
             UpdateBulletsCount(randomIndex, _bulletsPrefab[randomIndex]._value);
 
-            _scoreController.Score -= _bulletsPrefab[randomIndex]._requiredScoreAmmount;
+            _scoreController.Score -= _bulletsPrefab[randomIndex]._requiredPointsAmmount;
 
             _activeBulletIndex = randomIndex;
         }
