@@ -21,7 +21,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
     public Action<T> OnPlayerWeaponChanged { get; set; }
     public Action<T> OnSupportOrPropsChanged { get; set; }
     public Action OnAmmoTypeController { get; set; }
-    public Action<Action<int, List<int>>> OnGetPointsAndAmmoDataFromPlayer { get; set; }
+    public Action<Action<List<int>>> OnGetPointsAndAmmoDataFromPlayer { get; set; }
     public Action<AmmoTypeButton> OnSendWeaponPointsToUnlock { get; set; }
 
     public struct Properties
@@ -76,7 +76,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         _ammoTypeController.OnInformAboutTabActivityToTabsCustomization -= OnInformAboutTabActivityToTabsCustomization;
     }
 
-    public virtual void AssignProperties(AmmoTypeButton button, Properties properties, AmmoTypeStars stars)
+    public virtual void AssignProperties(AmmoTypeButton button, Properties properties, AmmoTypeStars stars, ScoreController localPlayerScoreController)
     {
         button._properties._buttonType = properties._buttonType;
 
@@ -101,6 +101,8 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         if (properties._bulletForceMaxSpeed.HasValue)
             button._properties.BulletForceMaxSpeed = properties._bulletForceMaxSpeed.Value;
 
+        button.GetLocalPlayerScoreController(localPlayerScoreController);
+
         button.PrintDescription(properties._weaponType, properties._description);
 
         button._ammoStars.OnSetStars(stars);
@@ -112,16 +114,16 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
             OnGetPointsAndAmmoDataFromPlayer?.Invoke(GetPointsAndAmmoDataFromPlayer);
     }
 
-    public virtual void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount)
+    public virtual void GetPointsAndAmmoDataFromPlayer(List<int> bulletsCount)
     {
         if (_instantiatedButtons != null)
         {
             for (int i = 0; i < _instantiatedButtons.Count; i++)
             {
-                DisplayPointsToUnlock(i, playerPoints, bulletsCount[i]);
+                DisplayPointsToUnlock(i, bulletsCount[i]);
             }
         }
     }
 
-    protected abstract void DisplayPointsToUnlock(int index, int playerPoints, int value);
+    protected abstract void DisplayPointsToUnlock(int index, int value);
 }

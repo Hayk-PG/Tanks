@@ -7,10 +7,8 @@ using UnityEngine.UI;
 public enum ButtonType { Shell, Rocket, Railgun }
 public enum DisplayType { MainWeaponsList, AvailableWeapon}
 
-public class AmmoTypeButton : MonoBehaviour
+public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 {
-    public AmmoStars _ammoStars;
-
     [Serializable]
     public struct Properties
     {
@@ -32,6 +30,8 @@ public class AmmoTypeButton : MonoBehaviour
 
         [SerializeField] [Space]
         public Color[] _colors; //0: Selected 1: Available 2: Locked
+
+        private bool _isUnlocked;
         
         public Button Button
         {
@@ -86,39 +86,50 @@ public class AmmoTypeButton : MonoBehaviour
                 _txtPrice.text = value.ToString();
             }
         }
-        public int PlayerScore { get; set; }
 
         public float BulletMaxForce { get; set; }
         public float BulletForceMaxSpeed { get; set; }
 
         public bool IsUnlocked
         {
-            get
-            {
-                return Button.interactable && ColorFrame != _colors[2];
-            }
+            get => _isUnlocked && ColorFrame != _colors[2];
 
             set
             {
-                Button.interactable = value;
+                _isUnlocked = value;
 
                 GlobalFunctions.CanvasGroupActivity(_canvasGroupLock, !value);
 
-                ColorFrame = value ? _colors[1] : _colors[2];
+                if (!value)
+                {
+                    ColorFrame = _colors[2];
+
+                    return;
+                }
+
+                ColorFrame = IsSelected ? _colors[0] : _colors[1];
             }
         }
+
         public bool IsSelected
         {
-            get
-            {
-                return ColorFrame == _colors[0] && IsUnlocked;
-            }
+            get => ColorFrame == _colors[0] && IsUnlocked;
+
             set
             {
+                if (!IsUnlocked)
+                {
+                    ColorFrame = _colors[2];
+
+                    return;
+                }
+
                 ColorFrame = value ? _colors[0] : _colors[1];
             }
         }  
     }
+
+    public AmmoStars _ammoStars;
 
     public Properties _properties;
 
@@ -128,21 +139,34 @@ public class AmmoTypeButton : MonoBehaviour
     [SerializeField] [Space]
     private TMP_Text _txtTop, _txtBottom;
 
+    private int _defaultQuantity;
+
     private bool _isAutoSelected;
+
+    private ScoreController LocalPlayerScoreController { get; set; }
 
     public Action<AmmoTypeButton> OnClickAmmoTypeButton { get; set; }
 
+    
 
 
 
-    private void Awake() => SetGroupsActive(GameSceneObjectsReferences.AmmoTabDescriptionButton.IsActive);
+
+
+    private void Awake()
+    {
+        SetGroupsActive(GameSceneObjectsReferences.AmmoTabDescriptionButton.IsActive);
+    }
+
+    private void Start() => SetDefaultQuantity();
 
     private void OnEnable() => GameSceneObjectsReferences.AmmoTabDescriptionButton.onDescriptionActivity += SetGroupsActive;
 
-    public virtual void OnClickButton()
+    private void SetDefaultQuantity()
     {
-        if (!_properties.IsSelected && _properties.IsUnlocked)
-            OnClickAmmoTypeButton?.Invoke(this);
+        _defaultQuantity = _properties.Quantity;
+
+        print(_defaultQuantity);
     }
 
     private void SetGroupsActive(bool isDescription)
@@ -151,33 +175,115 @@ public class AmmoTypeButton : MonoBehaviour
         GlobalFunctions.CanvasGroupActivity(_canvasGroupDescription, isDescription);
     }
 
-    public void DisplayScoresToUnlock(int playerScore, int bulletsCount)
+    public void GetLocalPlayerScoreController(ScoreController scoreController) => LocalPlayerScoreController = scoreController;
+
+    public void PrintDescription(string title, string text)
     {
-        SetPriceTagActive();
+        bool canPrintDescription = _txtTop != null && _txtBottom != null;
 
-        SetTextOwnedActive();
+        if (!canPrintDescription)
+            return;
 
-        _properties.PlayerScore = playerScore;
+        _txtTop.text = title;
 
-        _properties.Quantity = bulletsCount;
+        _txtBottom.text = text;
+    }
 
-        Conditions<bool>.Compare(_properties.PlayerScore >= _properties.Price, Unlock, Lock);
+    public virtual void OnClickButton()
+    {
+        if (IsSelected())
+            return;
+
+        if (IsUnlocked())
+        {
+            OnClickAmmoTypeButton?.Invoke(this);
+
+            return;
+        }
+
+        UnlockAndDeductPointsFromPlayer();
+    }
+
+    private void UnlockAndDeductPointsFromPlayer()
+    {
+        if (!HasEnoughPoints())
+            return;
+
+        Unlock();
+
+        IncrementRequiredPoints(1000);
+
+        LocalPlayerScoreController.GetScore(-_properties.Price, null);
+
+        OnClickAmmoTypeButton?.Invoke(this);
+    }
+
+    public void HandleAmmoButtonAvailability(int ammoCount)
+    {
+        GetLocaPlayerAmmoCount(ammoCount);
+
+        if (!IsPointsRequired())
+        {
+            HandleUnlockState(true);
+
+            ToggleCostUIVisibility(false);
+        }
+
+        if(IsPointsRequired() && !IsAmmoAvailable(ammoCount))
+        {
+            HandleUnlockState(false);
+
+            ToggleCostUIVisibility(true);
+
+            ResetQuantity();
+        }
+
+        if(IsPointsRequired() && IsAmmoAvailable(ammoCount) && IsUnlocked())
+        {
+            HandleUnlockState(true);
+
+            ToggleCostUIVisibility(false);
+        }
 
         AutoSelect();
     }
 
-    public void PrintDescription(string title, string text)
-    {
-        if (_txtTop == null || _txtBottom == null)
-            return;
+    private void GetLocaPlayerAmmoCount(int ammoCount) => _properties.Quantity = ammoCount;
 
-        _txtTop.text = title;
-        _txtBottom.text = text;
+    private void ResetQuantity() => _properties.Quantity = _defaultQuantity;
+
+    private bool IsSelected()
+    {
+        return _properties.IsSelected;
     }
 
-    private void SetPriceTagActive() => GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupPrice, _properties.Price <= 0 ? false : true);
+    private bool IsUnlocked()
+    {
+        return _properties.IsUnlocked;
+    }
 
-    private void SetTextOwnedActive() => GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTextOwned, _properties.Price <= 0 ? true : false);
+    private bool HasEnoughPoints()
+    {
+        return LocalPlayerScoreController.Score >= _properties.Price;
+    }
+
+    private bool IsPointsRequired()
+    {
+        return _properties.Price > 0;
+    }
+
+    private bool IsAmmoAvailable(int ammoCount)
+    {
+        return ammoCount > 0;
+    }
+
+    private void ToggleCostUIVisibility(bool isCostUIActive)
+    {
+        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupPrice, isCostUIActive);
+        GlobalFunctions.CanvasGroupActivity(_properties.CanvasGroupTextOwned, !isCostUIActive);
+    }
+
+    private void HandleUnlockState(bool unlcok) => Conditions<bool>.Compare(unlcok, Unlock, Lock);
 
     private void Unlock()
     {
@@ -189,7 +295,7 @@ public class AmmoTypeButton : MonoBehaviour
 
     private void Lock()
     {
-        if (_properties.IsUnlocked)
+        if (!_properties.IsUnlocked)
             return;
 
         _properties.IsUnlocked = false;
@@ -206,4 +312,6 @@ public class AmmoTypeButton : MonoBehaviour
             _isAutoSelected = true;
         }
     }
+
+    public void IncrementRequiredPoints(int amount = 0) => _properties.Price += amount;
 }

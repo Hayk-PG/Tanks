@@ -100,7 +100,7 @@ public class PlayerAmmoType : MonoBehaviour
         {
             for (int i = 0; i < _weapons.Length; i++)
             {
-                GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
+                GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], _scoreController, i);
 
                 _defaultWeaponsLength++;
             }
@@ -240,7 +240,7 @@ public class PlayerAmmoType : MonoBehaviour
 
             _scoreController.GetScore(price, null);
 
-            GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(newWeapon, 1);
+            GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(newWeapon, _scoreController, 1);
 
             GameSceneObjectsReferences.AmmoTabButtonNotification.NewAvailableWeaponNotificationHolder();
         }
