@@ -38,7 +38,7 @@ public class HUDComponentPlayerName : MonoBehaviour
     {
         if (!_isPlayerNameAssigned)
         {
-            _txtPlayerName.text = _turnState == TurnState.Player1 ? "Player1" : "Player2";
+            _txtPlayerName.text = _turnState == TurnState.Player1 ? "Player" : "CPU";
 
             _isPlayerNameAssigned = true;
         }

@@ -135,6 +135,8 @@ public class ScoreController : MonoBehaviour, IScore
         {
             PlayHitSoundEffect();
 
+            AnnouncePlayerHitFeedback();
+
             OnHitEnemy?.Invoke(scores);
         }
     }
@@ -145,6 +147,14 @@ public class ScoreController : MonoBehaviour, IScore
             return;
 
         SecondarySoundController.PlaySound(0, 1);
+    }
+
+    private void AnnouncePlayerHitFeedback()
+    {
+        if (_tankController.BasePlayer == null)
+            return;
+
+        GameSceneObjectsReferences.PlayerFeedbackAnnouncer.AnnounceFeedback(6, UnityEngine.Random.Range(0, SoundController.Instance.SoundsList[6]._clips.Length), true);
     }
 
     private void OnGetScoreFromTerOccInd() => UpdateScore(100, 0.5f);

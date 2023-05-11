@@ -152,6 +152,8 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
         OnTankDamageFire?.Invoke(Health);
 
         PlayDamageSoundFX(5, true);
+
+        AnnouncePlayerDamageFeedback();
     }
 
     private void ApplyArmorDamage(int damage)
@@ -192,6 +194,14 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
             return;
 
         SecondarySoundController.PlaySound(0, clipIndex);
+    }
+
+    private void AnnouncePlayerDamageFeedback()
+    {
+        if (_tankController.BasePlayer == null)
+            return;
+
+        GameSceneObjectsReferences.PlayerFeedbackAnnouncer.AnnounceFeedback(5, UnityEngine.Random.Range(0, SoundController.Instance.SoundsList[5]._clips.Length), false);
     }
 
     public int DamageValue(int damage)
