@@ -154,7 +154,7 @@ public class ScoreController : MonoBehaviour, IScore
         if (_tankController.BasePlayer == null)
             return;
 
-        GameSceneObjectsReferences.PlayerFeedbackAnnouncer.AnnounceFeedback(6, UnityEngine.Random.Range(0, SoundController.Instance.SoundsList[6]._clips.Length), true);
+        GameSceneObjectsReferences.PlayerFeedbackAnnouncer.AnnounceFeedback(6, UnityEngine.Random.Range(0, SoundController.Instance.SoundsList[6]._clips.Length));
     }
 
     private void OnGetScoreFromTerOccInd() => UpdateScore(100, 0.5f);

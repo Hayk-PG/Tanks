@@ -201,7 +201,7 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
         if (_tankController.BasePlayer == null)
             return;
 
-        GameSceneObjectsReferences.PlayerFeedbackAnnouncer.AnnounceFeedback(5, UnityEngine.Random.Range(0, SoundController.Instance.SoundsList[5]._clips.Length), false);
+        GameSceneObjectsReferences.PlayerFeedbackAnnouncer.AnnounceFeedback(5, UnityEngine.Random.Range(0, SoundController.Instance.SoundsList[5]._clips.Length));
     }
 
     public int DamageValue(int damage)

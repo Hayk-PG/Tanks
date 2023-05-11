@@ -9,7 +9,7 @@ public class GameplayAnnouncer : MonoBehaviour
     private TMP_Text _txt;
 
     [SerializeField] [Space]
-    private TMP_ColorGradient __yellow, _green, _blue, _red;
+    private TMP_ColorGradient __yellow, _green, _blue, _red, _white;
 
     private string[] _gameResultTexts = new string[2];
 
@@ -61,7 +61,7 @@ public class GameplayAnnouncer : MonoBehaviour
 
     public void AnnounceGameResult(bool isWin) => StartCoroutine(AnnounceGameResultCoroutine(isWin));
 
-    public void AnnouncePlayerFeedback(int soundListIndex, int clipIndex, bool isPositiveFeedback) => StartCoroutine(AnnouncePlayerFeedbackCoroutine(soundListIndex, clipIndex, isPositiveFeedback));
+    public void AnnouncePlayerFeedback(int soundListIndex, int clipIndex) => StartCoroutine(AnnouncePlayerFeedbackCoroutine(soundListIndex, clipIndex));
 
     private IEnumerator AnnounceGameResultCoroutine(bool isWin)
     {
@@ -91,7 +91,7 @@ public class GameplayAnnouncer : MonoBehaviour
         SoundController.MusicSRCVolume(SoundController.MusicVolume.Up);
     }
 
-    private IEnumerator AnnouncePlayerFeedbackCoroutine(int soundListIndex, int clipIndex, bool isPositiveFeedback)
+    private IEnumerator AnnouncePlayerFeedbackCoroutine(int soundListIndex, int clipIndex)
     {
         yield return new WaitForSeconds(0.5f);
 
@@ -99,7 +99,7 @@ public class GameplayAnnouncer : MonoBehaviour
 
         SoundController.PlaySound(soundListIndex, clipIndex, out float clipLength);
 
-        SetColorGradient(isPositiveFeedback ? __yellow : _red);
+        SetColorGradient(_white);
 
         yield return null;
 

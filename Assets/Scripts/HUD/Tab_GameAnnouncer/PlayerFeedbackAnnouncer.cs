@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PlayerFeedbackAnnouncer : MonoBehaviour
 {
-    public void AnnounceFeedback(int soundListIndex, int clipIndex, bool isPositiveFeedback)
+    public void AnnounceFeedback(int soundListIndex, int clipIndex)
     {
-        GameSceneObjectsReferences.GameplayAnnouncer.AnnouncePlayerFeedback(soundListIndex, clipIndex, isPositiveFeedback);
+        GameSceneObjectsReferences.GameplayAnnouncer.AnnouncePlayerFeedback(soundListIndex, clipIndex);
     }
 }
