@@ -37,12 +37,13 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
         public float? _bulletMaxForce;
         public float? _bulletForceMaxSpeed;
         public float? _radius;
+        public bool? _isReusable;
         public string _description;
         public string _weaponType;
         public string _supportType;       
         public Sprite _icon;
 
-        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? requirementPointsIncrementAmount, int? damageValue, int? minutes, int? seconds, float? bulletMaxForce, float? bulletForceMaxSpeed, float? radius, string description, string weaponType, string supportType, Sprite icon)
+        public Properties(ButtonType buttonType, int? index, int? value, int? requiredScoreAmmount, int? requirementPointsIncrementAmount, int? damageValue, int? minutes, int? seconds, float? bulletMaxForce, float? bulletForceMaxSpeed, float? radius, bool? isReusable, string description, string weaponType, string supportType, Sprite icon)
         {
             _buttonType = buttonType;
             _index = index;
@@ -55,6 +56,7 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
             _bulletMaxForce = bulletMaxForce;
             _bulletForceMaxSpeed = bulletForceMaxSpeed;
             _radius = radius;
+            _isReusable = isReusable;
             _description = description;
             _weaponType = weaponType;
             _supportType = supportType;
@@ -105,6 +107,9 @@ public abstract class BaseAmmoTabCustomization<T> : MonoBehaviour, IGetPointsAnd
 
         if (properties._bulletForceMaxSpeed.HasValue)
             button._properties.BulletForceMaxSpeed = properties._bulletForceMaxSpeed.Value;
+
+        if (properties._isReusable.HasValue)
+            button._properties.IsReusable = properties._isReusable.Value;
 
         button.InitPlayerScoreAndAmmoType(localPlayerScoreController, localPlayerAmmoType);
 

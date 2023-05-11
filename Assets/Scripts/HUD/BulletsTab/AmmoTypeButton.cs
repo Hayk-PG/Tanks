@@ -80,6 +80,7 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
                 _txtQuantity.text = Converter.DecimalString(value, 3);
             }
         }
+        public int DefaultQuantity { get; set; }
         public int Price
         {
             get
@@ -119,7 +120,6 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
                 ColorFrame = IsSelected ? _colors[0] : _colors[1];
             }
         }
-
         public bool IsSelected
         {
             get => ColorFrame == _colors[0] && IsUnlocked;
@@ -135,7 +135,9 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
                 ColorFrame = value ? _colors[0] : _colors[1];
             }
-        }  
+        }
+        public bool IsAutoSelected { get; set; }
+        public bool IsReusable { get; set; }
     }
 
     public AmmoStars _ammoStars;
@@ -147,10 +149,6 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
     [SerializeField] [Space]
     private TMP_Text _txtTop, _txtBottom;
-
-    private int _defaultQuantity;
-
-    private bool _isAutoSelected;
 
     private ScoreController LocalPlayerScoreController { get; set; }
     private PlayerAmmoType LocalPlayerAmmoType { get; set; }
@@ -172,7 +170,7 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
     private void OnEnable() => GameSceneObjectsReferences.AmmoTabDescriptionButton.onDescriptionActivity += SetGroupsActive;
 
-    private void SetDefaultQuantity() => _defaultQuantity = _properties.Quantity;
+    private void SetDefaultQuantity() => _properties.DefaultQuantity = _properties.Quantity;
 
     private void SetGroupsActive(bool isDescription)
     {
@@ -216,22 +214,24 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
     private void UnlockAndDeductPointsFromPlayer()
     {
-        if (!HasEnoughPoints())
-            return;
+        if(HasEnoughPoints() && IsReusable())
+        {
+            Unlock();
 
-        Unlock();
+            UpdatePlayerAmmoOnUnlock();
 
-        UpdatePlayerAmmoOnUnlock();
+            LocalPlayerScoreController.GetScore(-_properties.Price, null);
 
-        LocalPlayerScoreController.GetScore(-_properties.Price, null);
+            OnClickAmmoTypeButton?.Invoke(this);
 
-        OnClickAmmoTypeButton?.Invoke(this);
-
-        IncrementRequiredPoints(_properties.RequiredPointsIncrementAmount);
+            IncrementRequiredPoints(_properties.RequiredPointsIncrementAmount);
+        }
     }
 
     public void HandleAmmoButtonAvailability(int ammoCount)
     {
+        DeactivateIfNotReusableAndOutOfAmmo(ammoCount);
+
         GetLocaPlayerAmmoCount(ammoCount);
 
         if (!IsPointsRequired())
@@ -262,9 +262,15 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
         AutoSelect();
     }
 
+    private void DeactivateIfNotReusableAndOutOfAmmo(int ammoCount)
+    {
+        if (!IsReusable() && ammoCount <= 0)
+            gameObject.SetActive(false);
+    }
+
     private void GetLocaPlayerAmmoCount(int ammoCount) => _properties.Quantity = ammoCount;
 
-    private void ResetQuantity() => _properties.Quantity = _defaultQuantity;
+    private void ResetQuantity() => _properties.Quantity = _properties.DefaultQuantity;
 
     private void UpdatePlayerAmmoOnUnlock()
     {
@@ -273,7 +279,7 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
         if (hasAmmoRemaining)
             return;
 
-        LocalPlayerAmmoType._weaponsBulletsCount[_properties.Index] = _defaultQuantity;
+        LocalPlayerAmmoType._weaponsBulletsCount[_properties.Index] = _properties.DefaultQuantity;
     }
 
     private bool IsSelected()
@@ -294,6 +300,11 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
     private bool IsPointsRequired()
     {
         return _properties.Price > 0;
+    }
+
+    private bool IsReusable()
+    {
+        return _properties.IsReusable;
     }
 
     private bool IsAmmoAvailable(int ammoCount)
@@ -329,13 +340,13 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
     private void AutoSelect()
     {
-        if (_properties.Index == 0 && !_isAutoSelected)
+        if (_properties.Index == 0 && !_properties.IsAutoSelected)
         {
             _properties.IsUnlocked = true;
 
             _properties.IsSelected = true;
 
-            _isAutoSelected = true;
+            _properties.IsAutoSelected = true;
         }
     }
 

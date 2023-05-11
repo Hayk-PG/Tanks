@@ -255,7 +255,7 @@ public class PlayerAmmoType : MonoBehaviour
             int price = (int)data[0];
 
             for (int i = 0; i < _defaultWeaponsLength; i++)
-                _weaponsBulletsCount[i] += UnityEngine.Random.Range(0, 10);
+                _weaponsBulletsCount[i] += _weapons[i]._refillAmount;
 
             _scoreController.GetScore(price, null);
 
