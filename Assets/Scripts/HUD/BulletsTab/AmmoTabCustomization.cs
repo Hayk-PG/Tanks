@@ -14,11 +14,11 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         UnSubscribeFromAmmoTypeButtonEvents();
     }
 
-    public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, int loopIndex)
+    public void InstantiateAmmoTypeButton(WeaponProperties weaponProperty, ScoreController localPlayerScoreController, PlayerAmmoType localPlayerAmmoType, int loopIndex)
     {
         InstantiatedButton(out AmmoTypeButton button);
 
-        AssignProperties(button, weaponProperty);
+        AssignProperties(button, weaponProperty, localPlayerScoreController, localPlayerAmmoType);
 
         OnSendWeaponPointsToUnlock?.Invoke(button);
 
@@ -29,7 +29,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
     public void InstantiatedButton(out AmmoTypeButton button) => button = Instantiate(_buttonPrefab, _container.transform);
 
-    public void AssignProperties(AmmoTypeButton button, WeaponProperties weaponProperty)
+    public void AssignProperties(AmmoTypeButton button, WeaponProperties weaponProperty, ScoreController localPlayerScoreController, PlayerAmmoType localPlayerAmmoType)
     {
         AssignProperties(button, new BaseAmmoTabCustomization<AmmoTypeButton>.Properties
         {
@@ -39,7 +39,9 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
             _value = weaponProperty._value,
 
-            _requiredScoreAmmount = weaponProperty._requiredScoreAmmount,
+            _requiredPointsAmount = weaponProperty._requiredPointsAmmount,
+
+            _requirementPointsIncrementAmount = weaponProperty._requiredPointsIncrementAmount,
 
             _minutes = weaponProperty._minutes,
 
@@ -61,7 +63,13 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
             _description = weaponProperty.description
 
-        }, weaponProperty._ammoTypeStars);
+        }, 
+
+        weaponProperty._ammoTypeStars, 
+
+        localPlayerScoreController,
+
+        localPlayerAmmoType);
     }
 
     public void SetDefaultAmmo(AmmoTypeButton button)
@@ -109,7 +117,7 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
     }
 
     private void OnSelectedAmmoTypeButton(AmmoTypeButton ammoTypeButton)
-    {
+    {      
         GlobalFunctions.Loop<AmmoTypeButton>.Foreach(_instantiatedButtons,
 
             button =>
@@ -120,8 +128,8 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
         ammoTypeButton._properties.IsSelected = true;
     }
 
-    protected override void DisplayPointsToUnlock(int index, int playerPoints, int value)
+    protected override void DisplayPointsToUnlock(int index, int value)
     {
-        _instantiatedButtons[index].DisplayScoresToUnlock(playerPoints, value);
+        _instantiatedButtons[index].HandleAmmoButtonAvailability(value);
     }
 }

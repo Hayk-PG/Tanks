@@ -3,7 +3,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
-public class TileModifyManager : MonoBehaviour
+public class TileModifyManager : MonoBehaviour, IRequiredPointsManager
 {
     public enum TileModifyType { BuildBasicTiles, ExtendBasicTiles, BuildConcreteTiles, UpgradeToConcreteTiles }
 
@@ -22,28 +22,28 @@ public class TileModifyManager : MonoBehaviour
 
 
 
-    private int Price { get; set; }
+    private int RequiredPoints { get; set; }
 
     public bool CanModifyTiles
     {
-        get => _tabModify.LocalPlayerScoreController.Score >= Price;
+        get => _tabModify.LocalPlayerScoreController.Score >= RequiredPoints;
     }
 
-    public class Prices
+    public class Points
     {
         public string Name { get; set; }
-        public int Price { get; set; }
+        public int RequiredPoints { get; set; }
     }
 
     // Default values
     // Will be used if the SetRequiredCost method has not been called.
 
-    public Prices[] NewPrices = new Prices[4]
+    public Points[] NewPoints = new Points[4]
     {
-        new Prices{Name = Names.ModifyGround, Price = 250},
-        new Prices{Name = Names.MetalCube, Price = 1000},
-        new Prices{Name = Names.MetalGround, Price = 1000},
-        new Prices{Name = Names.Bridge, Price = 250}
+        new Points{Name = Names.ModifyGround, RequiredPoints = 250},
+        new Points{Name = Names.MetalCube, RequiredPoints = 1000},
+        new Points{Name = Names.MetalGround, RequiredPoints = 1000},
+        new Points{Name = Names.Bridge, RequiredPoints = 250}
     };
 
 
@@ -70,23 +70,23 @@ public class TileModifyManager : MonoBehaviour
 
     public void SetRquiredCost(int tileModiferCostPercentage, int armoredCubeCostPercentage, int armoredTileCostPercentage, int tileExtenderCostPercentage)
     {
-        NewPrices = new Prices[]
+        NewPoints = new Points[]
         {
-            new Prices{Name = Names.ModifyGround, Price = 250 / 100 * tileModiferCostPercentage},
-            new Prices{Name = Names.MetalCube, Price = 1000 / 100 * armoredCubeCostPercentage},
-            new Prices{Name = Names.MetalGround, Price = 1000 / 100 * armoredTileCostPercentage},
-            new Prices{Name = Names.Bridge, Price = 250 / 100 * tileExtenderCostPercentage}
+            new Points{Name = Names.ModifyGround, RequiredPoints = 250 / 100 * tileModiferCostPercentage},
+            new Points{Name = Names.MetalCube, RequiredPoints = 1000 / 100 * armoredCubeCostPercentage},
+            new Points{Name = Names.MetalGround, RequiredPoints = 1000 / 100 * armoredTileCostPercentage},
+            new Points{Name = Names.Bridge, RequiredPoints = 250 / 100 * tileExtenderCostPercentage}
         };
     }
 
-    private void SetScorePriceText(int score, int price)
+    private void UpdateScoreUI(int playerPoints, int requiredPoints)
     {
-        _txtScorePrice.text = score + "/" + price;
+        _txtScorePrice.text = playerPoints + "/" + requiredPoints;
     }
 
     private void BuildBasicTiles()
     {
-        SetPrice(NewPrices[0].Price);
+        SetRequiredPoints(NewPoints[0].RequiredPoints);
 
         SetTileModifyType(TileModifyType.BuildBasicTiles);
 
@@ -95,7 +95,7 @@ public class TileModifyManager : MonoBehaviour
 
     private void ExtendBasicTiles()
     {
-        SetPrice(NewPrices[3].Price);
+        SetRequiredPoints(NewPoints[3].RequiredPoints);
 
         SetTileModifyType(TileModifyType.ExtendBasicTiles);
 
@@ -104,7 +104,7 @@ public class TileModifyManager : MonoBehaviour
 
     private void BuildConcreteTiles()
     {
-        SetPrice(NewPrices[1].Price);
+        SetRequiredPoints(NewPoints[1].RequiredPoints);
 
         SetTileModifyType(TileModifyType.BuildConcreteTiles);
 
@@ -113,14 +113,14 @@ public class TileModifyManager : MonoBehaviour
 
     private void UpgradeToConcreteTiles()
     {
-        SetPrice(NewPrices[2].Price);
+        SetRequiredPoints(NewPoints[2].RequiredPoints);
 
         SetTileModifyType(TileModifyType.UpgradeToConcreteTiles);
 
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
-    private void SetPrice(int price) => Price = price;
+    private void SetRequiredPoints(int requiredPoints) => RequiredPoints = requiredPoints;
 
     private void SetTileModifyType(TileModifyType tileModifyType) => _tileModifyType = tileModifyType;
 
@@ -139,7 +139,7 @@ public class TileModifyManager : MonoBehaviour
 
     public void FindTilesAroundPlayer()
     {
-        SetScorePriceText(_tabModify.LocalPlayerScoreController.Score, Price);
+        UpdateScoreUI(_tabModify.LocalPlayerScoreController.Score, RequiredPoints);
 
         foundTiles = new List<GameObject>();
 
@@ -170,10 +170,52 @@ public class TileModifyManager : MonoBehaviour
 
     public void SubtractScore()
     {
-        SetScorePriceText(_tabModify.LocalPlayerScoreController.Score - Price, Price);
+        IncrementRequiredPoints(50);
 
-        _tabModify.LocalPlayerScoreController.GetScore(-Price, null);
+        UpdateScoreUI(_tabModify.LocalPlayerScoreController.Score - RequiredPoints, RequiredPoints);
+
+        DeductPointsFromPlayer();
 
         StartCoroutine(StartFindTilesAroundPlayer());
+    }
+
+    private void DeductPointsFromPlayer() => _tabModify.LocalPlayerScoreController.GetScore(-RequiredPoints, null);
+
+    public void IncrementRequiredPoints(int amount = 0)
+    {
+        switch (_tileModifyType)
+        {
+            case TileModifyType.BuildBasicTiles:
+
+                NewPoints[0].RequiredPoints += amount;
+
+                SetRequiredPoints(NewPoints[0].RequiredPoints);
+
+                break;
+
+            case TileModifyType.BuildConcreteTiles:
+
+                NewPoints[1].RequiredPoints += amount;
+
+                SetRequiredPoints(NewPoints[1].RequiredPoints);
+
+                break;
+
+            case TileModifyType.UpgradeToConcreteTiles:
+
+                NewPoints[2].RequiredPoints += amount;
+
+                SetRequiredPoints(NewPoints[2].RequiredPoints);
+
+                break;
+
+            case TileModifyType.ExtendBasicTiles:
+
+                NewPoints[3].RequiredPoints += amount;
+
+                SetRequiredPoints(NewPoints[3].RequiredPoints);
+
+                break;
+        }
     }
 }

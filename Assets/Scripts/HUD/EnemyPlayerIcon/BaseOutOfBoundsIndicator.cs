@@ -35,7 +35,11 @@ public abstract class BaseOutOfBoundsIndicator : MonoBehaviour
     protected virtual void ControlMovement()
     {
         if (Target == null)
+        {
+            SetActive(null, true);
+
             return;
+        }
 
         transform.position = DesiredPosition(Target);
 
@@ -52,8 +56,20 @@ public abstract class BaseOutOfBoundsIndicator : MonoBehaviour
         return new Vector2(_xPosition, _yPosition);
     }
 
-    protected virtual void SetActive(Transform target)
+    protected virtual void SetActive(Transform target, bool forceClose = false)
     {
+        if (forceClose)
+        {
+            if (_canvasGroup.alpha <= 0)
+                return;
+
+            GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
+
+            _canvasGroup.blocksRaycasts = false;
+
+            return;
+        }
+
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, !CameraSight.IsInCameraSight(target.position));
 
         _canvasGroup.blocksRaycasts = false;

@@ -100,7 +100,7 @@ public class PlayerAmmoType : MonoBehaviour
         {
             for (int i = 0; i < _weapons.Length; i++)
             {
-                GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], i);
+                GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(_weapons[i], _scoreController, this, i);
 
                 _defaultWeaponsLength++;
             }
@@ -240,7 +240,7 @@ public class PlayerAmmoType : MonoBehaviour
 
             _scoreController.GetScore(price, null);
 
-            GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(newWeapon, 1);
+            GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(newWeapon, _scoreController, this, 1);
 
             GameSceneObjectsReferences.AmmoTabButtonNotification.NewAvailableWeaponNotificationHolder();
         }
@@ -255,7 +255,7 @@ public class PlayerAmmoType : MonoBehaviour
             int price = (int)data[0];
 
             for (int i = 0; i < _defaultWeaponsLength; i++)
-                _weaponsBulletsCount[i] += UnityEngine.Random.Range(0, 10);
+                _weaponsBulletsCount[i] += _weapons[i]._refillAmount;
 
             _scoreController.GetScore(price, null);
 

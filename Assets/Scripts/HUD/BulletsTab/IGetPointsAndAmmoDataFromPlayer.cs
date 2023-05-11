@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public interface IGetPointsAndAmmoDataFromPlayer
 {
-    Action<Action<int, List<int>>> OnGetPointsAndAmmoDataFromPlayer { get; set; }
+    Action<Action<List<int>>> OnGetPointsAndAmmoDataFromPlayer { get; set; }
 
-    void GetPointsAndAmmoDataFromPlayer(int playerPoints, List<int> bulletsCount);
+    void GetPointsAndAmmoDataFromPlayer(List<int> bulletsCount);
 }

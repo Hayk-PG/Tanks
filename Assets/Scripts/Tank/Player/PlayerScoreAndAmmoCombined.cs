@@ -9,9 +9,10 @@ public class PlayerScoreAndAmmoCombined : MonoBehaviour
 
     private PlayerAmmoType _playerAmmoType;
 
-    private ScoreController _scoreController;
-
     private IGetPointsAndAmmoDataFromPlayer[] _iGet;
+
+
+
 
 
     private void Awake()
@@ -19,8 +20,6 @@ public class PlayerScoreAndAmmoCombined : MonoBehaviour
         _tankController = Get<TankController>.From(gameObject);
 
         _playerAmmoType = Get<PlayerAmmoType>.From(gameObject);
-
-        _scoreController = Get<ScoreController>.From(gameObject);
 
         _iGet = FindObjectsOfType<MonoBehaviour>().OfType<IGetPointsAndAmmoDataFromPlayer>().ToArray();
     }
@@ -44,8 +43,8 @@ public class PlayerScoreAndAmmoCombined : MonoBehaviour
             GlobalFunctions.Loop<IGetPointsAndAmmoDataFromPlayer>.Foreach(_iGet, get => { get.OnGetPointsAndAmmoDataFromPlayer += GetPointsAndAmmoDataFromPlayer; });
     }
 
-    private void GetPointsAndAmmoDataFromPlayer(Action<int, List<int>> SendPointsAndAmmoData)
+    private void GetPointsAndAmmoDataFromPlayer(Action<List<int>> SendPointsAndAmmoData)
     {
-        SendPointsAndAmmoData?.Invoke(_scoreController.Score, _playerAmmoType._weaponsBulletsCount);
+        SendPointsAndAmmoData?.Invoke(_playerAmmoType._weaponsBulletsCount);
     }
 }
