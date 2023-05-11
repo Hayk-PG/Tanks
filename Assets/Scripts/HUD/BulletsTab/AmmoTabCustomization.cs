@@ -53,6 +53,8 @@ public class AmmoTabCustomization : BaseAmmoTabCustomization<AmmoTypeButton>
 
             _bulletForceMaxSpeed = weaponProperty._bulletForceMaxSpeed,
 
+            _isReusable = weaponProperty._isReusable,
+
             _radius = weaponProperty._radius,
 
             _weaponType = weaponProperty._weaponType,
