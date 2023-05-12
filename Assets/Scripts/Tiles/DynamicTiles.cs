@@ -12,7 +12,7 @@ public class DynamicTiles : MonoBehaviour
 
     private Color32 _clrNormal = new Color32(123, 26, 0, 255);
     private Color32 _clrRain = new Color32(0, 123, 119, 255);
-    private Color32 _clrSnow = new Color32(154, 237, 238, 255);
+    private Color32 _clrSnow = new Color32(81, 146, 173, 255);
 
     private bool _isChangingColor;
 

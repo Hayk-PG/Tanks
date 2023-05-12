@@ -10,8 +10,12 @@ public class MovementBoostEffectController : MonoBehaviour, IMovementBoostObserv
     public void SetMovementBoostActive(bool isMovementBoostActive)
     {
         if (isMovementBoostActive)
+        {
             _particle.Play(true);
-        else
-            _particle.Stop(true);
+
+            return;
+        }
+
+        _particle.Stop(true);
     }
 }
