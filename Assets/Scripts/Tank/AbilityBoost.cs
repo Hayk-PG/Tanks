@@ -18,6 +18,8 @@ public class AbilityBoost : BaseAbility
         base.OnAbilityActivated(data);
 
         Boost(true);
+
+        PlayBoostSoundEffect(2);
     }
 
     protected override void OnTurnChanged(TurnState turnState)
@@ -39,6 +41,8 @@ public class AbilityBoost : BaseAbility
 
         SetMovementBoostObserversActive(isMovementBoostActive);
     }
+
+    private void PlayBoostSoundEffect(int clipIndex) => SecondarySoundController.PlaySound(10, clipIndex);
 
     // The boolean variable "_isMovementObserversGet" is used to ensure that the method is only executed once.
 

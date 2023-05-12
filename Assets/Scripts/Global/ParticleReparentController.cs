@@ -21,7 +21,10 @@ public class ParticleReparentController   : MonoBehaviour
     private void Awake()
     {
         _mainModule = _particles.main;
+
         _mainModule.stopAction = ParticleSystemStopAction.Callback;
+
+        InitializeAutoParent();
     }
 
     private void Start()
@@ -34,6 +37,14 @@ public class ParticleReparentController   : MonoBehaviour
     }
 
     private void OnParticleSystemStopped() => ReparentAndResetTransform();
+
+    private void InitializeAutoParent()
+    {
+        if (_parent != null)
+            return;
+
+        _parent = transform.parent;
+    }
 
     private void GetDefaultPosition() => _defaultLocalPosition = transform.localPosition;
 
