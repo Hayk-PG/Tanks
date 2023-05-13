@@ -56,19 +56,13 @@ public class VisualPointsManager : MonoBehaviour
             {
                 _generatedNumbers.Add(_generatedNumbers.Count > 0 ? value - _generatedNumbers[_generatedNumbers.Count - 1] : value);
 
-                print($"LastVisualPoint: {_generatedNumbers.Count}");
-
                 continue;
             }
 
             // Add numbers to the '_generatedNumbers' list if they are within the range of greater than 0 and less than the total value.
 
             if (isWithinRange)
-            {
                 _generatedNumbers.Add(randomNum);
-
-                print($"WithinRange: {_generatedNumbers.Count}");
-            }
             else
                 continue;
         }
