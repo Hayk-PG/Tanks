@@ -34,6 +34,8 @@ public class VisualPointsManager : MonoBehaviour
 
     private IEnumerator GenerateRandomNumbers(int value)
     {
+        yield return null;
+
         _generatedNumbers = new List<int>();
 
         for (int i = 0; i < _visualPoints.Length; i++)
@@ -69,8 +71,6 @@ public class VisualPointsManager : MonoBehaviour
             }
             else
                 continue;
-
-            yield return null;
         }
     }
 
