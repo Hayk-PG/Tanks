@@ -48,8 +48,6 @@ public class AbilityDodge : BaseAbility
 
             SetShootPointLocalPosition(true);
 
-            PlaySoundFX(1);
-
             transform.position = _positionNextTile;
 
             _isDodged = true;
@@ -123,8 +121,6 @@ public class AbilityDodge : BaseAbility
             SetShootPointLocalPosition(false);
 
             DeactivateAbilityAfterLimit();
-
-            PlaySoundFX(1);
 
             _isDodged = false;
         }

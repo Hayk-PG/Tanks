@@ -36,7 +36,11 @@ public class Dash : MonoBehaviour
     {
         _dashParticle.transform.SetParent(null);
         _dashParticle.Play();
+
+        PlaySoundEffect();
     }
+
+    private void PlaySoundEffect() => SecondarySoundController.PlaySound(10, 1);
 
     public void ResetTransform(GameObject gameObject)
     {
