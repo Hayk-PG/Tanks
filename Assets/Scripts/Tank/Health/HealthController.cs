@@ -41,7 +41,7 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
     public event Action<int> onUpdateArmorBar;
     public Action<int> OnTankDamageFire { get; set; }
 
-
+    public event Action onTankDeath;
 
 
 
@@ -261,7 +261,11 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
             GameSceneObjectsReferences.GameplayAnnouncer.AnnounceGameResult(Health > 0);
 
         if (Health <= 0)
+        {
             gameObject.SetActive(false);
+
+            onTankDeath?.Invoke();
+        }
     }
 
     public void WrapUpGame(object[] data = null)
