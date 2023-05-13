@@ -81,7 +81,7 @@ public class AcidExplosionParticleController : MonoBehaviour
         {
             iDamage.Damage(DamageValue);
 
-            OwnerScore.GetScore(ScoreValue, iDamage);
+            OwnerScore.GetScore(ScoreValue, iDamage, transform.position);
             OwnerScore.HitEnemyAndGetScore(new int[] { ScoreValue }, iDamage);
         }
         else

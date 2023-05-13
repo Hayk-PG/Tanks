@@ -238,7 +238,7 @@ public class PlayerAmmoType : MonoBehaviour
 
             _weaponsBulletsCount.Add(newWeapon._value);
 
-            _scoreController.GetScore(price, null);
+            _scoreController.GetScore(price, null, null, Vector3.zero);
 
             GameSceneObjectsReferences.AmmoTabCustomization.InstantiateAmmoTypeButton(newWeapon, _scoreController, this, 1);
 
@@ -257,7 +257,7 @@ public class PlayerAmmoType : MonoBehaviour
             for (int i = 0; i < _defaultWeaponsLength; i++)
                 _weaponsBulletsCount[i] += _weapons[i]._refillAmount;
 
-            _scoreController.GetScore(price, null);
+            _scoreController.GetScore(price, null, null, Vector3.zero);
 
             UpdateDisplayedWeapon(_shootController.ActiveAmmoIndex);
         }

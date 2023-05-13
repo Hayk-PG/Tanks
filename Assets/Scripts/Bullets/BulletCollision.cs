@@ -41,7 +41,7 @@ public class BulletCollision : MonoBehaviour
 
     protected virtual void OnCollisionInOfflineMode(Collider collider, IScore ownerScore)
     {
-        ownerScore.GetScore(10, null);
+        ownerScore.GetScore(10, null, transform.position);
         Get<IDestruct>.From(collider.gameObject)?.Destruct(_destructDamage, _tileParticleIndex);
     }
 

@@ -18,7 +18,7 @@ public class BaseExplosion : MonoBehaviour
 
     protected virtual void Score(IDamage iDamage, int[] scores)
     {
-        OwnerScore?.GetScore(scores[0] + scores[1], iDamage);
+        OwnerScore?.GetScore(scores[0] + scores[1], iDamage, transform.position);
         OwnerScore?.HitEnemyAndGetScore(scores, iDamage);
     }
 }

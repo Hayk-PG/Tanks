@@ -44,7 +44,7 @@ public class ScoreController : MonoBehaviour, IScore
 
         _scoreFromTerOccIndController = Get<ScoreFromTerOccIndController>.From(gameObject);
 
-        Score = 10000;
+        Score = 0;
 
         MainScore = Score;
     }
@@ -87,7 +87,7 @@ public class ScoreController : MonoBehaviour, IScore
     private void ReceiveTornadoScore(object[] data)
     {
         if ((string)data[2] == name && (string)data[0] != name)
-            GetScore(150, null);
+            GetScore(150, null, Vector3.zero);
     }
 
     private void OnTornado(object[] data) => ReceiveTornadoScore(data);
@@ -106,12 +106,12 @@ public class ScoreController : MonoBehaviour, IScore
 
     private void OnSupportOrPropsChanged(AmmoTypeButton supportOrPropsTypeButton) => UpdateScore(-supportOrPropsTypeButton._properties.Price, 0);
 
-    public void GetScore(int score, IDamage iDamage)
+    public void GetScore(int score, IDamage iDamage, Vector3? visualPointsStartPosition = null, Vector3? targetPosition = null, bool convertStartPositionToScreenSpace = true, bool convertTargetPositionToScreenSpace = true)
     {
-        Conditions<bool>.Compare(iDamage != IDamage || iDamage == null, () => UpdateScore(score, 0.5f), null);
+        Conditions<bool>.Compare(iDamage != IDamage || iDamage == null, () => UpdateScore(score, 0.5f, visualPointsStartPosition, targetPosition, convertStartPositionToScreenSpace, convertTargetPositionToScreenSpace), null);
     }
 
-    private void UpdateScore(int score, float waitForSeconds)
+    private void UpdateScore(int score, float waitForSeconds, Vector3? visualPointsStartPosition = null, Vector3? targetPosition = null, bool convertStartPositionToScreenSpace = true, bool convertTargetPositionToScreenSpace = true)
     {
         if (score == 0)
             return;
@@ -123,6 +123,8 @@ public class ScoreController : MonoBehaviour, IScore
 
         if (multipliedScore > 0)
             MainScore += multipliedScore;
+
+        VisualizePoints(multipliedScore, visualPointsStartPosition, targetPosition, convertStartPositionToScreenSpace, convertTargetPositionToScreenSpace);
 
         onDisplayPlayerScore?.Invoke(multipliedScore, waitForSeconds);
 
@@ -139,6 +141,18 @@ public class ScoreController : MonoBehaviour, IScore
 
             OnHitEnemy?.Invoke(scores);
         }
+    }
+
+    private void VisualizePoints(int score, Vector3? visualPointsStartPosition, Vector3? targetPosition, bool convertStartPositionToScreenSpace, bool convertTargetPositionToScreenSpace)
+    {
+        if (_tankController.BasePlayer == null)
+            return;
+
+        if (visualPointsStartPosition == null && targetPosition == null)
+            return;
+
+        GameSceneObjectsReferences.VisualPointsManager.VisualizePoints(score, visualPointsStartPosition.HasValue ? visualPointsStartPosition.Value : transform.position,
+                                                                       targetPosition.HasValue ? targetPosition.Value : transform.position, convertStartPositionToScreenSpace, convertTargetPositionToScreenSpace);
     }
 
     private void PlayHitSoundEffect()
@@ -169,7 +183,7 @@ public class ScoreController : MonoBehaviour, IScore
 
             int score = Score <= 100 ? 100 * m : Score * m;
 
-            GetScore(score, null);
+            GetScore(score, null, Vector3.zero);
         }
     }
 }

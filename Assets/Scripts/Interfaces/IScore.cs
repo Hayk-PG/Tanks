@@ -13,6 +13,6 @@ public interface IScore
     Action<int> OnPlayerGetsPoints { get; set; }
     Action<int[]> OnHitEnemy { get; set; }
 
-    void GetScore(int score, IDamage iDamage);
+    void GetScore(int score, IDamage iDamage, Vector3? visualPointsStartPosition = null, Vector3? targetPosition = null, bool convertStartPositionToScreenSpace = true, bool convertTargetPositionToScreenSpace = true);
     void HitEnemyAndGetScore(int[] scores, IDamage enemyDamage);
 }

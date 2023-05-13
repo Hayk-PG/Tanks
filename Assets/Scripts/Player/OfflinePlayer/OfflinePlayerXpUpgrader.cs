@@ -16,5 +16,5 @@ public class OfflinePlayerXpUpgrader : PlayerDropBoxObserver
         UpgradePlayerXp(_xp);
     }
 
-    protected virtual void UpgradePlayerXp(int xp) => _playerTankController._scoreController.GetScore(xp, null);
+    protected virtual void UpgradePlayerXp(int xp) => _playerTankController._scoreController.GetScore(xp, null, null, UnityEngine.Vector3.zero);
 }

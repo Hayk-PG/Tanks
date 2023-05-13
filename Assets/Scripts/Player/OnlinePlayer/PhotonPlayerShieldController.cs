@@ -13,7 +13,7 @@ public class PhotonPlayerShieldController : OfflinePlayerShieldController
         if (_playerTankController?.OwnTank.BasePlayer == null)
             return;
 
-        _playerTankController._scoreController.GetScore(price, null);
+        _playerTankController._scoreController.GetScore(price, null, null, Vector3.zero);
 
         _photonPlayerController.PhotonView.RPC("ActivateShieldRPC", RpcTarget.AllViaServer, ShieldIndex());
     }

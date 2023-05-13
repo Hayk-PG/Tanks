@@ -32,7 +32,7 @@ public abstract class PlayerDropBoxObserver : MonoBehaviour
         return false;
     }
 
-    protected virtual void DeductScores(int price) => _playerTankController._scoreController.GetScore(price, null);
+    protected virtual void DeductScores(int price) => _playerTankController._scoreController.GetScore(price, null, null, Vector3.zero);
 
     protected virtual void ManageTurnControllerSubscription(bool isSubscribing)
     {

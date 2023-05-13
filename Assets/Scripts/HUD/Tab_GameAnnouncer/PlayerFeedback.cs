@@ -72,7 +72,7 @@ public class PlayerFeedback : MonoBehaviour
         float c = (total * b);
 
         ScoreController sc = GlobalFunctions.ObjectsOfType<ScoreController>.Find(s => s.gameObject.name == tankName);
-        sc?.GetScore(Mathf.RoundToInt(c), null);
+        sc?.GetScore(Mathf.RoundToInt(c), null, Vector3.zero);
     }
 
     public void DisplayWeaponChangeText(string tankName, string weaponType)

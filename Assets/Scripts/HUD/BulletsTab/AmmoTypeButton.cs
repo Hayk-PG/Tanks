@@ -220,7 +220,7 @@ public class AmmoTypeButton : MonoBehaviour, IRequiredPointsManager
 
             UpdatePlayerAmmoOnUnlock();
 
-            LocalPlayerScoreController.GetScore(-_properties.Price, null);
+            LocalPlayerScoreController.GetScore(-_properties.Price, null, null, transform.position, true, false);
 
             OnClickAmmoTypeButton?.Invoke(this);
 

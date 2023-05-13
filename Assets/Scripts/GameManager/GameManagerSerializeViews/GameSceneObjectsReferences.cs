@@ -148,6 +148,9 @@ public class GameSceneObjectsReferences : MonoBehaviour
     [SerializeField]
     private TileModifyManager _tileModifyManager;
 
+    [SerializeField]
+    private VisualPointsManager _visualPointsManager;
+
 
 
     //GameManager
@@ -206,6 +209,7 @@ public class GameSceneObjectsReferences : MonoBehaviour
     public static EnemyPlayerIcon EnemyPlayerIcon => Instance._enemyPlayerIcon;
     public static ParachuteIcon ParachuteIcon => Instance._parachuteIcon;
     public static TileModifyManager TileModifyManager => Instance._tileModifyManager;
+    public static VisualPointsManager VisualPointsManager => Instance._visualPointsManager;
 
     //LavaSplash
     public static LavaSplash LavaSplash { get; private set; }

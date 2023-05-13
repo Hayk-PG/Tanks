@@ -56,7 +56,7 @@ public class GameManagerBulletSerializer : MonoBehaviourPun
 
             iDestruct.Destruct(destructDamage, 0);
 
-            iScore?.GetScore(UnityEngine.Random.Range(10, 110), null);
+            iScore?.GetScore(UnityEngine.Random.Range(10, 110), null, colliderPosition);
         }
     }
     #endregion

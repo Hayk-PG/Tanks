@@ -212,7 +212,7 @@ public class TileModifyGUI : MonoBehaviour
         {
             DisableGUI();
 
-            _tileModifyManager.SubtractScore();
+            _tileModifyManager.SubtractScore(transform.position);
 
             SecondarySoundController.PlaySound(3, 0);
 

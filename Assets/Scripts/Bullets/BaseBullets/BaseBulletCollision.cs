@@ -67,6 +67,6 @@ public class BaseBulletCollision : MonoBehaviour
 
         iDestruct.Destruct(_destructDamage, _tileParticleIndex);
 
-        _baseBulletController?.OwnerScore.GetScore(UnityEngine.Random.Range(10, 110), null);
+        _baseBulletController?.OwnerScore.GetScore(UnityEngine.Random.Range(10, 110), null, transform.position);
     }
 }

@@ -57,7 +57,7 @@ public class ExplosionDirect : BaseExplosion
     {
         iDestruct.Destruct(_destructDamage, 0);
 
-        OwnerScore.GetScore(Random.Range(10, 110), null);
+        OwnerScore.GetScore(Random.Range(10, 110), null, transform.position);
     }
 
     private void DamageTileAndGetScoredRPC()

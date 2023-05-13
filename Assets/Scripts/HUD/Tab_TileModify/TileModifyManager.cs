@@ -168,18 +168,18 @@ public class TileModifyManager : MonoBehaviour, IRequiredPointsManager
         }
     }
 
-    public void SubtractScore()
+    public void SubtractScore(Vector3? position = null)
     {
         IncrementRequiredPoints(50);
 
         UpdateScoreUI(_tabModify.LocalPlayerScoreController.Score - RequiredPoints, RequiredPoints);
 
-        DeductPointsFromPlayer();
+        DeductPointsFromPlayer(position);
 
         StartCoroutine(StartFindTilesAroundPlayer());
     }
 
-    private void DeductPointsFromPlayer() => _tabModify.LocalPlayerScoreController.GetScore(-RequiredPoints, null);
+    private void DeductPointsFromPlayer(Vector3? position = null) => _tabModify.LocalPlayerScoreController.GetScore(-RequiredPoints, null, null, position);
 
     public void IncrementRequiredPoints(int amount = 0)
     {

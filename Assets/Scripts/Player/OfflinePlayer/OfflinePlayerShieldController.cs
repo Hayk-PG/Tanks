@@ -20,7 +20,7 @@ public class OfflinePlayerShieldController : MonoBehaviour
 
     protected virtual void OnActivateShield(int price)
     {
-        _playerTankController._scoreController.GetScore(price, null);
+        _playerTankController._scoreController.GetScore(price, null, null, Vector3.zero);
 
         _playerTankController._playerShields.ActivateShields(ShieldIndex());
     }

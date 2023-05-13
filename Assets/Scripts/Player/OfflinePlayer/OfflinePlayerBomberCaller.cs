@@ -41,7 +41,7 @@ public class OfflinePlayerBomberCaller : MonoBehaviour
 
     protected virtual void DeductScores(int price)
     {
-        _playerTankController._scoreController.GetScore(price, null);
+        _playerTankController._scoreController.GetScore(price, null, null, Vector3.zero);
     }
 
     protected virtual void CallBomber(BomberType bomberType, Vector3 dropPosition)
