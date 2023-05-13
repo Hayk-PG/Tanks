@@ -19,9 +19,10 @@ public class DropBoxSelectionPanelPlayerAbility : BaseDropBoxSelectionPanelEleme
         StartCoroutine(RaiseEventAfterDelay(DropBoxItemType.Ability, _data));
     }
 
-    //For player's abilities
     public void Initialize(IPlayerAbility playerAbility, string title, string ability, int price, int quantity, int usageFrequency, int turns)
     {
+        CacheDropBoxAbility(playerAbility);
+
         _observer = playerAbility;
 
         _title = title;
@@ -32,4 +33,6 @@ public class DropBoxSelectionPanelPlayerAbility : BaseDropBoxSelectionPanelEleme
         _usageFrequency = usageFrequency;
         _turns = turns;
     }
+
+    private void CacheDropBoxAbility(IPlayerAbility playerAbility) => playerAbility.DropBoxAbility = this;
 }

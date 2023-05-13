@@ -28,7 +28,7 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
     protected abstract string Ability { get; }
 
     public BuffDebuffUIElement BuffDebuffUIElement { get; set; }
-
+    public DropBoxSelectionPanelPlayerAbility DropBoxAbility { get; set; }
 
     public event Action<object[]> onAbilityActive;
 
@@ -61,6 +61,8 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
         IsAbilityActive = true;
 
         UsedTime = 0;
+
+        UpdateAbilityUsage(true);
 
         ActivateBuffDebuffIcon(data);
 
@@ -109,8 +111,12 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
     {
         DeactivateBuffDebuffIcon();
 
+        UpdateAbilityUsage(false);
+
         IsAbilityActive = false;
     }
+
+    protected virtual void UpdateAbilityUsage(bool isCurrentlyBeingUsed) => DropBoxAbility.IsCurrentlyBeingUsed = isCurrentlyBeingUsed;
 
     protected virtual void DeactivateBuffDebuffIcon()
     {

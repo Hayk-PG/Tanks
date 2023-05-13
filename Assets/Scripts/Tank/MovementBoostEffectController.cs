@@ -17,7 +17,7 @@ public class MovementBoostEffectController : MonoBehaviour, IMovementBoostObserv
 
     public void SetMovementBoostActive(bool isMovementBoostActive)
     {
-        Shake(isMovementBoostActive);
+        ToggleCameraShake(isMovementBoostActive);
 
         if (isMovementBoostActive)
         {
@@ -32,7 +32,7 @@ public class MovementBoostEffectController : MonoBehaviour, IMovementBoostObserv
     // Shakes the camera upon particle activation.
     // Enables or disables the 'CFXR_Effect' component associated with the particle.
 
-    private void Shake(bool isEnabled)
+    private void ToggleCameraShake(bool isEnabled)
     {
         if (_cfxrEffect == null)
             return;

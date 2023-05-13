@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class AbilityDodge : BaseAbility, IPlayerAbility
+public class AbilityDodge : BaseAbility
 {
     [SerializeField] [Space]
     private Rigidbody _rigidbody;

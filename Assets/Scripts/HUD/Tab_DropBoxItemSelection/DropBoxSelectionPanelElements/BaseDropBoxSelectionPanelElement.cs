@@ -31,6 +31,8 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour, IRequire
 
     protected virtual bool CanUse { get; set; } = true;
 
+    public virtual bool IsCurrentlyBeingUsed { get; set; } = false;
+
 
 
 
@@ -41,7 +43,7 @@ public abstract class BaseDropBoxSelectionPanelElement : MonoBehaviour, IRequire
 
     public virtual void Activate()
     {
-        if (!CanUse || !GameSceneObjectsReferences.DropBoxItemSelectionPanelOwner.HasEnoughPoints(_price) || String.IsNullOrEmpty(_title))
+        if (!CanUse || IsCurrentlyBeingUsed || !GameSceneObjectsReferences.DropBoxItemSelectionPanelOwner.HasEnoughPoints(_price) || String.IsNullOrEmpty(_title))
         {
             gameObject.SetActive(false);
 
