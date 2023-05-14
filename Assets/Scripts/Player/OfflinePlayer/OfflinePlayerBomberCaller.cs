@@ -32,6 +32,8 @@ public class OfflinePlayerBomberCaller : MonoBehaviour
         DeductScores((int)data[1]);
 
         CallBomber((BomberType)data[0], (Vector3)data[3]);
+
+        AnnounceStrikeForLocalPlayer();
     }
 
     protected virtual IEnumerator WaitUntil()
@@ -47,5 +49,26 @@ public class OfflinePlayerBomberCaller : MonoBehaviour
     protected virtual void CallBomber(BomberType bomberType, Vector3 dropPosition)
     {
         GameSceneObjectsReferences.AirSupport.Call(_playerTankController._playerTurn, _playerTankController._iScore, dropPosition);
+    }
+
+    protected virtual void AnnounceStrikeForLocalPlayer()
+    {
+        int clipIndex = Random.Range(0, 6);
+
+        GameSceneObjectsReferences.GameplayAnnouncer.AnnouncePlayerFeedback(7, clipIndex);
+    }
+
+    protected virtual void AnnounceStrikeForOtherPlayer(string ownerName)
+    {
+        TankController tankController = GlobalFunctions.ObjectsOfType<TankController>.Find(t => t.gameObject.name == ownerName, true);
+
+        bool isOtherPlayer = tankController.BasePlayer == null;
+
+        if (isOtherPlayer)
+        {
+            int clipIndex = Random.Range(6, 8);
+
+            GameSceneObjectsReferences.GameplayAnnouncer.AnnouncePlayerFeedback(7, clipIndex);
+        }
     }
 }

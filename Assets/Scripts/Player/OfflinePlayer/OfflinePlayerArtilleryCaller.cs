@@ -15,6 +15,8 @@ public class OfflinePlayerArtilleryCaller : OfflinePlayerBomberCaller
         DeductScores((int)data[1]);
 
         CallArtillery(data);
+
+        AnnounceStrikeForLocalPlayer();
     }
 
     protected virtual void CallArtillery(object[] data)
