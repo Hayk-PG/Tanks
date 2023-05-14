@@ -38,6 +38,13 @@ public class AbilityDodge : BaseAbility
 
     private void FixedUpdate() => Conditions<bool>.Compare(IsAbilityActive, () => UseAbility(), null);
 
+    protected override void OnAbilityActivated(object[] data = null)
+    {
+        base.OnAbilityActivated(data);
+
+        PlaySoundFX(3);
+    }
+
     private void UseAbility(object[] data = null)
     {
         bool canUseDodgeAbility = !_isDodged && _isOpponentsTurn && ProjectileDistane() < 2.5f;
