@@ -39,6 +39,8 @@ public class AbilityBoost : BaseAbility
         GetMovementBoostObservers();
 
         SetMovementBoostObserversActive(isMovementBoostActive);
+
+        RaiseAbilityEvent(isMovementBoostActive);
     }
 
     private void PlayBoostSoundEffect(int clipIndex) => SecondarySoundController.PlaySound(10, clipIndex);

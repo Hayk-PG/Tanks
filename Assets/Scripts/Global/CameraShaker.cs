@@ -2,6 +2,9 @@ using CartoonFX;
 using System.Collections;
 using UnityEngine;
 
+
+
+[RequireComponent(typeof(CFXR_Effect))]
 public class CameraShaker : MonoBehaviour
 {
     [SerializeField]
@@ -13,10 +16,14 @@ public class CameraShaker : MonoBehaviour
 
     private void Awake()
     {
-        _cfxrEffect.enabled = false;
+        DisableCfxrEffect();
 
-        _shakeDuration = _cfxrEffect.cameraShake.duration;
+        GetShakeDuration();
     }
+
+    private void DisableCfxrEffect() => _cfxrEffect.enabled = false;
+
+    private void GetShakeDuration() => _shakeDuration = _cfxrEffect.cameraShake.duration;
 
     public void ToggleShake()
     {

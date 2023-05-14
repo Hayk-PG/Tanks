@@ -1,34 +1,17 @@
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using System;
 using System.Collections;
 
 
-//ADDRESSABLE
 public class AbilityCloak : BaseAbility
 {
-    [Serializable]
-    private class AssetReferenceData
-    {
-        public AssetReference _assetReferenceParticles;
-        public Vector3 localPosition;
-        public Vector3 localScale;
-    }
-
     [SerializeField] [Space]
     private BaseShootController _baseShootController;
 
-    [SerializeField] [Space]
-    private AssetReferenceData _assetReferenceData; // Note: When assigning this asset in the inspector, make sure to also set its local position and local scale accordingly.
-
     private Transform[] _transforms;
 
-    private ParticleSystem _particles; // Cached on Addressable instantiate
+    private ParticleSystem _particle; 
 
     private int[] _defaultLayers;
-
-    private object[] _active = new object[] { true };
-    private object[] _inactive = new object[] { false };
 
     protected override string Title => "Cloak";
     protected override string Ability => $"Become invisible for {Turns} turn.";
@@ -37,12 +20,8 @@ public class AbilityCloak : BaseAbility
 
 
 
-    protected override void Start()
-    {
-        base.Start();
 
-        InstantiateParticlesAsync();
-    }
+    public void AssignAbilityParticle(ParticleSystem particle) => _particle = particle;
 
     protected override void OnAbilityActivated(object[] data = null)
     {
@@ -50,7 +29,7 @@ public class AbilityCloak : BaseAbility
 
         SetInvisible(true);
 
-        RaiseAbilityEvent(_active);
+        RaiseAbilityEvent();
     }
 
     protected override void OnTurnChanged(TurnState turnState)
@@ -65,20 +44,7 @@ public class AbilityCloak : BaseAbility
 
         SetInvisible(false);
 
-        RaiseAbilityEvent(_inactive);
-    }
-
-    private void InstantiateParticlesAsync()
-    {
-        if (_assetReferenceData == null)
-            return;
-
-        _assetReferenceData._assetReferenceParticles.InstantiateAsync(transform).Completed += asset =>
-        {
-            _particles = Get<ParticleSystem>.From(asset.Result);
-            _particles.transform.localPosition = _assetReferenceData.localPosition;
-            _particles.transform.localScale = _assetReferenceData.localScale;
-        };
+        RaiseAbilityEvent(false);
     }
 
     private void SetInvisible(bool isInvisible)
@@ -123,7 +89,7 @@ public class AbilityCloak : BaseAbility
 
     private IEnumerator PlayParticleAndHide(bool isInvisible)
     {
-        if (_particles == null)
+        if (_particle == null)
         {
             ChangeLayers(isInvisible);
 
@@ -190,10 +156,10 @@ public class AbilityCloak : BaseAbility
 
     private bool IsParticlesTransform(Transform transform)
     {
-        return transform == _particles?.transform || transform.IsChildOf(_particles?.transform);
+        return transform == _particle?.transform || transform.IsChildOf(_particle?.transform);
     }
 
-    private void PlayParticles() => _particles.Play(true);
+    private void PlayParticles() => _particle.Play(true);
 
     public override void AssignBuffDebuffUIElement(BuffDebuffUIElement buffDebuffUIElement) => BuffDebuffUIElement = buffDebuffUIElement;
 }

@@ -30,7 +30,7 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
     public BuffDebuffUIElement BuffDebuffUIElement { get; set; }
     public DropBoxSelectionPanelPlayerAbility DropBoxAbility { get; set; }
 
-    public event Action<object[]> onAbilityActive;
+    public event Action<bool> onAbilityActive;
 
 
 
@@ -144,7 +144,7 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
 
     }
 
-    protected virtual void RaiseAbilityEvent(object[] data = null) => onAbilityActive?.Invoke(data);
+    protected virtual void RaiseAbilityEvent(bool isAbilityActive = true) => onAbilityActive?.Invoke(isAbilityActive);
 
     public abstract void AssignBuffDebuffUIElement(BuffDebuffUIElement buffDebuffUIElement);
 }
