@@ -50,6 +50,19 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
         GameSceneObjectsReferences.TurnController.OnTurnChanged += OnTurnChanged;
     }
 
+    protected virtual void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && _abilityOrder == AbilitiesOrders.First)
+        {
+            OnAbilityActivated();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return) && _abilityOrder == AbilitiesOrders.Second)
+        {
+            OnAbilityActivated();
+        }
+    }
+
     protected virtual void OnAbilitySelect(DropBoxItemType dropBoxItemType, object[] data)
     {
         if (dropBoxItemType == DropBoxItemType.Ability && (IPlayerAbility)data[0] == _iPlayerAbility)
