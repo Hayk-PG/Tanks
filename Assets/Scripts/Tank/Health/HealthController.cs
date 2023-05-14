@@ -43,6 +43,8 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
 
     public event Action onTankDeath;
 
+    public event Action onHealthBoost;
+
 
 
 
@@ -233,6 +235,8 @@ public class HealthController : MonoBehaviour, IDamage, IEndGame
             Health += hp;
         else
             Health = 100;
+
+        onHealthBoost?.Invoke();
 
         OnUpdateHealthBar?.Invoke(Health);
 
