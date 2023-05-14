@@ -43,13 +43,28 @@ public class ClipsEditorAssigner : MonoBehaviour
             int length = clipName.Length - startIndex;
 
             string trimmedClipName = _clips[i].name.Substring(startIndex, length);
+            string final = "";
 
-            if (trimmedClipName.Contains("_"))
-                continue;
+            bool isUnderscorePresent = trimmedClipName.Contains("_");
 
-            _clipsList.Add(new Clips { _clip = _clips[i], _clipName = trimmedClipName });
+            if (isUnderscorePresent)
+            {
+                for (int a = 0; a < trimmedClipName.Length; a++)
+                {
+                    bool isUnderscoreCharacterAtIndex = trimmedClipName[a] == '_';
 
-            print($"{i}: {trimmedClipName}");
+                    if (isUnderscoreCharacterAtIndex)
+                        final += " ";
+                    else
+                        final += trimmedClipName[a];
+                }
+            }
+            else
+                final = trimmedClipName;
+
+            _clipsList.Add(new Clips { _clip = _clips[i], _clipName = final });
+
+            print($"{i}: {final}");
         }
 
         _soundController.SoundsList[_soundController.SoundsList.Length - 1]._clips = _clipsList.ToArray();

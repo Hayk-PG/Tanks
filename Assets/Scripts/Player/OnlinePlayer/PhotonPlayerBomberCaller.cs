@@ -19,6 +19,8 @@ public class PhotonPlayerBomberCaller : OfflinePlayerBomberCaller
 
         base.CallBomber(bomberType, dropPosition);
 
+        AnnounceStrikeForLocalPlayer();
+
         // This method calls a bomber for all other players in the game
         // and should only be called on the server side
 
@@ -35,5 +37,7 @@ public class PhotonPlayerBomberCaller : OfflinePlayerBomberCaller
         PlayerTurn playerTurn = Get<PlayerTurn>.From(tankController.gameObject);
 
         GameSceneObjectsReferences.AirSupport.Call(playerTurn, iScore, dropPosition);
+
+        AnnounceStrikeForOtherPlayer(ownerName);
     }
 }

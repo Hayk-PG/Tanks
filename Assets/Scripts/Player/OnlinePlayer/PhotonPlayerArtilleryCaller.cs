@@ -23,6 +23,8 @@ public class PhotonPlayerArtilleryCaller : OfflinePlayerArtilleryCaller
 
         Vector3 target = (Vector3)targetData[3];
 
+        AnnounceStrikeForLocalPlayer();
+
         _photonPlayerController.PhotonView.RPC("CallArtilleryRPC", RpcTarget.AllViaServer, ownerName, shellsCount, shellsSpreadValue, target);
     }
 
@@ -38,5 +40,7 @@ public class PhotonPlayerArtilleryCaller : OfflinePlayerArtilleryCaller
         };
 
         GameSceneObjectsReferences.ArtillerySupport.Call(data);
+
+        AnnounceStrikeForOtherPlayer(ownerName);
     }
 }
