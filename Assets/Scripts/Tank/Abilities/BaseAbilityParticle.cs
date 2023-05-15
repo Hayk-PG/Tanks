@@ -12,6 +12,9 @@ public class BaseAbilityParticle<T> : MonoBehaviour where T: BaseAbility
 
     protected T _ability;
 
+    [SerializeField] [Space]
+    protected int _clipIndex;
+
 
 
 
@@ -28,6 +31,8 @@ public class BaseAbilityParticle<T> : MonoBehaviour where T: BaseAbility
             PlayParticle();
         else
             StopParticle();
+
+        PlaySoundEffect();
     }
 
     protected virtual void PlayParticle()
@@ -46,4 +51,6 @@ public class BaseAbilityParticle<T> : MonoBehaviour where T: BaseAbility
 
         _cameraShaker.ToggleShake();
     }
+
+    protected virtual void PlaySoundEffect() => SecondarySoundController.PlaySound(10, _clipIndex);
 }

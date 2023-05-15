@@ -9876,8 +9876,8 @@ GameObject:
   - component: {fileID: 7569170239859747442}
   - component: {fileID: 6131523359424734419}
   - component: {fileID: 41217129184760578}
-  - component: {fileID: 6820400831971764880}
   - component: {fileID: 6446026820714999508}
+  - component: {fileID: 6820400831971764880}
   m_Layer: 0
   m_Name: LightningEnchantBlue (Boost Activation)
   m_TagString: Untagged
@@ -14831,20 +14831,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cfxrEffect: {fileID: 6131523359424734419}
---- !u!114 &6820400831971764880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7569170239859747437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f663e8a6336af74ebd80f89551be147, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _particle: {fileID: 7569170239859747443}
-  _cameraShaker: {fileID: 41217129184760578}
 --- !u!114 &6446026820714999508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14859,3 +14845,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _particles: {fileID: 7569170239859747443}
   _parent: {fileID: 0}
+--- !u!114 &6820400831971764880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7569170239859747437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f663e8a6336af74ebd80f89551be147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _particle: {fileID: 7569170239859747443}
+  _cameraShaker: {fileID: 41217129184760578}
+  _clipIndex: 2

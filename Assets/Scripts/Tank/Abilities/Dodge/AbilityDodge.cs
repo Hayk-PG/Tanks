@@ -42,7 +42,7 @@ public class AbilityDodge : BaseAbility
     {
         base.OnAbilityActivated(data);
 
-        PlaySoundFX(3);
+        PlayDodgeSoundEffect();
     }
 
     private void UseAbility(object[] data = null)
@@ -72,6 +72,8 @@ public class AbilityDodge : BaseAbility
             OnOtherTurn(turnState);
         }
     }
+
+    private void PlayDodgeSoundEffect() => SecondarySoundController.PlaySound(10, 3);
 
     private void SetMeshesActive(bool isActive)
     {

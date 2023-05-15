@@ -18,7 +18,12 @@ public class TankHealParticle : MonoBehaviour
 
     private void GetHealthController() => _healthController = Get<HealthController>.From(gameObject);
 
-    private void OnHealthBoost() => PlayParticleAndToggleCameraShake();
+    private void OnHealthBoost()
+    {
+        PlayParticleAndToggleCameraShake();
+
+        PlaySoundEffect();
+    }
 
     private void PlayParticleAndToggleCameraShake()
     {
@@ -26,4 +31,6 @@ public class TankHealParticle : MonoBehaviour
 
         _cameraShaker.ToggleShake();
     }
+
+    private void PlaySoundEffect() => SecondarySoundController.PlaySound(13, 0);
 }

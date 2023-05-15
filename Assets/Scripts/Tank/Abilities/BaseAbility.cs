@@ -84,8 +84,6 @@ public abstract class BaseAbility : MonoBehaviour, IPlayerAbility, IBuffDebuffUI
 
     protected virtual void ActivateBuffDebuffIcon(object[] data = null) => BuffDebuffHandler.RaiseEvent(BuffDebuffType.Ability, _playerTurn.MyTurn, this, data);
 
-    protected virtual void PlaySoundFX(int clipIndex) => SecondarySoundController.PlaySound(10, clipIndex);
-
     protected virtual void DisplayPlayerFeedbackText()
     {
         GameSceneObjectsReferences.PlayerFeedback.DisplayDropBoxItemText(gameObject.name, $"{Title} is activated!");
