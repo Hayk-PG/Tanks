@@ -664,6 +664,7 @@ GameObject:
   - component: {fileID: 6889947198239675318}
   - component: {fileID: 5970875077495997693}
   - component: {fileID: 7862827223935972212}
+  - component: {fileID: 6758282503777671313}
   m_Layer: 5
   m_Name: Notification_Panel
   m_TagString: Untagged
@@ -722,7 +723,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc0d3d0fa730843a99bf32709efc5332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactType: 0
+  _interactionTypeMain: 0
+  _interactionTypeSecond: 0
   _canvasGroup: {fileID: 5970875077495997693}
   _txt: {fileID: 2181608616063328340}
   _btnMain: {fileID: 7816983712519696828}
@@ -735,6 +737,26 @@ MonoBehaviour:
   _unityEventSecond:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6758282503777671313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8320314299868383455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7beec05513b8a9544a54adfad0e15b4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tmpTexts:
+  - _txts:
+    - {fileID: 8790352163476273412}
+    _fontIndex: 9
+  - _txts:
+    - {fileID: 2181608616063328340}
+    - {fileID: 2266018519783879565}
+    _fontIndex: 10
 --- !u!1001 &4927141110232693152
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -960,6 +982,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdbef04644aeb03428d48c6a278b09c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8790352163476273412 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4439742209225539748, guid: b382ee90a686a1044b703fd91b21c959,
+    type: 3}
+  m_PrefabInstance: {fileID: 4927141110232693152}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7704550734137964670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1079,6 +1113,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3d2164a6edc14b99b02708e563ad0bd, type: 3}
+--- !u!114 &2266018519783879565 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8475374018787544051, guid: d3d2164a6edc14b99b02708e563ad0bd,
+    type: 3}
+  m_PrefabInstance: {fileID: 7704550734137964670}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4125340274537791523 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6029254530505685085, guid: d3d2164a6edc14b99b02708e563ad0bd,

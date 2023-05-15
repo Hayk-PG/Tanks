@@ -93,5 +93,9 @@ public class StunEffectTimer : MonoBehaviour
         _seconds--;
 
         _txtTimer.text = _seconds.ToString();
+
+        PlaySoundEffect();
     }
+
+    private void PlaySoundEffect() => UISoundController.PlaySound(5, 0);
 }

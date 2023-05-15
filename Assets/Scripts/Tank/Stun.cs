@@ -22,9 +22,13 @@ public class Stun : MonoBehaviour
     private void Awake()
     {
         _particles = Get<ParticleSystem>.FromChild(gameObject);
+
         _healthController = Get<HealthController>.From(transform.parent.gameObject);
+
         _playerTurn = Get<PlayerTurn>.From(transform.parent.gameObject);
+
         _turnTimer = FindObjectOfType<TurnTimer>();
+
         _globalTankStun = FindObjectOfType<GlobalTankStun>();
     }
 
@@ -56,7 +60,11 @@ public class Stun : MonoBehaviour
         if (!IsStunned)
         {           
             IsStunned = true;
+
+            PlayStunSoundEffect();
+
             StartCoroutine(DisableStunningEffect(duration));
+
             OnStunEffect?.Invoke(true);
         }
     }
@@ -66,6 +74,7 @@ public class Stun : MonoBehaviour
         if (IsStunned)
         {
             IsStunned = false;
+
             OnStunEffect?.Invoke(false);
         }
     }
@@ -75,5 +84,15 @@ public class Stun : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         Conditions<bool>.Compare(MyPhotonNetwork.IsOfflineMode, OnDisableStunningEffect, () => _globalTankStun.OnDisableStunningEffect(_playerTurn.MyTurn));
+    }
+
+    private void PlayStunSoundEffect()
+    {
+        TankController localTankController = Get<TankController>.From(_healthController.gameObject);
+
+        bool canPlaySoundEffect = localTankController?.BasePlayer != null;
+
+        if (canPlaySoundEffect)
+            SecondarySoundController.PlaySound(0, 7);
     }
 }
