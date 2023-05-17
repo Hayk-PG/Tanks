@@ -12,7 +12,7 @@ public class BaseShootController: MonoBehaviour
     protected ScoreController _scoreController;
     protected Stun _stun;
 
-    protected bool _isStunned;
+    protected bool _isStunned, _isPrecisionShotActive;
     internal Transform CanonPivotPoint => _canonPivotPoint;
 
     [Serializable] public struct Canon
@@ -83,4 +83,16 @@ public class BaseShootController: MonoBehaviour
     }
 
     protected virtual void OnStunEffect(bool isStunned) => _isStunned = isStunned;
+
+    /// <summary>
+    /// Sets the precision shot state of the projectile for the given <paramref name="baseBulletController"/>.
+    /// </summary>
+    /// <param name="baseBulletController">The base bullet controller to set the precision shot state for.</param>
+    protected virtual void SetProjectilePrecisionShot(BaseBulletController baseBulletController) => baseBulletController.IsPrecisionShotAcitve = _isPrecisionShotActive;
+
+    /// <summary>
+    /// Sets the state of the precision shot to be active or inactive.
+    /// </summary>
+    /// <param name="isPrecisionShotActive">The flag indicating whether the precision shot should be active or inactive.</param>
+    public void SetPrecisionShotActive(bool isPrecisionShotActive) => _isPrecisionShotActive = isPrecisionShotActive;
 }

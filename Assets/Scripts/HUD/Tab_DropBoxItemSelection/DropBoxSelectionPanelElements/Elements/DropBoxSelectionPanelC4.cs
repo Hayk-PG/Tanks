@@ -11,9 +11,9 @@ public class DropBoxSelectionPanelC4 : BaseDropBoxSelectionPanelElement
     {
         minePosition = MinePosition;
 
-        _data[0] = minePosition;
-        _data[1] = NegativePrice;
-        _data[2] = _quantity;
+        _data[0] = NegativePrice;
+        _data[1] = _quantity;
+        _data[2] = minePosition;
 
         StartCoroutine(RaiseEventAfterDelay(DropBoxItemType.C4, _data));
     }

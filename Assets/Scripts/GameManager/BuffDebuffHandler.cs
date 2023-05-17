@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public enum BuffDebuffType { Xp2, Xp3, Ability }
+public enum BuffDebuffType { None, Xp2, Xp3, Ability, Accuracy }
 
 public class BuffDebuffHandler : MonoBehaviour
 {

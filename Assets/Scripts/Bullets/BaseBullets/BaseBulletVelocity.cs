@@ -63,30 +63,29 @@ public class BaseBulletVelocity : MonoBehaviour
         OnVerticalLimit();
     }
 
-    protected virtual void ActivateTrail()
-    {
-        onTrail?.Invoke();
-    }
+    protected virtual void ActivateTrail() => onTrail?.Invoke();
 
-    protected virtual void ApplyWindForce()
-    {
-        _isWindForceApplied = true;
-    }
+    protected virtual void ApplyWindForce() => _isWindForceApplied = true;
 
-    protected virtual void ControlLookRotation()
-    {
-        _baseBulletController.RigidBody.rotation = Quaternion.LookRotation(_baseBulletController.RigidBody.velocity);
-    }
+    protected virtual void ControlLookRotation() => _baseBulletController.RigidBody.rotation = Quaternion.LookRotation(_baseBulletController.RigidBody.velocity);
 
     protected virtual void ControlMovement()
     {
+        if (IsPrecisionShotActive())
+            return;
+
         if (_isWindForceApplied)
             _baseBulletController.RigidBody.velocity += new Vector3((WindForce.x / 100 * WindForcePercentage), WindForce.y, WindForce.z);
     }
 
     protected virtual void ControlGravitation()
     {
-        if (_baseBulletController.RigidBody.velocity.y <= 0)
+        if (IsPrecisionShotActive())
+            return;
+
+        bool isMovingDownwards = _baseBulletController.RigidBody.velocity.y <= 0;
+
+        if (isMovingDownwards)
         {
             Vector3 velocity = new Vector3(_baseBulletController.RigidBody.velocity.x, GravityForce * WeatherFactor, _baseBulletController.RigidBody.velocity.z);
 
@@ -98,9 +97,14 @@ public class BaseBulletVelocity : MonoBehaviour
 
     protected virtual void OnVerticalLimit()
     {
-        if(_baseBulletController.RigidBody.position.y <= VerticalLimit.Min)
-        {
+        bool isBelowVerticalLimit = _baseBulletController.RigidBody.position.y <= VerticalLimit.Min;
+
+        if (isBelowVerticalLimit)
             onVerticalLimit?.Invoke();
-        }
+    }
+
+    protected virtual bool IsPrecisionShotActive()
+    {
+        return _baseBulletController.IsPrecisionShotAcitve;
     }
 }

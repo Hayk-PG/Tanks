@@ -1,7 +1,15 @@
 
 public class OfflinePlayerHealthBooster : PlayerDropBoxObserver
 {
-    private int _hp;
+    protected int _hp;
+
+
+
+
+    protected override void Awake()
+    {
+        
+    }
 
     protected override bool IsAllowed(DropBoxItemType dropBoxItemType)
     {
@@ -10,11 +18,10 @@ public class OfflinePlayerHealthBooster : PlayerDropBoxObserver
 
     protected override void Execute(object[] data)
     {
-        _price = (int)data[0];
-        _hp = (int)data[1];
+        RetrieveData(data);
 
-        _playerTankController._healthController.BoostHealth(_hp);
-
-        DeductScores(_price);
+        BoostPlayerHealth();
     }
+
+    protected virtual void BoostPlayerHealth() => _playerTankController._healthController.BoostHealth(_hp);
 }

@@ -8,6 +8,19 @@ public class OfflinePlayerC4Detonator: PlayerDropBoxObserver
 
 
 
+
+
+    protected override void Awake()
+    {
+        
+    }
+
+    protected override void OnItemSelect(DropBoxItemType dropBoxItemType, object[] data)
+    {
+        if (IsAllowed(dropBoxItemType))
+            Execute(data);
+    }
+
     protected override bool IsAllowed(DropBoxItemType dropBoxItemType)
     {
         return dropBoxItemType == DropBoxItemType.C4;
@@ -15,13 +28,19 @@ public class OfflinePlayerC4Detonator: PlayerDropBoxObserver
 
     protected override void Execute(object[] data)
     {
-        _minePosition = (Func<TankController, Vector3?>)data[0];
-
-        _price = (int)data[1];
-        _quantity = (int)data[2];
+        RetrieveData(data);
 
         OnC4(_minePosition, _price);
     }
+
+    protected override void RetrieveData(object[] data)
+    {
+        base.RetrieveData(data);
+
+        AssignMinPosition(data);
+    }
+
+    protected virtual void AssignMinPosition(object[] data) => _minePosition = (Func<TankController, Vector3?>)data[2];
 
     protected virtual void OnC4(Func<TankController, Vector3?> MinePosition, int price)
     {
@@ -31,7 +50,7 @@ public class OfflinePlayerC4Detonator: PlayerDropBoxObserver
 
         if (minePosition.HasValue)
         {
-            DeductScores(price);
+            DeductScores();
 
             TriggerMine(minePosition.Value);
 

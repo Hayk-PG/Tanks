@@ -266,6 +266,8 @@ public class ShootController : BaseShootController, IEndGame
         Bullet.OwnerScore = _iScore;
         Bullet.RigidBody.velocity = Bullet.transform.forward * force;
 
+        SetProjectilePrecisionShot(Bullet);
+
         GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = Bullet;
 
         GameSceneObjectsReferences.MainCameraController.GetProjectileRigidbody(Bullet.RigidBody);

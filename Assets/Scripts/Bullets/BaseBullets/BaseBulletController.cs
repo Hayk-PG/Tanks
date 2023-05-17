@@ -18,6 +18,8 @@ public class BaseBulletController : MonoBehaviour
 
     public bool IsLastShellOfBarrage { get; set; }
     public bool IsOwnerAI { get; set; }
+    public bool IsPrecisionShotAcitve { get; set; }
+
 
 
 

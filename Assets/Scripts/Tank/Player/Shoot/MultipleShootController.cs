@@ -22,6 +22,8 @@ public class MultipleShootController : ShootController
             Bullet.OwnerScore = _iScore;
             Bullet.RigidBody.velocity = Bullet.transform.forward * randomForce;
 
+            SetProjectilePrecisionShot(Bullet);
+
             GameSceneObjectsReferences.GameManagerBulletSerializer.BaseBulletController = Bullet;
             
             if (i == lastIndex)

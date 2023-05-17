@@ -83,6 +83,11 @@ public class BuffDebuffUIElement : MonoBehaviour, IReset
 
                 UpdateIconSprite(_iconSprites[2]);
                 break;
+
+            case BuffDebuffType.Accuracy:
+
+                UpdateIconSprite(_iconSprites[3]);
+                break;
         }
     }
 

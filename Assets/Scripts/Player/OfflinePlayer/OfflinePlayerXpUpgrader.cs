@@ -3,6 +3,14 @@ public class OfflinePlayerXpUpgrader : PlayerDropBoxObserver
 {
     private int _xp;
 
+
+
+
+    protected override void Awake()
+    {
+        
+    }
+
     protected override bool IsAllowed(DropBoxItemType dropBoxItemType)
     {
         return dropBoxItemType == DropBoxItemType.XpUpgrade;
@@ -10,8 +18,7 @@ public class OfflinePlayerXpUpgrader : PlayerDropBoxObserver
 
     protected override void Execute(object[] data)
     {
-        _xp = (int)data[0];
-        _price = (int)data[1];
+        RetrieveData(data);
 
         UpgradePlayerXp(_xp);
     }

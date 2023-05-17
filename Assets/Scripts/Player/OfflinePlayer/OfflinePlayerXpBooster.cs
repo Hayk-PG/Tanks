@@ -12,32 +12,31 @@ public class OfflinePlayerXpBooster : PlayerDropBoxObserver
 
     protected override void Execute(object[] data)
     {
-        _price = (int)data[0];
-        _quantity = (int)data[1] + GameSceneObjectsReferences.TurnController.TurnCyclesCount;
-        _xpMultiplier = (int)data[2];
-
-        _playerTurnState = _playerTankController.OwnTank.gameObject.name == Names.Tank_FirstPlayer ? TurnState.Player1 : TurnState.Player2;
-
-        _altData[0] = _quantity;
+        base.Execute(data);
 
         SetPlayerScoreMultiplier(_xpMultiplier);
-
-        ManageTurnControllerSubscription(true);
-
-        BuffDebuffHandler.RaiseEvent(_xpMultiplier <= 2 ? BuffDebuffType.Xp2 : BuffDebuffType.Xp3, _playerTurnState, null, _altData);
     }
 
-    protected virtual void SetPlayerScoreMultiplier(int xpMultiplier) => _playerTankController._scoreController.SetScoreMultiplier(xpMultiplier);
+    protected override void RetrieveData(object[] data)
+    {
+        base.RetrieveData(data);
+
+        AssignXpMultiplier(data);
+    }
+
+    protected override void RaiseBuffDebuffEvent(BuffDebuffType buffDebuffType = BuffDebuffType.None, IBuffDebuffUIElementController buffDebuffUIElementController = null)
+    {
+        base.RaiseBuffDebuffEvent(_xpMultiplier <= 2 ? BuffDebuffType.Xp2 : BuffDebuffType.Xp3, buffDebuffUIElementController);
+    }
 
     protected override void OnTurnController(TurnState turnState)
     {
-        if (GameSceneObjectsReferences.TurnController.TurnCyclesCount >= _quantity)
-        {
-            ManageTurnControllerSubscription(false);
+        base.OnTurnController(turnState);
 
-            SetPlayerScoreMultiplier(1);
-
-            return;
-        }
+        SetPlayerScoreMultiplier(1);
     }
+
+    protected virtual void AssignXpMultiplier(object[] data) => _xpMultiplier = (int)data[2];
+
+    protected virtual void SetPlayerScoreMultiplier(int xpMultiplier) => _playerTankController._scoreController.SetScoreMultiplier(xpMultiplier);
 }

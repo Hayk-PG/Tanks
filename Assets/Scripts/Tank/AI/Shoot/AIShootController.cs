@@ -280,6 +280,8 @@ public class AIShootController : BaseShootController
             baseBulletController.IsOwnerAI = true;
             baseBulletController.RigidBody.velocity = _target;
 
+            SetProjectilePrecisionShot(baseBulletController);
+
             _rigidBody.AddForce(transform.forward * _target.magnitude * _shoot._rigidbodyForceMultiplier, ForceMode.Impulse);
 
             GameSceneObjectsReferences.MainCameraController.GetProjectileRigidbody(baseBulletController.RigidBody);
